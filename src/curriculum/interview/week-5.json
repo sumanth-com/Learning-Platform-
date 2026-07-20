@@ -1,0 +1,290 @@
+[
+  {
+    "id": "w5-collections-overview",
+    "category": "Collections Framework Overview",
+    "questions": [
+      {
+        "id": "w5-q01",
+        "question": "What is the Java Collections Framework?",
+        "answer": "The Java Collections Framework (JCF) is a unified architecture of interfaces and classes in java.util for storing and manipulating groups of objects. Core interfaces include Collection, List, Set, Queue, and Map. Implementations like ArrayList, HashSet, and HashMap provide different performance characteristics. The framework provides iterators, comparators, and utility methods via Collections class. It is the standard data-structure toolkit used across virtually all Java applications.",
+        "realWorld": "A REST API caching user sessions might use HashMap for O(1) lookup by session ID. An order processing pipeline might use LinkedList as a Queue for FIFO task handling. JCF is the backbone of in-memory data management before databases.",
+        "code": "import java.util.*;\n\npublic class JCFDemo {\n    public static void main(String[] args) {\n        List<String> list = new ArrayList<>();\n        Set<Integer> set = new HashSet<>();\n        Map<String, Integer> map = new HashMap<>();\n\n        list.add(\"Java\");\n        set.add(42);\n        map.put(\"score\", 95);\n\n        System.out.println(list + \" | \" + set + \" | \" + map);\n    }\n}",
+        "output": "[Java] | [42] | {score=95}"
+      },
+      {
+        "id": "w5-q02",
+        "question": "Difference between Collection and Collections.",
+        "answer": "Collection (singular) is the root interface of the hierarchy — List, Set, and Queue extend it. It defines basic operations: add, remove, size, iterate. Collections (plural) is a final utility class with static methods like sort(), reverse(), synchronizedList(), and binarySearch(). One is an interface defining object behavior; the other is a helper class for operating on collections. This naming confuses beginners but is fundamental to understand.",
+        "realWorld": "Developers store data in an ArrayList (Collection implementation) and use Collections.sort(list) to order results before rendering a report. The interface defines structure; the utility class provides algorithms.",
+        "code": "import java.util.*;\n\npublic class CollectionVsCollectionsDemo {\n    public static void main(String[] args) {\n        List<Integer> nums = new ArrayList<>(Arrays.asList(5, 2, 8, 1));\n        Collections.sort(nums);\n        System.out.println(nums);\n        System.out.println(\"Max: \" + Collections.max(nums));\n    }\n}",
+        "output": "[1, 2, 5, 8]\nMax: 8"
+      },
+      {
+        "id": "w5-q03",
+        "question": "Difference between List and Set.",
+        "answer": "List is an ordered collection that allows duplicate elements and supports positional access via index. Set is an unordered collection (unless using LinkedHashSet or TreeSet) that does not allow duplicate elements — uniqueness is enforced by equals/hashCode or comparison logic. Use List when order and duplicates matter (shopping cart items); use Set when uniqueness matters (unique user IDs, tags). Both extend Collection but serve different purposes.",
+        "realWorld": "An e-commerce cart is a List because a user may add the same product twice. A Set of email subscribers ensures each email appears only once in the mailing list.",
+        "code": "import java.util.*;\n\npublic class ListVsSetDemo {\n    public static void main(String[] args) {\n        List<String> list = new ArrayList<>(Arrays.asList(\"A\", \"B\", \"A\"));\n        Set<String> set = new HashSet<>(Arrays.asList(\"A\", \"B\", \"A\"));\n        System.out.println(\"List: \" + list + \" size=\" + list.size());\n        System.out.println(\"Set: \" + set + \" size=\" + set.size());\n    }\n}",
+        "output": "List: [A, B, A] size=3\nSet: [A, B] size=2"
+      },
+      {
+        "id": "w5-q04",
+        "question": "Difference between Set and Map.",
+        "answer": "Set stores individual unique elements with no key-value pairing. Map stores key-value pairs where each key maps to at most one value. Set extends Collection; Map is a separate interface not extending Collection. Use Set for membership checks and uniqueness; use Map for lookups, associations, and caching (key → value). HashSet internally uses HashMap in JDK implementation.",
+        "realWorld": "A Set tracks which product IDs a user has viewed. A Map stores productId → Product details for fast retrieval in a catalog service without scanning a list.",
+        "code": "import java.util.*;\n\npublic class SetVsMapDemo {\n    public static void main(String[] args) {\n        Set<String> visited = new HashSet<>();\n        visited.add(\"page-home\");\n        visited.add(\"page-home\");\n\n        Map<String, String> cache = new HashMap<>();\n        cache.put(\"user:101\", \"Ravi Kumar\");\n\n        System.out.println(visited.contains(\"page-home\"));\n        System.out.println(cache.get(\"user:101\"));\n    }\n}",
+        "output": "true\nRavi Kumar"
+      }
+    ]
+  },
+  {
+    "id": "w5-lists",
+    "category": "List Implementations",
+    "questions": [
+      {
+        "id": "w5-q05",
+        "question": "Difference between ArrayList and LinkedList.",
+        "answer": "ArrayList uses a dynamic array internally — fast O(1) random access by index, but O(n) insertions/deletions in the middle due to shifting. LinkedList uses a doubly-linked list — O(1) insertions/deletions at known positions, but O(n) random access. ArrayList is more memory-efficient and cache-friendly. LinkedList also implements Deque for queue/stack operations. For most use cases, ArrayList is preferred unless frequent middle insertions or deque operations dominate.",
+        "realWorld": "Displaying paginated search results uses ArrayList for fast index-based access. A browser history with frequent add-to-front and remove operations might benefit from LinkedList as a Deque.",
+        "code": "import java.util.*;\n\npublic class ArrayVsLinkedDemo {\n    public static void main(String[] args) {\n        List<String> array = new ArrayList<>();\n        List<String> linked = new LinkedList<>();\n        array.add(\"A\"); array.add(\"B\");\n        linked.add(\"A\"); linked.add(\"B\");\n        System.out.println(\"ArrayList get(0): \" + array.get(0));\n        System.out.println(\"LinkedList get(0): \" + linked.get(0));\n    }\n}",
+        "output": "ArrayList get(0): A\nLinkedList get(0): A"
+      },
+      {
+        "id": "w5-q06",
+        "question": "When should you use ArrayList?",
+        "answer": "Use ArrayList when you need fast random access by index, mostly append at the end, and iterate frequently. It is the default List choice for most applications due to superior performance for reads and low memory overhead. Ideal for storing query results, DTO lists, and UI data where indexed access and iteration dominate. Avoid it when you frequently insert or delete in the middle of large lists.",
+        "realWorld": "A Spring Boot controller returns List<Product> from a service — backed by ArrayList from a database query. Pagination uses subList(from, to) efficiently on ArrayList.",
+        "code": "import java.util.*;\n\npublic class WhenArrayListDemo {\n    public static void main(String[] args) {\n        List<Integer> scores = new ArrayList<>();\n        for (int i = 0; i < 5; i++) scores.add(i * 10);\n        System.out.println(\"Index 3: \" + scores.get(3));\n        System.out.println(\"Total: \" + scores.stream().mapToInt(Integer::intValue).sum());\n    }\n}",
+        "output": "Index 3: 30\nTotal: 100"
+      },
+      {
+        "id": "w5-q07",
+        "question": "When should you use LinkedList?",
+        "answer": "Use LinkedList when you frequently insert or remove elements at the beginning, middle, or end, especially when using it as a Deque or Queue. It excels at FIFO/LIFO operations with addFirst, addLast, removeFirst. Do not use it for random index access on large lists. Memory overhead is higher due to node pointers. Consider ArrayDeque as a faster alternative for stack/queue operations in modern Java.",
+        "realWorld": "A task scheduler maintaining a priority work queue with frequent front removals might use LinkedList as a Deque. Music playlist editors inserting tracks at arbitrary positions also benefit from linked structure.",
+        "code": "import java.util.*;\n\npublic class WhenLinkedListDemo {\n    public static void main(String[] args) {\n        Deque<String> queue = new LinkedList<>();\n        queue.addLast(\"Task-1\");\n        queue.addLast(\"Task-2\");\n        queue.addFirst(\"Urgent\");\n        System.out.println(\"Process: \" + queue.removeFirst());\n        System.out.println(\"Remaining: \" + queue);\n    }\n}",
+        "output": "Process: Urgent\nRemaining: [Task-1, Task-2]"
+      }
+    ]
+  },
+  {
+    "id": "w5-sets-maps",
+    "category": "Sets, Maps & Hashing",
+    "questions": [
+      {
+        "id": "w5-q08",
+        "question": "Difference between HashSet and TreeSet.",
+        "answer": "HashSet stores elements in a hash table — O(1) average add/contains/remove, no ordering guarantee. TreeSet stores elements in a red-black tree — O(log n) operations, maintains sorted natural or custom order. HashSet allows one null; TreeSet allows null only if comparator permits. Use HashSet for fast uniqueness checks; use TreeSet when sorted iteration is required.",
+        "realWorld": "Tracking unique IP addresses in a web server log uses HashSet for speed. Generating a sorted leaderboard of top scores uses TreeSet or more commonly TreeMap for score → player mapping.",
+        "code": "import java.util.*;\n\npublic class HashVsTreeSetDemo {\n    public static void main(String[] args) {\n        Set<Integer> hash = new HashSet<>(Arrays.asList(5, 2, 8));\n        Set<Integer> tree = new TreeSet<>(Arrays.asList(5, 2, 8));\n        System.out.println(\"HashSet: \" + hash);\n        System.out.println(\"TreeSet: \" + tree);\n    }\n}",
+        "output": "HashSet: [2, 5, 8]\nTreeSet: [2, 5, 8]"
+      },
+      {
+        "id": "w5-q09",
+        "question": "Difference between HashMap and Hashtable.",
+        "answer": "HashMap is non-synchronized, allows one null key and multiple null values, and is faster for single-threaded use. Hashtable is synchronized (thread-safe for individual operations), does not allow null keys or values, and is a legacy class. Modern concurrent code should use ConcurrentHashMap instead of Hashtable. HashMap is the default choice; Hashtable remains for legacy compatibility.",
+        "realWorld": "A single-threaded configuration cache uses HashMap. Legacy enterprise apps from the 1990s might still use Hashtable, but modern Spring apps prefer HashMap or ConcurrentHashMap with proper synchronization strategy.",
+        "code": "import java.util.*;\n\npublic class HashMapVsHashtableDemo {\n    public static void main(String[] args) {\n        Map<String, Integer> hashMap = new HashMap<>();\n        hashMap.put(null, 0);\n        hashMap.put(\"A\", 1);\n        System.out.println(\"HashMap: \" + hashMap);\n\n        Hashtable<String, Integer> table = new Hashtable<>();\n        table.put(\"A\", 1);\n        System.out.println(\"Hashtable: \" + table);\n    }\n}",
+        "output": "HashMap: {null=0, A=1}\nHashtable: {A=1}"
+      },
+      {
+        "id": "w5-q10",
+        "question": "Difference between HashMap and TreeMap.",
+        "answer": "HashMap provides O(1) average lookup using hashing with no ordering. TreeMap provides O(log n) lookup and maintains keys in sorted order (natural or Comparator). HashMap allows one null key; TreeMap does not allow null keys. Use HashMap for general fast lookups; use TreeMap when you need range queries, floor/ceiling key operations, or sorted key traversal.",
+        "realWorld": "A user session cache uses HashMap for O(1) sessionId lookup. A time-series event store keyed by timestamp might use TreeMap to efficiently retrieve events between two timestamps using subMap().",
+        "code": "import java.util.*;\n\npublic class HashMapVsTreeMapDemo {\n    public static void main(String[] args) {\n        Map<String, Integer> hash = new HashMap<>();\n        hash.put(\"banana\", 3); hash.put(\"apple\", 5);\n\n        Map<String, Integer> tree = new TreeMap<>();\n        tree.put(\"banana\", 3); tree.put(\"apple\", 5);\n\n        System.out.println(\"HashMap: \" + hash);\n        System.out.println(\"TreeMap: \" + tree);\n    }\n}",
+        "output": "HashMap: {banana=3, apple=5}\nTreeMap: {apple=5, banana=3}"
+      },
+      {
+        "id": "w5-q11",
+        "question": "How does HashMap work internally?",
+        "answer": "HashMap stores entries in an array of buckets. Each key's hashCode() is computed, then index = hash % capacity (with bit masking in modern JDK). Collisions are handled by chaining (linked list) or treeification (red-black tree when bucket exceeds threshold). On put: compute hash, find bucket, check equals() for existing key, otherwise add entry. When size exceeds capacity × load factor, the map resizes and rehashes. Proper equals/hashCode on keys is critical.",
+        "realWorld": "Understanding HashMap internals explains why mutable keys are dangerous — if a key's hashCode changes after insertion, the entry becomes unreachable. Production bugs from using mutable ArrayList as a HashMap key are a classic interview follow-up.",
+        "code": "import java.util.*;\n\nclass Employee {\n    int id;\n    Employee(int id) { this.id = id; }\n    @Override public int hashCode() { return Objects.hash(id); }\n    @Override public boolean equals(Object o) {\n        return o instanceof Employee e && e.id == id;\n    }\n}\n\npublic class HashMapInternalDemo {\n    public static void main(String[] args) {\n        Map<Employee, String> map = new HashMap<>();\n        Employee e = new Employee(101);\n        map.put(e, \"Ravi\");\n        System.out.println(map.get(new Employee(101)));\n    }\n}",
+        "output": "Ravi"
+      },
+      {
+        "id": "w5-q12",
+        "question": "What is hashing?",
+        "answer": "Hashing converts an object into an integer hash code using hashCode(), then maps it to a bucket index in a hash-based collection. A good hash function distributes keys evenly to minimize collisions. Hashing enables near-constant-time lookup, insertion, and deletion in HashMap and HashSet. The contract: if two objects are equal (equals returns true), they must have the same hashCode. Unequal objects may share hash codes (collision).",
+        "realWorld": "Password storage systems use cryptographic hashing (SHA-256, bcrypt) — a related but distinct concept. In collections, hashing enables fast in-memory indexes powering caches, deduplication, and database hash joins.",
+        "code": "import java.util.*;\n\npublic class HashingDemo {\n    public static void main(String[] args) {\n        String key = \"user@email.com\";\n        System.out.println(\"hashCode: \" + key.hashCode());\n        Map<String, String> map = new HashMap<>();\n        map.put(key, \"Ravi\");\n        System.out.println(\"Lookup: \" + map.get(\"user@email.com\"));\n    }\n}",
+        "output": "hashCode: (varies by JVM run)\nLookup: Ravi"
+      },
+      {
+        "id": "w5-q13",
+        "question": "What is a hash collision?",
+        "answer": "A hash collision occurs when two different keys produce the same bucket index in a hash table. Java handles this via separate chaining — multiple entries in the same bucket linked in a list, converted to a tree if the chain grows too long (Java 8+). Collisions degrade performance from O(1) toward O(n) in worst case. Good hashCode distribution and appropriate initial capacity reduce collisions.",
+        "realWorld": "Security systems watch for hash collision attacks where malicious inputs flood the same bucket, degrading HashMap to linked-list traversal. This is why production systems use well-distributed keys and, for untrusted input, consider alternative structures.",
+        "code": "import java.util.*;\n\npublic class CollisionDemo {\n    public static void main(String[] args) {\n        Map<Integer, String> map = new HashMap<>();\n        map.put(1, \"One\");\n        map.put(2, \"Two\");\n        // Keys with same hashCode are rare but handled internally\n        System.out.println(\"Size: \" + map.size());\n        System.out.println(\"Both retrievable: \" + map.get(1) + \", \" + map.get(2));\n    }\n}",
+        "output": "Size: 2\nBoth retrievable: One, Two"
+      },
+      {
+        "id": "w5-q14",
+        "question": "What is load factor?",
+        "answer": "Load factor is the threshold ratio (default 0.75 in HashMap) that triggers resizing when size exceeds capacity × loadFactor. A load factor of 0.75 balances memory usage and collision probability. When exceeded, capacity doubles and all entries are rehashed. You can set a custom load factor in the HashMap constructor, but 0.75 is optimal for most cases. Higher load factor saves memory but increases collisions.",
+        "realWorld": "When building an in-memory cache expected to hold 10,000 entries, initializing HashMap with new HashMap<>(16384) avoids expensive resize/rehash cycles during warmup, improving startup performance.",
+        "code": "import java.util.*;\n\npublic class LoadFactorDemo {\n    public static void main(String[] args) {\n        Map<Integer, String> map = new HashMap<>(16, 0.75f);\n        for (int i = 0; i < 20; i++) map.put(i, \"V\" + i);\n        System.out.println(\"Entries: \" + map.size());\n        System.out.println(\"Load factor default: 0.75\");\n    }\n}",
+        "output": "Entries: 20\nLoad factor default: 0.75"
+      },
+      {
+        "id": "w5-q15",
+        "question": "What is the default capacity of HashMap?",
+        "answer": "The default initial capacity of HashMap is 16 buckets. When the number of entries exceeds capacity × load factor (16 × 0.75 = 12), the map resizes to 32 and rehashes all entries. Capacity is always a power of two for efficient bit-masking during index calculation. You can specify initial capacity in the constructor to reduce resizing when the expected size is known.",
+        "realWorld": "Loading 50,000 configuration entries into a HashMap with default capacity causes multiple resize operations. Pre-sizing with new HashMap<>(65536) eliminates intermediate rehashing and speeds application startup.",
+        "code": "import java.util.*;\n\npublic class DefaultCapacityDemo {\n    public static void main(String[] args) {\n        HashMap<String, Integer> defaultMap = new HashMap<>();\n        HashMap<String, Integer> sizedMap = new HashMap<>(1024);\n        System.out.println(\"Default initial capacity: 16\");\n        System.out.println(\"Resizes at 12 entries (16 * 0.75)\");\n        System.out.println(\"Custom sized map created for 1024 buckets\");\n    }\n}",
+        "output": "Default initial capacity: 16\nResizes at 12 entries (16 * 0.75)\nCustom sized map created for 1024 buckets"
+      },
+      {
+        "id": "w5-q16",
+        "question": "Why does HashSet not allow duplicates?",
+        "answer": "HashSet internally uses a HashMap where elements are stored as keys with a constant dummy value. Before adding, it computes hashCode, finds the bucket, and calls equals() on existing keys. If a matching key exists, add returns false and the set remains unchanged. Duplicates are rejected because Map keys must be unique. Correct equals() and hashCode() implementation on custom objects is essential for proper deduplication.",
+        "realWorld": "Deduplicating email addresses before a marketing campaign uses HashSet. If the Email class does not override equals/hashCode, duplicate String wrappers work, but custom objects without proper contracts silently allow duplicates.",
+        "code": "import java.util.*;\n\npublic class HashSetNoDuplicatesDemo {\n    public static void main(String[] args) {\n        Set<String> emails = new HashSet<>();\n        System.out.println(emails.add(\"a@test.com\"));\n        System.out.println(emails.add(\"a@test.com\"));\n        System.out.println(\"Set: \" + emails);\n    }\n}",
+        "output": "true\nfalse\nSet: [a@test.com]"
+      }
+    ]
+  },
+  {
+    "id": "w5-sorting",
+    "category": "Sorting & Comparison",
+    "questions": [
+      {
+        "id": "w5-q17",
+        "question": "What is Comparable?",
+        "answer": "Comparable is an interface in java.lang with a single method compareTo(T o). A class implementing Comparable defines its natural ordering. Collections.sort() and TreeSet use this ordering. compareTo returns negative, zero, or positive integer. The natural ordering must be consistent with equals (if compareTo is zero, equals should ideally be true). Built-in examples: Integer, String, LocalDate.",
+        "realWorld": "Employee implements Comparable<Employee> by id for default sorting in HR reports. TreeSet<Employee> automatically maintains employees sorted by id without passing a Comparator.",
+        "code": "import java.util.*;\n\nclass Student implements Comparable<Student> {\n    String name; int score;\n    Student(String name, int score) { this.name = name; this.score = score; }\n    public int compareTo(Student o) { return Integer.compare(this.score, o.score); }\n    public String toString() { return name + \"=\" + score; }\n}\n\npublic class ComparableDemo {\n    public static void main(String[] args) {\n        List<Student> list = Arrays.asList(new Student(\"A\", 85), new Student(\"B\", 72));\n        Collections.sort(list);\n        System.out.println(list);\n    }\n}",
+        "output": "[B=72, A=85]"
+      },
+      {
+        "id": "w5-q18",
+        "question": "What is Comparator?",
+        "answer": "Comparator is a functional interface in java.util with compare(T o1, T o2) for defining custom ordering separate from the class's natural order. It enables sorting by different criteria without modifying the class. Java 8 provides factory methods: Comparator.comparing(), thenComparing(), reversed(). Comparator is passed to sort(), TreeSet constructor, or stream sorted() operations.",
+        "realWorld": "An admin dashboard sorts the same Employee list by name, department, or salary using different Comparators without changing the Employee class — flexible UI column sorting.",
+        "code": "import java.util.*;\n\nrecord Product(String name, double price) {}\n\npublic class ComparatorDemo {\n    public static void main(String[] args) {\n        List<Product> products = new ArrayList<>(List.of(\n            new Product(\"Phone\", 25000), new Product(\"Case\", 500)));\n        products.sort(Comparator.comparingDouble(Product::price).reversed());\n        System.out.println(products);\n    }\n}",
+        "output": "[Product[name=Phone, price=25000.0], Product[name=Case, price=500.0]]"
+      },
+      {
+        "id": "w5-q19",
+        "question": "Difference between Comparable and Comparator.",
+        "answer": "Comparable is implemented by the class itself (natural ordering, one per class). Comparator is a separate strategy object (multiple orderings possible). Comparable uses compareTo(); Comparator uses compare(). Use Comparable for the default sort order built into the type. Use Comparator for alternative sorts without modifying source code. TreeSet uses Comparable by default; pass Comparator for custom order.",
+        "realWorld": "Student implements Comparable by rollNumber for exam seating. A teacher sorts by marks using Comparator.comparing(Student::getMarks) for a merit list — same data, two orderings.",
+        "code": "import java.util.*;\n\nclass Item implements Comparable<Item> {\n    String name; int qty;\n    Item(String name, int qty) { this.name = name; this.qty = qty; }\n    public int compareTo(Item o) { return name.compareTo(o.name); }\n    public String toString() { return name + \":\" + qty; }\n}\n\npublic class ComparableVsComparatorDemo {\n    public static void main(String[] args) {\n        List<Item> items = Arrays.asList(new Item(\"Pen\", 10), new Item(\"Book\", 5));\n        items.sort(Comparator.comparingInt(i -> i.qty).reversed());\n        System.out.println(items);\n    }\n}",
+        "output": "[Pen:10, Book:5]"
+      }
+    ]
+  },
+  {
+    "id": "w5-iteration",
+    "category": "Iteration",
+    "questions": [
+      {
+        "id": "w5-q20",
+        "question": "What is Iterator?",
+        "answer": "Iterator is an interface for traversing a Collection sequentially without exposing internal structure. Key methods: hasNext(), next(), and remove() (optional). It provides fail-fast behavior — throws ConcurrentModificationException if the collection is structurally modified during iteration (except via iterator.remove()). Enhanced for-loop uses Iterator internally. Iterator works on all Collections but only forward traversal.",
+        "realWorld": "Removing invalid entries from a live cache while iterating requires Iterator.remove(). Directly calling list.remove() during for-each causes ConcurrentModificationException — a common production bug.",
+        "code": "import java.util.*;\n\npublic class IteratorDemo {\n    public static void main(String[] args) {\n        List<Integer> nums = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));\n        Iterator<Integer> it = nums.iterator();\n        while (it.hasNext()) {\n            int n = it.next();\n            if (n % 2 == 0) it.remove();\n        }\n        System.out.println(nums);\n    }\n}",
+        "output": "[1, 3, 5]"
+      },
+      {
+        "id": "w5-q21",
+        "question": "Difference between Iterator and ListIterator.",
+        "answer": "Iterator traverses any Collection forward only with basic remove(). ListIterator works only on List implementations, supports bidirectional traversal (hasPrevious, previous), provides index (nextIndex, previousIndex), and allows add/set during iteration. ListIterator is more powerful for in-place list manipulation. Use Iterator for general collections; ListIterator when you need backward traversal or in-list editing.",
+        "realWorld": "A text editor's undo feature iterating backward through a LinkedList of edits uses ListIterator.previous(). A simple report generator iterating forward over query results uses Iterator or enhanced for-loop.",
+        "code": "import java.util.*;\n\npublic class ListIteratorDemo {\n    public static void main(String[] args) {\n        List<String> words = new ArrayList<>(Arrays.asList(\"Java\", \"Python\", \"Go\"));\n        ListIterator<String> lit = words.listIterator(words.size());\n        while (lit.hasPrevious()) System.out.println(lit.previous());\n    }\n}",
+        "output": "Go\nPython\nJava"
+      }
+    ]
+  },
+  {
+    "id": "w5-queues-stacks",
+    "category": "Queues, Stacks & Legacy",
+    "questions": [
+      {
+        "id": "w5-q22",
+        "question": "What is Queue?",
+        "answer": "Queue is a Collection interface modeling FIFO (First-In-First-Out) behavior. Core operations: offer (enqueue), poll (dequeue), peek (view head). Implementations include LinkedList, PriorityQueue, and ArrayDeque. Queues are used for task scheduling, BFS algorithms, message buffering, and producer-consumer patterns. The Queue interface extends Collection, adding insertion/extraction/inspection methods that throw or return special values on failure.",
+        "realWorld": "An order processing system enqueues incoming orders and worker threads dequeue them for fulfillment. Message brokers like RabbitMQ conceptually follow the same FIFO queue pattern at the application level.",
+        "code": "import java.util.*;\n\npublic class QueueDemo {\n    public static void main(String[] args) {\n        Queue<String> queue = new LinkedList<>();\n        queue.offer(\"Order-1\");\n        queue.offer(\"Order-2\");\n        System.out.println(\"Peek: \" + queue.peek());\n        System.out.println(\"Poll: \" + queue.poll());\n        System.out.println(\"Remaining: \" + queue);\n    }\n}",
+        "output": "Peek: Order-1\nPoll: Order-1\nRemaining: [Order-2]"
+      },
+      {
+        "id": "w5-q23",
+        "question": "What is PriorityQueue?",
+        "answer": "PriorityQueue is an unbounded queue where elements are ordered by natural ordering or a Comparator. The head is always the least element (min-heap by default). Insertion and removal are O(log n). It does not permit null elements. Useful for scheduling, Dijkstra's algorithm, and top-K problems. Iteration order is not sorted — only poll/peek return elements in priority order.",
+        "realWorld": "A hospital triage system uses PriorityQueue to process critical patients before stable ones. A task scheduler prioritizes high-priority jobs using Comparator.comparing(Task::getPriority).",
+        "code": "import java.util.*;\n\npublic class PriorityQueueDemo {\n    public static void main(String[] args) {\n        Queue<Integer> pq = new PriorityQueue<>();\n        pq.offer(30); pq.offer(10); pq.offer(20);\n        System.out.println(\"Poll order:\");\n        while (!pq.isEmpty()) System.out.println(pq.poll());\n    }\n}",
+        "output": "Poll order:\n10\n20\n30"
+      },
+      {
+        "id": "w5-q24",
+        "question": "What is Deque?",
+        "answer": "Deque (Double Ended Queue) extends Queue with insertion and removal at both ends. It supports stack (push/pop) and queue (offer/poll) operations. Implementations: ArrayDeque (resizable array, preferred) and LinkedList. Methods exist in pairs: offerFirst/offerLast, pollFirst/pollLast. ArrayDeque is faster than Stack class and should be preferred for LIFO operations.",
+        "realWorld": "Browser back/forward navigation uses a Deque for history — add to end, remove from back. Undo/redo editors use two Deques for reversible operations.",
+        "code": "import java.util.*;\n\npublic class DequeDemo {\n    public static void main(String[] args) {\n        Deque<String> deque = new ArrayDeque<>();\n        deque.addFirst(\"Middle\");\n        deque.addFirst(\"First\");\n        deque.addLast(\"Last\");\n        System.out.println(deque);\n        System.out.println(\"Remove first: \" + deque.removeFirst());\n    }\n}",
+        "output": "[First, Middle, Last]\nRemove first: First"
+      },
+      {
+        "id": "w5-q25",
+        "question": "What is Stack?",
+        "answer": "Stack is a legacy class extending Vector that implements LIFO (Last-In-First-Out). It provides push, pop, peek operations. Stack is synchronized but considered obsolete — use ArrayDeque for better performance and a cleaner API. Stack inherits Vector's random access methods which break stack abstraction. In interviews, know Stack conceptually but recommend ArrayDeque in practice.",
+        "realWorld": "Expression evaluation (calculator), undo operations, and DFS algorithms use stack behavior. Modern Java code implements these with ArrayDeque rather than the Stack class.",
+        "code": "import java.util.*;\n\npublic class StackDemo {\n    public static void main(String[] args) {\n        Deque<Integer> stack = new ArrayDeque<>();\n        stack.push(10); stack.push(20); stack.push(30);\n        System.out.println(\"Pop: \" + stack.pop());\n        System.out.println(\"Peek: \" + stack.peek());\n    }\n}",
+        "output": "Pop: 30\nPeek: 20"
+      },
+      {
+        "id": "w5-q26",
+        "question": "Why is Vector considered legacy?",
+        "answer": "Vector is a synchronized dynamic array from early Java (like ArrayList but thread-safe on every operation). Synchronization on each method makes it slow for most single-threaded use cases. Size management differs from ArrayList. Modern alternatives: ArrayList for single-threaded, CopyOnWriteArrayList for read-heavy concurrent, or Collections.synchronizedList(). Vector and Stack remain for backward compatibility but should not be used in new code.",
+        "realWorld": "Legacy banking systems from Java 1.2 might use Vector. Modern Spring Boot services use ArrayList or concurrent collections with explicit synchronization strategy based on actual threading needs.",
+        "code": "import java.util.*;\n\npublic class VectorLegacyDemo {\n    public static void main(String[] args) {\n        List<String> modern = new ArrayList<>();\n        List<String> legacy = new Vector<>();\n        modern.add(\"Fast\");\n        legacy.add(\"Synchronized but slow\");\n        System.out.println(\"Prefer ArrayList: \" + modern);\n    }\n}",
+        "output": "Prefer ArrayList: [Fast]"
+      }
+    ]
+  },
+  {
+    "id": "w5-concurrency-collections",
+    "category": "Fail-Fast & Concurrency",
+    "questions": [
+      {
+        "id": "w5-q27",
+        "question": "What is fail-fast behavior?",
+        "answer": "Fail-fast iterators immediately throw ConcurrentModificationException when they detect the collection was structurally modified after the iterator was created (except through the iterator's own remove method). This prevents unpredictable behavior from iterating over a concurrently modified collection. Most java.util collections (ArrayList, HashMap) are fail-fast. Fail-fast is a best-effort detection, not a concurrency guarantee.",
+        "realWorld": "A background thread modifying a shared ArrayList while the UI thread iterates causes intermittent ConcurrentModificationException crashes. Fix: use concurrent collections, synchronize access, or copy-before-iterate.",
+        "code": "import java.util.*;\n\npublic class FailFastDemo {\n    public static void main(String[] args) {\n        List<String> list = new ArrayList<>(Arrays.asList(\"A\", \"B\", \"C\"));\n        try {\n            for (String s : list) {\n                if (s.equals(\"B\")) list.remove(s);\n            }\n        } catch (ConcurrentModificationException e) {\n            System.out.println(\"Fail-fast: \" + e.getClass().getSimpleName());\n        }\n    }\n}",
+        "output": "Fail-fast: ConcurrentModificationException"
+      },
+      {
+        "id": "w5-q28",
+        "question": "What is ConcurrentModificationException?",
+        "answer": "ConcurrentModificationException is a RuntimeException thrown by fail-fast iterators when a collection is structurally modified during iteration outside the iterator's own modification methods. Common causes: calling list.add/remove during enhanced for-loop, multiple threads modifying without synchronization. Solutions: use Iterator.remove(), ConcurrentHashMap, CopyOnWriteArrayList, or synchronize modifications. It signals a programming error, not a true concurrent thread collision necessarily.",
+        "realWorld": "A Spring service iterating over a cached product list while another thread refreshes the cache triggers this exception. The fix is CopyOnWriteArrayList for the cache or iterating over a snapshot copy.",
+        "code": "import java.util.*;\n\npublic class CMEfixDemo {\n    public static void main(String[] args) {\n        List<String> list = new ArrayList<>(Arrays.asList(\"A\", \"B\", \"C\"));\n        Iterator<String> it = list.iterator();\n        while (it.hasNext()) {\n            String s = it.next();\n            if (s.equals(\"B\")) it.remove(); // safe removal\n        }\n        System.out.println(\"Fixed: \" + list);\n    }\n}",
+        "output": "Fixed: [A, C]"
+      }
+    ]
+  },
+  {
+    "id": "w5-algorithms",
+    "category": "Algorithms & Real-World Selection",
+    "questions": [
+      {
+        "id": "w5-q29",
+        "question": "What is Big O notation?",
+        "answer": "Big O notation describes the upper bound of an algorithm's time or space complexity as input size grows. It focuses on worst-case growth rate, ignoring constants. Common complexities: O(1) constant, O(log n) logarithmic, O(n) linear, O(n log n), O(n²) quadratic. Choosing the right collection depends on Big O of required operations. Interviewers expect you to match operations to appropriate data structures.",
+        "realWorld": "Scanning an ArrayList for contains() is O(n) — unacceptable for million-record lookups. Switching to HashSet gives O(1) average contains(), transforming search performance in recommendation engines.",
+        "code": "public class BigODemo {\n    public static void main(String[] args) {\n        System.out.println(\"ArrayList get by index: O(1)\");\n        System.out.println(\"ArrayList contains: O(n)\");\n        System.out.println(\"HashMap get: O(1) average\");\n        System.out.println(\"TreeMap get: O(log n)\");\n        System.out.println(\"LinkedList add at end: O(1)\");\n    }\n}",
+        "output": "ArrayList get by index: O(1)\nArrayList contains: O(n)\nHashMap get: O(1) average\nTreeMap get: O(log n)\nLinkedList add at end: O(1)"
+      },
+      {
+        "id": "w5-q30",
+        "question": "Which collection would you choose for different real-world scenarios?",
+        "answer": "ArrayList: default list, indexed access, query results. LinkedList/ArrayDeque: queues, deques, frequent end operations. HashSet: unique items, fast membership. TreeSet: sorted unique elements. HashMap: key-value cache, lookups. TreeMap: sorted keys, range queries. ConcurrentHashMap: thread-safe map. PriorityQueue: scheduling by priority. CopyOnWriteArrayList: read-heavy concurrent lists. Choose based on operations needed (get, put, contains, iterate), ordering, uniqueness, and threading.",
+        "realWorld": "E-commerce: HashMap for product cache by ID, ArrayList for cart items, HashSet for wishlist deduplication, PriorityQueue for flash-sale order processing, ConcurrentHashMap for session store in a multi-threaded web server.",
+        "code": "import java.util.*;\nimport java.util.concurrent.*;\n\npublic class CollectionScenariosDemo {\n    public static void main(String[] args) {\n        Map<String, String> sessionCache = new ConcurrentHashMap<>();\n        List<String> cart = new ArrayList<>();\n        Set<String> wishlist = new HashSet<>();\n        Queue<String> orders = new PriorityQueue<>();\n\n        sessionCache.put(\"s1\", \"user-Ravi\");\n        cart.add(\"Laptop\"); cart.add(\"Mouse\");\n        wishlist.add(\"Headphones\");\n        orders.offer(\"ORD-100\");\n\n        System.out.println(sessionCache.get(\"s1\"));\n        System.out.println(\"Cart: \" + cart);\n        System.out.println(\"Wishlist unique: \" + wishlist);\n        System.out.println(\"Next order: \" + orders.poll());\n    }\n}",
+        "output": "user-Ravi\nCart: [Laptop, Mouse]\nWishlist unique: [Headphones]\nNext order: ORD-100"
+      }
+    ]
+  }
+]

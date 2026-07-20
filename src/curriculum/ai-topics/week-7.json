@@ -1,0 +1,42 @@
+{
+  "ai-w7-t1": {
+    "answer": "AI drafts SQL from plain English. Always review: correct tables, JOINs, WHERE clauses, and use **parameterized** queries — never paste user input into strings.",
+    "realWorld": "Ask: 'SELECT students with grade > 80, JOIN courses.' Run in local DB; fix wrong column names AI invented."
+  },
+  "ai-w7-t2": {
+    "answer": "Describe entities and relationships; AI suggests schema. You validate keys, types, and normalization before CREATE TABLE.",
+    "realWorld": "Library system: Book, Member, Loan — AI forgets FK on member_id; you add it."
+  },
+  "ai-w7-t3": {
+    "answer": "AI can sketch ER diagrams from requirements. Check cardinality: one-to-many vs many-to-many needs junction table.",
+    "realWorld": "Student *—* Course requires enrollment table — AI sometimes draws direct many-to-many without it."
+  },
+  "ai-w7-t4": {
+    "answer": "Paste slow query + EXPLAIN output. Ask what to index or rewrite. AI guesses; EXPLAIN proves.",
+    "realWorld": "Full table scan on users.email — add index after verifying selectivity."
+  },
+  "ai-w7-t5": {
+    "answer": "EXPLAIN shows scan type, rows examined, keys used. Ask AI to translate jargon: 'type=ALL means bad for big tables.'",
+    "realWorld": "rows: 500000, type: ALL → add WHERE index or rewrite JOIN order."
+  },
+  "ai-w7-t6": {
+    "answer": "CRUD prompts: specify table, columns, types. Generate INSERT/UPDATE with ? placeholders for JDBC.",
+    "realWorld": "INSERT INTO student (name, roll) VALUES (?, ?) — PreparedStatement pattern."
+  },
+  "ai-w7-t7": {
+    "answer": "AI lists JUnit cases for DAO methods: null params, empty result, duplicate key. You write assertions.",
+    "realWorld": "findById(-1) should return empty Optional, not throw — define behavior first."
+  },
+  "ai-w7-t8": {
+    "answer": "JDBC errors: SQLException message, SQL state, line. Paste to AI with your connection URL (redact password).",
+    "realWorld": "Connection refused → wrong port; Syntax error → AI fixes SQL dialect mismatch."
+  },
+  "ai-w7-t9": {
+    "answer": "Generate table/column comments and schema README. Edit for accuracy — AI doesn't know your naming conventions.",
+    "realWorld": "Schema doc for onboarding — AI first draft, you fix table relationships."
+  },
+  "ai-w7-t10": {
+    "answer": "AI SQL risks: missing indexes, wrong dialect (MySQL vs Postgres), SQL injection in generated examples. Never run unreviewed SQL on prod.",
+    "realWorld": "AI writes SELECT * WHERE id = \" + userId — reject; use PreparedStatement."
+  }
+}

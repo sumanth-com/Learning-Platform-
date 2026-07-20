@@ -1,0 +1,469 @@
+[
+  {
+    "weekId": 1,
+    "slug": "week-1",
+    "title": "Java Fundamentals",
+    "emoji": "",
+    "theme": "candy-blue",
+    "badge": "Start Here",
+    "description": "Core Java syntax, variables, operators, input/output, and your first programs.",
+    "subtopics": [
+      {
+        "slug": "what-is-java",
+        "title": "What is Java?",
+        "category": "java"
+      },
+      {
+        "slug": "jdk-jre-jvm",
+        "title": "JDK, JRE & JVM",
+        "category": "java"
+      },
+      {
+        "slug": "variables-data-types",
+        "title": "Variables & Data Types",
+        "category": "java"
+      },
+      {
+        "slug": "operators",
+        "title": "Operators",
+        "category": "java"
+      },
+      {
+        "slug": "type-casting",
+        "title": "Type Casting",
+        "category": "java"
+      },
+      {
+        "slug": "scanner-input",
+        "title": "User Input (Scanner)",
+        "category": "java"
+      },
+      {
+        "slug": "first-java-program",
+        "title": "First Java Program",
+        "category": "java"
+      }
+    ]
+  },
+  {
+    "weekId": 2,
+    "slug": "week-2",
+    "title": "Control Flow & Methods",
+    "emoji": "",
+    "theme": "candy-pink",
+    "description": "Conditionals, loops, methods, and array manipulation.",
+    "subtopics": [
+      {
+        "slug": "if-else",
+        "title": "If, Else If, Else",
+        "category": "java"
+      },
+      {
+        "slug": "switch",
+        "title": "Switch Statement",
+        "category": "java"
+      },
+      {
+        "slug": "for-loop",
+        "title": "For Loop",
+        "category": "java"
+      },
+      {
+        "slug": "while-loop",
+        "title": "While & Do-While",
+        "category": "java"
+      },
+      {
+        "slug": "methods",
+        "title": "Methods",
+        "category": "java"
+      },
+      {
+        "slug": "arrays-1d",
+        "title": "1D Arrays",
+        "category": "java"
+      },
+      {
+        "slug": "arrays-2d",
+        "title": "2D Arrays",
+        "category": "java"
+      }
+    ]
+  },
+  {
+    "weekId": 3,
+    "slug": "week-3",
+    "title": "Object-Oriented Programming",
+    "emoji": "",
+    "theme": "candy-purple",
+    "description": "Classes, objects, inheritance, polymorphism, and interfaces.",
+    "subtopics": [
+      {
+        "slug": "classes-objects",
+        "title": "Classes & Objects",
+        "category": "oop"
+      },
+      {
+        "slug": "constructors",
+        "title": "Constructors",
+        "category": "oop"
+      },
+      {
+        "slug": "encapsulation",
+        "title": "Encapsulation",
+        "category": "oop"
+      },
+      {
+        "slug": "inheritance",
+        "title": "Inheritance",
+        "category": "oop"
+      },
+      {
+        "slug": "polymorphism",
+        "title": "Polymorphism",
+        "category": "oop"
+      },
+      {
+        "slug": "interfaces",
+        "title": "Interfaces",
+        "category": "oop"
+      },
+      {
+        "slug": "abstraction",
+        "title": "Abstraction",
+        "category": "oop"
+      }
+    ]
+  },
+  {
+    "weekId": 4,
+    "slug": "week-4",
+    "title": "Exceptions, Files & Packages",
+    "emoji": "",
+    "theme": "candy-cyan",
+    "description": "Error handling, file I/O, and organizing code into packages.",
+    "subtopics": [
+      {
+        "slug": "try-catch",
+        "title": "Try-Catch-Finally",
+        "category": "java"
+      },
+      {
+        "slug": "throw-throws",
+        "title": "Throw & Throws",
+        "category": "java"
+      },
+      {
+        "slug": "custom-exceptions",
+        "title": "Custom Exceptions",
+        "category": "java"
+      },
+      {
+        "slug": "file-io",
+        "title": "File Reading & Writing",
+        "category": "java"
+      },
+      {
+        "slug": "packages",
+        "title": "Packages & Modules",
+        "category": "java"
+      }
+    ]
+  },
+  {
+    "weekId": 5,
+    "slug": "week-5",
+    "title": "Collections, Generics & Java 8",
+    "emoji": "",
+    "theme": "candy-gold",
+    "description": "ArrayList, HashMap, generics, lambdas, and the Streams API.",
+    "subtopics": [
+      {
+        "slug": "arraylist",
+        "title": "ArrayList",
+        "category": "collections"
+      },
+      {
+        "slug": "hashmap",
+        "title": "HashMap",
+        "category": "collections"
+      },
+      {
+        "slug": "hashset-treeset",
+        "title": "HashSet & TreeSet",
+        "category": "collections"
+      },
+      {
+        "slug": "generics",
+        "title": "Generics",
+        "category": "java8"
+      },
+      {
+        "slug": "lambda-streams",
+        "title": "Lambda & Streams",
+        "category": "java8"
+      }
+    ]
+  },
+  {
+    "weekId": 6,
+    "slug": "week-6",
+    "title": "Multithreading & Functional Programming",
+    "emoji": "",
+    "theme": "candy-teal",
+    "description": "Threads, synchronization, executors, and CompletableFuture.",
+    "subtopics": [
+      {
+        "slug": "thread-basics",
+        "title": "Thread Basics",
+        "category": "multithreading"
+      },
+      {
+        "slug": "synchronization",
+        "title": "Synchronization",
+        "category": "multithreading"
+      },
+      {
+        "slug": "deadlock",
+        "title": "Deadlock & Prevention",
+        "category": "multithreading"
+      },
+      {
+        "slug": "executor-service",
+        "title": "ExecutorService",
+        "category": "multithreading"
+      },
+      {
+        "slug": "completable-future",
+        "title": "CompletableFuture",
+        "category": "multithreading"
+      }
+    ]
+  },
+  {
+    "weekId": 7,
+    "slug": "week-7",
+    "title": "DSA Foundations",
+    "emoji": "",
+    "theme": "candy-orange",
+    "description": "Arrays, strings, linked lists, stacks, and queues.",
+    "subtopics": [
+      {
+        "slug": "time-complexity",
+        "title": "Time & Space Complexity",
+        "category": "dsa"
+      },
+      {
+        "slug": "array-problems",
+        "title": "Array Problems",
+        "category": "dsa"
+      },
+      {
+        "slug": "string-problems",
+        "title": "String Problems",
+        "category": "dsa"
+      },
+      {
+        "slug": "linked-list",
+        "title": "Linked List",
+        "category": "dsa"
+      },
+      {
+        "slug": "stack-queue",
+        "title": "Stack & Queue",
+        "category": "dsa"
+      }
+    ]
+  },
+  {
+    "weekId": 8,
+    "slug": "week-8",
+    "title": "Advanced DSA",
+    "emoji": "",
+    "theme": "candy-red",
+    "description": "Trees, graphs, dynamic programming, and hashing.",
+    "subtopics": [
+      {
+        "slug": "binary-search",
+        "title": "Binary Search",
+        "category": "dsa"
+      },
+      {
+        "slug": "trees",
+        "title": "Trees & BST",
+        "category": "dsa"
+      },
+      {
+        "slug": "graphs",
+        "title": "Graphs BFS & DFS",
+        "category": "dsa"
+      },
+      {
+        "slug": "dynamic-programming",
+        "title": "Dynamic Programming",
+        "category": "dsa"
+      },
+      {
+        "slug": "hashing",
+        "title": "Hashing",
+        "category": "dsa"
+      }
+    ]
+  },
+  {
+    "weekId": 9,
+    "slug": "week-9",
+    "title": "Database Engineering",
+    "emoji": "",
+    "theme": "candy-indigo",
+    "description": "SQL, MySQL, JDBC, normalization, transactions, indexes, and MongoDB.",
+    "subtopics": [
+      {
+        "slug": "sql-select",
+        "title": "SQL SELECT & WHERE",
+        "category": "sql"
+      },
+      {
+        "slug": "sql-joins",
+        "title": "SQL JOINs",
+        "category": "sql"
+      },
+      {
+        "slug": "sql-aggregations",
+        "title": "GROUP BY & HAVING",
+        "category": "sql"
+      },
+      {
+        "slug": "normalization",
+        "title": "Database Normalization",
+        "category": "database-design"
+      },
+      {
+        "slug": "transactions",
+        "title": "Transactions & ACID",
+        "category": "sql"
+      },
+      {
+        "slug": "indexes",
+        "title": "Indexes & Performance",
+        "category": "database-design"
+      },
+      {
+        "slug": "jdbc",
+        "title": "JDBC Connection & CRUD",
+        "category": "jdbc"
+      },
+      {
+        "slug": "mongodb",
+        "title": "MongoDB Documents",
+        "category": "mongodb"
+      }
+    ]
+  },
+  {
+    "weekId": 10,
+    "slug": "week-10",
+    "title": "Spring Boot & REST APIs",
+    "emoji": "",
+    "theme": "candy-green",
+    "description": "Spring, Spring Boot, JPA, REST design, validation, and Swagger.",
+    "subtopics": [
+      {
+        "slug": "spring-core",
+        "title": "Spring Framework Core",
+        "category": "spring-boot"
+      },
+      {
+        "slug": "spring-boot",
+        "title": "Spring Boot Setup",
+        "category": "spring-boot"
+      },
+      {
+        "slug": "jpa-hibernate",
+        "title": "JPA & Hibernate",
+        "category": "hibernate"
+      },
+      {
+        "slug": "rest-design",
+        "title": "REST API Design",
+        "category": "rest-api"
+      },
+      {
+        "slug": "validation-pagination",
+        "title": "Validation & Pagination",
+        "category": "rest-api"
+      },
+      {
+        "slug": "swagger",
+        "title": "Swagger / OpenAPI",
+        "category": "rest-api"
+      }
+    ]
+  },
+  {
+    "weekId": 11,
+    "slug": "week-11",
+    "title": "Security",
+    "emoji": "",
+    "theme": "candy-royal",
+    "description": "Spring Security, JWT, OAuth, authentication, authorization, and RBAC.",
+    "subtopics": [
+      {
+        "slug": "spring-security",
+        "title": "Spring Security Basics",
+        "category": "security"
+      },
+      {
+        "slug": "jwt-auth",
+        "title": "JWT Authentication",
+        "category": "security"
+      },
+      {
+        "slug": "oauth",
+        "title": "OAuth 2.0",
+        "category": "security"
+      },
+      {
+        "slug": "rbac",
+        "title": "Role-Based Access Control",
+        "category": "security"
+      }
+    ]
+  },
+  {
+    "weekId": 12,
+    "slug": "week-12",
+    "title": "Projects, AI & Interview Prep",
+    "emoji": "",
+    "theme": "candy-indigo",
+    "badge": "Graduate",
+    "description": "Capstone projects, mock interviews, resume, GitHub portfolio, and AI skills.",
+    "subtopics": [
+      {
+        "slug": "capstone-backend",
+        "title": "Capstone Backend Project",
+        "category": "spring-boot"
+      },
+      {
+        "slug": "git-workflow",
+        "title": "Git Workflow",
+        "category": "git"
+      },
+      {
+        "slug": "mock-interview",
+        "title": "Mock Interview Prep",
+        "category": "ai"
+      },
+      {
+        "slug": "ai-coding",
+        "title": "AI-Assisted Coding",
+        "category": "ai"
+      },
+      {
+        "slug": "github-portfolio",
+        "title": "GitHub Portfolio",
+        "category": "git"
+      }
+    ]
+  }
+]

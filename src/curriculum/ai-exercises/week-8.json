@@ -1,0 +1,42 @@
+{
+  "ai-w8-e1": {
+    "answer": "Paste controller code. Ask for OpenAPI-style doc. Compare with springdoc output.",
+    "realWorld": "Accurate docs = fewer Slack questions from frontend."
+  },
+  "ai-w8-e2": {
+    "answer": "Describe your API. Ask REST design review: nouns, verbs, status codes. Fix one endpoint.",
+    "realWorld": "POST /createUser → POST /users — resource-oriented naming."
+  },
+  "ai-w8-e3": {
+    "answer": "List endpoints. Ask for better names and URI structure. Apply one rename with deprecation plan.",
+    "realWorld": "/getAllStudents → GET /students — HTTP verb carries action."
+  },
+  "ai-w8-e4": {
+    "answer": "Ask when to use 200, 201, 400, 401, 404, 500. Map each to your API scenario.",
+    "realWorld": "201 + Location header on create; 404 when student id not found."
+  },
+  "ai-w8-e5": {
+    "answer": "Generate Postman tests for login + protected route. Import and run.",
+    "realWorld": "Test script stores JWT from login, uses in next request header."
+  },
+  "ai-w8-e6": {
+    "answer": "Ask sample JSON request bodies for your DTOs. Validate against @Valid annotations.",
+    "realWorld": "Missing required field → 400 with field errors — test that case."
+  },
+  "ai-w8-e7": {
+    "answer": "List validation rules AI suggests: email format, password length, @NotNull. Add to DTO.",
+    "realWorld": "@Email, @Size(min=8) on RegisterRequest — standard pattern."
+  },
+  "ai-w8-e8": {
+    "answer": "REST checklist: stateless, cache headers, HATEOAS optional, consistent errors. Score your API.",
+    "realWorld": "Same error JSON shape on all 400s — {code, message, field}."
+  },
+  "ai-w8-e9": {
+    "answer": "Paste API with hardcoded secrets or no auth. Ask security review. Fix findings.",
+    "realWorld": "API key in query string → move to Authorization header."
+  },
+  "ai-w8-e10": {
+    "answer": "Ask REST architecture: client, gateway, service, DB. Draw for your project.",
+    "realWorld": "Mobile → API Gateway → Spring Boot → PostgreSQL — interview whiteboard staple."
+  }
+}

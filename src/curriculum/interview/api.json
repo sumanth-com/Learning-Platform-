@@ -1,0 +1,233 @@
+{
+  "id": "api",
+  "title": "API Interview Questions",
+  "subtitle": "30 REST & API design questions",
+  "categories": [
+    {
+      "id": "api-rest",
+      "category": "REST Fundamentals",
+      "questions": [
+        {
+          "id": "api-q01",
+          "question": "What is REST?",
+          "answer": "REST (Representational State Transfer) is an architectural style for designing networked applications. It treats resources as the core abstraction—each resource is identified by a URI and manipulated through standard HTTP methods. RESTful APIs are stateless: every request must contain all information needed to process it, with no server-side session stored between calls. Responses typically use JSON or XML representations. In Spring Boot, you build REST APIs with @RestController and return domain objects that Jackson serializes to JSON automatically.",
+          "realWorld": "E-commerce platforms expose REST APIs so mobile apps, web frontends, and partner systems can list products, manage carts, and process orders using the same endpoints. A GET /api/products/42 returns product details; POST /api/orders creates a new order—all over HTTP without custom protocols.",
+          "code": "@RestController\n@RequestMapping(\"/api/products\")\npublic class ProductController {\n\n    @GetMapping(\"/{id}\")\n    public Product getProduct(@PathVariable Long id) {\n        return productService.findById(id);\n    }\n\n    @PostMapping\n    public ResponseEntity<Product> createProduct(@RequestBody ProductDto dto) {\n        Product saved = productService.save(dto);\n        return ResponseEntity.status(HttpStatus.CREATED).body(saved);\n    }\n}"
+        },
+        {
+          "id": "api-q02",
+          "question": "What are the REST constraints?",
+          "answer": "Roy Fielding defined six constraints for REST: (1) Client-Server—separation of UI and data storage enables independent evolution. (2) Stateless—each request is self-contained; the server holds no client context between requests. (3) Cacheable—responses must declare whether they can be cached to improve performance. (4) Uniform Interface—consistent use of URIs, HTTP methods, and hypermedia. (5) Layered System—clients cannot tell if connected directly to the server or through intermediaries like load balancers. (6) Code on Demand (optional)—server can extend client functionality by sending executable code. Together these enable scalability, reliability, and simplicity.",
+          "realWorld": "A CDN caches GET /api/articles responses (Cacheable). Your React app talks to an API gateway, which routes to microservices (Layered System). Session state lives in JWT tokens, not server memory (Stateless)—standard pattern in cloud-native Java apps."
+        },
+        {
+          "id": "api-q03",
+          "question": "REST vs SOAP — what is the difference?",
+          "answer": "REST is an architectural style using HTTP with lightweight formats like JSON; SOAP is a protocol with strict XML envelopes, WSDL contracts, and built-in security standards. REST is simpler, faster to develop, and better suited for public APIs and mobile clients. SOAP offers ACID-like reliability features, WS-Security, and formal contracts—common in banking, healthcare, and legacy enterprise integrations. REST uses HTTP status codes for errors; SOAP wraps everything in XML fault elements regardless of transport success.",
+          "realWorld": "A fintech startup exposes REST/JSON APIs for its mobile app. A legacy bank still uses SOAP/XML for inter-bank transfers because regulators require WS-Security and formal WSDL contracts. Modern Java teams use Spring Web MVC/REST; older integrations may use Spring-WS for SOAP."
+        },
+        {
+          "id": "api-q04",
+          "question": "REST vs GraphQL — when would you choose each?",
+          "answer": "REST exposes fixed resource endpoints; clients may over-fetch or under-fetch data across multiple round trips. GraphQL provides a single endpoint where clients specify exactly the fields they need in one query. Choose REST for simple CRUD, caching with HTTP, file uploads, and broad public API familiarity. Choose GraphQL when clients have diverse data needs (mobile vs web), complex nested relationships, or you want to reduce chattiness. REST scales caching naturally; GraphQL requires careful query depth limiting and caching strategies.",
+          "realWorld": "GitHub's REST API returns full repository objects; their GraphQL API lets you fetch repo name, star count, and latest issue title in one request. A Java backend might offer REST for most services and add GraphQL (via Spring GraphQL) only for dashboard aggregations."
+        },
+        {
+          "id": "api-q05",
+          "question": "Explain HTTP methods used in REST APIs.",
+          "answer": "GET retrieves a resource without side effects (read-only). POST creates a new resource or triggers an action. PUT replaces an entire resource at a given URI (full update). PATCH applies partial updates to a resource. DELETE removes a resource. HEAD is like GET but returns headers only. OPTIONS describes supported methods (used in CORS preflight). In REST design, URIs name resources (nouns), and HTTP verbs express actions—e.g., GET /users/5 reads user 5; DELETE /users/5 removes them.",
+          "realWorld": "An HR system uses POST /employees to hire, PUT /employees/10 to replace all fields after a promotion, PATCH /employees/10 to update only salary, and GET /employees?department=engineering for listing.",
+          "code": "@PatchMapping(\"/{id}/status\")\npublic Employee updateStatus(@PathVariable Long id,\n                             @RequestBody StatusUpdateDto dto) {\n    return employeeService.patchStatus(id, dto.getStatus());\n}\n\n@DeleteMapping(\"/{id}\")\n@ResponseStatus(HttpStatus.NO_CONTENT)\npublic void deleteEmployee(@PathVariable Long id) {\n    employeeService.delete(id);\n}"
+        },
+        {
+          "id": "api-q06",
+          "question": "What is the difference between PUT and PATCH?",
+          "answer": "PUT performs a full replacement: the client sends the complete resource representation, and omitted fields are typically set to null or defaults. PUT is idempotent—repeating the same request yields the same result. PATCH applies a partial update: only changed fields are sent, leaving others untouched. PATCH may not be idempotent depending on implementation (e.g., increment operations). Use PUT when replacing entire records; use PATCH for updating one or two fields to save bandwidth and avoid accidental overwrites.",
+          "realWorld": "Updating a user profile: PATCH /users/7 with {\"phone\": \"+91-9876543210\"} changes only the phone. PUT /users/7 requires sending name, email, phone, address—missing fields could wipe existing data if not handled carefully.",
+          "code": "// PUT — full replace\n@PutMapping(\"/{id}\")\npublic User replaceUser(@PathVariable Long id, @RequestBody UserDto dto) {\n    return userService.replace(id, dto); // all fields required\n}\n\n// PATCH — partial update\n@PatchMapping(\"/{id}\")\npublic User patchUser(@PathVariable Long id, @RequestBody Map<String, Object> updates) {\n    return userService.applyPartialUpdate(id, updates);\n}"
+        },
+        {
+          "id": "api-q07",
+          "question": "What are safe HTTP methods?",
+          "answer": "Safe methods do not modify server state—they are read-only operations. GET, HEAD, and OPTIONS are safe. Calling GET /api/orders/100 multiple times does not change any data. Safe does not mean 'no side effects at all'—logging and analytics may occur—but the resource state must remain unchanged. Non-safe methods (POST, PUT, PATCH, DELETE) alter server state and require careful authorization, validation, and idempotency considerations.",
+          "realWorld": "Search engines crawl GET links safely. If DELETE were safe, accidental crawler visits would wipe data—hence crawlers only follow safe methods. Monitoring tools poll GET /health endpoints without risk."
+        },
+        {
+          "id": "api-q08",
+          "question": "What are idempotent HTTP methods?",
+          "answer": "An idempotent method produces the same effect on the server no matter how many times it is repeated with the same input. GET, PUT, DELETE, HEAD, and OPTIONS are idempotent. POST is not—each call typically creates a new resource (two POSTs create two orders). PUT is idempotent because sending the same full resource twice results in the same final state. PATCH is generally not idempotent (e.g., {\"salary\": \"+5000\"} applied twice doubles the raise). Idempotency matters for retries: network failures should not cause duplicate side effects.",
+          "realWorld": "Payment gateways use idempotency keys on POST requests because POST is not idempotent. DELETE /payments/txn-123 called twice: first deletes, second returns 404—state is the same (payment gone).",
+          "code": "@PostMapping(\"/orders\")\npublic ResponseEntity<Order> createOrder(\n        @RequestHeader(\"Idempotency-Key\") String key,\n        @RequestBody OrderRequest request) {\n    return orderService.createIfAbsent(key, request)\n        .map(o -> ResponseEntity.status(HttpStatus.CREATED).body(o))\n        .orElse(ResponseEntity.ok(orderService.findByKey(key)));\n}"
+        },
+        {
+          "id": "api-q09",
+          "question": "Explain important HTTP status codes for REST APIs.",
+          "answer": "2xx Success: 200 OK (successful GET/PUT/PATCH), 201 Created (POST created resource—include Location header), 204 No Content (successful DELETE with no body). 3xx Redirection: 301/302 for redirects, 304 Not Modified for caching. 4xx Client Error: 400 Bad Request (validation failure), 401 Unauthorized (not authenticated), 403 Forbidden (authenticated but not permitted), 404 Not Found, 409 Conflict (duplicate or state conflict), 422 Unprocessable Entity (semantic errors). 5xx Server Error: 500 Internal Server Error, 503 Service Unavailable. Use precise codes so clients handle errors programmatically.",
+          "realWorld": "POST /users with duplicate email returns 409 Conflict. Missing JWT returns 401; valid JWT but wrong role returns 403. During deployment, load balancer returns 503 until the new Spring Boot instance passes health checks.",
+          "code": "@ExceptionHandler(ResourceNotFoundException.class)\n@ResponseStatus(HttpStatus.NOT_FOUND)\npublic ErrorResponse handleNotFound(ResourceNotFoundException ex) {\n    return new ErrorResponse(\"NOT_FOUND\", ex.getMessage());\n}\n\n@PostMapping\npublic ResponseEntity<User> create(@RequestBody @Valid UserDto dto) {\n    User user = userService.create(dto);\n    URI location = URI.create(\"/api/users/\" + user.getId());\n    return ResponseEntity.created(location).body(user);\n}"
+        },
+        {
+          "id": "api-q10",
+          "question": "What are important HTTP headers in REST APIs?",
+          "answer": "Request headers: Authorization (Bearer JWT or Basic credentials), Content-Type (application/json), Accept (desired response format), Idempotency-Key, X-Request-ID (tracing). Response headers: Content-Type, Location (URI of created resource), Cache-Control, ETag (optimistic concurrency), X-RateLimit-Remaining. CORS headers: Access-Control-Allow-Origin, Access-Control-Allow-Methods. Security: Strict-Transport-Security. Custom headers should use X- prefix or registered names. Headers carry metadata separate from the body—authentication, caching, and content negotiation all rely on them.",
+          "realWorld": "Mobile apps send Authorization: Bearer eyJhbG... on every API call. ETag headers enable conditional GET—if the client's cached ETag matches, server returns 304 and saves bandwidth on large product catalogs.",
+          "code": "@GetMapping(\"/{id}\")\npublic ResponseEntity<Product> getProduct(@PathVariable Long id,\n        @RequestHeader(value = \"If-None-Match\", required = false) String ifNoneMatch) {\n    Product product = productService.findById(id);\n    String etag = \"\\\"\" + product.getVersion() + \"\\\"\";\n    if (etag.equals(ifNoneMatch)) {\n        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(etag).build();\n    }\n    return ResponseEntity.ok().eTag(etag).body(product);\n}"
+        }
+      ]
+    },
+    {
+      "id": "api-design",
+      "category": "API Design & Security",
+      "questions": [
+        {
+          "id": "api-q11",
+          "question": "What is a DTO and why use it in APIs?",
+          "answer": "A Data Transfer Object (DTO) is a plain object that carries data between layers or across network boundaries without business logic. In REST APIs, DTOs decouple your internal entity model from the API contract—preventing over-exposure of sensitive fields (passwords, internal IDs), avoiding lazy-loading serialization errors, and allowing API evolution independent of JPA entities. Use separate DTOs for request (CreateUserRequest) and response (UserResponse) when shapes differ. Map between entities and DTOs with MapStruct or manual mappers.",
+          "realWorld": "Your User entity has passwordHash and internal audit fields. UserResponseDto exposes only id, name, and email to clients. CreateOrderRequestDto accepts productId and quantity without exposing database-generated fields.",
+          "code": "public record UserResponseDto(Long id, String name, String email) {}\n\npublic record CreateUserRequest(\n    @NotBlank String name,\n    @Email String email,\n    @Size(min = 8) String password\n) {}\n\n@PostMapping\npublic UserResponseDto register(@RequestBody @Valid CreateUserRequest req) {\n    User user = userService.register(req);\n    return new UserResponseDto(user.getId(), user.getName(), user.getEmail());\n}"
+        },
+        {
+          "id": "api-q12",
+          "question": "How do you implement API versioning?",
+          "answer": "Common strategies: (1) URI path—/api/v1/users (most visible, easy to route). (2) Query parameter—/api/users?version=1. (3) Header—Accept: application/vnd.myapp.v2+json. (4) Custom header—X-API-Version: 2. URI versioning is simplest and most common in Spring Boot. Version when making breaking changes (removing fields, changing behavior). Maintain backward compatibility when possible; deprecate old versions with sunset headers before removal.",
+          "realWorld": "Stripe maintains /v1/charges while introducing breaking changes in new versions. Your Spring app uses @RequestMapping(\"/api/v1/orders\") and later adds v2 with a redesigned response shape while v1 runs for 12 months.",
+          "code": "@RestController\n@RequestMapping(\"/api/v1/products\")\npublic class ProductControllerV1 { /* ... */ }\n\n@RestController\n@RequestMapping(\"/api/v2/products\")\npublic class ProductControllerV2 {\n    // breaking change: price moved to nested pricing object\n}"
+        },
+        {
+          "id": "api-q13",
+          "question": "How do you implement pagination in REST APIs?",
+          "answer": "Never return unbounded lists. Use page-based pagination (page, size, sort) or cursor-based pagination for large/real-time datasets. Return metadata: totalElements, totalPages, current page, and links (first, next, prev, last). Spring Data provides Page<T> with Pageable parameter. Default page size (e.g., 20) with a max cap (e.g., 100) prevents abuse. Cursor pagination uses an opaque token (last seen ID/timestamp) and scales better for infinite feeds.",
+          "realWorld": "GET /api/transactions?page=2&size=50&sort=createdAt,desc returns 50 transactions with metadata. Admin dashboards with millions of rows use cursor-based ?after=txn_abc123 for stable, efficient scrolling.",
+          "code": "@GetMapping\npublic Page<ProductDto> listProducts(\n        @RequestParam(defaultValue = \"0\") int page,\n        @RequestParam(defaultValue = \"20\") int size,\n        @RequestParam(defaultValue = \"name,asc\") String sort) {\n    Pageable pageable = PageRequest.of(page, Math.min(size, 100),\n        Sort.by(Sort.Direction.fromString(sort.split(\",\")[1]), sort.split(\",\")[0]));\n    return productService.findAll(pageable).map(ProductDto::from);\n}",
+          "output": "{\n  \"content\": [{ \"id\": 1, \"name\": \"Laptop\" }],\n  \"totalElements\": 240,\n  \"totalPages\": 12,\n  \"number\": 0,\n  \"size\": 20,\n  \"first\": true,\n  \"last\": false\n}"
+        },
+        {
+          "id": "api-q14",
+          "question": "What is Swagger / OpenAPI and how is it used?",
+          "answer": "OpenAPI (formerly Swagger specification) is a standard for describing REST API structure—endpoints, parameters, request/response schemas, and authentication. Swagger UI renders interactive documentation where developers can try APIs in the browser. In Spring Boot 3, springdoc-openapi auto-generates specs from @RestController annotations, @Schema, and @Operation. Benefits: contract-first collaboration, client SDK generation, and consistent documentation that stays in sync with code.",
+          "realWorld": "Your team shares http://localhost:8080/swagger-ui.html with frontend developers. They explore endpoints, see required fields, and test POST /orders without writing curl commands. CI validates that the OpenAPI spec matches deployed controllers.",
+          "code": "@Operation(summary = \"Get product by ID\")\n@ApiResponses({\n    @ApiResponse(responseCode = \"200\", description = \"Product found\"),\n    @ApiResponse(responseCode = \"404\", description = \"Product not found\")\n})\n@GetMapping(\"/{id}\")\npublic ProductDto getProduct(@Parameter(description = \"Product ID\") @PathVariable Long id) {\n    return productService.findDto(id);\n}"
+        },
+        {
+          "id": "api-q15",
+          "question": "What is Postman and how do developers use it?",
+          "answer": "Postman is an API development platform for designing, testing, documenting, and monitoring HTTP APIs. Developers create collections of requests with environments (dev/staging/prod base URLs), store auth tokens, write pre-request scripts and test assertions, and share collections with teams. It supports automated test runs in CI via Newman CLI. Postman complements Swagger—Swagger documents the contract; Postman stores practical test scenarios, chained requests, and environment-specific configurations.",
+          "realWorld": "QA saves a Postman collection with login → create order → verify payment flow. Pre-request script extracts JWT from login response and sets it on subsequent requests. Newman runs the collection in GitHub Actions after each deploy."
+        },
+        {
+          "id": "api-q16",
+          "question": "What is CORS and how do you handle it in Spring Boot?",
+          "answer": "Cross-Origin Resource Sharing (CORS) is a browser security mechanism that blocks JavaScript from calling APIs on a different origin (scheme + domain + port) unless the server explicitly permits it via Access-Control-Allow-Origin headers. Simple requests go directly; preflight OPTIONS requests check permissions for non-simple methods or custom headers. Configure allowed origins, methods, and headers in Spring with @CrossOrigin on controllers or a global WebMvcConfigurer. Never use * with credentials in production.",
+          "realWorld": "React app at http://localhost:3000 calls Spring Boot API at http://localhost:8080—different ports = different origins. Without CORS config, the browser blocks responses even though Postman works fine.",
+          "code": "@Configuration\npublic class CorsConfig implements WebMvcConfigurer {\n    @Override\n    public void addCorsMappings(CorsRegistry registry) {\n        registry.addMapping(\"/api/**\")\n            .allowedOrigins(\"http://localhost:3000\")\n            .allowedMethods(\"GET\", \"POST\", \"PUT\", \"PATCH\", \"DELETE\")\n            .allowedHeaders(\"*\")\n            .allowCredentials(true);\n    }\n}"
+        },
+        {
+          "id": "api-q17",
+          "question": "What is CSRF and is it relevant for REST APIs?",
+          "answer": "Cross-Site Request Forgery (CSRF) tricks an authenticated user's browser into submitting unwanted requests to a site where they are logged in, exploiting cookie-based sessions. CSRF protection (CSRF tokens) is critical for traditional server-rendered forms with session cookies. For stateless REST APIs using JWT in Authorization headers (not cookies), CSRF risk is minimal because browsers do not automatically attach custom headers on cross-origin requests. If you store JWTs in cookies, enable CSRF protection or use SameSite=Strict cookies.",
+          "realWorld": "A bank's web app using session cookies needs CSRF tokens on fund transfer forms. A mobile app sending Bearer tokens in headers to a Spring Boot API typically disables CSRF in SecurityFilterChain because the attack vector does not apply.",
+          "code": "@Bean\nSecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.csrf(csrf -> csrf.disable()) // OK for stateless JWT APIs\n        .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))\n        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated());\n    return http.build();\n}"
+        },
+        {
+          "id": "api-q18",
+          "question": "Explain OAuth 2.0 in the context of APIs.",
+          "answer": "OAuth 2.0 is an authorization framework where a resource owner grants limited access to their data without sharing credentials. Key roles: Resource Owner (user), Client (app), Authorization Server (issues tokens), Resource Server (API). Common flows: Authorization Code (web/mobile apps—most secure), Client Credentials (service-to-service), Refresh Token (renew access). Access tokens are sent as Bearer tokens. OpenID Connect (OIDC) adds identity on top of OAuth 2.0. Spring Security OAuth2 Resource Server validates JWTs from providers like Keycloak, Auth0, or Azure AD.",
+          "realWorld": "'Login with Google' on your app: user consents, Google returns an authorization code, your backend exchanges it for tokens, then calls Google APIs or issues your own JWT. Microservices validate JWT signatures without calling the auth server on every request.",
+          "code": "@Bean\nSecurityFilterChain security(HttpSecurity http) throws Exception {\n    http.oauth2ResourceServer(oauth2 ->\n        oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter())));\n    return http.build();\n}"
+        },
+        {
+          "id": "api-q19",
+          "question": "What are API keys and when should you use them?",
+          "answer": "API keys are opaque tokens issued to identify and authenticate calling applications (not individual users). They are typically sent in headers (X-API-Key) or query parameters. Use API keys for server-to-server integrations, public data APIs, and rate limiting by tenant—not as the sole security for sensitive user data. Keys should be rotatable, scoped (read-only vs write), and never committed to source control. Combine with OAuth for user-level authorization; use keys for identifying which partner app is calling.",
+          "realWorld": "Weather API gives each developer an API key with 1000 free calls/day. Your backend stores keys in environment variables; Spring filter validates X-API-Key against a database before allowing /api/public/* endpoints.",
+          "code": "@Component\npublic class ApiKeyFilter extends OncePerRequestFilter {\n    @Override\n    protected void doFilterInternal(HttpServletRequest req,\n            HttpServletResponse res, FilterChain chain) throws IOException, ServletException {\n        String key = req.getHeader(\"X-API-Key\");\n        if (!apiKeyService.isValid(key)) {\n            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, \"Invalid API key\");\n            return;\n        }\n        chain.doFilter(req, res);\n    }\n}"
+        },
+        {
+          "id": "api-q20",
+          "question": "What is rate limiting and why is it important?",
+          "answer": "Rate limiting restricts how many requests a client can make in a time window to prevent abuse, ensure fair usage, and protect backend resources. Implement using token bucket or sliding window algorithms. Return 429 Too Many Requests with Retry-After header when limits are exceeded. Include X-RateLimit-Limit and X-RateLimit-Remaining headers so clients can self-throttle. Limits can apply per API key, IP, or user. Essential for public APIs and protection against DDoS and credential stuffing.",
+          "realWorld": "Twitter API allows 300 requests per 15-minute window per app. Your Spring Boot API uses Redis-backed rate limiting: free tier gets 100 req/hour, premium gets 10,000. Exceeding limit returns 429 with Retry-After: 3600.",
+          "code": "@GetMapping(\"/public/data\")\n@RateLimiter(name = \"publicApi\", fallbackMethod = \"rateLimitFallback\")\npublic List<DataDto> getData() {\n    return dataService.findAll();\n}\n\npublic List<DataDto> rateLimitFallback(Exception ex) {\n    throw new TooManyRequestsException(\"Rate limit exceeded. Retry later.\");\n}"
+        }
+      ]
+    },
+    {
+      "id": "api-spring",
+      "category": "Spring Boot REST",
+      "questions": [
+        {
+          "id": "api-q21",
+          "question": "What is ResponseEntity and when do you use it?",
+          "answer": "ResponseEntity<T> is a Spring class representing the full HTTP response—status code, headers, and body. Use it when you need control beyond @ResponseStatus: return 201 Created with Location header, 204 No Content with empty body, conditional responses with custom headers, or different status codes based on business logic. For simple 200 OK responses, returning the object directly is sufficient. ResponseEntity gives precise REST semantics.",
+          "realWorld": "Creating a resource returns 201 with Location: /api/orders/5501. Deleting returns 204 with no body. Conditional update returns 412 Precondition Failed when ETag doesn't match.",
+          "code": "@PostMapping\npublic ResponseEntity<OrderDto> create(@RequestBody OrderDto dto) {\n    OrderDto created = orderService.create(dto);\n    URI location = ServletUriComponentsBuilder\n        .fromCurrentRequest().path(\"/{id}\")\n        .buildAndExpand(created.id()).toUri();\n    return ResponseEntity.created(location).body(created);\n}\n\n@DeleteMapping(\"/{id}\")\npublic ResponseEntity<Void> delete(@PathVariable Long id) {\n    orderService.delete(id);\n    return ResponseEntity.noContent().build();\n}"
+        },
+        {
+          "id": "api-q22",
+          "question": "How do you handle exceptions in REST APIs?",
+          "answer": "Use @ControllerAdvice with @ExceptionHandler methods to centralize error handling—avoid try-catch in every controller. Map domain exceptions to appropriate HTTP status codes and return consistent error response bodies (timestamp, status, error code, message, field errors). Log 5xx errors with stack traces; return sanitized messages to clients. Spring's ProblemDetail (RFC 7807) standardizes error format in Boot 3. Never expose internal exception details in production responses.",
+          "realWorld": "Validation fails → 400 with field-level errors. ProductNotFoundException → 404. DuplicateOrderException → 409. Unexpected NullPointerException → 500 with generic message, full trace in logs/Sentry.",
+          "code": "@RestControllerAdvice\npublic class GlobalExceptionHandler {\n\n    @ExceptionHandler(MethodArgumentNotValidException.class)\n    @ResponseStatus(BAD_REQUEST)\n    public Map<String, Object> handleValidation(MethodArgumentNotValidException ex) {\n        Map<String, String> fields = ex.getBindingResult().getFieldErrors().stream()\n            .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));\n        return Map.of(\"status\", 400, \"errors\", fields);\n    }\n\n    @ExceptionHandler(ResourceNotFoundException.class)\n    @ResponseStatus(NOT_FOUND)\n    public ProblemDetail handleNotFound(ResourceNotFoundException ex) {\n        return ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());\n    }\n}"
+        },
+        {
+          "id": "api-q23",
+          "question": "How do you validate request data in Spring REST APIs?",
+          "answer": "Use Jakarta Bean Validation annotations (@NotNull, @NotBlank, @Email, @Size, @Min, @Pattern) on DTO fields. Activate validation with @Valid or @Validated on @RequestBody, @PathVariable, or @RequestParam. Custom validators implement ConstraintValidator for complex rules. Return 400 Bad Request with structured field errors via MethodArgumentNotValidException handler. Validate at the API boundary; don't rely solely on database constraints.",
+          "realWorld": "Registration API rejects empty names, invalid emails, and passwords under 8 characters before hitting the service layer. Custom @UniqueEmail validator checks database uniqueness and returns a clear 400 message.",
+          "code": "public record RegisterRequest(\n    @NotBlank(message = \"Name is required\")\n    String name,\n\n    @NotBlank @Email(message = \"Valid email required\")\n    String email,\n\n    @Size(min = 8, message = \"Password must be at least 8 characters\")\n    String password\n) {}\n\n@PostMapping(\"/register\")\npublic UserDto register(@RequestBody @Valid RegisterRequest request) {\n    return userService.register(request);\n}"
+        },
+        {
+          "id": "api-q24",
+          "question": "What is @RequestBody and how does it work?",
+          "answer": "@RequestBody deserializes the HTTP request body into a Java object using HttpMessageConverter (typically Jackson for JSON). Spring reads Content-Type header to choose the converter. The body must be valid JSON matching the target class/record structure; mismatches cause 400 errors. Use @RequestBody for POST, PUT, and PATCH payloads. For large files, use MultipartFile instead. Combine with @Valid for automatic validation after deserialization.",
+          "realWorld": "Mobile app sends POST /api/orders with JSON body {\"productId\": 5, \"quantity\": 2}. Spring deserializes it into CreateOrderRequest record and passes it to your controller method.",
+          "code": "@PostMapping(\"/orders\")\npublic OrderDto placeOrder(@RequestBody @Valid CreateOrderRequest request) {\n    return orderService.placeOrder(request.productId(), request.quantity());\n}\n\n// JSON body:\n// { \"productId\": 5, \"quantity\": 2 }",
+          "output": "HTTP/1.1 201 Created\nContent-Type: application/json\n\n{\n  \"id\": 1001,\n  \"productId\": 5,\n  \"quantity\": 2,\n  \"status\": \"PENDING\"\n}"
+        },
+        {
+          "id": "api-q25",
+          "question": "What is @PathVariable in Spring REST?",
+          "answer": "@PathVariable extracts values from URI template variables defined in @RequestMapping/@GetMapping paths. {id} in /users/{id} maps to a method parameter. Required by default; set required=false for optional path segments. Use explicit name @PathVariable(\"id\") when parameter name differs. Path variables identify specific resources; they are part of the RESTful URI design. Type conversion happens automatically (String to Long, etc.).",
+          "realWorld": "GET /api/employees/42/departments/7 uses @PathVariable Long employeeId and @PathVariable Long departmentId to fetch a specific department for a specific employee.",
+          "code": "@GetMapping(\"/users/{userId}/orders/{orderId}\")\npublic OrderDto getOrder(\n        @PathVariable Long userId,\n        @PathVariable Long orderId) {\n    return orderService.findByUserAndOrderId(userId, orderId);\n}\n\n// GET /api/users/10/orders/500 → userId=10, orderId=500"
+        },
+        {
+          "id": "api-q26",
+          "question": "What is @RequestParam and how does it differ from @PathVariable?",
+          "answer": "@RequestParam extracts query string parameters from the URL (?key=value). Use for filtering, sorting, pagination, and optional search criteria—not for identifying primary resources. Supports defaultValue, required flag, and name alias. @PathVariable is for resource identity in the path (/users/{id}); @RequestParam is for modifiers and filters (/users?role=admin&page=0). Both support type conversion and validation with @Validated.",
+          "realWorld": "GET /api/products?category=laptops&minPrice=500&maxPrice=2000&sort=price,asc filters catalog results. GET /api/products/42 fetches one product by ID via path variable.",
+          "code": "@GetMapping(\"/products\")\npublic List<ProductDto> search(\n        @RequestParam(required = false) String category,\n        @RequestParam(defaultValue = \"0\") int page,\n        @RequestParam(defaultValue = \"20\") int size,\n        @RequestParam(defaultValue = \"name,asc\") String sort) {\n    return productService.search(category, PageRequest.of(page, size));\n}"
+        },
+        {
+          "id": "api-q27",
+          "question": "What is content negotiation in REST?",
+          "answer": "Content negotiation lets clients and servers agree on response format via Accept header (client preference) and Content-Type (actual format sent). Spring supports JSON (default), XML, and custom formats through HttpMessageConverter. Use produces/consumes attributes on mapping annotations: @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE). Accept: application/xml returns XML if Jackson XML is configured. API versioning can use custom media types: Accept: application/vnd.company.v2+json.",
+          "realWorld": "Legacy enterprise clients require XML; modern apps use JSON. Same endpoint serves both based on Accept header. Spring Boot auto-configures Jackson for JSON; add jackson-dataformat-xml for XML support.",
+          "code": "@GetMapping(value = \"/report/{id}\", produces = {\n    MediaType.APPLICATION_JSON_VALUE,\n    MediaType.APPLICATION_XML_VALUE\n})\npublic ReportDto getReport(@PathVariable Long id) {\n    return reportService.generate(id);\n}\n\n// Accept: application/json  → JSON response\n// Accept: application/xml   → XML response"
+        },
+        {
+          "id": "api-q28",
+          "question": "What is HATEOAS and how is it used in Spring?",
+          "answer": "HATEOAS (Hypermedia as the Engine of Application State) means API responses include links to related actions and resources, enabling clients to discover next steps dynamically without hardcoded URLs. A user response might include links for self, orders, and update. Spring HATEOAS provides EntityModel, CollectionModel, and WebMvcLinkBuilder to add _links to responses. It improves API discoverability but adds complexity—more common in mature public APIs than internal microservices.",
+          "realWorld": "HAL+JSON response for an order includes links: self (/orders/1), cancel (/orders/1/cancel), and payment (/orders/1/payment). Client follows links instead of constructing URLs, so URI changes don't break clients.",
+          "code": "@GetMapping(\"/{id}\")\npublic EntityModel<OrderDto> getOrder(@PathVariable Long id) {\n    OrderDto order = orderService.find(id);\n    return EntityModel.of(order,\n        linkTo(methodOn(OrderController.class).getOrder(id)).withSelfRel(),\n        linkTo(methodOn(OrderController.class).cancel(id)).withRel(\"cancel\"));\n}",
+          "output": "{\n  \"id\": 1,\n  \"status\": \"PENDING\",\n  \"_links\": {\n    \"self\": { \"href\": \"http://localhost:8080/orders/1\" },\n    \"cancel\": { \"href\": \"http://localhost:8080/orders/1/cancel\" }\n  }\n}"
+        },
+        {
+          "id": "api-q29",
+          "question": "What are health check APIs?",
+          "answer": "Health check endpoints report application readiness and liveness for load balancers, Kubernetes, and monitoring tools. Spring Boot Actuator exposes /actuator/health with status UP/DOWN and component details (database, disk space, custom checks). Liveness probe: is the app running? Readiness probe: can it accept traffic (DB connected)? Keep health endpoints lightweight and unauthenticated internally, or secure them in production. Custom HealthIndicator beans add business-specific checks.",
+          "realWorld": "Kubernetes hits /actuator/health/liveness every 10 seconds—failure restarts the pod. Load balancer removes instances where /actuator/health/readiness returns DOWN during database migration.",
+          "code": "@Component\npublic class PaymentGatewayHealthIndicator implements HealthIndicator {\n    @Override\n    public Health health() {\n        boolean reachable = paymentClient.ping();\n        return reachable ? Health.up().withDetail(\"payment\", \"reachable\").build()\n                         : Health.down().withDetail(\"payment\", \"unreachable\").build();\n    }\n}\n\n// application.properties:\n// management.endpoints.web.exposure.include=health,info\n// management.endpoint.health.show-details=when-authorized"
+        },
+        {
+          "id": "api-q30",
+          "question": "Why is API documentation important and how do you maintain it?",
+          "answer": "Good API documentation reduces integration time, prevents misuse, and serves as a contract between teams. Document endpoints, auth requirements, request/response examples, error codes, rate limits, and versioning policy. Tools: springdoc-openapi (auto-generated from code), Markdown guides, Postman collections. Best practice: docs live close to code (annotations generate specs), include examples for every endpoint, document breaking changes in changelogs, and validate specs in CI. Treat documentation as a deliverable, not an afterthought.",
+          "realWorld": "New frontend developer onboarded in one day using Swagger UI and a README with auth flow diagram. API changelog documents v2 field renames. CI fails if controller changes aren't reflected in the generated OpenAPI spec diff review.",
+          "code": "# application.properties\nspringdoc.api-docs.path=/api-docs\nspringdoc.swagger-ui.path=/swagger-ui.html\nspringdoc.swagger-ui.operationsSorter=method\n\n# Group related APIs\nspringdoc.group-configs[0].group=orders\nspringdoc.group-configs[0].packages-to-scan=com.academy.orders"
+        }
+      ]
+    }
+  ]
+}

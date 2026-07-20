@@ -1,0 +1,236 @@
+{
+  "task-tracker": {
+    "mode": "inline",
+    "overview": "CLI task tracker with add, list, and complete commands.\n\nFeatures:\n• Add tasks\n• List all tasks\n• Mark tasks complete\n• Exit gracefully",
+    "explanation": "An ArrayList stores Task objects with id, title, and done flag. A menu loop reads user choice. Each task gets an auto-increment id. Marking complete sets the boolean flag; listing shows [ ] or [x] prefix.",
+    "code": "import java.util.ArrayList;\nimport java.util.Scanner;\n\nrecord Task(int id, String title, boolean done) {}\n\npublic class TaskTracker {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        ArrayList<Task> tasks = new ArrayList<>();\n        int nextId = 1;\n\n        while (true) {\n            System.out.println(\"\\n1. Add  2. List  3. Complete  4. Exit\");\n            System.out.print(\"Choice: \");\n            int choice = Integer.parseInt(sc.nextLine().trim());\n\n            switch (choice) {\n                case 1 -> {\n                    System.out.print(\"Task title: \");\n                    tasks.add(new Task(nextId++, sc.nextLine(), false));\n                    System.out.println(\"Added.\");\n                }\n                case 2 -> {\n                    if (tasks.isEmpty()) System.out.println(\"No tasks yet.\");\n                    else tasks.forEach(t ->\n                        System.out.printf(\"%s #%d %s%n\", t.done() ? \"[x]\" : \"[ ]\", t.id(), t.title()));\n                }\n                case 3 -> {\n                    System.out.print(\"Task id: \");\n                    int id = Integer.parseInt(sc.nextLine().trim());\n                    tasks.replaceAll(t -> t.id() == id ? new Task(t.id(), t.title(), true) : t);\n                    System.out.println(\"Marked complete.\");\n                }\n                case 4 -> { sc.close(); return; }\n                default -> System.out.println(\"Invalid choice.\");\n            }\n        }\n    }\n}",
+    "filename": "TaskTracker.java",
+    "sampleInput": "1\\nLearn Java\\n2\\n3\\n1",
+    "sampleOutput": "Added.\\n[ ] #1 Learn Java\\nMarked complete.",
+    "runInstructions": "javac TaskTracker.java\\njava TaskTracker"
+  },
+  "github-user-activity": {
+    "mode": "inline",
+    "overview": "Fetch a GitHub user's public events via REST API and print recent activity.",
+    "explanation": "HttpClient (Java 11+) sends GET to api.github.com/users/{username}/events/public. The response JSON array is parsed simply by searching for \"type\" fields. For production, use Jackson or Gson.",
+    "code": "import java.net.URI;\nimport java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\n\npublic class GitHubUserActivity {\n    public static void main(String[] args) throws Exception {\n        String username = args.length > 0 ? args[0] : \"octocat\";\n        String url = \"https://api.github.com/users/\" + username + \"/events/public\";\n\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder()\n            .uri(URI.create(url))\n            .header(\"Accept\", \"application/vnd.github+json\")\n            .header(\"User-Agent\", \"Prathyu-Academy\")\n            .GET()\n            .build();\n\n        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());\n        System.out.println(\"Status: \" + response.statusCode());\n        String body = response.body();\n        int count = 0;\n        int idx = 0;\n        while ((idx = body.indexOf(\"\\\"type\\\":\", idx)) != -1 && count < 5) {\n            int start = body.indexOf('\"', idx + 7) + 1;\n            int end = body.indexOf('\"', start);\n            System.out.println(\"- \" + body.substring(start, end));\n            idx = end;\n            count++;\n        }\n    }\n}",
+    "filename": "GitHubUserActivity.java",
+    "sampleOutput": "Status: 200\\n- PushEvent\\n- CreateEvent\\n- WatchEvent",
+    "runInstructions": "javac GitHubUserActivity.java\\njava GitHubUserActivity octocat"
+  },
+  "expense-tracker-cli": {
+    "mode": "inline",
+    "overview": "Track daily expenses from the terminal with category and running total.",
+    "explanation": "Each expense stores description, amount, and category. ArrayList accumulates entries. A running total updates on every add. List command prints a formatted table.",
+    "code": "import java.util.ArrayList;\nimport java.util.Scanner;\n\nrecord Expense(String desc, double amount, String category) {}\n\npublic class ExpenseTracker {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        ArrayList<Expense> expenses = new ArrayList<>();\n        double total = 0;\n\n        while (true) {\n            System.out.println(\"\\n1. Add expense  2. List  3. Exit\");\n            System.out.print(\"Choice: \");\n            int c = Integer.parseInt(sc.nextLine().trim());\n            if (c == 1) {\n                System.out.print(\"Description: \");\n                String desc = sc.nextLine();\n                System.out.print(\"Amount: \");\n                double amt = Double.parseDouble(sc.nextLine().trim());\n                System.out.print(\"Category: \");\n                String cat = sc.nextLine();\n                expenses.add(new Expense(desc, amt, cat));\n                total += amt;\n                System.out.printf(\"Added. Total: Rs. %.2f%n\", total);\n            } else if (c == 2) {\n                expenses.forEach(e -> System.out.printf(\"%-20s Rs.%8.2f [%s]%n\", e.desc(), e.amount(), e.category()));\n                System.out.printf(\"Total: Rs. %.2f%n\", total);\n            } else if (c == 3) {\n                sc.close();\n                return;\n            }\n        }\n    }\n}",
+    "filename": "ExpenseTracker.java",
+    "sampleInput": "1\\nLunch\\n120\\nFood\\n2",
+    "sampleOutput": "Added. Total: Rs. 120.00\\nLunch                Rs.  120.00 [Food]\\nTotal: Rs. 120.00",
+    "runInstructions": "javac ExpenseTracker.java\\njava ExpenseTracker"
+  },
+  "unit-converter": {
+    "mode": "inline",
+    "overview": "Convert between length units: meters, kilometers, miles, and feet.",
+    "explanation": "All conversions go through meters as the base unit. switch on from/to unit codes. User enters value and unit pair; result prints with 4 decimal precision.",
+    "code": "import java.util.Scanner;\n\npublic class UnitConverter {\n    static double toMeters(double val, String unit) {\n        return switch (unit.toLowerCase()) {\n            case \"km\" -> val * 1000;\n            case \"mi\" -> val * 1609.344;\n            case \"ft\" -> val * 0.3048;\n            default -> val;\n        };\n    }\n\n    static double fromMeters(double m, String unit) {\n        return switch (unit.toLowerCase()) {\n            case \"km\" -> m / 1000;\n            case \"mi\" -> m / 1609.344;\n            case \"ft\" -> m / 0.3048;\n            default -> m;\n        };\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Value: \");\n        double val = sc.nextDouble();\n        sc.nextLine();\n        System.out.print(\"From unit (m/km/mi/ft): \");\n        String from = sc.nextLine().trim();\n        System.out.print(\"To unit (m/km/mi/ft): \");\n        String to = sc.nextLine().trim();\n        double result = fromMeters(toMeters(val, from), to);\n        System.out.printf(\"%.4f %s = %.4f %s%n\", val, from, result, to);\n        sc.close();\n    }\n}",
+    "filename": "UnitConverter.java",
+    "sampleInput": "5\\nkm\\nm",
+    "sampleOutput": "5.0000 km = 5000.0000 m",
+    "runInstructions": "javac UnitConverter.java\\njava UnitConverter"
+  },
+  "github-trending-cli": {
+    "mode": "inline",
+    "overview": "CLI that lists trending Java repositories from GitHub Search API.",
+    "explanation": "GitHub Search API returns repositories sorted by stars. This starter parses repo full_name fields from JSON. Extend with date filters and language params.",
+    "code": "import java.net.URI;\nimport java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\n\npublic class GitHubTrendingCLI {\n    public static void main(String[] args) throws Exception {\n        String lang = args.length > 0 ? args[0] : \"java\";\n        String url = \"https://api.github.com/search/repositories?q=language:\" + lang + \"&sort=stars&order=desc&per_page=5\";\n\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest req = HttpRequest.newBuilder()\n            .uri(URI.create(url))\n            .header(\"Accept\", \"application/vnd.github+json\")\n            .header(\"User-Agent\", \"Prathyu-Academy\")\n            .GET().build();\n\n        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());\n        String body = res.body();\n        int idx = 0, n = 1;\n        while ((idx = body.indexOf(\"\\\"full_name\\\":\", idx)) != -1 && n <= 5) {\n            int s = body.indexOf('\"', idx + 14) + 1;\n            int e = body.indexOf('\"', s);\n            System.out.println(n++ + \". \" + body.substring(s, e));\n            idx = e;\n        }\n    }\n}",
+    "filename": "GitHubTrendingCLI.java",
+    "sampleOutput": "1. TheAlgorithms/Java\\n2. spring-projects/spring-boot",
+    "runInstructions": "javac GitHubTrendingCLI.java\\njava GitHubTrendingCLI java"
+  },
+  "tmdb-cli-tool": {
+    "mode": "inline",
+    "overview": "Search movies by title using The Movie Database (TMDB) API.",
+    "explanation": "Replace YOUR_API_KEY with a free key from themoviedb.org. HttpClient calls /search/movie endpoint. Parse title fields from JSON response.",
+    "code": "import java.net.URI;\nimport java.net.URLEncoder;\nimport java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\nimport java.nio.charset.StandardCharsets;\n\npublic class TmdbCliTool {\n    static final String API_KEY = \"YOUR_API_KEY\";\n\n    public static void main(String[] args) throws Exception {\n        String query = args.length > 0 ? args[0] : \"inception\";\n        String encoded = URLEncoder.encode(query, StandardCharsets.UTF_8);\n        String url = \"https://api.themoviedb.org/3/search/movie?api_key=\" + API_KEY + \"&query=\" + encoded;\n\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest req = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();\n        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());\n\n        System.out.println(\"Results for: \" + query);\n        String body = res.body();\n        int idx = 0, n = 1;\n        while ((idx = body.indexOf(\"\\\"title\\\":\", idx)) != -1 && n <= 5) {\n            int s = body.indexOf('\"', idx + 8) + 1;\n            int e = body.indexOf('\"', s);\n            System.out.println(n++ + \". \" + body.substring(s, e));\n            idx = e;\n        }\n    }\n}",
+    "filename": "TmdbCliTool.java",
+    "sampleOutput": "Results for: inception\\n1. Inception",
+    "runInstructions": "Set TMDB API key, then:\\njavac TmdbCliTool.java\\njava TmdbCliTool matrix"
+  },
+  "caching-proxy": {
+    "mode": "inline",
+    "overview": "Simple in-memory HTTP caching proxy for GET requests.",
+    "explanation": "A HashMap caches URL → response body with timestamp. On cache hit within TTL (60s), return cached body. Otherwise fetch upstream and store. Extend with HttpServer for real proxy.",
+    "code": "import java.net.URI;\nimport java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class CachingProxy {\n    record CacheEntry(String body, long time) {}\n\n    static final Map<String, CacheEntry> CACHE = new HashMap<>();\n    static final long TTL_MS = 60_000;\n\n    static String fetch(String url) throws Exception {\n        CacheEntry hit = CACHE.get(url);\n        if (hit != null && System.currentTimeMillis() - hit.time() < TTL_MS) {\n            System.out.println(\"CACHE HIT\");\n            return hit.body();\n        }\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest req = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();\n        String body = client.send(req, HttpResponse.BodyHandlers.ofString()).body();\n        CACHE.put(url, new CacheEntry(body, System.currentTimeMillis()));\n        System.out.println(\"CACHE MISS\");\n        return body;\n    }\n\n    public static void main(String[] args) throws Exception {\n        String url = \"https://api.github.com/zen\";\n        System.out.println(fetch(url).substring(0, Math.min(80, fetch(url).length())));\n        System.out.println(fetch(url).substring(0, Math.min(80, fetch(url).length())));\n    }\n}",
+    "filename": "CachingProxy.java",
+    "sampleOutput": "CACHE MISS\\nDesign for failure...\\nCACHE HIT\\nDesign for failure...",
+    "runInstructions": "javac CachingProxy.java\\njava CachingProxy"
+  },
+  "broadcast-server": {
+    "mode": "inline",
+    "overview": "TCP server that broadcasts messages to all connected clients.",
+    "explanation": "ServerSocket listens on port 9090. Each client runs in its own thread. When a message arrives, the server writes it to every connected PrintWriter. Clients need a matching socket reader.",
+    "code": "import java.io.*;\nimport java.net.*;\nimport java.util.*;\nimport java.util.concurrent.*;\n\npublic class BroadcastServer {\n    static final Set<PrintWriter> clients = ConcurrentHashMap.newKeySet();\n\n    public static void main(String[] args) throws Exception {\n        try (ServerSocket server = new ServerSocket(9090)) {\n            System.out.println(\"Broadcast server on :9090\");\n            while (true) {\n                Socket socket = server.accept();\n                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);\n                clients.add(out);\n                new Thread(() -> {\n                    try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {\n                        String line;\n                        while ((line = in.readLine()) != null) {\n                            for (PrintWriter w : clients) w.println(line);\n                        }\n                    } catch (IOException ignored) {}\n                    finally { clients.remove(out); }\n                }).start();\n            }\n        }\n    }\n}",
+    "filename": "BroadcastServer.java",
+    "sampleOutput": "Broadcast server on :9090",
+    "runInstructions": "javac BroadcastServer.java\\njava BroadcastServer"
+  },
+  "database-backup-utility": {
+    "mode": "inline",
+    "overview": "Utility that runs mysqldump and saves a timestamped SQL backup file.",
+    "explanation": "ProcessBuilder executes mysqldump with database credentials. Output redirects to backups/ folder with timestamp filename. Requires MySQL client tools installed.",
+    "code": "import java.io.File;\nimport java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter;\n\npublic class DatabaseBackupUtility {\n    public static void main(String[] args) throws Exception {\n        String db = args.length > 0 ? args[0] : \"mydb\";\n        String user = args.length > 1 ? args[1] : \"root\";\n        String dir = \"backups\";\n        new File(dir).mkdirs();\n        String file = dir + \"/backup-\" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyyMMdd-HHmmss\")) + \".sql\";\n\n        ProcessBuilder pb = new ProcessBuilder(\"mysqldump\", \"-u\", user, db);\n        pb.redirectOutput(new File(file));\n        Process p = pb.start();\n        int code = p.waitFor();\n        System.out.println(code == 0 ? \"Backup saved: \" + file : \"Backup failed with code \" + code);\n    }\n}",
+    "filename": "DatabaseBackupUtility.java",
+    "sampleOutput": "Backup saved: backups/backup-20260101-120000.sql",
+    "runInstructions": "Ensure mysqldump is installed:\\njavac DatabaseBackupUtility.java\\njava DatabaseBackupUtility mydb root"
+  },
+  "personal-blog": {
+    "mode": "external",
+    "overview": "Build a personal blog with Spring Boot, Thymeleaf, and a database for posts.",
+    "explanation": "A full blog needs Spring MVC controllers, JPA entities for Post, and Thymeleaf templates. Use the Amigoscode full-stack repo as reference architecture.",
+    "githubUrl": "https://github.com/amigoscode/spring-boot-fullstack-professional",
+    "githubLabel": "Spring Boot Full Stack — Blog & CRUD patterns",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot + Database Full Tutorial",
+    "studyNote": "1. Watch the tutorial for Spring Boot + JPA setup.\\n2. Clone the repo and study the Post/Article entity pattern.\\n3. Add create, edit, list, and delete routes.\\n4. Style with Thymeleaf templates."
+  },
+  "weather-api-project": {
+    "mode": "external",
+    "overview": "REST API that fetches weather from OpenWeatherMap and returns JSON.",
+    "explanation": "Spring Boot @RestController exposes /weather?city=. RestTemplate or WebClient calls external weather API. Return DTO with temp, humidity, description.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "Spring Boot REST API Tutorial",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot REST API — Amigoscode",
+    "studyNote": "1. Create Spring Boot project with Web starter.\\n2. Add RestController and DTO classes.\\n3. Integrate OpenWeatherMap API key.\\n4. Test with Postman."
+  },
+  "todo-list-api": {
+    "mode": "external",
+    "overview": "RESTful CRUD API for managing todo items with Spring Boot.",
+    "explanation": "Standard REST: GET /todos, POST /todos, PUT /todos/{id}, DELETE /todos/{id}. Use Spring Data JPA with H2 or PostgreSQL.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "Spring Boot Todo / Product CRUD API",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "Build REST APIs with Spring Boot",
+    "studyNote": "1. Define Todo entity with title, completed, createdAt.\\n2. Create TodoRepository extending JpaRepository.\\n3. Implement TodoController with CRUD endpoints.\\n4. Add validation and error handling."
+  },
+  "blogging-platform-api": {
+    "mode": "external",
+    "overview": "REST API for a blogging platform with users, posts, and comments.",
+    "explanation": "Multi-entity API with User, Post, Comment relationships. Spring Security optional for auth. Follow layered architecture: controller → service → repository.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Spring REST & JPA — Baeldung Tutorials",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "REST API Design with Spring Boot",
+    "studyNote": "1. Design entities and relationships first.\\n2. Build repositories and services.\\n3. Expose REST endpoints with proper HTTP status codes.\\n4. Document with Swagger/OpenAPI."
+  },
+  "expense-tracker-api": {
+    "mode": "external",
+    "overview": "Backend API for tracking expenses with categories and monthly summaries.",
+    "explanation": "Expense entity with amount, category, date. Add aggregation endpoints for monthly totals using Spring Data queries or @Query.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "Spring Boot API with PostgreSQL",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot + Database Integration",
+    "studyNote": "1. Create Expense entity and repository.\\n2. Build CRUD endpoints.\\n3. Add /summary?month= endpoint.\\n4. Connect PostgreSQL via application.properties."
+  },
+  "markdown-note-app": {
+    "mode": "external",
+    "overview": "Note-taking API that stores markdown content and renders to HTML.",
+    "explanation": "Store raw markdown in database. Use a library like commonmark-java to render HTML on read. REST endpoints for create, update, list notes.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Spring Boot REST patterns — Baeldung",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot REST API Course",
+    "studyNote": "1. Add commonmark dependency for markdown parsing.\\n2. Note entity with title and content fields.\\n3. GET /notes/{id}/html returns rendered HTML.\\n4. Add search by title."
+  },
+  "url-shortening-service": {
+    "mode": "external",
+    "overview": "URL shortener API — POST long URL, GET short code redirect.",
+    "explanation": "Generate unique short codes (Base62 or UUID substring). Map code → original URL in database. GET /{code} returns 302 redirect.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "URL Shortener patterns — Baeldung Spring tutorials",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "Build REST APIs with Spring Boot",
+    "studyNote": "1. Study the reference repo structure.\\n2. Implement POST /api/shorten endpoint.\\n3. Handle collision on short codes.\\n4. Add click analytics optional."
+  },
+  "multi-container-docker": {
+    "mode": "external",
+    "overview": "Run Spring Boot app + PostgreSQL + Redis with Docker Compose.",
+    "explanation": "docker-compose.yml defines services: app, db, cache. App connects via environment variables. Learn networking, volumes, and health checks.",
+    "githubUrl": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+    "githubLabel": "Spring PetClinic Microservices + Docker",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot + Docker deployment",
+    "studyNote": "1. Write Dockerfile for Spring Boot JAR.\\n2. Add postgres service with volume.\\n3. Configure SPRING_DATASOURCE_URL env var.\\n4. Run docker compose up and test."
+  },
+  "ecommerce-api-project": {
+    "mode": "external",
+    "overview": "E-commerce REST API with products, cart, and checkout flow.",
+    "explanation": "Product catalog, Cart with line items, Order placement. Integrate Stripe or Razorpay for payments in production.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "E-Commerce Spring Boot API",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "Product CRUD REST API — Spring Boot",
+    "studyNote": "1. Model Product, CartItem, Order entities.\\n2. Cart endpoints: add, remove, view.\\n3. Checkout creates Order from Cart.\\n4. Add payment webhook stub."
+  },
+  "linux-server-setup": {
+    "mode": "external",
+    "overview": "Set up a secure Linux VPS — SSH, firewall, Nginx, and Java deployment.",
+    "explanation": "Provision Ubuntu server. Configure UFW firewall, SSH keys, install Java 21, Nginx reverse proxy, and systemd service for Spring Boot JAR.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "Spring PetClinic — deploy reference app",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Deploy Spring Boot to production",
+    "studyNote": "1. Create VPS on DigitalOcean/AWS free tier.\\n2. Harden SSH — disable password login.\\n3. Install Java and run JAR with systemd.\\n4. Configure Nginx as reverse proxy."
+  },
+  "workout-tracker": {
+    "mode": "external",
+    "overview": "API for logging workouts, exercises, sets, and tracking progress over time.",
+    "explanation": "Workout → Exercise → Set hierarchy. Endpoints for daily log and progress charts. Use Spring Data JPA with date-range queries.",
+    "githubUrl": "https://github.com/amigoscode/spring-boot-fullstack-professional",
+    "githubLabel": "Spring Boot Full Stack API patterns",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot + JPA Tutorial",
+    "studyNote": "1. Design Workout and Exercise entities.\\n2. CRUD for logging sessions.\\n3. GET /progress?from=&to= for stats.\\n4. Optional React frontend."
+  },
+  "image-processing-service": {
+    "mode": "external",
+    "overview": "Upload images and apply resize/thumbnail transformations.",
+    "explanation": "Multipart file upload endpoint. Use Java ImageIO or Thumbnailator library. Store originals and thumbnails on disk or S3.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Java file upload — Baeldung tutorials",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "Spring Boot file upload REST API",
+    "studyNote": "1. POST /upload with MultipartFile.\\n2. Resize to 200px thumbnail.\\n3. Return URLs for original and thumb.\\n4. Add content-type validation."
+  },
+  "movie-reservation-system": {
+    "mode": "external",
+    "overview": "Book movie tickets with seat selection and showtime management.",
+    "explanation": "Entities: Movie, Theater, Show, Seat, Booking. Handle concurrent seat booking with optimistic locking or synchronized blocks.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "Spring PetClinic — complex domain reference",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot enterprise project walkthrough",
+    "studyNote": "1. Model seats as rows/columns per show.\\n2. Lock seat during checkout (5 min TTL).\\n3. Confirm booking on payment.\\n4. Send confirmation response."
+  },
+  "realtime-leaderboard": {
+    "mode": "external",
+    "overview": "Real-time game leaderboard with WebSocket updates.",
+    "explanation": "Spring WebSocket or STOMP broadcasts score updates. Redis sorted set for O(log N) rank queries. REST endpoint for top 100.",
+    "githubUrl": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+    "githubLabel": "Microservices + real-time patterns",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot WebSocket & REST",
+    "studyNote": "1. POST /scores to submit score.\\n2. WebSocket /topic/leaderboard for live updates.\\n3. Redis ZADD for ranking.\\n4. GET /leaderboard/top100."
+  },
+  "scalable-ecommerce-platform": {
+    "mode": "external",
+    "overview": "Microservices e-commerce: catalog, cart, order, payment services.",
+    "explanation": "Split monolith into services communicating via REST or Kafka. API Gateway routes requests. Each service owns its database.",
+    "githubUrl": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+    "githubLabel": "Spring PetClinic Microservices Architecture",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot Microservices Full Course",
+    "studyNote": "1. Study PetClinic microservices layout.\\n2. Extract catalog and order services.\\n3. Add API Gateway (Spring Cloud Gateway).\\n4. Docker Compose all services."
+  }
+}

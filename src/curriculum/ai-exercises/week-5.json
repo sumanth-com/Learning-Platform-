@@ -1,0 +1,42 @@
+{
+  "ai-w5-e1": {
+    "answer": "Describe 3 scenarios (lookup, sort, queue). Ask which Java collection. Justify each answer.",
+    "realWorld": "LRU cache → LinkedHashMap; priority tasks → PriorityQueue."
+  },
+  "ai-w5-e2": {
+    "answer": "Compare ArrayList vs LinkedList with AI. Write micro-benchmark for get(5000) on 10k list.",
+    "realWorld": "ArrayList wins random access — measure proves textbook claim."
+  },
+  "ai-w5-e3": {
+    "answer": "HashMap vs TreeMap: when need sorted keys? Write 5-line example of each.",
+    "realWorld": "TreeMap for range queries on keys; HashMap for plain speed."
+  },
+  "ai-w5-e4": {
+    "answer": "Ask how HashSet avoids duplicates internally (hashCode, equals). Implement contains duplicate check both ways.",
+    "realWorld": "Understanding equals/hashCode contract prevents Set bugs with custom objects."
+  },
+  "ai-w5-e5": {
+    "answer": "Review Student Management System for collection misuse. Fix one hot path.",
+    "realWorld": "Linear search in list on every login → Map by studentId."
+  },
+  "ai-w5-e6": {
+    "answer": "Replace nested loop duplicate-finder with HashSet. Same results, time both.",
+    "realWorld": "Classic optimization exercise — appears in interviews and real code review."
+  },
+  "ai-w5-e7": {
+    "answer": "Ask Big-O of your methods. Explain n² loop aloud in 30 seconds.",
+    "realWorld": "Interview: 'What's complexity of this nested for?' — practice here."
+  },
+  "ai-w5-e8": {
+    "answer": "List edge tests for a method using collections. Implement 3 as JUnit or main asserts.",
+    "realWorld": "Empty list, null list, list with null element — define expected behavior."
+  },
+  "ai-w5-e9": {
+    "answer": "Paste code using Vector or Hashtable. Ask for modern alternative. Migrate if safe.",
+    "realWorld": "Legacy synchronized collections → ArrayList + Collections.synchronizedList or concurrent types."
+  },
+  "ai-w5-e10": {
+    "answer": "Ask memory difference: ArrayList of 1M Integers vs int[]. Discuss boxing cost.",
+    "realWorld": "Production lesson: primitives in tight memory paths matter at scale."
+  }
+}

@@ -1,0 +1,167 @@
+[
+  {
+    "weekId": 1,
+    "slug": "week-1",
+    "title": "Java Fundamentals",
+    "description": "Core Java syntax, variables, operators, input/output, and your first programs.",
+    "topics": [
+      { "slug": "what-is-java", "title": "What is Java?", "category": "java", "description": "Platform, JVM, and why Java powers enterprise backends." },
+      { "slug": "jdk-jre-jvm", "title": "JDK, JRE & JVM", "category": "java", "description": "How Java compiles, runs, and ships to production." },
+      { "slug": "variables-data-types", "title": "Variables & Data Types", "category": "java", "description": "int, double, char, boolean, String, and naming rules." },
+      { "slug": "operators", "title": "Operators", "category": "java", "description": "Arithmetic, relational, logical, and assignment operators." },
+      { "slug": "type-casting", "title": "Type Casting", "category": "java", "description": "Widening, narrowing, and safe conversions." },
+      { "slug": "scanner-input", "title": "User Input (Scanner)", "category": "java", "description": "Reading keyboard input and formatting output." },
+      { "slug": "first-java-program", "title": "First Java Program", "category": "java", "description": "Structure of a Java class and main method." }
+    ]
+  },
+  {
+    "weekId": 2,
+    "slug": "week-2",
+    "title": "Control Flow & Methods",
+    "description": "Conditionals, loops, methods, and array manipulation.",
+    "topics": [
+      { "slug": "if-else", "title": "If, Else If, Else", "category": "java", "description": "Branching logic and decision trees." },
+      { "slug": "switch", "title": "Switch Statement", "category": "java", "description": "Multi-way branching and switch expressions." },
+      { "slug": "for-loop", "title": "For Loop", "category": "java", "description": "Iteration, counters, and pattern programs." },
+      { "slug": "while-loop", "title": "While & Do-While", "category": "java", "description": "Condition-driven loops and sentinel values." },
+      { "slug": "methods", "title": "Methods", "category": "java", "description": "Parameters, return types, and method overloading." },
+      { "slug": "arrays-1d", "title": "1D Arrays", "category": "java", "description": "Declaration, traversal, search, and sort basics." },
+      { "slug": "arrays-2d", "title": "2D Arrays", "category": "java", "description": "Matrices, grids, and nested iteration." }
+    ]
+  },
+  {
+    "weekId": 3,
+    "slug": "week-3",
+    "title": "Object-Oriented Programming",
+    "description": "Classes, objects, inheritance, polymorphism, and interfaces.",
+    "topics": [
+      { "slug": "classes-objects", "title": "Classes & Objects", "category": "oop", "description": "Blueprints, instances, fields, and methods." },
+      { "slug": "constructors", "title": "Constructors", "category": "oop", "description": "Default, parameterized, and constructor chaining." },
+      { "slug": "encapsulation", "title": "Encapsulation", "category": "oop", "description": "Private fields, getters, setters, and validation." },
+      { "slug": "inheritance", "title": "Inheritance", "category": "oop", "description": "extends, super, and IS-A relationships." },
+      { "slug": "polymorphism", "title": "Polymorphism", "category": "oop", "description": "Method overriding, upcasting, and dynamic dispatch." },
+      { "slug": "interfaces", "title": "Interfaces", "category": "oop", "description": "Contracts, default methods, and multiple inheritance." },
+      { "slug": "abstraction", "title": "Abstraction", "category": "oop", "description": "Abstract classes vs interfaces in real systems." }
+    ]
+  },
+  {
+    "weekId": 4,
+    "slug": "week-4",
+    "title": "Exceptions, Files & Packages",
+    "description": "Error handling, file I/O, and organizing code into packages.",
+    "topics": [
+      { "slug": "try-catch", "title": "Try-Catch-Finally", "category": "java", "description": "Handling runtime errors gracefully." },
+      { "slug": "throw-throws", "title": "Throw & Throws", "category": "java", "description": "Propagating and declaring checked exceptions." },
+      { "slug": "custom-exceptions", "title": "Custom Exceptions", "category": "java", "description": "Domain-specific error types for APIs." },
+      { "slug": "file-io", "title": "File Reading & Writing", "category": "java", "description": "FileReader, BufferedReader, and try-with-resources." },
+      { "slug": "packages", "title": "Packages & Modules", "category": "java", "description": "Package structure, imports, and access control." }
+    ]
+  },
+  {
+    "weekId": 5,
+    "slug": "week-5",
+    "title": "Collections, Generics & Java 8",
+    "description": "ArrayList, HashMap, generics, lambdas, and the Streams API.",
+    "topics": [
+      { "slug": "arraylist", "title": "ArrayList", "category": "collections", "description": "Dynamic arrays, add/remove, and iteration." },
+      { "slug": "hashmap", "title": "HashMap", "category": "collections", "description": "Key-value storage, hashing, and collision handling." },
+      { "slug": "hashset-treeset", "title": "HashSet & TreeSet", "category": "collections", "description": "Unique elements and sorted sets." },
+      { "slug": "generics", "title": "Generics", "category": "java8", "description": "Type-safe collections and wildcards." },
+      { "slug": "lambda-streams", "title": "Lambda & Streams", "category": "java8", "description": "Functional-style data processing in Java." }
+    ]
+  },
+  {
+    "weekId": 6,
+    "slug": "week-6",
+    "title": "Multithreading & Functional Programming",
+    "description": "Threads, synchronization, executors, and CompletableFuture.",
+    "topics": [
+      { "slug": "thread-basics", "title": "Thread Basics", "category": "multithreading", "description": "Creating threads with Thread and Runnable." },
+      { "slug": "synchronization", "title": "Synchronization", "category": "multithreading", "description": "synchronized blocks, locks, and race conditions." },
+      { "slug": "deadlock", "title": "Deadlock & Prevention", "category": "multithreading", "description": "Detecting and avoiding circular waits." },
+      { "slug": "executor-service", "title": "ExecutorService", "category": "multithreading", "description": "Thread pools and task submission." },
+      { "slug": "completable-future", "title": "CompletableFuture", "category": "multithreading", "description": "Async pipelines and non-blocking composition." }
+    ]
+  },
+  {
+    "weekId": 7,
+    "slug": "week-7",
+    "title": "DSA Foundations",
+    "description": "Arrays, strings, linked lists, stacks, and queues.",
+    "topics": [
+      { "slug": "time-complexity", "title": "Time & Space Complexity", "category": "dsa", "description": "Big-O analysis for interviews." },
+      { "slug": "array-problems", "title": "Array Problems", "category": "dsa", "description": "Two sum, rotation, kadane — LeetCode style." },
+      { "slug": "string-problems", "title": "String Problems", "category": "dsa", "description": "Palindrome, anagram, substring search." },
+      { "slug": "linked-list", "title": "Linked List", "category": "dsa", "description": "Reverse, cycle detection, merge sorted lists." },
+      { "slug": "stack-queue", "title": "Stack & Queue", "category": "dsa", "description": "Valid parentheses, BFS/DFS foundations." }
+    ]
+  },
+  {
+    "weekId": 8,
+    "slug": "week-8",
+    "title": "Advanced DSA",
+    "description": "Trees, graphs, dynamic programming, and hashing.",
+    "topics": [
+      { "slug": "binary-search", "title": "Binary Search", "category": "dsa", "description": "Search space reduction and variants." },
+      { "slug": "trees", "title": "Trees & BST", "category": "dsa", "description": "Traversals, height, LCA, validation." },
+      { "slug": "graphs", "title": "Graphs BFS & DFS", "category": "dsa", "description": "Adjacency lists, shortest path basics." },
+      { "slug": "dynamic-programming", "title": "Dynamic Programming", "category": "dsa", "description": "Memoization, tabulation, classic patterns." },
+      { "slug": "hashing", "title": "Hashing", "category": "dsa", "description": "Hash maps for O(1) lookups in problems." }
+    ]
+  },
+  {
+    "weekId": 9,
+    "slug": "week-9",
+    "title": "Database Engineering",
+    "description": "SQL, MySQL, JDBC, normalization, transactions, indexes, and MongoDB.",
+    "topics": [
+      { "slug": "sql-select", "title": "SQL SELECT & WHERE", "category": "sql", "description": "Querying relational data with filters." },
+      { "slug": "sql-joins", "title": "SQL JOINs", "category": "sql", "description": "INNER, LEFT, RIGHT joins with real schemas." },
+      { "slug": "sql-aggregations", "title": "GROUP BY & HAVING", "category": "sql", "description": "Aggregations, window functions intro." },
+      { "slug": "normalization", "title": "Database Normalization", "category": "database-design", "description": "1NF, 2NF, 3NF with ER diagrams." },
+      { "slug": "transactions", "title": "Transactions & ACID", "category": "sql", "description": "COMMIT, ROLLBACK, isolation levels." },
+      { "slug": "indexes", "title": "Indexes & Performance", "category": "database-design", "description": "B-tree indexes, query plans, optimization." },
+      { "slug": "jdbc", "title": "JDBC Connection & CRUD", "category": "jdbc", "description": "Java ↔ MySQL with PreparedStatement." },
+      { "slug": "mongodb", "title": "MongoDB Documents", "category": "mongodb", "description": "Collections, queries, aggregation vs SQL." }
+    ]
+  },
+  {
+    "weekId": 10,
+    "slug": "week-10",
+    "title": "Spring Boot & REST APIs",
+    "description": "Spring, Spring Boot, JPA, REST design, validation, and Swagger.",
+    "topics": [
+      { "slug": "spring-core", "title": "Spring Framework Core", "category": "spring-boot", "description": "IoC, DI, and @Component architecture." },
+      { "slug": "spring-boot", "title": "Spring Boot Setup", "category": "spring-boot", "description": "Auto-configuration, starters, application.properties." },
+      { "slug": "jpa-hibernate", "title": "JPA & Hibernate", "category": "hibernate", "description": "Entities, repositories, and relationships." },
+      { "slug": "rest-design", "title": "REST API Design", "category": "rest-api", "description": "Resources, HTTP verbs, status codes, JSON." },
+      { "slug": "validation-pagination", "title": "Validation & Pagination", "category": "rest-api", "description": "@Valid, error responses, pageable endpoints." },
+      { "slug": "swagger", "title": "Swagger / OpenAPI", "category": "rest-api", "description": "Documenting and testing APIs interactively." }
+    ]
+  },
+  {
+    "weekId": 11,
+    "slug": "week-11",
+    "title": "Security",
+    "description": "Spring Security, JWT, OAuth, authentication, authorization, and RBAC.",
+    "topics": [
+      { "slug": "spring-security", "title": "Spring Security Basics", "category": "security", "description": "Filter chain, UserDetailsService, BCrypt." },
+      { "slug": "jwt-auth", "title": "JWT Authentication", "category": "security", "description": "Token issuance, validation, and stateless auth." },
+      { "slug": "oauth", "title": "OAuth 2.0", "category": "security", "description": "Authorization code flow with Google/GitHub." },
+      { "slug": "rbac", "title": "Role-Based Access Control", "category": "security", "description": "Roles, permissions, @PreAuthorize." }
+    ]
+  },
+  {
+    "weekId": 12,
+    "slug": "week-12",
+    "title": "Projects, AI & Interview Prep",
+    "description": "Capstone projects, mock interviews, resume, GitHub portfolio, and AI skills.",
+    "topics": [
+      { "slug": "capstone-backend", "title": "Capstone Backend Project", "category": "spring-boot", "description": "End-to-end Spring Boot + MySQL + REST API." },
+      { "slug": "git-workflow", "title": "Git Workflow", "category": "git", "description": "Branching, PRs, merge conflicts, rebasing." },
+      { "slug": "mock-interview", "title": "Mock Interview Prep", "category": "ai", "description": "System design drills and behavioral questions." },
+      { "slug": "ai-coding", "title": "AI-Assisted Coding", "category": "ai", "description": "Prompt engineering for debugging and code review." },
+      { "slug": "github-portfolio", "title": "GitHub Portfolio", "category": "git", "description": "README, pinned repos, and recruiter-ready profile." }
+    ]
+  }
+]

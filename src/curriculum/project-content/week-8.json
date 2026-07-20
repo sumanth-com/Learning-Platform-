@@ -1,0 +1,52 @@
+{
+  "student-rest-api": {
+    "mode": "external",
+    "overview": "Full CRUD REST API for student management with MySQL and validation.\n\nFeatures to build:\n• Student CRUD\n• Search\n• Validation\n\nRequirements:\n• Spring Boot REST API\n• Spring Data JPA\n• MySQL database\n• Postman collection for testing\n\nBonus:\n• Pagination for student list",
+    "explanation": "Student Management REST API is a advanced-level project (Week 8). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Student CRUD, Search, Validation.",
+    "githubUrl": "https://github.com/amigoscode/spring-boot-fullstack-professional",
+    "githubLabel": "Spring Boot REST API — Amigoscode Full Stack",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot REST API — Full Course 2025 (Amigoscode)",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "employee-rest-api": {
+    "mode": "external",
+    "overview": "Employee CRUD with department filtering and salary search.\n\nFeatures to build:\n• CRUD\n• Department Filter\n• Salary Search\n\nRequirements:\n• Layered architecture (Controller → Service → Repository)\n• Spring Data JPA\n• MySQL\n\nBonus:\n• Salary statistics endpoint",
+    "explanation": "Employee Management REST API is a advanced-level project (Week 8). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: CRUD, Department Filter, Salary Search.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "Employee / Product REST API — Amigoscode",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "Build REST APIs with Spring Boot",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "library-rest-api": {
+    "mode": "external",
+    "overview": "Library API for books, borrowing, returns, and search.\n\nFeatures to build:\n• Add Books\n• Borrow Books\n• Return Books\n• Search\n\nRequirements:\n• REST API with proper HTTP methods\n• JPA entities with relationships\n• MySQL\n\nBonus:\n• Overdue book tracking",
+    "explanation": "Library Management API is a advanced-level project (Week 8). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Add Books, Borrow Books, Return Books, Search.",
+    "githubUrl": "https://github.com/mehmetpekdemir/Library-Management-System",
+    "githubLabel": "Library REST API — Spring Boot + JPA",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot REST + PostgreSQL Tutorial",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "inventory-rest-api": {
+    "mode": "external",
+    "overview": "Product inventory API with category filtering and stock management.\n\nFeatures to build:\n• Product CRUD\n• Category Filter\n• Stock Management\n\nRequirements:\n• Spring Boot REST API\n• Spring Data JPA\n• MySQL\n\nBonus:\n• Low stock alert endpoint",
+    "explanation": "Inventory Management API is a advanced-level project (Week 8). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Product CRUD, Category Filter, Stock Management.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "Inventory / Product REST API — Spring Boot",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "REST API Design with Spring Boot",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "hospital-rest-api": {
+    "mode": "external",
+    "overview": "Hospital API for patients, doctors, and appointments.\n\nFeatures to build:\n• Patient CRUD\n• Doctor CRUD\n• Appointment CRUD\n\nRequirements:\n• Multiple related entities with JPA\n• RESTful endpoints\n• MySQL\n\nBonus:\n• Appointment conflict detection",
+    "explanation": "Hospital Management API is a advanced-level project (Week 8). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Patient CRUD, Doctor CRUD, Appointment CRUD.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "Spring PetClinic REST API Reference",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot Backend API Crash Course",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

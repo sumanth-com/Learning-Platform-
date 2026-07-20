@@ -1,0 +1,52 @@
+{
+  "student-management-oop": {
+    "mode": "inline",
+    "overview": "Object-oriented student management with CRUD operations.\n\nFeatures to build:\n• Add Student\n• Display Student\n• Update Student\n• Delete Student\n\nRequirements:\n• Use classes and objects\n• Use constructors\n• Apply encapsulation with getters/setters\n\nBonus:\n• Search by roll number\n• Sort by name",
+    "explanation": "Student Management System (OOP Version) is a console Java program implementing: Add Student, Display Student, Update Student, Delete Student. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class StudentManagementOop {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Student Management System (OOP Version)\");\n        // Features: Add Student, Display Student, Update Student, Delete Student\n        sc.close();\n    }\n}",
+    "filename": "StudentManagementOop.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Student Management System (OOP Version)\nObject-oriented student management with CRUD operations.",
+    "runInstructions": "javac StudentManagementOop.java\njava StudentManagementOop"
+  },
+  "bank-account-system": {
+    "mode": "inline",
+    "overview": "OOP-based bank account with transactions and balance tracking.\n\nFeatures to build:\n• Create Account\n• Deposit\n• Withdraw\n• Balance\n• Transaction Summary\n\nRequirements:\n• Use constructors\n• Use methods\n• Use getters and setters\n\nBonus:\n• Multiple account types\n• Interest calculation",
+    "explanation": "Bank Account System is a console Java program implementing: Create Account, Deposit, Withdraw, Balance, Transaction Summary. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class BankAccountSystem {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Bank Account System\");\n        // Features: Create Account, Deposit, Withdraw, Balance, Transaction Summary\n        sc.close();\n    }\n}",
+    "filename": "BankAccountSystem.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Bank Account System\nOOP-based bank account with transactions and balance tracking.",
+    "runInstructions": "javac BankAccountSystem.java\njava BankAccountSystem"
+  },
+  "library-management": {
+    "mode": "inline",
+    "overview": "Manage books with borrow and return functionality using OOP.\n\nFeatures to build:\n• Add Books\n• Borrow Book\n• Return Book\n• Display Books\n\nRequirements:\n• Use objects and constructors\n• Apply encapsulation\n\nBonus:\n• Fine calculation for late returns",
+    "explanation": "Library Management System is a console Java program implementing: Add Books, Borrow Book, Return Book, Display Books. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class LibraryManagement {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Library Management System\");\n        // Features: Add Books, Borrow Book, Return Book, Display Books\n        sc.close();\n    }\n}",
+    "filename": "LibraryManagement.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Library Management System\nManage books with borrow and return functionality using OOP.",
+    "runInstructions": "javac LibraryManagement.java\njava LibraryManagement"
+  },
+  "employee-management": {
+    "mode": "inline",
+    "overview": "Employee records with department and salary management.\n\nFeatures to build:\n• Employee Details\n• Salary\n• Department\n• Experience\n• Display Information\n\nRequirements:\n• Encapsulate employee data\n• Use proper class design\n\nBonus:\n• Department-wise filtering",
+    "explanation": "Employee Management System is a console Java program implementing: Employee Details, Salary, Department, Experience, Display Information. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class EmployeeManagement {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Employee Management System\");\n        // Features: Employee Details, Salary, Department, Experience, Display Information\n        sc.close();\n    }\n}",
+    "filename": "EmployeeManagement.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Employee Management System\nEmployee records with department and salary management.",
+    "runInstructions": "javac EmployeeManagement.java\njava EmployeeManagement"
+  },
+  "vehicle-registration": {
+    "mode": "inline",
+    "overview": "Register and manage vehicle records with owner details.\n\nFeatures to build:\n• Register Vehicle\n• Owner Details\n• Vehicle Information\n• Display Records\n\nRequirements:\n• Separate classes for Vehicle and Owner\n• Use encapsulation\n\nBonus:\n• Search by registration number",
+    "explanation": "Vehicle Registration System is a console Java program implementing: Register Vehicle, Owner Details, Vehicle Information, Display Records. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class VehicleRegistration {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Vehicle Registration System\");\n        // Features: Register Vehicle, Owner Details, Vehicle Information, Display Records\n        sc.close();\n    }\n}",
+    "filename": "VehicleRegistration.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Vehicle Registration System\nRegister and manage vehicle records with owner details.",
+    "runInstructions": "javac VehicleRegistration.java\njava VehicleRegistration"
+  }
+}

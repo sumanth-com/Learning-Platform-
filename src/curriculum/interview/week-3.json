@@ -1,0 +1,264 @@
+[
+  {
+    "id": "w3-oop-fundamentals",
+    "category": "OOP Fundamentals",
+    "questions": [
+      {
+        "id": "w3-q01",
+        "question": "What is OOP?",
+        "answer": "Object-Oriented Programming (OOP) is a programming paradigm that models software as interacting objects—each object bundles data (fields) and behavior (methods) that operate on that data. Programs are built by defining classes as blueprints and creating objects as instances. OOP emphasizes organizing code around real-world entities, which improves modularity, reuse, and team collaboration on large systems.",
+        "realWorld": "An HR system models Employee, Department, and PayrollRun as objects—each encapsulates its own data and operations instead of scattered global functions."
+      },
+      {
+        "id": "w3-q02",
+        "question": "What are the four pillars of OOP?",
+        "answer": "The four pillars are Encapsulation (hiding internal state and exposing controlled access), Inheritance (deriving new classes from existing ones to reuse and extend behavior), Polymorphism (same interface, different implementations—method overriding and overloading), and Abstraction (hiding complexity and showing only essential features via abstract classes and interfaces). Together they enable flexible, maintainable design.",
+        "realWorld": "A Payment interface (abstraction) is implemented by CreditCardPayment and UpiPayment (polymorphism); each encapsulates processing details behind process() method."
+      },
+      {
+        "id": "w3-q03",
+        "question": "What is a class?",
+        "answer": "A class is a blueprint or template that defines the structure and behavior objects of that type will have. It specifies fields (state), methods (behavior), constructors, and optionally nested types. A class itself is not an object—it describes what instances will look like. You declare a class once and create many objects from it.",
+        "realWorld": "class BankAccount defines accountNumber, balance, deposit(), and withdraw()—every customer account is an object built from this template.",
+        "code": "class BankAccount {\n    String accountNumber;\n    double balance;\n\n    void deposit(double amount) {\n        balance += amount;\n    }\n}",
+        "output": "BankAccount is a blueprint; no output until objects are created and methods called."
+      },
+      {
+        "id": "w3-q04",
+        "question": "What is an object?",
+        "answer": "An object is a concrete instance of a class created at runtime with the new keyword. It occupies memory on the heap and has its own copy of instance fields (unless static). Objects interact by calling methods on each other, passing messages. Identity, state, and behavior are the three characteristics of every object.",
+        "realWorld": "Two BankAccount objects for different customers share the same class but hold different account numbers and balances in memory.",
+        "code": "BankAccount alice = new BankAccount();\nalice.accountNumber = \"ACC-001\";\nalice.balance = 500.0;\n\nBankAccount bob = new BankAccount();\nbob.accountNumber = \"ACC-002\";\nbob.balance = 1200.0;",
+        "output": "Two distinct objects: alice (ACC-001, 500.0) and bob (ACC-002, 1200.0)"
+      },
+      {
+        "id": "w3-q05",
+        "question": "Difference between class and object.",
+        "answer": "A class is the definition—a single specification existing at compile time. An object is a runtime instance created from that class, with actual values in memory. Analogy: class is the architectural plan; object is the built house. One class can produce unlimited objects, each with independent state.",
+        "realWorld": "Car is a class defining model, color, and drive(); your specific Toyota Camry in the parking lot is an object with actual values.",
+        "code": "class Car {\n    String model;\n    void drive() { System.out.println(model + \" moving\"); }\n}\n\nCar c1 = new Car(); c1.model = \"Sedan\";\nCar c2 = new Car(); c2.model = \"SUV\";\nc1.drive(); c2.drive();",
+        "output": "Sedan moving\nSUV moving"
+      },
+      {
+        "id": "w3-q06",
+        "question": "Why is OOP better than procedural programming?",
+        "answer": "OOP organizes code around data and the operations that belong to it, reducing global state and spaghetti code. It enables encapsulation, reuse through inheritance and composition, and polymorphism for extensibility. Procedural code works for small scripts, but OOP scales better for large teams and evolving requirements because changes are localized to classes.",
+        "realWorld": "Adding a new payment type in OOP means adding one class implementing PaymentInterface; procedural code might require editing many switch statements across files."
+      },
+      {
+        "id": "w3-q07",
+        "question": "How does OOP help in large applications?",
+        "answer": "OOP divides large systems into cohesive modules (classes and packages) with clear boundaries. Teams can own domains—billing, auth, inventory—without stepping on each other. Encapsulation hides implementation; interfaces define contracts. Design patterns and SOLID principles build on OOP to manage complexity, testability, and long-term maintenance in enterprise software.",
+        "realWorld": "Amazon's codebase spans thousands of services and classes; bounded contexts like OrderService and InventoryService evolve independently behind well-defined APIs."
+      }
+    ]
+  },
+  {
+    "id": "w3-classes-constructors",
+    "category": "Classes, Variables & Constructors",
+    "questions": [
+      {
+        "id": "w3-q08",
+        "question": "What is an instance variable?",
+        "answer": "An instance variable is a field declared inside a class but outside any method. Each object gets its own copy (unless static). Instance variables define an object's state and exist for the object's lifetime on the heap. They receive default values if not explicitly initialized and are accessible to all instance methods of the class.",
+        "realWorld": "In class User, fields like email, createdAt, and isVerified are instance variables—each User object stores its own values.",
+        "code": "class Product {\n    String name;      // instance variable\n    double price;     // instance variable\n\n    void display() {\n        System.out.println(name + \": $\" + price);\n    }\n}",
+        "output": "Each Product object has its own name and price fields."
+      },
+      {
+        "id": "w3-q09",
+        "question": "What is a local variable?",
+        "answer": "A local variable is declared inside a method, constructor, or block. It is created when the block executes and destroyed when the block ends. Locals must be explicitly assigned before use and cannot have access modifiers. They shadow instance variables if they share the same name within that block.",
+        "realWorld": "A calculateDiscount() method uses local variables discountRate and finalPrice that exist only during that method call.",
+        "code": "class Demo {\n    int value = 10; // instance variable\n\n    void show() {\n        int value = 99; // local variable shadows instance\n        System.out.println(value);\n    }\n}",
+        "output": "99"
+      },
+      {
+        "id": "w3-q10",
+        "question": "What is a constructor?",
+        "answer": "A constructor is a special method invoked when an object is created with new. It has the same name as the class and no return type. Constructors initialize instance variables and prepare the object for use. If you define no constructor, Java provides a default no-arg constructor. Once any constructor is defined, the default is not supplied automatically.",
+        "realWorld": "new User(\"alice@email.com\", \"Alice\") calls a constructor that sets email and name and maybe logs account creation.",
+        "code": "class Employee {\n    String name;\n    int id;\n\n    Employee(String name, int id) {\n        this.name = name;\n        this.id = id;\n    }\n}\n\nEmployee e = new Employee(\"Ravi\", 101);",
+        "output": "e.name = \"Ravi\", e.id = 101"
+      },
+      {
+        "id": "w3-q11",
+        "question": "Can a constructor be private?",
+        "answer": "Yes—a private constructor cannot be called from outside the class. Common uses include Singleton pattern (only one instance), utility classes that should not be instantiated (e.g., java.lang.Math), and factory methods that control object creation. The class must provide a static method or field to obtain instances if needed externally.",
+        "realWorld": "Singleton database connection pools use private constructors so all code obtains the shared instance via getInstance().",
+        "code": "class Config {\n    private static Config instance = new Config();\n    private Config() { } // private constructor\n\n    static Config getInstance() { return instance; }\n}",
+        "output": "Config.getInstance() returns the single shared instance; new Config() is a compile error outside the class."
+      },
+      {
+        "id": "w3-q12",
+        "question": "Can constructors be overloaded?",
+        "answer": "Yes—like methods, multiple constructors can exist with different parameter lists in the same class. One constructor can call another using this(...) as the first statement, enabling constructor chaining. Overloading provides convenient ways to create objects with varying initial data—no-arg, partial, or full initialization.",
+        "realWorld": "class Rectangle may offer Rectangle(), Rectangle(int size), and Rectangle(int width, int height) for different creation scenarios.",
+        "code": "class Book {\n    String title;\n    String author;\n\n    Book() { this(\"Unknown\", \"Anonymous\"); }\n    Book(String title) { this(title, \"Anonymous\"); }\n    Book(String title, String author) {\n        this.title = title;\n        this.author = author;\n    }\n}",
+        "output": "new Book(\"Java Basics\") → title=\"Java Basics\", author=\"Anonymous\""
+      },
+      {
+        "id": "w3-q13",
+        "question": "Constructor vs Method.",
+        "answer": "Constructors initialize new objects; methods perform operations on existing objects. Constructors match the class name exactly and have no return type—not even void. They are invoked only via new, not directly. Methods have their own names and return types and can be called anytime. Constructors are not inherited, though a subclass constructor must call a superclass constructor.",
+        "realWorld": "Constructor sets initial balance when Account is opened; withdraw() method changes balance during the account's lifetime.",
+        "code": "class Account {\n    double balance;\n    Account(double initial) { balance = initial; }  // constructor\n    void withdraw(double amt) { balance -= amt; }   // method\n}",
+        "output": "new Account(1000) initializes; withdraw(200) updates existing object."
+      },
+      {
+        "id": "w3-q14",
+        "question": "What is the this keyword?",
+        "answer": "this is a reference to the current object—the instance on which a method or constructor was invoked. Use it to disambiguate instance variables from parameters with the same name, to call other constructors with this(...), or to pass the current object to another method. this cannot be used in static context because static methods have no current instance.",
+        "realWorld": "this.email = email in a User constructor assigns the parameter to the instance field when both share the name email.",
+        "code": "class Point {\n    int x, y;\n    Point(int x, int y) {\n        this.x = x;\n        this.y = y;\n    }\n    void print() { System.out.println(this.x + \",\" + this.y); }\n}",
+        "output": "new Point(3, 4).print() → 3,4"
+      },
+      {
+        "id": "w3-q15",
+        "question": "Why do we use this()?",
+        "answer": "this() calls another constructor in the same class and must be the first statement in a constructor. It eliminates duplicate initialization code by centralizing common setup in one constructor. Chaining ensures all objects pass through a consistent validation or defaulting path before use.",
+        "realWorld": "A User class might chain this(email) to this(email, Role.USER) so role defaults and validation run in one place.",
+        "code": "class User {\n    String email;\n    String role;\n\n    User(String email) { this(email, \"GUEST\"); }\n    User(String email, String role) {\n        this.email = email;\n        this.role = role;\n    }\n}",
+        "output": "new User(\"a@b.com\") → email=a@b.com, role=GUEST"
+      }
+    ]
+  },
+  {
+    "id": "w3-static-members",
+    "category": "Static Members",
+    "questions": [
+      {
+        "id": "w3-q16",
+        "question": "What is the static keyword?",
+        "answer": "static means a member belongs to the class itself rather than to any single instance. Static variables are shared across all objects; static methods are called on the class name. Static blocks run once when the class is loaded. static context has no this reference and cannot directly access instance members without an object reference.",
+        "realWorld": "A static counter totalUsersCreated tracks how many User objects exist; all instances share one variable in memory.",
+        "code": "class Counter {\n    static int count = 0;\n    Counter() { count++; }\n}\n\nnew Counter();\nnew Counter();\nSystem.out.println(Counter.count);",
+        "output": "2"
+      },
+      {
+        "id": "w3-q17",
+        "question": "Static variable vs Instance variable.",
+        "answer": "A static variable is shared by all instances of the class—one memory location for the entire class. An instance variable belongs to each object separately—each instance has its own copy. Changing a static variable affects all objects; changing an instance variable affects only that object. Static variables exist when the class is loaded; instance variables exist per object.",
+        "realWorld": "companyName as static is same for all Employee objects; salary as instance varies per employee.",
+        "code": "class Employee {\n    static String company = \"TechCorp\";\n    String name;\n    Employee(String name) { this.name = name; }\n}\n\nEmployee e1 = new Employee(\"Ana\");\nEmployee e2 = new Employee(\"Ben\");\nEmployee.company = \"NewCorp\";\nSystem.out.println(e1.name + \", \" + Employee.company);",
+        "output": "Ana, NewCorp"
+      },
+      {
+        "id": "w3-q18",
+        "question": "Static method vs Instance method.",
+        "answer": "Static methods belong to the class and are invoked as ClassName.method() without an object. Instance methods require an object and can access both instance and static members. Static methods cannot use this or super directly and typically implement utility or factory logic that does not depend on instance state.",
+        "realWorld": "Integer.parseInt() is static utility logic; account.getBalance() is instance behavior tied to a specific account object.",
+        "code": "class MathUtil {\n    static int square(int n) { return n * n; }\n    int instanceVal = 5;\n}\n\nSystem.out.println(MathUtil.square(4));",
+        "output": "16"
+      },
+      {
+        "id": "w3-q19",
+        "question": "Can static methods access instance variables?",
+        "answer": "No—not directly. Static methods have no this reference and no associated instance, so they cannot access instance fields or call instance methods without an object reference passed as a parameter. They can access static variables and other static methods. To use instance data, pass an object into the static method or make the method non-static.",
+        "realWorld": "A static validateEmail(String email) can check format but needs a User object parameter to read user.getPreferences().",
+        "code": "class Demo {\n    int instanceVar = 10;\n    static int staticVar = 20;\n\n    static void staticMethod() {\n        System.out.println(staticVar); // OK\n        // System.out.println(instanceVar); // compile error\n    }\n}",
+        "output": "Compile error: non-static variable instanceVar cannot be referenced from a static context"
+      }
+    ]
+  },
+  {
+    "id": "w3-encapsulation",
+    "category": "Encapsulation & Data Hiding",
+    "questions": [
+      {
+        "id": "w3-q20",
+        "question": "What is encapsulation?",
+        "answer": "Encapsulation is bundling data and the methods that operate on it within a class, while restricting direct access to internal state. Fields are typically private; controlled access goes through public methods (getters/setters) or business methods. This protects invariants, hides implementation details, and allows internal changes without breaking callers.",
+        "realWorld": "An ATM class exposes withdraw() and getBalance() but keeps the internal ledger private—users cannot set balance to a million directly.",
+        "code": "class Account {\n    private double balance;\n\n    public void deposit(double amount) {\n        if (amount > 0) balance += amount;\n    }\n\n    public double getBalance() { return balance; }\n}",
+        "output": "Only valid deposits change balance; direct balance manipulation is prevented."
+      },
+      {
+        "id": "w3-q21",
+        "question": "Why use private variables?",
+        "answer": "Private variables prevent external code from reading or modifying internal state arbitrarily. This lets the class enforce validation rules—rejecting negative ages, null emails, or invalid transitions. Private fields are a key defense against bugs and security issues and are the foundation of encapsulation and maintainable APIs.",
+        "realWorld": "Keeping passwordHash private ensures no external code reads or overwrites credentials; only authenticate() handles it safely.",
+        "code": "class User {\n    private int age;\n\n    public void setAge(int age) {\n        if (age >= 0 && age <= 150) this.age = age;\n    }\n}",
+        "output": "setAge(-5) is ignored; invalid data never enters the object."
+      },
+      {
+        "id": "w3-q22",
+        "question": "What are getters and setters?",
+        "answer": "Getters (accessor methods) return the value of a private field; setters (mutator methods) assign a new value, often with validation. Naming convention: getFieldName() and setFieldName(value). For boolean fields, isActive() is common instead of getActive(). They provide controlled read/write access while keeping fields private.",
+        "realWorld": "IDEs and frameworks like Spring and Hibernate use getters/setters (or records) to bind UI forms and persist entity properties.",
+        "code": "class Product {\n    private String name;\n\n    public String getName() { return name; }\n    public void setName(String name) {\n        if (name != null && !name.isBlank()) this.name = name;\n    }\n}",
+        "output": "getName() returns current name; setName validates before assignment."
+      },
+      {
+        "id": "w3-q23",
+        "question": "What is data hiding?",
+        "answer": "Data hiding is restricting access to internal object details by using access modifiers—primarily private and protected. External code interacts through a public interface without knowing how data is stored or processed. Data hiding is the mechanism; encapsulation is the broader design principle that includes bundling behavior with hidden data.",
+        "realWorld": "A car's public interface is accelerate() and brake(); engine internals and fuel injection logic are hidden from the driver.",
+        "code": "class Engine {\n    private int rpm;\n    public void accelerate() { rpm += 500; }\n    public int getRpm() { return rpm; }\n}",
+        "output": "rpm cannot be set directly; only accelerate() modifies it through controlled logic."
+      },
+      {
+        "id": "w3-q24",
+        "question": "What are JavaBeans?",
+        "answer": "A JavaBean is a reusable software component following conventions: a public no-arg constructor, private fields, and public getters/setters for each property. Beans may be serializable and support event handling. The pattern enables frameworks—Spring, JSP, Jackson—to introspect objects via reflection and bind data automatically.",
+        "realWorld": "DTOs like UserRegistrationBean with private fields and get/set methods serialize to JSON in REST APIs via Jackson without custom mapping code.",
+        "code": "class UserBean {\n    private String username;\n    public UserBean() { }\n    public String getUsername() { return username; }\n    public void setUsername(String username) { this.username = username; }\n}",
+        "output": "Frameworks read/write username via getUsername/setUsername by convention."
+      }
+    ]
+  },
+  {
+    "id": "w3-objects-memory",
+    "category": "Objects, Memory & Composition",
+    "questions": [
+      {
+        "id": "w3-q25",
+        "question": "What is garbage collection?",
+        "answer": "Garbage collection (GC) is the JVM's automatic process of reclaiming heap memory occupied by objects that are no longer reachable from any live reference. Developers do not call free() or delete—unreachable objects become eligible for collection. GC reduces memory leaks from forgotten allocations but adds pause times; tuning matters in high-throughput systems.",
+        "realWorld": "When a user logs out and session objects are dereferenced, GC eventually frees that memory for new requests without manual cleanup.",
+        "code": "Object obj = new Object();\nobj = null; // object now eligible for GC\n// JVM reclaims memory during next GC cycle",
+        "output": "No console output; memory is reclaimed automatically by the JVM."
+      },
+      {
+        "id": "w3-q26",
+        "question": "What is object initialization?",
+        "answer": "Object initialization is the process of preparing a new instance when new ClassName() is called. Order: memory allocated, instance variables get default values, instance initializer blocks run, constructor executes (possibly chaining this() or super()). Proper initialization ensures the object is in a valid, usable state before any method uses it.",
+        "realWorld": "Creating a DatabaseConnection object initializes the socket, credentials, and connection pool slot in the constructor before queries run.",
+        "code": "class InitDemo {\n    int x;\n    InitDemo() {\n        x = 42; // constructor initialization\n    }\n}\n\nInitDemo d = new InitDemo();\nSystem.out.println(d.x);",
+        "output": "42"
+      },
+      {
+        "id": "w3-q27",
+        "question": "What is object reference?",
+        "answer": "An object reference is a variable that holds the memory address (pointer) of an object on the heap—not the object itself. Multiple references can point to the same object; assigning one reference to another copies the address, not the object. null means the reference points to no object. References enable passing and sharing objects across methods.",
+        "realWorld": "Two variables currentUser and loggedInUser may reference the same User object in memory after login assignment.",
+        "code": "class Box { int value; }\n\nBox a = new Box();\na.value = 10;\nBox b = a; // b references same object\nb.value = 20;\nSystem.out.println(a.value);",
+        "output": "20"
+      },
+      {
+        "id": "w3-q28",
+        "question": "Can one object access another object?",
+        "answer": "Yes—objects interact by holding references to each other and calling methods on those references. A field can store another object; a method can accept an object parameter. This models relationships: an Order contains Customer and LineItem objects. Access depends on visibility modifiers—only public and accessible members can be used across classes/packages.",
+        "realWorld": "An Order object calls customer.getShippingAddress() and paymentMethod.charge(total) to complete checkout.",
+        "code": "class Customer { String name; Customer(String n) { name = n; } }\nclass Order {\n    Customer customer;\n    Order(Customer c) { customer = c; }\n    void printCustomer() { System.out.println(customer.name); }\n}\n\nOrder o = new Order(new Customer(\"Priya\"));\no.printCustomer();",
+        "output": "Priya"
+      },
+      {
+        "id": "w3-q29",
+        "question": "What is composition?",
+        "answer": "Composition is a 'has-a' relationship where a class contains references to other objects as fields, building complex objects from simpler ones. The contained objects are typically created and owned by the parent—if the parent is destroyed, components go too. Composition is preferred over inheritance when behavior is assembled from parts rather than extended.",
+        "realWorld": "class Car has-a Engine and has-a Wheel[]—the car delegates start() to its engine rather than inheriting from Engine.",
+        "code": "class Engine { void start() { System.out.println(\"Engine on\"); } }\nclass Car {\n    private Engine engine = new Engine();\n    void start() { engine.start(); }\n}\n\nnew Car().start();",
+        "output": "Engine on"
+      },
+      {
+        "id": "w3-q30",
+        "question": "What are immutable objects?",
+        "answer": "An immutable object cannot change state after construction—all fields are final and the object is fully initialized in the constructor with no setters. If it holds mutable objects (like a List), defensive copies prevent external modification. Strings, Integer, and LocalDate are immutable. Immutability improves thread safety and simplifies reasoning about shared data.",
+        "realWorld": "String keys in HashMap are immutable so hash codes stay stable; sharing String literals across threads is safe without synchronization.",
+        "code": "final class ImmutablePoint {\n    private final int x;\n    private final int y;\n    ImmutablePoint(int x, int y) { this.x = x; this.y = y; }\n    public int getX() { return x; }\n    // no setters — state never changes\n}",
+        "output": "Once created, x and y cannot be modified; object is thread-safe for reads."
+      }
+    ]
+  }
+]

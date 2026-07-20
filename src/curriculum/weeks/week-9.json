@@ -1,0 +1,1247 @@
+{
+  "id": 9,
+  "slug": "week-9",
+  "title": "Spring Security, JWT Authentication & Authorization",
+  "goal": "Secure Spring Boot applications, implement Login and Registration APIs, understand Authentication and Authorization, generate and validate JWT tokens, protect REST APIs, implement RBAC, handle password encryption, understand backend security practices, and use AI to review vulnerabilities.",
+  "description": "This week covers Security — login, authentication, authorization, and user management. Almost every real backend application needs these concepts, and companies expect every Java backend developer to understand them.",
+  "estimatedHours": 26,
+  "difficulty": "hard",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Security Fundamentals",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-security-fundamentals",
+          "title": "Security Fundamentals",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-why-security",
+              "title": "Why Application Security?"
+            },
+            {
+              "id": "d1-authentication",
+              "title": "Authentication"
+            },
+            {
+              "id": "d1-authorization",
+              "title": "Authorization"
+            },
+            {
+              "id": "d1-identity",
+              "title": "Identity"
+            },
+            {
+              "id": "d1-credentials",
+              "title": "Credentials"
+            },
+            {
+              "id": "d1-sessions",
+              "title": "Sessions"
+            },
+            {
+              "id": "d1-cookies",
+              "title": "Cookies"
+            },
+            {
+              "id": "d1-stateless",
+              "title": "Stateless Authentication"
+            },
+            {
+              "id": "d1-stateful",
+              "title": "Stateful Authentication"
+            },
+            {
+              "id": "d1-oauth",
+              "title": "OAuth (Introduction)"
+            },
+            {
+              "id": "d1-jwt-overview",
+              "title": "JWT Overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Spring Security Basics",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-spring-security",
+          "title": "Spring Security Basics",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d2-architecture",
+              "title": "Spring Security Architecture"
+            },
+            {
+              "id": "d2-filter-chain",
+              "title": "Security Filter Chain"
+            },
+            {
+              "id": "d2-auth-manager",
+              "title": "Authentication Manager"
+            },
+            {
+              "id": "d2-user-details",
+              "title": "UserDetails"
+            },
+            {
+              "id": "d2-user-details-service",
+              "title": "UserDetailsService"
+            },
+            {
+              "id": "d2-password-encoder",
+              "title": "PasswordEncoder"
+            },
+            {
+              "id": "d2-bcrypt",
+              "title": "BCrypt Password Encoder"
+            },
+            {
+              "id": "d2-security-config",
+              "title": "Security Configuration"
+            },
+            {
+              "id": "d2-custom-config",
+              "title": "Custom Security Configuration"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "JWT Authentication",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-jwt",
+          "title": "JWT Authentication",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d3-what-jwt",
+              "title": "What is JWT?"
+            },
+            {
+              "id": "d3-structure",
+              "title": "JWT Structure"
+            },
+            {
+              "id": "d3-header",
+              "title": "Header"
+            },
+            {
+              "id": "d3-payload",
+              "title": "Payload"
+            },
+            {
+              "id": "d3-signature",
+              "title": "Signature"
+            },
+            {
+              "id": "d3-token-generation",
+              "title": "Token Generation"
+            },
+            {
+              "id": "d3-token-validation",
+              "title": "Token Validation"
+            },
+            {
+              "id": "d3-expiration",
+              "title": "Expiration"
+            },
+            {
+              "id": "d3-refresh-tokens",
+              "title": "Refresh Tokens (Introduction)"
+            },
+            {
+              "id": "d3-jwt-best-practices",
+              "title": "JWT Best Practices"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Login & Registration",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-login-registration",
+          "title": "Login & Registration",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d4-registration-api",
+              "title": "Registration API"
+            },
+            {
+              "id": "d4-login-api",
+              "title": "Login API"
+            },
+            {
+              "id": "d4-password-encryption",
+              "title": "Password Encryption"
+            },
+            {
+              "id": "d4-user-entity",
+              "title": "User Entity"
+            },
+            {
+              "id": "d4-role-entity",
+              "title": "Role Entity"
+            },
+            {
+              "id": "d4-user-repository",
+              "title": "User Repository"
+            },
+            {
+              "id": "d4-auth-service",
+              "title": "Authentication Service"
+            },
+            {
+              "id": "d4-token-response",
+              "title": "Token Response"
+            },
+            {
+              "id": "d4-error-handling",
+              "title": "Error Handling"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Role Based Access Control",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-rbac",
+          "title": "Role Based Access Control",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d5-roles",
+              "title": "Roles"
+            },
+            {
+              "id": "d5-user-role",
+              "title": "USER Role"
+            },
+            {
+              "id": "d5-admin-role",
+              "title": "ADMIN Role"
+            },
+            {
+              "id": "d5-permissions",
+              "title": "Permissions"
+            },
+            {
+              "id": "d5-role-hierarchy",
+              "title": "Role Hierarchy"
+            },
+            {
+              "id": "d5-securing-endpoints",
+              "title": "Securing Endpoints"
+            },
+            {
+              "id": "d5-preauthorize",
+              "title": "@PreAuthorize"
+            },
+            {
+              "id": "d5-method-security",
+              "title": "Method Security"
+            },
+            {
+              "id": "d5-url-security",
+              "title": "URL Security"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Validation & Exception Handling",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-validation",
+          "title": "Validation & Exception Handling",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-bean-validation",
+              "title": "Bean Validation"
+            },
+            {
+              "id": "d6-valid",
+              "title": "@Valid"
+            },
+            {
+              "id": "d6-validation-annotations",
+              "title": "Validation Annotations"
+            },
+            {
+              "id": "d6-custom-validation",
+              "title": "Custom Validation"
+            },
+            {
+              "id": "d6-auth-exceptions",
+              "title": "Authentication Exceptions"
+            },
+            {
+              "id": "d6-access-denied",
+              "title": "Access Denied Handling"
+            },
+            {
+              "id": "d6-global-handler",
+              "title": "Global Exception Handler"
+            },
+            {
+              "id": "d6-api-error-responses",
+              "title": "API Error Responses"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Revision",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d7-jwt-practice",
+              "title": "JWT Practice"
+            },
+            {
+              "id": "d7-security-practice",
+              "title": "Security Practice"
+            },
+            {
+              "id": "d7-api-testing",
+              "title": "API Testing"
+            },
+            {
+              "id": "d7-mock-assessment",
+              "title": "Mock Assessment"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-security-fundamentals",
+      "title": "Security Fundamentals",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w9-d1-1",
+          "title": "Authentication vs Authorization",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w9-d1-2",
+          "title": "Identity, Credentials & Sessions",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d1-3",
+          "title": "Stateless vs Stateful Authentication",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d1-4",
+          "title": "OAuth (Introduction)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d1-5",
+          "title": "JWT Overview",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-spring-security",
+      "title": "Spring Security Basics",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w9-d2-1",
+          "title": "Security Filter Chain & Authentication Manager",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d2-2",
+          "title": "UserDetails & UserDetailsService",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d2-3",
+          "title": "PasswordEncoder & BCrypt",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d2-4",
+          "title": "Security Configuration",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-jwt",
+      "title": "JWT Authentication",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w9-d3-1",
+          "title": "JWT Structure (Header, Payload, Signature)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d3-2",
+          "title": "Token Generation & Validation",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d3-3",
+          "title": "Expiration & Refresh Tokens",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d3-4",
+          "title": "JWT Best Practices",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-login-registration",
+      "title": "Login & Registration",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w9-d4-1",
+          "title": "Registration & Login APIs",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d4-2",
+          "title": "User & Role Entities",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d4-3",
+          "title": "Authentication Service & Token Response",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d4-4",
+          "title": "Password Encryption with BCrypt",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-rbac",
+      "title": "Role Based Access Control",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w9-d5-1",
+          "title": "Roles & Permissions",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d5-2",
+          "title": "USER & ADMIN Roles",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w9-d5-3",
+          "title": "@PreAuthorize & Method Security",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d5-4",
+          "title": "URL Security & Securing Endpoints",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-validation-exceptions",
+      "title": "Validation & Exception Handling",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w9-d6-1",
+          "title": "Bean Validation & @Valid",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w9-d6-2",
+          "title": "Custom Validation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d6-3",
+          "title": "Authentication & Access Denied Exceptions",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d6-4",
+          "title": "Global Exception Handler & API Error Responses",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision",
+      "title": "Revision",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w9-d7-1",
+          "title": "JWT Practice",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d7-2",
+          "title": "Security Practice",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w9-d7-3",
+          "title": "API Testing",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w9-d7-4",
+          "title": "Mock Assessment",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-authentication",
+      "category": "Authentication",
+      "questions": [
+        {
+          "id": "pq-w9-1",
+          "title": "Registration API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-2",
+          "title": "Login API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-3",
+          "title": "Logout API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-4",
+          "title": "Password Encryption",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-5",
+          "title": "User Validation",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-jwt",
+      "category": "JWT",
+      "questions": [
+        {
+          "id": "pq-w9-6",
+          "title": "Generate JWT Token",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-7",
+          "title": "Validate Token",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-8",
+          "title": "Extract Username",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-9",
+          "title": "Check Token Expiry",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-10",
+          "title": "Custom JWT Claims",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-spring-security",
+      "category": "Spring Security",
+      "questions": [
+        {
+          "id": "pq-w9-11",
+          "title": "Secure GET API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-12",
+          "title": "Secure POST API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-13",
+          "title": "Secure PUT API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-14",
+          "title": "Secure DELETE API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-15",
+          "title": "Configure Security Filter",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-roles",
+      "category": "Roles",
+      "questions": [
+        {
+          "id": "pq-w9-16",
+          "title": "USER Role",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w9-17",
+          "title": "ADMIN Role",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w9-18",
+          "title": "Admin Dashboard API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-19",
+          "title": "User Dashboard API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-20",
+          "title": "Restrict API by Role",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-validation",
+      "category": "Validation",
+      "questions": [
+        {
+          "id": "pq-w9-21",
+          "title": "Validate Email",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w9-22",
+          "title": "Validate Password",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-23",
+          "title": "Validate Mobile Number",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w9-24",
+          "title": "Validate Username",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w9-25",
+          "title": "Validate Registration Request",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-exception-handling",
+      "category": "Exception Handling",
+      "questions": [
+        {
+          "id": "pq-w9-26",
+          "title": "Invalid Login",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-27",
+          "title": "Invalid Token",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-28",
+          "title": "Unauthorized Request",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-29",
+          "title": "Forbidden Request",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-30",
+          "title": "Custom Authentication Exception",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-advanced-practice",
+      "category": "Advanced Practice",
+      "questions": [
+        {
+          "id": "pq-w9-31",
+          "title": "Reset Password",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w9-32",
+          "title": "Change Password",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-33",
+          "title": "Profile API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-34",
+          "title": "Update User Details",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-35",
+          "title": "Delete User",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-security-practice",
+      "category": "Security Practice",
+      "questions": [
+        {
+          "id": "pq-w9-36",
+          "title": "Secure File Upload API",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w9-37",
+          "title": "Secure Profile Update",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-38",
+          "title": "User Search API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-39",
+          "title": "Admin User List API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w9-40",
+          "title": "Secure Employee CRUD",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "authentication-service",
+      "title": "Authentication Service",
+      "description": "Standalone authentication service with JWT and role management.",
+      "features": [
+        {
+          "id": "p1-register",
+          "title": "Register"
+        },
+        {
+          "id": "p1-login",
+          "title": "Login"
+        },
+        {
+          "id": "p1-jwt",
+          "title": "JWT"
+        },
+        {
+          "id": "p1-bcrypt",
+          "title": "BCrypt"
+        },
+        {
+          "id": "p1-roles",
+          "title": "Role Management"
+        }
+      ],
+      "requirements": [
+        "Spring Security",
+        "JWT token generation & validation",
+        "BCrypt password hashing",
+        "USER and ADMIN roles"
+      ],
+      "bonusFeatures": [
+        "Refresh token support"
+      ]
+    },
+    {
+      "id": "employee-portal",
+      "title": "Employee Portal",
+      "description": "Employee portal with role-based dashboards and profile management.",
+      "features": [
+        {
+          "id": "p2-login",
+          "title": "Login"
+        },
+        {
+          "id": "p2-profile",
+          "title": "Profile"
+        },
+        {
+          "id": "p2-admin-dashboard",
+          "title": "Admin Dashboard"
+        },
+        {
+          "id": "p2-employee-dashboard",
+          "title": "Employee Dashboard"
+        },
+        {
+          "id": "p2-rbac",
+          "title": "Role-Based Access"
+        }
+      ],
+      "requirements": [
+        "JWT authentication",
+        "RBAC with @PreAuthorize",
+        "Separate admin and employee endpoints"
+      ],
+      "bonusFeatures": [
+        "Profile photo upload"
+      ]
+    },
+    {
+      "id": "hospital-portal",
+      "title": "Hospital Portal",
+      "description": "Multi-role hospital portal with doctor, patient, and admin access.",
+      "features": [
+        {
+          "id": "p3-doctor-login",
+          "title": "Doctor Login"
+        },
+        {
+          "id": "p3-patient-login",
+          "title": "Patient Login"
+        },
+        {
+          "id": "p3-admin-login",
+          "title": "Admin Login"
+        },
+        {
+          "id": "p3-appointments",
+          "title": "Appointment APIs"
+        },
+        {
+          "id": "p3-jwt",
+          "title": "JWT Authentication"
+        }
+      ],
+      "requirements": [
+        "Multiple roles (DOCTOR, PATIENT, ADMIN)",
+        "JWT-protected appointment APIs",
+        "Spring Security"
+      ],
+      "bonusFeatures": [
+        "Role-specific appointment views"
+      ]
+    },
+    {
+      "id": "ecommerce-auth",
+      "title": "E-Commerce Authentication",
+      "description": "E-commerce authentication with customer and admin login flows.",
+      "features": [
+        {
+          "id": "p4-customer-login",
+          "title": "Customer Login"
+        },
+        {
+          "id": "p4-admin-login",
+          "title": "Admin Login"
+        },
+        {
+          "id": "p4-password-reset",
+          "title": "Password Reset"
+        },
+        {
+          "id": "p4-token-validation",
+          "title": "Token Validation"
+        }
+      ],
+      "requirements": [
+        "JWT authentication",
+        "Customer and Admin roles",
+        "Password reset flow"
+      ],
+      "bonusFeatures": [
+        "Email verification on registration"
+      ]
+    },
+    {
+      "id": "student-portal",
+      "title": "Student Portal",
+      "description": "Student portal with faculty and admin access for courses and attendance.",
+      "features": [
+        {
+          "id": "p5-student-login",
+          "title": "Student Login"
+        },
+        {
+          "id": "p5-faculty-login",
+          "title": "Faculty Login"
+        },
+        {
+          "id": "p5-admin-login",
+          "title": "Admin Login"
+        },
+        {
+          "id": "p5-courses",
+          "title": "Course APIs"
+        },
+        {
+          "id": "p5-attendance",
+          "title": "Attendance APIs"
+        }
+      ],
+      "requirements": [
+        "Three roles (STUDENT, FACULTY, ADMIN)",
+        "JWT-protected course and attendance APIs",
+        "RBAC"
+      ],
+      "bonusFeatures": [
+        "Attendance report for faculty"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-9",
+    "title": "Secure AI API Integration",
+    "description": "Learn secure AI API integration — authentication, secret management, prompt injection risks, and responsible AI usage.",
+    "learningTopics": [
+      {
+        "id": "ai-w9-t1",
+        "title": "AI API Authentication"
+      },
+      {
+        "id": "ai-w9-t2",
+        "title": "API Keys"
+      },
+      {
+        "id": "ai-w9-t3",
+        "title": "Environment Variables"
+      },
+      {
+        "id": "ai-w9-t4",
+        "title": "Secret Management"
+      },
+      {
+        "id": "ai-w9-t5",
+        "title": "Prompt Injection Basics"
+      },
+      {
+        "id": "ai-w9-t6",
+        "title": "AI Security Risks"
+      },
+      {
+        "id": "ai-w9-t7",
+        "title": "Secure Prompt Design"
+      },
+      {
+        "id": "ai-w9-t8",
+        "title": "AI Output Validation"
+      },
+      {
+        "id": "ai-w9-t9",
+        "title": "AI Response Filtering"
+      },
+      {
+        "id": "ai-w9-t10",
+        "title": "Responsible AI Usage"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w9-e1",
+        "title": "Review your Spring Security configuration."
+      },
+      {
+        "id": "ai-w9-e2",
+        "title": "Identify security vulnerabilities in your API."
+      },
+      {
+        "id": "ai-w9-e3",
+        "title": "Explain JWT token flow step by step."
+      },
+      {
+        "id": "ai-w9-e4",
+        "title": "Compare: JWT vs Sessions."
+      },
+      {
+        "id": "ai-w9-e5",
+        "title": "Generate secure password validation rules."
+      },
+      {
+        "id": "ai-w9-e6",
+        "title": "Review your login API."
+      },
+      {
+        "id": "ai-w9-e7",
+        "title": "Explain BCrypt hashing."
+      },
+      {
+        "id": "ai-w9-e8",
+        "title": "Suggest secure REST API practices."
+      },
+      {
+        "id": "ai-w9-e9",
+        "title": "Create authentication flow diagrams."
+      },
+      {
+        "id": "ai-w9-e10",
+        "title": "Identify common authentication mistakes."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-9",
+    "repository": "springboot-week-2-security",
+    "description": "Create repository springboot-week-2-security and upload all Week 9 security projects.",
+    "files": [
+      {
+        "id": "gh-w9-f1",
+        "path": "AuthenticationAPI/"
+      },
+      {
+        "id": "gh-w9-f2",
+        "path": "RegistrationAPI/"
+      },
+      {
+        "id": "gh-w9-f3",
+        "path": "JWTConfiguration.java"
+      },
+      {
+        "id": "gh-w9-f4",
+        "path": "UserService.java"
+      },
+      {
+        "id": "gh-w9-f5",
+        "path": "SecurityConfiguration.java"
+      },
+      {
+        "id": "gh-w9-f6",
+        "path": "RoleManagement/"
+      },
+      {
+        "id": "gh-w9-f7",
+        "path": "ProfileAPI/"
+      },
+      {
+        "id": "gh-w9-f8",
+        "path": "EmployeePortal/"
+      },
+      {
+        "id": "gh-w9-f9",
+        "path": "README.md"
+      },
+      {
+        "id": "gh-w9-f10",
+        "path": "Postman Collection.json"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w9-security",
+      "category": "Security Fundamentals",
+      "questions": [
+        {
+          "id": "iq-w9-1",
+          "question": "Difference between Authentication and Authorization?",
+          "answer": "Authentication verifies who you are (login). Authorization determines what you can access (permissions/roles) after authentication."
+        },
+        {
+          "id": "iq-w9-2",
+          "question": "What is JWT and how does it work?",
+          "answer": "JSON Web Token — compact, signed token with Header, Payload, and Signature. Server generates it on login; client sends it in Authorization header for subsequent requests."
+        },
+        {
+          "id": "iq-w9-3",
+          "question": "JWT vs Session-based authentication?",
+          "answer": "JWT is stateless — server doesn't store session. Sessions are stateful — server stores session data. JWT scales better for microservices; sessions are simpler for monoliths."
+        }
+      ]
+    },
+    {
+      "id": "iq-w9-spring",
+      "category": "Spring Security",
+      "questions": [
+        {
+          "id": "iq-w9-4",
+          "question": "What is the Security Filter Chain?",
+          "answer": "Chain of filters in Spring Security that intercept requests — handles authentication, authorization, CSRF, and other security concerns before reaching the controller."
+        },
+        {
+          "id": "iq-w9-5",
+          "question": "What is BCrypt and why use it?",
+          "answer": "Adaptive password hashing algorithm with built-in salt. Slow by design to resist brute-force attacks. Spring Security's recommended PasswordEncoder."
+        },
+        {
+          "id": "iq-w9-6",
+          "question": "What is RBAC?",
+          "answer": "Role-Based Access Control — users are assigned roles (USER, ADMIN) and permissions are granted based on roles, not individual users."
+        }
+      ]
+    },
+    {
+      "id": "iq-w9-api",
+      "category": "API Security",
+      "questions": [
+        {
+          "id": "iq-w9-7",
+          "question": "HTTP 401 vs 403?",
+          "answer": "401 Unauthorized — authentication failed or missing (not logged in). 403 Forbidden — authenticated but lacks permission for the resource."
+        },
+        {
+          "id": "iq-w9-8",
+          "question": "How do you secure a REST API with JWT?",
+          "answer": "Configure Spring Security filter to validate JWT on each request, extract user/roles from token, enforce RBAC with @PreAuthorize, and never store secrets in code."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w9-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions across Authentication, JWT, Spring Security, Roles, Validation, and Exception Handling",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w9-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 security-focused portal and authentication projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w9-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to springboot-week-2-security repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w9-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 20
+      }
+    },
+    {
+      "id": "del-w9-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 9 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 30
+      }
+    }
+  ]
+}

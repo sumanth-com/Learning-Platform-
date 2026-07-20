@@ -1,0 +1,49 @@
+{
+  "ai-e1": {
+    "answer": "**JDK** = write & compile (javac, tools). **JRE** = run apps (JVM + libraries). **JVM** = executes bytecode on any OS.",
+    "realWorld": "Laptop has JDK for coding. Server runs your JAR with a JVM — same bytecode, different OS.",
+    "code": "public class Hello {\n  public static void main(String[] args) {\n    System.out.println(\"Runs on JVM!\");\n  }\n}"
+  },
+  "ai-e2": {
+    "answer": "Variables store values: `int age = 12;` `String name = \"Riya\";` Type is fixed; you can reassign compatible values.",
+    "realWorld": "Game stats: health, coins, playerName — updated as the program runs.",
+    "code": "int age = 10;\nString name = \"Riya\";\nSystem.out.println(name + \" is \" + age);"
+  },
+  "ai-e3": {
+    "answer": "`public class HelloWorld` — class name. `public static void main` — entry point. `System.out.println` — print line. Braces close method and class.",
+    "realWorld": "`java HelloWorld` → JVM runs main() → output in terminal. Every Java app starts here.",
+    "code": "public class HelloWorld {\n  public static void main(String[] args) {\n    System.out.println(\"Hello, World!\");\n  }\n}"
+  },
+  "ai-e4": {
+    "answer": "Syntax error = compiler can't parse code: missing `;`, bad braces, typos. Fix the line javac reports before running.",
+    "realWorld": "Missing semicolon → red squiggle → add `;` → compiles.",
+    "code": "int score = 95;\nSystem.out.println(score);"
+  },
+  "ai-e5": {
+    "answer": "Find bugs: read error line, check recent edits, print variables, fix one issue at a time. Logic bugs compile but give wrong output — trace step by step.",
+    "realWorld": "NPE on null.length() — add null check before calling methods.",
+    "code": "System.out.println(\"Sum: \" + (a + b)); // not just \"Sum\""
+  },
+  "ai-e6": {
+    "answer": "Compare AI answers: accurate? clear? compiles? Compare two responses — pick correct + simple over fancy + wrong.",
+    "realWorld": "'int always worse than double' — misleading. 'int for counts, double for prices' — correct."
+  },
+  "ai-e7": {
+    "answer": "Names describe purpose: studentCount not n, isLoggedIn not flag. camelCase in Java. Booleans often start with is/has.",
+    "realWorld": "passingScore and grade beat x and s in code review.",
+    "code": "int maxAttendance = 100;\ndouble examAverage = 89.5;"
+  },
+  "ai-e8": {
+    "answer": "Casting: int→double automatic. double→int needs (int) and drops decimals. Watch int division: 7/2 is 3, 7/2.0 is 3.5.",
+    "realWorld": "(int)(29.97/2) = 14 — know when losing decimals is OK.",
+    "code": "double price = 9.99;\nint rounded = (int) price; // 9"
+  },
+  "ai-e9": {
+    "answer": "Self-quiz: main signature? 4 primitives? javac vs java? Fix `String name = Alex`. What is bytecode? == vs =?",
+    "realWorld": "Cover answers, write from memory, then check — best prep for tests and interviews."
+  },
+  "ai-e10": {
+    "answer": "Project review: meaningful names, input validation, no magic numbers, small methods, test empty list and bad input.",
+    "realWorld": "Clean GitHub README + validation shows you think like a developer, not a copy-paster."
+  }
+}

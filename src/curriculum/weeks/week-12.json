@@ -1,0 +1,29 @@
+{
+  "id": 12,
+  "slug": "week-12",
+  "title": "Projects, AI & Interview Prep",
+  "goal": "Capstone backend project, GitHub portfolio, AI-assisted coding, and mock interview preparation.",
+  "description": "Week 12 brings everything together: capstone Spring Boot project, professional Git workflow, AI skills for coding and interviews, and portfolio readiness.",
+  "estimatedHours": 20,
+  "difficulty": "hard",
+  "days": [],
+  "topics": [],
+  "programmingQuestions": [],
+  "projects": [],
+  "aiSkill": {
+    "id": "ai-w12",
+    "title": "AI & Interview Skills",
+    "description": "Prompt engineering, mock interviews, and AI-assisted development.",
+    "learningTopics": [],
+    "tools": ["ChatGPT", "Claude", "GitHub Copilot"],
+    "exercises": [],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "github-w12",
+    "repository": "portfolio",
+    "files": []
+  },
+  "interviewQuestions": [],
+  "deliverables": []
+}

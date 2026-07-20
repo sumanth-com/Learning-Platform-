@@ -1,0 +1,1306 @@
+{
+  "id": 8,
+  "slug": "week-8",
+  "title": "Spring Boot Fundamentals & REST API Development",
+  "goal": "Understand the Spring Framework, build REST APIs with Spring Boot, master Dependency Injection and IoC, build layered backend applications, connect Spring Boot with MySQL, test APIs with Postman, build complete CRUD REST APIs, and use AI for API documentation and debugging.",
+  "description": "Now that Core Java, Java 8, Collections, JDBC, SQL, Maven, and Testing are complete — this is the perfect time to start Spring Boot. Focus on how Spring Boot works internally before Microservices or Security.",
+  "estimatedHours": 26,
+  "difficulty": "medium",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Introduction to Spring",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-spring-intro",
+          "title": "Introduction to Spring",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-what-spring",
+              "title": "What is Spring?"
+            },
+            {
+              "id": "d1-why-spring",
+              "title": "Why Spring?"
+            },
+            {
+              "id": "d1-framework-overview",
+              "title": "Spring Framework Overview"
+            },
+            {
+              "id": "d1-spring-modules",
+              "title": "Spring Modules"
+            },
+            {
+              "id": "d1-spring-vs-boot",
+              "title": "Spring vs Spring Boot"
+            },
+            {
+              "id": "d1-why-spring-boot",
+              "title": "Why Spring Boot?"
+            },
+            {
+              "id": "d1-boot-architecture",
+              "title": "Spring Boot Architecture"
+            },
+            {
+              "id": "d1-starter-projects",
+              "title": "Spring Boot Starter Projects"
+            },
+            {
+              "id": "d1-initializr",
+              "title": "Spring Initializr"
+            },
+            {
+              "id": "d1-project-structure",
+              "title": "Project Structure"
+            },
+            {
+              "id": "d1-maven-review",
+              "title": "Maven Review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Spring Core",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-spring-core",
+          "title": "Spring Core",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d2-ioc",
+              "title": "IoC (Inversion of Control)"
+            },
+            {
+              "id": "d2-di",
+              "title": "Dependency Injection"
+            },
+            {
+              "id": "d2-bean",
+              "title": "Bean"
+            },
+            {
+              "id": "d2-bean-lifecycle",
+              "title": "Bean Lifecycle"
+            },
+            {
+              "id": "d2-bean-scope",
+              "title": "Bean Scope"
+            },
+            {
+              "id": "d2-app-context",
+              "title": "Application Context"
+            },
+            {
+              "id": "d2-component-scan",
+              "title": "Component Scan"
+            },
+            {
+              "id": "d2-component",
+              "title": "@Component"
+            },
+            {
+              "id": "d2-service",
+              "title": "@Service"
+            },
+            {
+              "id": "d2-repository",
+              "title": "@Repository"
+            },
+            {
+              "id": "d2-controller",
+              "title": "@Controller"
+            },
+            {
+              "id": "d2-restcontroller",
+              "title": "@RestController"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "REST API Basics",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-rest-basics",
+          "title": "REST API Basics",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-what-rest",
+              "title": "What is REST?"
+            },
+            {
+              "id": "d3-rest-architecture",
+              "title": "REST Architecture"
+            },
+            {
+              "id": "d3-http-protocol",
+              "title": "HTTP Protocol"
+            },
+            {
+              "id": "d3-http-methods",
+              "title": "HTTP Methods"
+            },
+            {
+              "id": "d3-get",
+              "title": "GET"
+            },
+            {
+              "id": "d3-post",
+              "title": "POST"
+            },
+            {
+              "id": "d3-put",
+              "title": "PUT"
+            },
+            {
+              "id": "d3-patch",
+              "title": "PATCH"
+            },
+            {
+              "id": "d3-delete",
+              "title": "DELETE"
+            },
+            {
+              "id": "d3-request",
+              "title": "Request"
+            },
+            {
+              "id": "d3-response",
+              "title": "Response"
+            },
+            {
+              "id": "d3-json",
+              "title": "JSON"
+            },
+            {
+              "id": "d3-rest-best-practices",
+              "title": "REST Best Practices"
+            },
+            {
+              "id": "d3-api-versioning",
+              "title": "API Versioning (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Spring MVC",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-spring-mvc",
+          "title": "Spring MVC",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d4-controller",
+              "title": "Controller"
+            },
+            {
+              "id": "d4-request-mapping",
+              "title": "Request Mapping"
+            },
+            {
+              "id": "d4-path-variables",
+              "title": "Path Variables"
+            },
+            {
+              "id": "d4-request-params",
+              "title": "Request Parameters"
+            },
+            {
+              "id": "d4-request-body",
+              "title": "Request Body"
+            },
+            {
+              "id": "d4-response-entity",
+              "title": "Response Entity"
+            },
+            {
+              "id": "d4-response-status",
+              "title": "Response Status"
+            },
+            {
+              "id": "d4-json-serialization",
+              "title": "JSON Serialization"
+            },
+            {
+              "id": "d4-jackson",
+              "title": "Jackson"
+            },
+            {
+              "id": "d4-dto",
+              "title": "DTO (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Spring Data JPA",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-spring-data-jpa",
+          "title": "Spring Data JPA",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d5-spring-data-jpa",
+              "title": "Spring Data JPA"
+            },
+            {
+              "id": "d5-hibernate",
+              "title": "Hibernate Overview"
+            },
+            {
+              "id": "d5-entity",
+              "title": "Entity"
+            },
+            {
+              "id": "d5-table-mapping",
+              "title": "Table Mapping"
+            },
+            {
+              "id": "d5-column-mapping",
+              "title": "Column Mapping"
+            },
+            {
+              "id": "d5-repository-interface",
+              "title": "Repository Interface"
+            },
+            {
+              "id": "d5-crud-repo",
+              "title": "CrudRepository"
+            },
+            {
+              "id": "d5-jpa-repo",
+              "title": "JpaRepository"
+            },
+            {
+              "id": "d5-save",
+              "title": "Save"
+            },
+            {
+              "id": "d5-find-by-id",
+              "title": "FindById"
+            },
+            {
+              "id": "d5-find-all",
+              "title": "FindAll"
+            },
+            {
+              "id": "d5-delete",
+              "title": "Delete"
+            },
+            {
+              "id": "d5-update",
+              "title": "Update"
+            },
+            {
+              "id": "d5-custom-queries",
+              "title": "Custom Queries (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Postman & API Testing",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-postman",
+          "title": "Postman & API Testing",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-install-postman",
+              "title": "Installing Postman"
+            },
+            {
+              "id": "d6-test-get",
+              "title": "Testing GET APIs"
+            },
+            {
+              "id": "d6-test-post",
+              "title": "Testing POST APIs"
+            },
+            {
+              "id": "d6-test-put",
+              "title": "Testing PUT APIs"
+            },
+            {
+              "id": "d6-test-delete",
+              "title": "Testing DELETE APIs"
+            },
+            {
+              "id": "d6-collections",
+              "title": "Collections"
+            },
+            {
+              "id": "d6-env-vars",
+              "title": "Environment Variables"
+            },
+            {
+              "id": "d6-status-codes",
+              "title": "Status Codes"
+            },
+            {
+              "id": "d6-request-headers",
+              "title": "Request Headers"
+            },
+            {
+              "id": "d6-response-validation",
+              "title": "Response Validation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Revision",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d7-spring-revision",
+              "title": "Spring Revision"
+            },
+            {
+              "id": "d7-rest-revision",
+              "title": "REST Revision"
+            },
+            {
+              "id": "d7-crud-practice",
+              "title": "CRUD Practice"
+            },
+            {
+              "id": "d7-api-testing",
+              "title": "API Testing"
+            },
+            {
+              "id": "d7-mock-assessment",
+              "title": "Mock Assessment"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-spring-intro",
+      "title": "Introduction to Spring",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w8-d1-1",
+          "title": "What is Spring & Why Spring?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d1-2",
+          "title": "Spring Framework Overview & Modules",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d1-3",
+          "title": "Spring vs Spring Boot",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d1-4",
+          "title": "Spring Boot Architecture",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d1-5",
+          "title": "Starter Projects & Spring Initializr",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d1-6",
+          "title": "Project Structure & Maven Review",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-spring-core",
+      "title": "Spring Core",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w8-d2-1",
+          "title": "IoC & Dependency Injection",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d2-2",
+          "title": "Bean, Lifecycle & Scope",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d2-3",
+          "title": "Application Context & Component Scan",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d2-4",
+          "title": "@Component / @Service / @Repository",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d2-5",
+          "title": "@Controller & @RestController",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-rest-basics",
+      "title": "REST API Basics",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w8-d3-1",
+          "title": "What is REST & REST Architecture",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d3-2",
+          "title": "HTTP Protocol & Methods",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d3-3",
+          "title": "Request & Response",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d3-4",
+          "title": "JSON & REST Best Practices",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d3-5",
+          "title": "API Versioning (Introduction)",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-spring-mvc",
+      "title": "Spring MVC",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w8-d4-1",
+          "title": "Controller & Request Mapping",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d4-2",
+          "title": "Path Variables & Request Parameters",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d4-3",
+          "title": "Request Body & Response Entity",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d4-4",
+          "title": "JSON Serialization & Jackson",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d4-5",
+          "title": "DTO (Introduction)",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-spring-data-jpa",
+      "title": "Spring Data JPA",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w8-d5-1",
+          "title": "Spring Data JPA & Hibernate",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d5-2",
+          "title": "Entity & Table/Column Mapping",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d5-3",
+          "title": "CrudRepository & JpaRepository",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d5-4",
+          "title": "Save / FindById / FindAll / Delete",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d5-5",
+          "title": "Update & Custom Queries (Introduction)",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-postman",
+      "title": "Postman & API Testing",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w8-d6-1",
+          "title": "Testing GET / POST / PUT / DELETE APIs",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d6-2",
+          "title": "Collections & Environment Variables",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d6-3",
+          "title": "Status Codes & Request Headers",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d6-4",
+          "title": "Response Validation",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision",
+      "title": "Revision",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w8-d7-1",
+          "title": "Spring Revision",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d7-2",
+          "title": "REST Revision",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w8-d7-3",
+          "title": "CRUD Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d7-4",
+          "title": "API Testing",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w8-d7-5",
+          "title": "Mock Assessment",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-spring-basics",
+      "category": "Spring Basics",
+      "questions": [
+        {
+          "id": "pq-w8-1",
+          "title": "Create First Spring Boot Project",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-2",
+          "title": "Hello World API",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-3",
+          "title": "Welcome API",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-4",
+          "title": "Current Date API",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-5",
+          "title": "User Greeting API",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-get-apis",
+      "category": "GET APIs",
+      "questions": [
+        {
+          "id": "pq-w8-6",
+          "title": "Get Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-7",
+          "title": "Get Employee",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-8",
+          "title": "Get Product",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-9",
+          "title": "Get Book",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-10",
+          "title": "Get Customer",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-post-apis",
+      "category": "POST APIs",
+      "questions": [
+        {
+          "id": "pq-w8-11",
+          "title": "Add Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-12",
+          "title": "Add Employee",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-13",
+          "title": "Add Product",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-14",
+          "title": "Add Book",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-15",
+          "title": "Register Customer",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-put-apis",
+      "category": "PUT APIs",
+      "questions": [
+        {
+          "id": "pq-w8-16",
+          "title": "Update Student",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-17",
+          "title": "Update Employee",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-18",
+          "title": "Update Product",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-19",
+          "title": "Update Book",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-20",
+          "title": "Update Customer",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-delete-apis",
+      "category": "DELETE APIs",
+      "questions": [
+        {
+          "id": "pq-w8-21",
+          "title": "Delete Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-22",
+          "title": "Delete Employee",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-23",
+          "title": "Delete Product",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-24",
+          "title": "Delete Book",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-25",
+          "title": "Delete Customer",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-jpa",
+      "category": "JPA",
+      "questions": [
+        {
+          "id": "pq-w8-26",
+          "title": "Save Entity",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-27",
+          "title": "Find By ID",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-28",
+          "title": "Find All",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-29",
+          "title": "Delete Entity",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w8-30",
+          "title": "Update Entity",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-api-practice",
+      "category": "API Practice",
+      "questions": [
+        {
+          "id": "pq-w8-31",
+          "title": "Build Login API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-32",
+          "title": "Build Register API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-33",
+          "title": "Search Student API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-34",
+          "title": "Filter Products API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-35",
+          "title": "Get Employee by Department",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-exception-handling",
+      "category": "Exception Handling",
+      "questions": [
+        {
+          "id": "pq-w8-36",
+          "title": "Resource Not Found Exception",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-37",
+          "title": "Invalid Input Exception",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-38",
+          "title": "Global Exception Handler",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w8-39",
+          "title": "Custom Response",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w8-40",
+          "title": "Validation Error Handling",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "student-rest-api",
+      "title": "Student Management REST API",
+      "description": "Full CRUD REST API for student management with MySQL and validation.",
+      "features": [
+        {
+          "id": "p1-crud",
+          "title": "Student CRUD"
+        },
+        {
+          "id": "p1-search",
+          "title": "Search"
+        },
+        {
+          "id": "p1-validation",
+          "title": "Validation"
+        }
+      ],
+      "requirements": [
+        "Spring Boot REST API",
+        "Spring Data JPA",
+        "MySQL database",
+        "Postman collection for testing"
+      ],
+      "bonusFeatures": [
+        "Pagination for student list"
+      ]
+    },
+    {
+      "id": "employee-rest-api",
+      "title": "Employee Management REST API",
+      "description": "Employee CRUD with department filtering and salary search.",
+      "features": [
+        {
+          "id": "p2-crud",
+          "title": "CRUD"
+        },
+        {
+          "id": "p2-dept-filter",
+          "title": "Department Filter"
+        },
+        {
+          "id": "p2-salary-search",
+          "title": "Salary Search"
+        }
+      ],
+      "requirements": [
+        "Layered architecture (Controller → Service → Repository)",
+        "Spring Data JPA",
+        "MySQL"
+      ],
+      "bonusFeatures": [
+        "Salary statistics endpoint"
+      ]
+    },
+    {
+      "id": "library-rest-api",
+      "title": "Library Management API",
+      "description": "Library API for books, borrowing, returns, and search.",
+      "features": [
+        {
+          "id": "p3-add-books",
+          "title": "Add Books"
+        },
+        {
+          "id": "p3-borrow",
+          "title": "Borrow Books"
+        },
+        {
+          "id": "p3-return",
+          "title": "Return Books"
+        },
+        {
+          "id": "p3-search",
+          "title": "Search"
+        }
+      ],
+      "requirements": [
+        "REST API with proper HTTP methods",
+        "JPA entities with relationships",
+        "MySQL"
+      ],
+      "bonusFeatures": [
+        "Overdue book tracking"
+      ]
+    },
+    {
+      "id": "inventory-rest-api",
+      "title": "Inventory Management API",
+      "description": "Product inventory API with category filtering and stock management.",
+      "features": [
+        {
+          "id": "p4-crud",
+          "title": "Product CRUD"
+        },
+        {
+          "id": "p4-category",
+          "title": "Category Filter"
+        },
+        {
+          "id": "p4-stock",
+          "title": "Stock Management"
+        }
+      ],
+      "requirements": [
+        "Spring Boot REST API",
+        "Spring Data JPA",
+        "MySQL"
+      ],
+      "bonusFeatures": [
+        "Low stock alert endpoint"
+      ]
+    },
+    {
+      "id": "hospital-rest-api",
+      "title": "Hospital Management API",
+      "description": "Hospital API for patients, doctors, and appointments.",
+      "features": [
+        {
+          "id": "p5-patient",
+          "title": "Patient CRUD"
+        },
+        {
+          "id": "p5-doctor",
+          "title": "Doctor CRUD"
+        },
+        {
+          "id": "p5-appointment",
+          "title": "Appointment CRUD"
+        }
+      ],
+      "requirements": [
+        "Multiple related entities with JPA",
+        "RESTful endpoints",
+        "MySQL"
+      ],
+      "bonusFeatures": [
+        "Appointment conflict detection"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-8",
+    "title": "Building AI-Powered REST APIs",
+    "description": "Learn to use AI for API documentation, REST design review, Postman test generation, and understanding AI APIs from Java.",
+    "learningTopics": [
+      {
+        "id": "ai-w8-t1",
+        "title": "What is an AI API?"
+      },
+      {
+        "id": "ai-w8-t2",
+        "title": "REST API vs AI API"
+      },
+      {
+        "id": "ai-w8-t3",
+        "title": "Calling AI APIs from Java"
+      },
+      {
+        "id": "ai-w8-t4",
+        "title": "Prompt Templates"
+      },
+      {
+        "id": "ai-w8-t5",
+        "title": "JSON Request Structure"
+      },
+      {
+        "id": "ai-w8-t6",
+        "title": "JSON Response Parsing"
+      },
+      {
+        "id": "ai-w8-t7",
+        "title": "Error Handling"
+      },
+      {
+        "id": "ai-w8-t8",
+        "title": "API Documentation with AI"
+      },
+      {
+        "id": "ai-w8-t9",
+        "title": "AI-assisted Swagger Documentation"
+      },
+      {
+        "id": "ai-w8-t10",
+        "title": "AI for API Testing"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot",
+      "Postman AI"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w8-e1",
+        "title": "Generate API documentation."
+      },
+      {
+        "id": "ai-w8-e2",
+        "title": "Review your REST API design."
+      },
+      {
+        "id": "ai-w8-e3",
+        "title": "Suggest better endpoint names."
+      },
+      {
+        "id": "ai-w8-e4",
+        "title": "Explain HTTP status codes."
+      },
+      {
+        "id": "ai-w8-e5",
+        "title": "Generate Postman test cases."
+      },
+      {
+        "id": "ai-w8-e6",
+        "title": "Generate JSON request bodies."
+      },
+      {
+        "id": "ai-w8-e7",
+        "title": "Create API validation rules."
+      },
+      {
+        "id": "ai-w8-e8",
+        "title": "Review REST best practices."
+      },
+      {
+        "id": "ai-w8-e9",
+        "title": "Identify security issues in an API."
+      },
+      {
+        "id": "ai-w8-e10",
+        "title": "Explain REST architecture with real-world examples."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-8",
+    "repository": "springboot-week-1",
+    "description": "Create repository springboot-week-1 and upload all Week 8 Spring Boot REST API projects.",
+    "files": [
+      {
+        "id": "gh-w8-f1",
+        "path": "StudentAPI/"
+      },
+      {
+        "id": "gh-w8-f2",
+        "path": "EmployeeAPI/"
+      },
+      {
+        "id": "gh-w8-f3",
+        "path": "ProductAPI/"
+      },
+      {
+        "id": "gh-w8-f4",
+        "path": "LibraryAPI/"
+      },
+      {
+        "id": "gh-w8-f5",
+        "path": "HospitalAPI/"
+      },
+      {
+        "id": "gh-w8-f6",
+        "path": "Postman Collection.json"
+      },
+      {
+        "id": "gh-w8-f7",
+        "path": "database-scripts/"
+      },
+      {
+        "id": "gh-w8-f8",
+        "path": "README.md"
+      },
+      {
+        "id": "gh-w8-f9",
+        "path": "API-Documentation.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w8-spring",
+      "category": "Spring Boot",
+      "questions": [
+        {
+          "id": "iq-w8-1",
+          "question": "What is Spring Boot and why use it over plain Spring?",
+          "answer": "Spring Boot auto-configures Spring applications with sensible defaults, embedded servers, and starter dependencies — reduces boilerplate and speeds up development."
+        },
+        {
+          "id": "iq-w8-2",
+          "question": "What is Dependency Injection?",
+          "answer": "Design pattern where objects receive dependencies from an external source (IoC container) rather than creating them — promotes loose coupling and testability."
+        },
+        {
+          "id": "iq-w8-3",
+          "question": "Difference between @Controller and @RestController?",
+          "answer": "@Controller returns view names for MVC. @RestController combines @Controller + @ResponseBody — returns data (JSON/XML) directly."
+        }
+      ]
+    },
+    {
+      "id": "iq-w8-rest",
+      "category": "REST API",
+      "questions": [
+        {
+          "id": "iq-w8-4",
+          "question": "What is REST?",
+          "answer": "Representational State Transfer — architectural style using HTTP methods (GET, POST, PUT, DELETE) on resources identified by URLs, typically returning JSON."
+        },
+        {
+          "id": "iq-w8-5",
+          "question": "Difference between PUT and PATCH?",
+          "answer": "PUT replaces the entire resource. PATCH applies partial updates to specific fields only."
+        },
+        {
+          "id": "iq-w8-6",
+          "question": "What HTTP status codes for CRUD?",
+          "answer": "GET: 200 OK. POST (create): 201 Created. PUT/PATCH: 200 OK. DELETE: 204 No Content. Not found: 404. Bad input: 400."
+        }
+      ]
+    },
+    {
+      "id": "iq-w8-jpa",
+      "category": "Spring Data JPA",
+      "questions": [
+        {
+          "id": "iq-w8-7",
+          "question": "What is Spring Data JPA?",
+          "answer": "Abstraction over JPA/Hibernate that provides repository interfaces with built-in CRUD methods — reduces boilerplate database code."
+        },
+        {
+          "id": "iq-w8-8",
+          "question": "Difference between CrudRepository and JpaRepository?",
+          "answer": "CrudRepository provides basic CRUD. JpaRepository extends it with batch operations, flush, and JPA-specific methods like saveAndFlush()."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w8-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions across Spring Basics, REST APIs, JPA, and Exception Handling",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w8-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 Spring Boot REST API projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w8-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to springboot-week-1 repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 9
+      }
+    },
+    {
+      "id": "del-w8-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 20
+      }
+    },
+    {
+      "id": "del-w8-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 8 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 30
+      }
+    }
+  ]
+}

@@ -1,0 +1,1415 @@
+{
+  "id": 1,
+  "slug": "week-1",
+  "title": "Java Programming Fundamentals + Introduction to AI",
+  "goal": "Master Java fundamentals, complete 40 programming questions, build 5 mini projects, and learn to use AI effectively while learning Java",
+  "description": "Week 1 covers introduction to programming, Java environment setup, basics, operators, user input, code quality, debugging, mini projects, and introduction to AI tools and prompt engineering.",
+  "estimatedHours": 15,
+  "difficulty": "easy",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Introduction to Programming",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-intro-programming",
+          "title": "Introduction to Programming",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d1-what-is-programming",
+              "title": "What is Programming?"
+            },
+            {
+              "id": "d1-how-software-works",
+              "title": "How Software Works"
+            },
+            {
+              "id": "d1-programming-languages",
+              "title": "Programming Languages"
+            },
+            {
+              "id": "d1-compiler-vs-interpreter",
+              "title": "Compiler vs Interpreter"
+            },
+            {
+              "id": "d1-why-java",
+              "title": "Why Java?"
+            },
+            {
+              "id": "d1-features-of-java",
+              "title": "Features of Java"
+            },
+            {
+              "id": "d1-java-applications",
+              "title": "Java Applications"
+            },
+            {
+              "id": "d1-java-editions",
+              "title": "Java Editions (SE, EE, ME)"
+            },
+            {
+              "id": "d1-java-history",
+              "title": "Java History"
+            },
+            {
+              "id": "d1-oracle-java",
+              "title": "Oracle Java"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Java Environment Setup",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-env-setup",
+          "title": "Java Environment Setup",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d2-install-jdk",
+              "title": "Install JDK"
+            },
+            {
+              "id": "d2-jdk-vs-jre-vs-jvm",
+              "title": "JDK vs JRE vs JVM"
+            },
+            {
+              "id": "d2-path-variable",
+              "title": "PATH Variable"
+            },
+            {
+              "id": "d2-compilation-process",
+              "title": "Java Compilation Process"
+            },
+            {
+              "id": "d2-bytecode",
+              "title": "Bytecode"
+            },
+            {
+              "id": "d2-execution-flow",
+              "title": "Java Execution Flow"
+            },
+            {
+              "id": "d2-intellij-install",
+              "title": "IntelliJ IDEA Installation"
+            },
+            {
+              "id": "d2-intellij-structure",
+              "title": "IntelliJ Project Structure"
+            },
+            {
+              "id": "d2-hello-world",
+              "title": "Hello World Program"
+            },
+            {
+              "id": "d2-program-execution",
+              "title": "Program Execution"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Java Basics",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-java-basics",
+          "title": "Java Basics",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d3-program-structure",
+              "title": "Program Structure"
+            },
+            {
+              "id": "d3-package",
+              "title": "Package"
+            },
+            {
+              "id": "d3-class",
+              "title": "Class"
+            },
+            {
+              "id": "d3-main-method",
+              "title": "Main Method"
+            },
+            {
+              "id": "d3-statements",
+              "title": "Statements"
+            },
+            {
+              "id": "d3-keywords",
+              "title": "Keywords"
+            },
+            {
+              "id": "d3-identifiers",
+              "title": "Identifiers"
+            },
+            {
+              "id": "d3-variables",
+              "title": "Variables"
+            },
+            {
+              "id": "d3-data-types",
+              "title": "Data Types"
+            },
+            {
+              "id": "d3-literals",
+              "title": "Literals"
+            },
+            {
+              "id": "d3-constants",
+              "title": "Constants (final)"
+            },
+            {
+              "id": "d3-naming-conventions",
+              "title": "Naming Conventions"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Operators",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-operators",
+          "title": "Operators",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d4-arithmetic",
+              "title": "Arithmetic Operators"
+            },
+            {
+              "id": "d4-assignment",
+              "title": "Assignment Operators"
+            },
+            {
+              "id": "d4-unary",
+              "title": "Unary Operators"
+            },
+            {
+              "id": "d4-increment",
+              "title": "Increment"
+            },
+            {
+              "id": "d4-decrement",
+              "title": "Decrement"
+            },
+            {
+              "id": "d4-relational",
+              "title": "Relational Operators"
+            },
+            {
+              "id": "d4-logical",
+              "title": "Logical Operators"
+            },
+            {
+              "id": "d4-ternary",
+              "title": "Ternary Operator"
+            },
+            {
+              "id": "d4-bitwise",
+              "title": "Bitwise Operators (Introduction)"
+            },
+            {
+              "id": "d4-precedence",
+              "title": "Operator Precedence"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "User Input",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-user-input",
+          "title": "User Input",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d5-scanner",
+              "title": "Scanner Class"
+            },
+            {
+              "id": "d5-read-int",
+              "title": "Reading Integer"
+            },
+            {
+              "id": "d5-read-string",
+              "title": "Reading String"
+            },
+            {
+              "id": "d5-read-double",
+              "title": "Reading Double"
+            },
+            {
+              "id": "d5-read-boolean",
+              "title": "Reading Boolean"
+            },
+            {
+              "id": "d5-escape-chars",
+              "title": "Escape Characters"
+            },
+            {
+              "id": "d5-formatting",
+              "title": "Formatting Output"
+            },
+            {
+              "id": "d5-printf",
+              "title": "printf()"
+            },
+            {
+              "id": "d5-type-casting",
+              "title": "Type Casting"
+            },
+            {
+              "id": "d5-implicit-casting",
+              "title": "Implicit Casting"
+            },
+            {
+              "id": "d5-explicit-casting",
+              "title": "Explicit Casting"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Comments & Code Quality",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-code-quality",
+          "title": "Comments & Code Quality",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d6-single-line-comments",
+              "title": "Single Line Comments"
+            },
+            {
+              "id": "d6-multi-line-comments",
+              "title": "Multi Line Comments"
+            },
+            {
+              "id": "d6-doc-comments",
+              "title": "Documentation Comments"
+            },
+            {
+              "id": "d6-code-formatting",
+              "title": "Code Formatting"
+            },
+            {
+              "id": "d6-clean-coding",
+              "title": "Clean Coding Basics"
+            },
+            {
+              "id": "d6-meaningful-names",
+              "title": "Meaningful Variable Names"
+            },
+            {
+              "id": "d6-indentation",
+              "title": "Indentation"
+            },
+            {
+              "id": "d6-readable-code",
+              "title": "Readable Code"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision + Debugging",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision-debugging",
+          "title": "Revision + Debugging",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d7-syntax-errors",
+              "title": "Syntax Errors"
+            },
+            {
+              "id": "d7-runtime-errors",
+              "title": "Runtime Errors"
+            },
+            {
+              "id": "d7-logical-errors",
+              "title": "Logical Errors"
+            },
+            {
+              "id": "d7-debugger-basics",
+              "title": "Debugger Basics"
+            },
+            {
+              "id": "d7-breakpoints",
+              "title": "Breakpoints"
+            },
+            {
+              "id": "d7-console",
+              "title": "Console"
+            },
+            {
+              "id": "d7-revision",
+              "title": "Revision"
+            },
+            {
+              "id": "d7-quiz",
+              "title": "Quiz"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-intro-programming",
+      "title": "Introduction to Programming",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-d1-1",
+          "title": "What is Programming?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-2",
+          "title": "How Software Works",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-3",
+          "title": "Programming Languages",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-4",
+          "title": "Compiler vs Interpreter",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-5",
+          "title": "Why Java?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-6",
+          "title": "Features of Java",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-7",
+          "title": "Java Applications",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-8",
+          "title": "Java Editions (SE, EE, ME)",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-9",
+          "title": "Java History",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d1-10",
+          "title": "Oracle Java",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-env-setup",
+      "title": "Java Environment Setup",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-d2-1",
+          "title": "Install JDK",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-2",
+          "title": "JDK vs JRE vs JVM",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-3",
+          "title": "PATH Variable",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-4",
+          "title": "Java Compilation Process",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-5",
+          "title": "Bytecode",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-6",
+          "title": "Java Execution Flow",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-7",
+          "title": "IntelliJ IDEA Installation",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-8",
+          "title": "IntelliJ Project Structure",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-9",
+          "title": "Hello World Program",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d2-10",
+          "title": "Program Execution",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-java-basics",
+      "title": "Java Basics",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-d3-1",
+          "title": "Program Structure",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-2",
+          "title": "Package",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-3",
+          "title": "Class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-4",
+          "title": "Main Method",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-5",
+          "title": "Statements",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-6",
+          "title": "Keywords",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-7",
+          "title": "Identifiers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-8",
+          "title": "Variables",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-9",
+          "title": "Data Types",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-10",
+          "title": "Literals",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-11",
+          "title": "Constants (final)",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d3-12",
+          "title": "Naming Conventions",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-operators",
+      "title": "Operators",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-d4-1",
+          "title": "Arithmetic Operators",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d4-2",
+          "title": "Assignment Operators",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d4-3",
+          "title": "Unary Operators",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d4-4",
+          "title": "Increment",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d4-5",
+          "title": "Decrement",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d4-6",
+          "title": "Relational Operators",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d4-7",
+          "title": "Logical Operators",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d4-8",
+          "title": "Ternary Operator",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-d4-9",
+          "title": "Bitwise Operators (Introduction)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-d4-10",
+          "title": "Operator Precedence",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-user-input",
+      "title": "User Input",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-d5-1",
+          "title": "Scanner Class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-2",
+          "title": "Reading Integer",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-3",
+          "title": "Reading String",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-4",
+          "title": "Reading Double",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-5",
+          "title": "Reading Boolean",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-6",
+          "title": "Escape Characters",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-7",
+          "title": "Formatting Output",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-8",
+          "title": "printf()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d5-9",
+          "title": "Type Casting",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-d5-10",
+          "title": "Implicit Casting",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-d5-11",
+          "title": "Explicit Casting",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-code-quality",
+      "title": "Comments & Code Quality",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-d6-1",
+          "title": "Single Line Comments",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d6-2",
+          "title": "Multi Line Comments",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d6-3",
+          "title": "Documentation Comments",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d6-4",
+          "title": "Code Formatting",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d6-5",
+          "title": "Clean Coding Basics",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d6-6",
+          "title": "Meaningful Variable Names",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d6-7",
+          "title": "Indentation",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d6-8",
+          "title": "Readable Code",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision-debugging",
+      "title": "Revision + Debugging",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-d7-1",
+          "title": "Syntax Errors",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d7-2",
+          "title": "Runtime Errors",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d7-3",
+          "title": "Logical Errors",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d7-4",
+          "title": "Debugger Basics",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d7-5",
+          "title": "Breakpoints",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d7-6",
+          "title": "Console",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d7-7",
+          "title": "Revision",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-d7-8",
+          "title": "Quiz",
+          "difficulty": "easy"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-variables-output",
+      "category": "Variables & Output",
+      "questions": [
+        {
+          "id": "pq-1",
+          "title": "Print Hello World",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-2",
+          "title": "Print your name",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-3",
+          "title": "Print your address",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-4",
+          "title": "Print your college details",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-5",
+          "title": "Print using multiple println()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-6",
+          "title": "Print using printf()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-7",
+          "title": "Print formatted output",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-8",
+          "title": "Print ASCII values",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-9",
+          "title": "Swap two numbers (without third variable)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-10",
+          "title": "Swap using third variable",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-user-input",
+      "category": "User Input",
+      "questions": [
+        {
+          "id": "pq-11",
+          "title": "Read name and print greeting",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-12",
+          "title": "Read age",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-13",
+          "title": "Read salary",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-14",
+          "title": "Read double",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-15",
+          "title": "Read float",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-16",
+          "title": "Read character",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-17",
+          "title": "Read boolean",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-18",
+          "title": "Read multiple values",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-19",
+          "title": "Read full sentence",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-20",
+          "title": "Calculate sum",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-operators",
+      "category": "Operators",
+      "questions": [
+        {
+          "id": "pq-21",
+          "title": "Addition",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-22",
+          "title": "Subtraction",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-23",
+          "title": "Multiplication",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-24",
+          "title": "Division",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-25",
+          "title": "Modulus",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-26",
+          "title": "Area of Rectangle",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-27",
+          "title": "Area of Circle",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-28",
+          "title": "Perimeter of Rectangle",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-29",
+          "title": "Celsius to Fahrenheit",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-30",
+          "title": "Fahrenheit to Celsius",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-31",
+          "title": "Simple Interest",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-32",
+          "title": "Compound Interest (formula only)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-33",
+          "title": "BMI Calculator",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-34",
+          "title": "Percentage Calculator",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-35",
+          "title": "Average of 5 Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-36",
+          "title": "Square",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-37",
+          "title": "Cube",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-38",
+          "title": "Power of Number",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-39",
+          "title": "Distance Formula",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-40",
+          "title": "Currency Converter",
+          "difficulty": "medium"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "student-info-system",
+      "title": "Student Information System",
+      "description": "Console application to collect and display student details.",
+      "features": [
+        {
+          "id": "p1-feat-name",
+          "title": "Name"
+        },
+        {
+          "id": "p1-feat-age",
+          "title": "Age"
+        },
+        {
+          "id": "p1-feat-roll",
+          "title": "Roll Number"
+        },
+        {
+          "id": "p1-feat-branch",
+          "title": "Branch"
+        },
+        {
+          "id": "p1-feat-college",
+          "title": "College"
+        },
+        {
+          "id": "p1-feat-display",
+          "title": "Display Details"
+        }
+      ],
+      "requirements": [
+        "Use Scanner for input",
+        "Store data in variables",
+        "Display formatted output"
+      ]
+    },
+    {
+      "id": "simple-calculator",
+      "title": "Simple Calculator",
+      "description": "Menu-driven calculator with basic arithmetic operations.",
+      "features": [
+        {
+          "id": "p2-feat-add",
+          "title": "Addition"
+        },
+        {
+          "id": "p2-feat-sub",
+          "title": "Subtraction"
+        },
+        {
+          "id": "p2-feat-mul",
+          "title": "Multiplication"
+        },
+        {
+          "id": "p2-feat-div",
+          "title": "Division"
+        },
+        {
+          "id": "p2-feat-mod",
+          "title": "Modulus"
+        }
+      ],
+      "requirements": [
+        "Handle division by zero",
+        "Use switch-case or if-else for operations"
+      ]
+    },
+    {
+      "id": "bmi-calculator",
+      "title": "BMI Calculator",
+      "description": "Calculate Body Mass Index from height and weight input.",
+      "features": [
+        {
+          "id": "p3-feat-height",
+          "title": "Height (Input)"
+        },
+        {
+          "id": "p3-feat-weight",
+          "title": "Weight (Input)"
+        },
+        {
+          "id": "p3-feat-bmi",
+          "title": "BMI (Output)"
+        },
+        {
+          "id": "p3-feat-category",
+          "title": "Category (Output)"
+        }
+      ],
+      "requirements": [
+        "Validate input ranges",
+        "Display BMI category based on result"
+      ]
+    },
+    {
+      "id": "student-grade-calculator",
+      "title": "Student Grade Calculator",
+      "description": "Calculate total, average, and percentage from 5 subject marks.",
+      "features": [
+        {
+          "id": "p4-feat-subjects",
+          "title": "5 Subjects (Input)"
+        },
+        {
+          "id": "p4-feat-total",
+          "title": "Total (Output)"
+        },
+        {
+          "id": "p4-feat-average",
+          "title": "Average (Output)"
+        },
+        {
+          "id": "p4-feat-percentage",
+          "title": "Percentage (Output)"
+        }
+      ],
+      "requirements": [
+        "Accept marks for 5 subjects",
+        "Calculate and display results"
+      ]
+    },
+    {
+      "id": "electricity-bill-calculator",
+      "title": "Electricity Bill Calculator",
+      "description": "Calculate electricity bill amount based on units consumed.",
+      "features": [
+        {
+          "id": "p5-feat-units",
+          "title": "Units (Input)"
+        },
+        {
+          "id": "p5-feat-bill",
+          "title": "Bill Amount (Output)"
+        }
+      ],
+      "requirements": [
+        "Read units consumed",
+        "Apply tariff/slab logic and display bill amount"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-1",
+    "title": "AI Skill of the Week — Introduction to AI",
+    "description": "The goal is not to let AI write code. The goal is to learn how to use AI effectively while learning Java.",
+    "learningTopics": [
+      {
+        "id": "ai-t1",
+        "title": "What is AI?"
+      },
+      {
+        "id": "ai-t2",
+        "title": "What is Generative AI?"
+      },
+      {
+        "id": "ai-t3",
+        "title": "What is an LLM?"
+      },
+      {
+        "id": "ai-t4",
+        "title": "What is a Prompt?"
+      },
+      {
+        "id": "ai-t5",
+        "title": "What makes a good prompt?"
+      },
+      {
+        "id": "ai-t6",
+        "title": "Hallucinations"
+      },
+      {
+        "id": "ai-t7",
+        "title": "Why AI sometimes gives wrong answers"
+      },
+      {
+        "id": "ai-t8",
+        "title": "AI ethics"
+      },
+      {
+        "id": "ai-t9",
+        "title": "When to trust AI"
+      },
+      {
+        "id": "ai-t10",
+        "title": "When not to trust AI"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot (understand what it does, don't rely on it)"
+    ],
+    "exercises": [
+      {
+        "id": "ai-e1",
+        "title": "Explain JDK vs JVM vs JRE."
+      },
+      {
+        "id": "ai-e2",
+        "title": "Explain variables like you're 10 years old."
+      },
+      {
+        "id": "ai-e3",
+        "title": "Generate a Java Hello World and explain every line."
+      },
+      {
+        "id": "ai-e4",
+        "title": "Explain why a syntax error occurs."
+      },
+      {
+        "id": "ai-e5",
+        "title": "A broken Java program and ask it to find the bug."
+      },
+      {
+        "id": "ai-e6",
+        "title": "Compare: two AI responses for the same Java question."
+      },
+      {
+        "id": "ai-e7",
+        "title": "Suggest better variable names for your code."
+      },
+      {
+        "id": "ai-e8",
+        "title": "Explain type casting with examples."
+      },
+      {
+        "id": "ai-e9",
+        "title": "Create a quiz on Java basics."
+      },
+      {
+        "id": "ai-e10",
+        "title": "Review your Student Information System project and suggest improvements."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-1",
+    "repository": "java-week-1",
+    "description": "Create repository java-week-1 and upload all Week 1 programs. README.md should describe what you learned this week.",
+    "files": [
+      {
+        "id": "gh-f1",
+        "path": "HelloWorld.java"
+      },
+      {
+        "id": "gh-f2",
+        "path": "Variables.java"
+      },
+      {
+        "id": "gh-f3",
+        "path": "DataTypes.java"
+      },
+      {
+        "id": "gh-f4",
+        "path": "Operators.java"
+      },
+      {
+        "id": "gh-f5",
+        "path": "ScannerDemo.java"
+      },
+      {
+        "id": "gh-f6",
+        "path": "Calculator.java"
+      },
+      {
+        "id": "gh-f7",
+        "path": "StudentInfo.java"
+      },
+      {
+        "id": "gh-f8",
+        "path": "BMI.java"
+      },
+      {
+        "id": "gh-f9",
+        "path": "GradeCalculator.java"
+      },
+      {
+        "id": "gh-f10",
+        "path": "README.md (describe what you learned this week)"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-cat-java",
+      "category": "Java",
+      "questions": [
+        {
+          "id": "iq-1",
+          "question": "What is Java?",
+          "answer": "Java is a high-level, object-oriented programming language that runs on the JVM."
+        },
+        {
+          "id": "iq-2",
+          "question": "Difference between JDK, JRE, and JVM?",
+          "answer": "JDK is the development kit, JRE is the runtime environment, JVM executes bytecode."
+        },
+        {
+          "id": "iq-3",
+          "question": "What are primitive data types in Java?",
+          "answer": "byte, short, int, long, float, double, char, boolean."
+        },
+        {
+          "id": "iq-4",
+          "question": "What is the main method in Java?",
+          "answer": "The entry point of a Java application: public static void main(String[] args)."
+        }
+      ]
+    },
+    {
+      "id": "iq-cat-ai",
+      "category": "AI",
+      "questions": [
+        {
+          "id": "iq-5",
+          "question": "What is an LLM?",
+          "answer": "Large Language Model — AI trained on vast text data to understand and generate human language."
+        },
+        {
+          "id": "iq-6",
+          "question": "What is prompt engineering?",
+          "answer": "Crafting effective inputs to get accurate, useful responses from AI models."
+        },
+        {
+          "id": "iq-7",
+          "question": "What are AI hallucinations?",
+          "answer": "When AI generates confident but incorrect or fabricated information."
+        },
+        {
+          "id": "iq-8",
+          "question": "When should you not trust AI output?",
+          "answer": "When learning core concepts, during exams, or without verifying against official documentation."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 mini projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to java-week-1 repository including README",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all 10 AI practice exercises and learning topics",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 20
+      }
+    },
+    {
+      "id": "del-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 1 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 20
+      }
+    }
+  ]
+}

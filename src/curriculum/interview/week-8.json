@@ -1,0 +1,219 @@
+[
+  {
+    "id": "w8-spring-core",
+    "category": "Spring Framework & Core Concepts",
+    "questions": [
+      {
+        "id": "w8-q01",
+        "question": "What is Spring Framework?",
+        "answer": "Spring Framework is an open-source, comprehensive application framework for Java enterprise development. It provides modules for dependency injection (Core), aspect-oriented programming (AOP), data access (JDBC, ORM), web MVC, security, and more. Spring's core philosophy is loose coupling through IoC/DI, making applications modular, testable, and maintainable. It integrates with virtually every Java technology and is the foundation for Spring Boot.",
+        "realWorld": "Major banks, Netflix microservices, and countless SaaS products use Spring as their backend framework for REST APIs, batch jobs, and event-driven systems."
+      },
+      {
+        "id": "w8-q02",
+        "question": "What is Spring Boot?",
+        "answer": "Spring Boot is an opinionated layer on top of Spring Framework that simplifies building production-ready applications. It provides auto-configuration (sensible defaults based on classpath), embedded servers (Tomcat/Jetty), starter dependencies (spring-boot-starter-web bundles everything for REST), and eliminates XML configuration. You can create a running REST API in minutes with minimal boilerplate.",
+        "code": "@SpringBootApplication\npublic class AcademyApplication {\n    public static void main(String[] args) {\n        SpringApplication.run(AcademyApplication.class, args);\n    }\n}"
+      },
+      {
+        "id": "w8-q03",
+        "question": "Difference between Spring and Spring Boot.",
+        "answer": "Spring Framework is the core library requiring manual configuration—XML or Java config for beans, servers, and dependencies. Spring Boot builds on Spring with auto-configuration, embedded servers, starter POMs, and production features (Actuator, metrics). Spring alone offers maximum flexibility but more setup; Spring Boot prioritizes convention over configuration and rapid development. Spring Boot still uses Spring Core—you're always using Spring underneath.",
+        "realWorld": "Greenfield projects almost always start with Spring Boot. Plain Spring is used when you need fine-grained control over a non-standard deployment (e.g., custom servlet container integration)."
+      },
+      {
+        "id": "w8-q04",
+        "question": "What is IoC?",
+        "answer": "Inversion of Control (IoC) is a design principle where object creation and lifecycle management are transferred from application code to a container (Spring). Instead of classes creating their own dependencies with new, the container injects them. This inverts control flow—the framework calls your code and provides dependencies, rather than your code calling the framework. IoC enables loose coupling, easier testing, and configurable components.",
+        "realWorld": "A PaymentService no longer does new EmailService()—Spring injects EmailService, so you can swap in MockEmailService during tests without changing PaymentService."
+      },
+      {
+        "id": "w8-q05",
+        "question": "What is Dependency Injection?",
+        "answer": "Dependency Injection (DI) is the mechanism Spring uses to implement IoC. The container creates objects (beans) and injects their dependencies via constructor, setter, or field injection. Constructor injection is preferred—it makes dependencies explicit, enables immutability, and simplifies unit testing. Spring resolves dependencies by type and @Qualifier name at runtime.",
+        "code": "@Service\npublic class OrderService {\n    private final OrderRepository repo;\n\n    // Constructor injection (preferred)\n    public OrderService(OrderRepository repo) {\n        this.repo = repo;\n    }\n}"
+      },
+      {
+        "id": "w8-q06",
+        "question": "What is a Bean?",
+        "answer": "A bean is a Java object instantiated, assembled, and managed by the Spring IoC container. Beans are created from @Component-scanned classes, @Configuration @Bean methods, or XML definitions. The container handles their full lifecycle—creation, dependency injection, initialization (@PostConstruct), and destruction (@PreDestroy). By default, beans are singletons (one instance per container).",
+        "code": "@Configuration\npublic class AppConfig {\n    @Bean\n    public PasswordEncoder passwordEncoder() {\n        return new BCryptPasswordEncoder();\n    }\n}"
+      },
+      {
+        "id": "w8-q07",
+        "question": "What is ApplicationContext?",
+        "answer": "ApplicationContext is Spring's central IoC container interface—it extends BeanFactory with enterprise features. It loads bean definitions, creates and wires beans, publishes events, resolves messages (i18n), and provides resource loading. In Spring Boot, SpringApplication.run() creates an AnnotationConfigApplicationContext (or ServletWebServerApplicationContext for web apps). You rarely interact with it directly except in tests or advanced scenarios.",
+        "realWorld": "In integration tests, @SpringBootTest loads the full ApplicationContext to verify all beans wire correctly."
+      }
+    ]
+  },
+  {
+    "id": "w8-stereotypes",
+    "category": "Spring Stereotype Annotations",
+    "questions": [
+      {
+        "id": "w8-q08",
+        "question": "Difference between @Component, @Service, and @Repository.",
+        "answer": "All three are stereotype annotations that mark classes for component scanning and register them as beans—they are functionally equivalent for bean creation. @Component is the generic stereotype. @Service semantically marks business logic layer classes. @Repository marks persistence layer classes and adds automatic translation of persistence exceptions to Spring's DataAccessException hierarchy. Use the specific stereotype for clarity and layer separation, not because of different behavior.",
+        "code": "@Repository\npublic interface UserRepository extends JpaRepository<User, Long> {}\n\n@Service\npublic class UserService { /* business logic */ }\n\n@Component\npublic class EmailValidator { /* utility bean */ }"
+      },
+      {
+        "id": "w8-q09",
+        "question": "What is @RestController?",
+        "answer": "@RestController combines @Controller and @ResponseBody. It marks a class as a REST API controller where every handler method's return value is serialized directly to the HTTP response body (typically JSON via Jackson)—not resolved to a view template. It is the standard annotation for building RESTful web services in Spring Boot.",
+        "code": "@RestController\n@RequestMapping(\"/api/users\")\npublic class UserController {\n    @GetMapping(\"/{id}\")\n    public User getUser(@PathVariable Long id) {\n        return userService.findById(id);\n    }\n}"
+      },
+      {
+        "id": "w8-q10",
+        "question": "Difference between @Controller and @RestController.",
+        "answer": "@Controller is for traditional MVC applications that return view names (Thymeleaf, JSP templates)—handler methods return String view names or ModelAndView. @RestController adds @ResponseBody to every method, so return values go directly to the response body as JSON/XML. Use @Controller for server-rendered pages; use @RestController for REST APIs consumed by frontends or mobile apps.",
+        "realWorld": "An admin dashboard using Thymeleaf uses @Controller. A React frontend consuming /api/products uses @RestController on the backend."
+      }
+    ]
+  },
+  {
+    "id": "w8-rest-http",
+    "category": "REST & HTTP",
+    "questions": [
+      {
+        "id": "w8-q11",
+        "question": "What is REST?",
+        "answer": "REST (Representational State Transfer) is an architectural style for designing networked APIs. Resources are identified by URLs (e.g., /users/42), manipulated via standard HTTP methods, and represented in formats like JSON. Key constraints: stateless communication, uniform interface, cacheable responses, layered system, and optional code-on-demand. RESTful APIs use nouns for resources and HTTP verbs for actions—not verbs in URLs like /getUser.",
+        "realWorld": "Twitter API, GitHub API, and Stripe API all follow REST principles—resources, HTTP methods, status codes, and JSON representations."
+      },
+      {
+        "id": "w8-q12",
+        "question": "What are HTTP methods?",
+        "answer": "HTTP methods define the action on a resource: GET — retrieve data (safe, idempotent, no body side effects); POST — create a new resource (not idempotent); PUT — replace/update entire resource (idempotent); PATCH — partial update (idempotent); DELETE — remove resource (idempotent); HEAD — like GET but headers only; OPTIONS — describe communication options. REST maps CRUD to GET/POST/PUT-PATCH/DELETE respectively.",
+        "code": "GET    /api/users       → list users\nPOST   /api/users       → create user\nGET    /api/users/1     → get user 1\nPUT    /api/users/1     → replace user 1\nDELETE /api/users/1     → delete user 1"
+      },
+      {
+        "id": "w8-q13",
+        "question": "Difference between PUT and PATCH.",
+        "answer": "PUT replaces the entire resource—you send a complete representation and missing fields may be set to null/default. PATCH applies a partial update—only changed fields are sent. Example: updating just a user's email uses PATCH with {\"email\":\"new@mail.com\"}; PUT would require sending all fields (name, email, phone, etc.). PATCH is more bandwidth-efficient; PUT is simpler but requires full resource state.",
+        "realWorld": "A profile settings page changing only the avatar URL should use PATCH. Migrating/syncing a full record from another system may use PUT."
+      },
+      {
+        "id": "w8-q14",
+        "question": "What is JSON?",
+        "answer": "JSON (JavaScript Object Notation) is a lightweight, text-based data interchange format. It uses key-value pairs and arrays, is human-readable, and language-independent. Spring Boot uses Jackson to automatically serialize Java objects to JSON in @RestController responses and deserialize JSON request bodies to Java objects. JSON is the standard format for REST API communication.",
+        "code": "// Java object → JSON\n{\n  \"id\": 1,\n  \"name\": \"Alice\",\n  \"email\": \"alice@academy.com\",\n  \"courses\": [\"Java\", \"Spring\"]\n}"
+      },
+      {
+        "id": "w8-q15",
+        "question": "What is ResponseEntity?",
+        "answer": "ResponseEntity is a Spring class representing the full HTTP response—status code, headers, and body. It gives fine-grained control over REST responses beyond simply returning an object. Use it to return 201 Created with Location header, 404 Not Found, custom headers, or empty bodies.",
+        "code": "@PostMapping\npublic ResponseEntity<User> create(@RequestBody User user) {\n    User saved = userService.save(user);\n    URI location = URI.create(\"/api/users/\" + saved.getId());\n    return ResponseEntity.created(location).body(saved);\n}\n\n@GetMapping(\"/{id}\")\npublic ResponseEntity<User> get(@PathVariable Long id) {\n    return userService.findById(id)\n        .map(ResponseEntity::ok)\n        .orElse(ResponseEntity.notFound().build());\n}"
+      }
+    ]
+  },
+  {
+    "id": "w8-jpa",
+    "category": "Spring Data JPA & Hibernate",
+    "questions": [
+      {
+        "id": "w8-q16",
+        "question": "What is Spring Data JPA?",
+        "answer": "Spring Data JPA is a Spring module that simplifies data access by providing repository abstractions over JPA. You define an interface extending JpaRepository—Spring generates the implementation at runtime. It eliminates boilerplate JDBC/DAO code, supports derived query methods (findByEmail), @Query annotations, pagination, and sorting. It sits on top of Hibernate (default JPA provider) and standardizes persistence patterns.",
+        "code": "public interface StudentRepository extends JpaRepository<Student, Long> {\n    List<Student> findByGrade(int grade);\n    Optional<Student> findByEmail(String email);\n}"
+      },
+      {
+        "id": "w8-q17",
+        "question": "What is Hibernate?",
+        "answer": "Hibernate is an ORM (Object-Relational Mapping) framework and the default JPA provider in Spring Boot. It maps Java classes to database tables, Java fields to columns, and handles SQL generation automatically. Hibernate manages entity lifecycle, caching (first and second level), lazy loading, and HQL (Hibernate Query Language). Developers work with objects instead of writing raw SQL for most operations.",
+        "realWorld": "Instead of writing INSERT INTO students..., you call studentRepository.save(student) and Hibernate generates optimized SQL."
+      },
+      {
+        "id": "w8-q18",
+        "question": "Difference between CrudRepository and JpaRepository.",
+        "answer": "CrudRepository provides basic CRUD operations: save, findById, findAll, delete, count. JpaRepository extends CrudRepository and PagingAndSortingRepository, adding JPA-specific features: flush(), saveAndFlush(), deleteInBatch(), getReferenceById(), and batch delete. JpaRepository also supports pagination (Pageable) and sorting. In Spring Boot projects, extend JpaRepository for full feature set—it is the standard choice.",
+        "code": "// CrudRepository — basic CRUD only\npublic interface ItemRepo extends CrudRepository<Item, Long> {}\n\n// JpaRepository — CRUD + pagination, batch, flush\npublic interface ItemRepo extends JpaRepository<Item, Long> {\n    Page<Item> findByCategory(String cat, Pageable pageable);\n}"
+      },
+      {
+        "id": "w8-q19",
+        "question": "What is an Entity?",
+        "answer": "An entity is a Java class mapped to a database table via JPA annotations. It represents a persistent domain object whose state is stored in the database. Entities must have a no-arg constructor, a primary key (@Id), and are managed by the JPA EntityManager/Hibernate session. Entity fields map to columns; relationships (@OneToMany, @ManyToOne) map to foreign keys.",
+        "code": "@Entity\n@Table(name = \"students\")\npublic class Student {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    private String name;\n    private String email;\n}"
+      },
+      {
+        "id": "w8-q20",
+        "question": "What is @Id?",
+        "answer": "@Id marks a field as the primary key of the entity—the unique identifier for each row. Every JPA entity must have exactly one @Id field (or @IdClass/@EmbeddedId for composite keys). The primary key column is used for findById(), updates, and relationship joins. Without @Id, JPA cannot persist or retrieve the entity.",
+        "code": "@Entity\npublic class Product {\n    @Id\n    private Long id;  // maps to PRIMARY KEY column\n}"
+      },
+      {
+        "id": "w8-q21",
+        "question": "What is @GeneratedValue?",
+        "answer": "@GeneratedValue configures automatic primary key generation strategy used with @Id. Strategies: IDENTITY — database auto-increment (MySQL, SQL Server); SEQUENCE — database sequence (PostgreSQL, Oracle); AUTO — provider chooses; TABLE — separate key table. IDENTITY is most common with MySQL. The database generates the ID on insert—you don't set it manually.",
+        "code": "@Id\n@GeneratedValue(strategy = GenerationType.IDENTITY)\nprivate Long id;  // MySQL AUTO_INCREMENT"
+      }
+    ]
+  },
+  {
+    "id": "w8-mvc",
+    "category": "Spring MVC & REST Mapping",
+    "questions": [
+      {
+        "id": "w8-q22",
+        "question": "What is @RequestMapping?",
+        "answer": "@RequestMapping maps HTTP requests to handler methods. It can be applied at class level (base path) and method level. Attributes include path/value, method (GET/POST), consumes, produces, and params. Specialized shortcuts (@GetMapping, @PostMapping) are preferred for clarity. Spring MVC uses it to route incoming requests to the correct controller method.",
+        "code": "@RestController\n@RequestMapping(\"/api/products\")\npublic class ProductController {\n    @RequestMapping(value = \"/{id}\", method = RequestMethod.GET)\n    public Product get(@PathVariable Long id) { ... }\n}"
+      },
+      {
+        "id": "w8-q23",
+        "question": "What is @GetMapping?",
+        "answer": "@GetMapping is a composed annotation that acts as a shortcut for @RequestMapping(method = RequestMethod.GET). It maps HTTP GET requests to a handler method for retrieving resources. Supports path, params, headers, and produces attributes. It is the standard annotation for read operations in REST controllers.",
+        "code": "@GetMapping(\"/api/courses\")\npublic List<Course> getAllCourses() {\n    return courseService.findAll();\n}\n\n@GetMapping(\"/api/courses/{id}\")\npublic Course getCourse(@PathVariable Long id) {\n    return courseService.findById(id);\n}"
+      },
+      {
+        "id": "w8-q24",
+        "question": "What is @PostMapping?",
+        "answer": "@PostMapping is a shortcut for @RequestMapping(method = RequestMethod.POST). It handles HTTP POST requests, typically for creating new resources. The request body (JSON) is deserialized to a Java object via @RequestBody. Returns the created resource, often with HTTP 201 Created status.",
+        "code": "@PostMapping(\"/api/courses\")\npublic ResponseEntity<Course> create(@RequestBody Course course) {\n    Course saved = courseService.save(course);\n    return ResponseEntity.status(HttpStatus.CREATED).body(saved);\n}"
+      },
+      {
+        "id": "w8-q25",
+        "question": "What is @RequestBody?",
+        "answer": "@RequestBody tells Spring to deserialize the HTTP request body (typically JSON) into a Java object using HttpMessageConverter (Jackson by default). Used on POST/PUT/PATCH handler parameters. The Content-Type header (application/json) determines the converter. Validation annotations (@Valid, @NotBlank) can be applied to trigger Bean Validation.",
+        "code": "@PostMapping(\"/api/users\")\npublic User register(@Valid @RequestBody UserDto dto) {\n    return userService.register(dto);\n}\n// Client sends: {\"name\":\"Alice\",\"email\":\"a@mail.com\"}"
+      },
+      {
+        "id": "w8-q26",
+        "question": "What is @PathVariable?",
+        "answer": "@PathVariable extracts values from the URI path template. In @GetMapping(\"/users/{id}\"), the {id} segment is bound to a method parameter. Useful for identifying specific resources. Supports multiple path variables and type conversion (String to Long). Required by default; set required=false for optional path variables.",
+        "code": "@GetMapping(\"/api/orders/{orderId}/items/{itemId}\")\npublic Item getItem(\n    @PathVariable Long orderId,\n    @PathVariable Long itemId) {\n    return orderService.getItem(orderId, itemId);\n}"
+      },
+      {
+        "id": "w8-q27",
+        "question": "What is @RequestParam?",
+        "answer": "@RequestParam extracts query parameters from the URL (?key=value). Used for filtering, pagination, sorting, and optional search criteria. Supports defaultValue, required flag, and name alias. Unlike @PathVariable which is part of the path, @RequestParam reads from the query string.",
+        "code": "@GetMapping(\"/api/products\")\npublic Page<Product> search(\n    @RequestParam(required = false) String category,\n    @RequestParam(defaultValue = \"0\") int page,\n    @RequestParam(defaultValue = \"10\") int size) {\n    return productService.search(category, PageRequest.of(page, size));\n}\n// GET /api/products?category=books&page=0&size=10"
+      }
+    ]
+  },
+  {
+    "id": "w8-tools-arch",
+    "category": "Tools & Architecture",
+    "questions": [
+      {
+        "id": "w8-q28",
+        "question": "What is Postman?",
+        "answer": "Postman is an API development and testing tool for sending HTTP requests, inspecting responses, and organizing API collections. Developers use it to test REST endpoints during development without writing frontend code. Features include environment variables, automated test scripts, collection sharing, mock servers, and API documentation generation. Essential for manual API testing before integration.",
+        "realWorld": "Before connecting a React frontend, backend developers verify all CRUD endpoints in Postman—checking status codes, JSON structure, and error handling."
+      },
+      {
+        "id": "w8-q29",
+        "question": "What are HTTP status codes?",
+        "answer": "HTTP status codes indicate request outcome: 2xx Success — 200 OK (success), 201 Created (resource created), 204 No Content (success, no body); 3xx Redirection — 301 Moved, 304 Not Modified; 4xx Client Error — 400 Bad Request (invalid input), 401 Unauthorized (not authenticated), 403 Forbidden (not authorized), 404 Not Found, 409 Conflict; 5xx Server Error — 500 Internal Server Error, 503 Service Unavailable. REST APIs must return appropriate codes, not 200 for everything.",
+        "code": "200 OK          → GET success\n201 Created     → POST success\n400 Bad Request → validation failed\n404 Not Found   → resource missing\n500 Server Error → unhandled exception"
+      },
+      {
+        "id": "w8-q30",
+        "question": "Explain the architecture of a Spring Boot application.",
+        "answer": "A typical Spring Boot REST application follows layered architecture: Client (browser/mobile/Postman) sends HTTP requests → Controller layer (@RestController) handles routing, validation, and HTTP concerns → Service layer (@Service) contains business logic and transactions → Repository layer (@Repository/JpaRepository) handles persistence via Spring Data JPA → Hibernate generates SQL → Database (MySQL/PostgreSQL). Cross-cutting concerns: Spring Security (auth), validation, exception handling (@ControllerAdvice), logging (SLF4J), and configuration (application.properties). Embedded Tomcat serves the app; Maven/Gradle builds the executable JAR.",
+        "realWorld": "POST /api/students → StudentController → StudentService (validates, applies rules) → StudentRepository.save() → Hibernate INSERT → MySQL students table → JSON response returned.",
+        "code": "@RestController → @Service → @Repository → @Entity → Database\n\nClient ──HTTP──▶ Controller ──▶ Service ──▶ Repository ──▶ DB\n                     │              │\n                     ▼              ▼\n              @Valid DTO      Business Rules\n              ResponseEntity  @Transactional"
+      }
+    ]
+  }
+]

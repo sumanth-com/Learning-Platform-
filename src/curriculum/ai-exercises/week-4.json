@@ -1,0 +1,43 @@
+{
+  "ai-w4-e1": {
+    "answer": "Trigger NPE in a small program. Paste trace. Ask AI to explain each frame. Fix with null check.",
+    "realWorld": "String s = null; s.length() — classic first NPE lesson.",
+    "code": "if (s != null) System.out.println(s.length());"
+  },
+  "ai-w4-e2": {
+    "answer": "Ask why ArrayIndexOutOfBounds happens. Relate to loop condition using array.length incorrectly.",
+    "realWorld": "for (i=0; i<=arr.length; i++) — should be i < arr.length."
+  },
+  "ai-w4-e3": {
+    "answer": "Paste full stack trace. Label: crash site, root cause, your fix line.",
+    "realWorld": "Reading traces calmly is a skill — practice on homework bugs before on-call."
+  },
+  "ai-w4-e4": {
+    "answer": "Find duplicated if/else blocks. Ask AI to extract method. Verify output unchanged.",
+    "realWorld": "Same validation in add() and update() → validateStudent() once."
+  },
+  "ai-w4-e5": {
+    "answer": "Describe inheritance hierarchy. Ask if design fits Liskov. Simplify if subclass breaks parent contract.",
+    "realWorld": "Square extends Rectangle with setWidth breaking area — classic design smell."
+  },
+  "ai-w4-e6": {
+    "answer": "Ask: interface vs abstract class for your scenario. Build tiny example of each.",
+    "realWorld": "Multiple inheritance of type → interface. Shared base code → abstract class."
+  },
+  "ai-w4-e7": {
+    "answer": "Generate JavaDoc for one class. Open in IDE preview. Fix errors.",
+    "realWorld": "Good JavaDoc shows in IDE hover — teammates read it daily."
+  },
+  "ai-w4-e8": {
+    "answer": "SOLID with examples: one principle per day. Single Responsibility first — split a fat class.",
+    "realWorld": "Interview: name SOLID letters and one Java example each."
+  },
+  "ai-w4-e9": {
+    "answer": "List your packages. Ask if structure is clear. Move one misplaced class.",
+    "realWorld": "model classes in controller package — move to model/ for standard layout."
+  },
+  "ai-w4-e10": {
+    "answer": "Full project review: bugs, structure, naming. Fix highest-impact issue before marking done.",
+    "realWorld": "Portfolio project with one solid README + clean package structure impresses recruiters."
+  }
+}

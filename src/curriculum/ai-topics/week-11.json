@@ -1,0 +1,42 @@
+{
+  "ai-w11-t1": {
+    "answer": "AI generates ER from requirements. Validate entities, PKs, FKs, and naming match your Flyway migrations.",
+    "realWorld": "Banking ER: Account, Transaction — AI may miss double-entry constraints."
+  },
+  "ai-w11-t2": {
+    "answer": "Schema design: normalize, choose types, index strategy, soft delete columns. AI drafts; DBA instincts verify.",
+    "realWorld": "BIGSERIAL id, TIMESTAMPTZ created_at, VARCHAR(255) with known max — explicit types."
+  },
+  "ai-w11-t3": {
+    "answer": "Complex SQL: JOINs, subqueries, CTEs, window functions. Run on sample data; AI often wrong on dialect.",
+    "realWorld": "ROW_NUMBER() OVER (PARTITION BY dept) — verify on Postgres vs MySQL."
+  },
+  "ai-w11-t4": {
+    "answer": "EXPLAIN ANALYZE shows actual timings. Paste to AI with query; discuss index vs rewrite.",
+    "realWorld": "Seq scan 2M rows → index on filter column or partition table."
+  },
+  "ai-w11-t5": {
+    "answer": "Index columns in WHERE, JOIN, ORDER BY — not every column. Too many indexes slow writes.",
+    "realWorld": "Composite index (user_id, created_at) for user's recent orders query."
+  },
+  "ai-w11-t6": {
+    "answer": "Performance: connection pool sizing, N+1 queries, missing indexes, SELECT *. AI flags patterns in logs.",
+    "realWorld": "Hibernate statistics or query count in test reveals N+1."
+  },
+  "ai-w11-t7": {
+    "answer": "MongoDB: aggregation pipelines, $match, $group, $lookup. AI drafts; test in mongosh.",
+    "realWorld": "Analytics: orders per day — $group by $dateToString on createdAt."
+  },
+  "ai-w11-t8": {
+    "answer": "Hibernate: LazyInitializationException, N+1, wrong fetch type. Paste entity + error; fix fetch join or @Transactional.",
+    "realWorld": "@OneToMany fetch LAZY + session closed = classic bug — join fetch in query."
+  },
+  "ai-w11-t9": {
+    "answer": "AI drafts data dictionary: table purpose, column meaning, constraints. Keep synced with migrations.",
+    "realWorld": "Onboarding doc: what each table stores — reduces tribal knowledge."
+  },
+  "ai-w11-t10": {
+    "answer": "Flyway/Liquibase migrations versioned in git. AI writes V2__add_column.sql; you test rollback strategy.",
+    "realWorld": "Never edit applied migration — add new version file instead."
+  }
+}

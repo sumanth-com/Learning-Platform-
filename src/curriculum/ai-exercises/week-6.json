@@ -1,0 +1,43 @@
+{
+  "ai-w6-e1": {
+    "answer": "Convert for-loop filtering list to stream().filter().collect(). Same output, compare readability.",
+    "realWorld": "Team code review often debates loop vs Stream — know both.",
+    "code": "list.stream().filter(x -> x > 0).collect(Collectors.toList());"
+  },
+  "ai-w6-e2": {
+    "answer": "Paste complex lambda. Ask line-by-line explanation. Rewrite in plain loop.",
+    "realWorld": "If you can't read it as a loop, don't ship it."
+  },
+  "ai-w6-e3": {
+    "answer": "Compare Streams vs loops: debugging, performance, readability. When would you choose each?",
+    "realWorld": "Breakpoints in loops are easier for juniors — valid reason to prefer loops."
+  },
+  "ai-w6-e4": {
+    "answer": "Optimize list processing: remove repeated stream passes. Combine filter+map in one pipeline.",
+    "realWorld": "Three separate streams over same list → one pipeline, one pass."
+  },
+  "ai-w6-e5": {
+    "answer": "Ask visual explanation of synchronized block. Draw two threads and lock.",
+    "realWorld": "Only one thread inside synchronized method at a time — mutex concept."
+  },
+  "ai-w6-e6": {
+    "answer": "Write buggy shared counter. Ask AI why race happens. Fix with synchronization or AtomicInteger.",
+    "realWorld": "Classic interview: why counter++ is not atomic."
+  },
+  "ai-w6-e7": {
+    "answer": "ExecutorService: submit tasks, shutdown, awaitTermination. Ask for thread pool sizing basics.",
+    "realWorld": "Fixed pool of 4 for 4-core CPU — starting point, not law."
+  },
+  "ai-w6-e8": {
+    "answer": "Review Stream code for readability. Split long pipeline or add method references.",
+    "realWorld": "Extract .filter(this::isActive) — named predicate reads better."
+  },
+  "ai-w6-e9": {
+    "answer": "Ask ExecutorService analogy (workers, queue). Implement 3 tasks printing thread name.",
+    "realWorld": "Thread pool = limited workers pulling jobs from queue — factory floor model."
+  },
+  "ai-w6-e10": {
+    "answer": "Generate concurrent test scenarios. Expect flakiness — use CountDownLatch for coordination.",
+    "realWorld": "Multithreaded tests are hard — AI gives ideas; you stabilize with proper sync."
+  }
+}

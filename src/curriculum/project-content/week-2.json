@@ -1,0 +1,52 @@
+{
+  "bank-atm-simulation": {
+    "mode": "inline",
+    "overview": "Menu-driven ATM simulation using switch, methods, and loops.\n\nFeatures to build:\n• Deposit\n• Withdraw\n• Balance Enquiry\n• Exit\n\nRequirements:\n• Use switch for menu\n• Use methods for each operation\n• Use loops for continuous operation\n\nBonus:\n• Transaction history\n• PIN validation",
+    "explanation": "Uses a while loop for the ATM menu and switch for deposit, withdraw, and balance check. A double balance variable holds the account state. Withdraw validates sufficient funds.",
+    "code": "import java.util.Scanner;\n\npublic class BankATM {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        double balance = 0;\n        int choice;\n\n        do {\n            System.out.println(\"ATM Menu\\n1.Deposit 2.Withdraw 3.Balance 4.Exit\");\n            choice = sc.nextInt();\n            switch (choice) {\n                case 1 -> {\n                    System.out.print(\"Amount: \");\n                    balance += sc.nextDouble();\n                    System.out.println(\"Deposited. Balance: \" + balance);\n                }\n                case 2 -> {\n                    System.out.print(\"Amount: \");\n                    double amt = sc.nextDouble();\n                    if (amt > balance) System.out.println(\"Insufficient funds.\");\n                    else { balance -= amt; System.out.println(\"Withdrawn. Balance: \" + balance); }\n                }\n                case 3 -> System.out.println(\"Balance: \" + balance);\n                case 4 -> System.out.println(\"Thank you!\");\n                default -> System.out.println(\"Invalid choice.\");\n            }\n        } while (choice != 4);\n        sc.close();\n    }\n}",
+    "filename": "BankATM.java",
+    "sampleInput": "1\\n500\\n2\\n200\\n3\\n4",
+    "sampleOutput": "ATM Menu\\n1.Deposit 2.Withdraw 3.Balance 4.Exit\\nDeposited. Balance: 500.0\\nWithdrawn. Balance: 300.0\\nBalance: 300.0\\nThank you!",
+    "runInstructions": "javac BankATM.java\njava BankATM"
+  },
+  "student-result-system": {
+    "mode": "inline",
+    "overview": "Calculate student results with grades and pass/fail status.\n\nFeatures to build:\n• Enter Marks\n• Calculate Total\n• Percentage\n• Grade\n• Pass/Fail\n\nRequirements:\n• Use if-else for grading\n• Use methods for calculations\n\nBonus:\n• Multiple students\n• Subject-wise breakdown",
+    "explanation": "Student Result System is a console Java program implementing: Enter Marks, Calculate Total, Percentage, Grade, Pass/Fail. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class StudentResultSystem {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Student Result System\");\n        // Features: Enter Marks, Calculate Total, Percentage, Grade, Pass/Fail\n        sc.close();\n    }\n}",
+    "filename": "StudentResultSystem.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Student Result System\nCalculate student results with grades and pass/fail status.",
+    "runInstructions": "javac StudentResultSystem.java\njava StudentResultSystem"
+  },
+  "number-utility-app": {
+    "mode": "inline",
+    "overview": "Utility app for common number operations.\n\nFeatures to build:\n• Reverse Number\n• Palindrome\n• Armstrong\n• Prime\n• Factorial\n\nRequirements:\n• Use methods for each utility\n• Use loops where needed\n\nBonus:\n• Menu-driven interface",
+    "explanation": "Number Utility Application is a console Java program implementing: Reverse Number, Palindrome, Armstrong, Prime, Factorial. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class NumberUtilityApp {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Number Utility Application\");\n        // Features: Reverse Number, Palindrome, Armstrong, Prime, Factorial\n        sc.close();\n    }\n}",
+    "filename": "NumberUtilityApp.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Number Utility Application\nUtility app for common number operations.",
+    "runInstructions": "javac NumberUtilityApp.java\njava NumberUtilityApp"
+  },
+  "restaurant-billing": {
+    "mode": "inline",
+    "overview": "Restaurant order and billing system with discount and GST.\n\nFeatures to build:\n• Menu\n• Quantity\n• Bill\n• Discount\n• GST\n\nRequirements:\n• Use switch for menu selection\n• Use loops for multiple items\n• Use methods for bill calculation\n\nBonus:\n• Print formatted receipt",
+    "explanation": "Restaurant Billing System is a console Java program implementing: Menu, Quantity, Bill, Discount, GST. Use Scanner, loops, and conditionals. Build one feature at a time and test each step.",
+    "code": "import java.util.Scanner;\n\npublic class RestaurantBilling {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"Restaurant Billing System\");\n        // Features: Menu, Quantity, Bill, Discount, GST\n        sc.close();\n    }\n}",
+    "filename": "RestaurantBilling.java",
+    "sampleInput": "(enter values when prompted)",
+    "sampleOutput": "Restaurant Billing System\nRestaurant order and billing system with discount and GST.",
+    "runInstructions": "javac RestaurantBilling.java\njava RestaurantBilling"
+  },
+  "pattern-generator": {
+    "mode": "inline",
+    "overview": "Menu-driven pattern generator for star and number patterns.\n\nFeatures to build:\n• Menu Driven\n• Different Star Patterns\n• Number Patterns\n\nRequirements:\n• Menu-driven pattern selection\n• Implement at least 3 patterns\n\nBonus:\n• Character patterns\n• Custom size input",
+    "explanation": "Nested for loops print rows and columns of stars. The outer loop controls rows; the inner loop prints stars per row. Classic pattern practice for loops.",
+    "code": "import java.util.Scanner;\n\npublic class PatternGenerator {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter rows: \");\n        int n = sc.nextInt();\n        for (int i = 1; i <= n; i++) {\n            for (int j = 1; j <= i; j++) System.out.print(\"*\");\n            System.out.println();\n        }\n        sc.close();\n    }\n}",
+    "filename": "PatternGenerator.java",
+    "sampleInput": "Enter rows: 5",
+    "sampleOutput": "*\\n**\\n***\\n****\\n*****",
+    "runInstructions": "javac PatternGenerator.java\njava PatternGenerator"
+  }
+}

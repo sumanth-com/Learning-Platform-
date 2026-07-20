@@ -1,0 +1,402 @@
+{
+  "library-management-oop": {
+    "github": {
+      "url": "https://github.com/mehmetpekdemir/Library-Management-System",
+      "label": "Library Management System — Spring Boot + JPA"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=VmLP05Ignyk",
+      "label": "Library Management System in Java (JSP + Servlet + MySQL)"
+    }
+  },
+  "bank-management-system": {
+    "github": {
+      "url": "https://github.com/shawkyebrahim2514/Banking-System-Application",
+      "label": "Banking System Application — Java OOP + MySQL"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=xk4_1vDr-kk",
+      "label": "Java OOP Full Course — Bro Code"
+    }
+  },
+  "hospital-management": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-petclinic",
+      "label": "Spring PetClinic — Clinic / Hospital Management Sample"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+      "label": "Spring Boot + Database Full Tutorial"
+    }
+  },
+  "employee-payroll": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Java OOP Examples — Baeldung (eugenp/tutorials)"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=YGZIdT8xiG8",
+      "label": "Employee Management System — Java + MySQL Project"
+    }
+  },
+  "student-report-card": {
+    "github": {
+      "url": "https://github.com/kunal-kushwaha/DSA-Bootcamp-Java",
+      "label": "Kunal Kushwaha — Java DSA Bootcamp (OOP + Projects)"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=6T_HgnjoYwI",
+      "label": "15 Java Projects for Beginners — freeCodeCamp"
+    }
+  },
+  "student-management-collections": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Java Collections — Baeldung Examples"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=GdAhl29kdDw",
+      "label": "Java Collections Framework — Full Tutorial"
+    }
+  },
+  "library-book-management": {
+    "github": {
+      "url": "https://github.com/mehmetpekdemir/Library-Management-System",
+      "label": "Library Book Management — Spring Data JPA"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=KtDcPQkHU7o",
+      "label": "Library Management — Core Java + JDBC (Part 1)"
+    }
+  },
+  "employee-directory": {
+    "github": {
+      "url": "https://github.com/aljalo/BankManagementSystem",
+      "label": "Bank / Account Management — Java Collections + OOP"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=GdAhl29kdDw",
+      "label": "Collections + ArrayList Deep Dive"
+    }
+  },
+  "online-shopping-cart": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "HashMap & Cart Logic — Baeldung Java Tutorials"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=1Ob6N1kWqEY",
+      "label": "Shopping Cart with Java Collections"
+    }
+  },
+  "hospital-appointment": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-petclinic",
+      "label": "Spring PetClinic — Appointments & Visits"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=GdAhl29kdDw",
+      "label": "Java Collections for Scheduling Lists"
+    }
+  },
+  "employee-management-java8": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Java 8 Features — Baeldung (Streams, Lambda)"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=1VIxkAlt7DE",
+      "label": "Java 8 Streams & Lambda Expressions"
+    }
+  },
+  "student-analytics": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Java 8 Streams Analytics — Baeldung Tutorials Repo"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=1VIxkAlt7DE",
+      "label": "Process Data with Java 8 Streams"
+    }
+  },
+  "ticket-booking-concurrent": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Java Concurrency — Baeldung Examples"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=r_MbozUl2YQ",
+      "label": "Java Multithreading & Concurrency"
+    }
+  },
+  "task-scheduler": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Scheduled Tasks & Thread Pools — Baeldung"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=r_MbozUl2YQ",
+      "label": "Threads & Executors in Java"
+    }
+  },
+  "payroll-processor": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Payroll Logic with Streams — Java 8"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=YGZIdT8xiG8",
+      "label": "Employee Payroll System — Java Project"
+    }
+  },
+  "student-management-jdbc": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Java JDBC CRUD — Baeldung Tutorials"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=IvaOT020SSI",
+      "label": "Java JDBC Full Course — Connect Java to MySQL"
+    }
+  },
+  "employee-management-jdbc": {
+    "github": {
+      "url": "https://github.com/shawkyebrahim2514/Banking-System-Application",
+      "label": "Employee / User Management with JDBC + MySQL"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=YGZIdT8xiG8",
+      "label": "Employee Management with MySQL Database"
+    }
+  },
+  "library-management-jdbc": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Library JDBC CRUD Reference"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=KtDcPQkHU7o",
+      "label": "Library Management with JDBC + MySQL"
+    }
+  },
+  "inventory-management-jdbc": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Inventory CRUD with JDBC"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=IvaOT020SSI",
+      "label": "JDBC Insert, Update, Delete Tutorial"
+    }
+  },
+  "hospital-management-jdbc": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Hospital Patient Records — JDBC Pattern"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=IvaOT020SSI",
+      "label": "Database CRUD with Java JDBC"
+    }
+  },
+  "student-rest-api": {
+    "github": {
+      "url": "https://github.com/amigoscode/spring-boot-fullstack-professional",
+      "label": "Spring Boot REST API — Amigoscode Full Stack"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+      "label": "Spring Boot REST API — Full Course 2025 (Amigoscode)"
+    }
+  },
+  "employee-rest-api": {
+    "github": {
+      "url": "https://github.com/amigoscode/java-springboot-full-stack",
+      "label": "Employee / Product REST API — Amigoscode"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+      "label": "Build REST APIs with Spring Boot"
+    }
+  },
+  "library-rest-api": {
+    "github": {
+      "url": "https://github.com/mehmetpekdemir/Library-Management-System",
+      "label": "Library REST API — Spring Boot + JPA"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+      "label": "Spring Boot REST + PostgreSQL Tutorial"
+    }
+  },
+  "inventory-rest-api": {
+    "github": {
+      "url": "https://github.com/amigoscode/java-springboot-full-stack",
+      "label": "Inventory / Product REST API — Spring Boot"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+      "label": "REST API Design with Spring Boot"
+    }
+  },
+  "hospital-rest-api": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-petclinic",
+      "label": "Spring PetClinic REST API Reference"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+      "label": "Spring Boot Backend API Crash Course"
+    }
+  },
+  "authentication-service": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-security-samples",
+      "label": "Spring Security Official Samples"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+      "label": "Spring Security Full Course — JWT & Auth"
+    }
+  },
+  "employee-portal": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-authorization-server",
+      "label": "Spring Authorization Server — OAuth2 / JWT"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+      "label": "Secure REST APIs with Spring Security"
+    }
+  },
+  "hospital-portal": {
+    "github": {
+      "url": "https://github.com/spring-petclinic/spring-petclinic-angular",
+      "label": "PetClinic Angular + Spring Portal"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+      "label": "Spring Security for Web Portals"
+    }
+  },
+  "ecommerce-auth": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-security-samples",
+      "label": "E-Commerce Auth Patterns — Spring Security"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+      "label": "Authentication & Authorization in Spring"
+    }
+  },
+  "student-portal": {
+    "github": {
+      "url": "https://github.com/amigoscode/full-stack-professional",
+      "label": "Full Stack Portal — Spring Boot + React"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+      "label": "Login & Registration with Spring Security"
+    }
+  },
+  "employee-rest-api-mastery": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "Advanced Spring REST — Baeldung"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+      "label": "Production REST API with Spring Boot"
+    }
+  },
+  "hospital-rest-api-mastery": {
+    "github": {
+      "url": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+      "label": "PetClinic Microservices — Hospital Scale"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+      "label": "Spring Boot Microservices REST APIs"
+    }
+  },
+  "ecommerce-product-api": {
+    "github": {
+      "url": "https://github.com/amigoscode/java-springboot-full-stack",
+      "label": "E-Commerce Product API — Spring Boot + S3"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+      "label": "Build Product CRUD REST API"
+    }
+  },
+  "crm-rest-api": {
+    "github": {
+      "url": "https://github.com/eugenp/tutorials",
+      "label": "CRM REST Patterns — Baeldung Spring REST"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+      "label": "REST API Best Practices — Spring Boot"
+    }
+  },
+  "student-rest-api-mastery": {
+    "github": {
+      "url": "https://github.com/amigoscode/spring-boot-fullstack-professional",
+      "label": "Student API Mastery — Amigoscode Full Stack"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+      "label": "Complete Spring Boot REST Course"
+    }
+  },
+  "banking-database": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-petclinic",
+      "label": "Spring PetClinic — Database Integration Reference"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+      "label": "Spring Boot + MySQL Database Tutorial"
+    }
+  },
+  "ecommerce-database": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-petclinic",
+      "label": "Spring Data JPA — E-Commerce Database"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+      "label": "Spring Boot JPA & MySQL Integration"
+    }
+  },
+  "hospital-database": {
+    "github": {
+      "url": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+      "label": "Hospital Database — Microservices + JPA"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+      "label": "Database Design with Spring Boot"
+    }
+  },
+  "crm-database": {
+    "github": {
+      "url": "https://github.com/spring-projects/spring-petclinic",
+      "label": "CRM Database Schema — Spring Data JPA"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+      "label": "JPA Entity Relationships Tutorial"
+    }
+  },
+  "inventory-database": {
+    "github": {
+      "url": "https://github.com/amigoscode/java-springboot-full-stack",
+      "label": "Inventory Database — Spring Boot + PostgreSQL"
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+      "label": "Spring Boot Database Migrations & JPA"
+    }
+  }
+}

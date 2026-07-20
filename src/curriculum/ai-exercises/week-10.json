@@ -1,0 +1,42 @@
+{
+  "ai-w10-e1": {
+    "answer": "Add springdoc to Spring Boot. Generate OpenAPI. Export JSON to repo.",
+    "realWorld": "CI fails if undocumented endpoint added — optional advanced step."
+  },
+  "ai-w10-e2": {
+    "answer": "Build Postman collection with tests for 3 endpoints. Share export.json in repo.",
+    "realWorld": "pm.environment.set('token', json.token) — chain auth tests."
+  },
+  "ai-w10-e3": {
+    "answer": "Review URI design: plural nouns, no verbs in path, nested resources max 2 levels.",
+    "realWorld": "/students/5/courses better than /getStudentCourses?studentId=5."
+  },
+  "ai-w10-e4": {
+    "answer": "400 bad request (malformed), 422 unprocessable (valid JSON, business rule fail), 409 conflict (duplicate).",
+    "realWorld": "Duplicate email register → 409 Conflict, not 500."
+  },
+  "ai-w10-e5": {
+    "answer": "Add ?page=0&size=20&sort=name,asc. Document in OpenAPI. AI suggests defaults.",
+    "realWorld": "Pageable in Spring: PageRequest.of(page, size, Sort.by(\"name\"))."
+  },
+  "ai-w10-e6": {
+    "answer": "Review Entity→DTO mapping. Ask if MapStruct or manual mapper is cleaner. Avoid exposing entities.",
+    "realWorld": "UserDTO without password hash — security + stable API contract."
+  },
+  "ai-w10-e7": {
+    "answer": "Scan DTOs for missing @NotNull, @Email, @Size. Add validation messages.",
+    "realWorld": "Clear message: 'Email must be valid' helps frontend show errors."
+  },
+  "ai-w10-e8": {
+    "answer": "Edge API tests: empty body, huge payload, wrong Content-Type, expired token.",
+    "realWorld": "413 or 400 on 10MB JSON when limit is 1MB — define and test."
+  },
+  "ai-w10-e9": {
+    "answer": "Rate limiting (Bucket4j, gateway) and CORS allowed origins — AI suggests config snippets.",
+    "realWorld": "CORS * in prod is risky — whitelist frontend domain only."
+  },
+  "ai-w10-e10": {
+    "answer": "Trim API responses: no internal ids leak, pagination meta, HATEOAS links optional.",
+    "realWorld": "{data:[], page:0, total:100} — consistent envelope helps clients."
+  }
+}

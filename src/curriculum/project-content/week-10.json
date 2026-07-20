@@ -1,0 +1,52 @@
+{
+  "employee-rest-api-mastery": {
+    "mode": "external",
+    "overview": "Production-quality employee API with DTOs, pagination, validation, Swagger docs, and proper status codes.\n\nFeatures to build:\n• Full CRUD with DTOs\n• Pagination & Sorting\n• Swagger Documentation\n• Request Validation\n• Standardized Error Responses\n\nRequirements:\n• RESTful endpoint design\n• DTO pattern with mappers\n• Swagger/OpenAPI\n• Postman collection\n\nBonus:\n• Department filter and search endpoints",
+    "explanation": "Employee Management REST API is a expert-level project (Week 10). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Full CRUD with DTOs, Pagination & Sorting, Swagger Documentation, Request Validation, Standardized Error Responses.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Advanced Spring REST — Baeldung",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "Production REST API with Spring Boot",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "hospital-rest-api-mastery": {
+    "mode": "external",
+    "overview": "Hospital API with nested resources, versioning, and comprehensive documentation.\n\nFeatures to build:\n• Patient APIs\n• Doctor APIs\n• Appointment APIs\n• Nested Resources\n• API Versioning\n\nRequirements:\n• Nested resource URIs\n• Generic response wrapper\n• Swagger docs\n• Health check endpoint\n\nBonus:\n• v1 and v2 appointment endpoints",
+    "explanation": "Hospital Management REST API is a expert-level project (Week 10). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Patient APIs, Doctor APIs, Appointment APIs, Nested Resources, API Versioning.",
+    "githubUrl": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+    "githubLabel": "PetClinic Microservices — Hospital Scale",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Spring Boot Microservices REST APIs",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "ecommerce-product-api": {
+    "mode": "external",
+    "overview": "Product catalog API with search, filter, pagination, and rate limiting.\n\nFeatures to build:\n• Product CRUD\n• Search & Filter\n• Pagination\n• Category Endpoints\n• Rate Limiting\n\nRequirements:\n• Search and filter APIs\n• Pagination with sorting\n• Swagger documentation\n• Proper HTTP status codes\n\nBonus:\n• Product image metadata endpoints",
+    "explanation": "E-Commerce Product API is a expert-level project (Week 10). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Product CRUD, Search & Filter, Pagination, Category Endpoints, Rate Limiting.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "E-Commerce Product API — Spring Boot + S3",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "Build Product CRUD REST API",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "crm-rest-api": {
+    "mode": "external",
+    "overview": "Customer relationship management API with contacts, leads, and activity tracking.\n\nFeatures to build:\n• Contact Management\n• Lead Tracking\n• Activity Logs\n• Search & Filter\n• Full API Documentation\n\nRequirements:\n• DTO pattern\n• Pagination and sorting\n• OpenAPI spec\n• Postman test suite\n\nBonus:\n• Lead conversion endpoint",
+    "explanation": "CRM REST API is a expert-level project (Week 10). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Contact Management, Lead Tracking, Activity Logs, Search & Filter, Full API Documentation.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "CRM REST Patterns — Baeldung Spring REST",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "youtubeLabel": "REST API Best Practices — Spring Boot",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "student-rest-api-mastery": {
+    "mode": "external",
+    "overview": "Student API with validation, idempotency, correlation IDs, and production structure.\n\nFeatures to build:\n• Student CRUD\n• Input Validation\n• Idempotent POST\n• Correlation ID Logging\n• Swagger & Postman\n\nRequirements:\n• Bean validation on DTOs\n• Standardized error responses\n• Swagger docs\n• Correlation ID in logs\n\nBonus:\n• Course enrollment nested endpoints",
+    "explanation": "Student Management REST API is a expert-level project (Week 10). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Student CRUD, Input Validation, Idempotent POST, Correlation ID Logging, Swagger & Postman.",
+    "githubUrl": "https://github.com/amigoscode/spring-boot-fullstack-professional",
+    "githubLabel": "Student API Mastery — Amigoscode Full Stack",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Cw0J6jYJtzw",
+    "youtubeLabel": "Complete Spring Boot REST Course",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

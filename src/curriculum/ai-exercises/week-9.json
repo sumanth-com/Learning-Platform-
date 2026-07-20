@@ -1,0 +1,42 @@
+{
+  "ai-w9-e1": {
+    "answer": "Paste SecurityConfig. Ask what's missing: CSRF, CORS, permitAll too broad. Fix one issue.",
+    "realWorld": "/admin/** permitAll by mistake — lock to ROLE_ADMIN."
+  },
+  "ai-w9-e2": {
+    "answer": "Ask security review of your API: auth on all routes?, SQL injection?, mass assignment?",
+    "realWorld": "Binding entity directly from request → DTO + validation instead."
+  },
+  "ai-w9-e3": {
+    "answer": "Ask JWT flow: login → token → Authorization header → filter validates → SecurityContext.",
+    "realWorld": "Once you can draw the flow, Spring Security config makes sense."
+  },
+  "ai-w9-e4": {
+    "answer": "Compare JWT vs server sessions: stateless vs stateful, logout, scale. Pick for your app type.",
+    "realWorld": "SPA + mobile often JWT; traditional web app may use session cookies."
+  },
+  "ai-w9-e5": {
+    "answer": "Generate password rules: length, upper, digit, special. Implement in validator + test.",
+    "realWorld": "@Pattern or custom validator on RegisterRequest.password."
+  },
+  "ai-w9-e6": {
+    "answer": "Review login endpoint: rate limit?, generic error messages?, BCrypt?",
+    "realWorld": "'Invalid credentials' not 'User not found' — prevents user enumeration."
+  },
+  "ai-w9-e7": {
+    "answer": "BCrypt hashes passwords one-way with salt. Never store plain text. Spring: BCryptPasswordEncoder.",
+    "realWorld": "passwordEncoder.encode(raw) on register; matches() on login."
+  },
+  "ai-w9-e8": {
+    "answer": "Secure REST checklist: HTTPS, auth, validation, rate limit, CORS whitelist, no secrets in repo.",
+    "realWorld": "Score your project; fix top gap before portfolio demo."
+  },
+  "ai-w9-e9": {
+    "answer": "Ask for auth flow diagram: register, login, refresh, protected call. Draw and label components.",
+    "realWorld": "Diagram in README shows security thinking to interviewers."
+  },
+  "ai-w9-e10": {
+    "answer": "Common mistakes: JWT in localStorage XSS risk, long-lived tokens, no HTTPS, default admin password.",
+    "realWorld": "httpOnly cookie for token — discuss trade-offs with AI, decide consciously."
+  }
+}

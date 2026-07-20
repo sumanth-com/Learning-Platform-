@@ -1,0 +1,42 @@
+{
+  "ai-w8-t1": {
+    "answer": "AI API = HTTP endpoint you call with JSON (prompt in, text/json out). Same client skills as any REST API: headers, auth, timeouts.",
+    "realWorld": "OpenAI chat/completions — POST JSON, parse choices[0].message.content."
+  },
+  "ai-w8-t2": {
+    "answer": "Your REST API serves **your** business data. AI API serves **model** responses. Both use HTTP — different contracts and billing.",
+    "realWorld": "GET /students/1 = your DB. POST to OpenAI = paid tokens per request."
+  },
+  "ai-w8-t3": {
+    "answer": "Call from Java: HttpClient, RestTemplate, or WebClient. Set Content-Type, Authorization, read status, parse JSON with Jackson.",
+    "realWorld": "RestTemplate.postForObject(url, requestBody, Response.class) — handle 4xx/5xx."
+  },
+  "ai-w8-t4": {
+    "answer": "Prompt templates: reusable strings with {{variables}}. Keeps prompts consistent and out of business logic.",
+    "realWorld": "\"Summarize ticket {{id}}: {{description}}\" — swap values per call."
+  },
+  "ai-w8-t5": {
+    "answer": "Request JSON: model name, messages array (role + content), temperature. Match provider docs exactly.",
+    "realWorld": "OpenAI: {\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}"
+  },
+  "ai-w8-t6": {
+    "answer": "Parse response with POJOs or JsonNode. Check error field, not just 200 — providers embed errors in body.",
+    "realWorld": "Map to ChatResponse DTO; null-check nested fields before use."
+  },
+  "ai-w8-t7": {
+    "answer": "Handle timeouts, retries with backoff, rate limits (429), and malformed JSON. Log request id, never log API keys.",
+    "realWorld": "429 → exponential backoff; 401 → fix key, don't retry blindly."
+  },
+  "ai-w8-t8": {
+    "answer": "AI drafts API descriptions from controller code. Verify paths, params, and examples match running app.",
+    "realWorld": "springdoc generates from annotations — AI polishes descriptions."
+  },
+  "ai-w8-t9": {
+    "answer": "Swagger/OpenAPI from @Operation annotations. AI suggests descriptions; you keep truth in sync with code.",
+    "realWorld": "Wrong response schema in docs breaks client teams — diff after each API change."
+  },
+  "ai-w8-t10": {
+    "answer": "AI suggests Postman tests: status, JSON fields, response time. You run collection in CI with Newman.",
+    "realWorld": "pm.test('status 200'); pm.expect(json.id).to.exist — basic regression."
+  }
+}

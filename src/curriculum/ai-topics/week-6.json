@@ -1,0 +1,34 @@
+{
+  "ai-w6-t1": {
+    "answer": "AI converts loops to Streams: filter, map, collect. Learn the loop version first — Streams are syntax sugar, not magic.",
+    "realWorld": "for-loop sum → stream().mapToInt().sum() — same logic, different style."
+  },
+  "ai-w6-t2": {
+    "answer": "Lambdas: (x) -> x * 2. Ask AI to explain parameter, arrow, body. Rewrite as anonymous class to compare.",
+    "realWorld": "Comparator.comparing(Student::getName) — method reference shorthand."
+  },
+  "ai-w6-t3": {
+    "answer": "Complex pipeline: ask AI to label each step. Read left-to-right: source → intermediate → terminal.",
+    "realWorld": "list.stream().filter().map().sorted().collect() — one operation per line for readability."
+  },
+  "ai-w6-t4": {
+    "answer": "Inefficient: stream inside loop, repeated sorting, parallel on tiny data. AI flags; you measure.",
+    "realWorld": "parallelStream() on 10 items — overhead wins nothing."
+  },
+  "ai-w6-t5": {
+    "answer": "Thread safety: ask AI when to use synchronized, ConcurrentHashMap, atomic classes. Race conditions need reproduction.",
+    "realWorld": "counter++ on shared int across threads — broken; AtomicInteger fixes."
+  },
+  "ai-w6-t6": {
+    "answer": "Concurrency test ideas: multiple threads, same resource, assert final count. Flaky tests need careful design.",
+    "realWorld": "AI suggests thread pool test; you run 100 iterations to spot races."
+  },
+  "ai-w6-t7": {
+    "answer": "Profile before parallelizing. AI suggests ExecutorService for I/O-bound tasks — not CPU magic on one core.",
+    "realWorld": "Blocking HTTP calls → thread pool; CPU math → maybe not more threads."
+  },
+  "ai-w6-t8": {
+    "answer": "AI may suggest parallelStream everywhere — wrong for small data, shared state, or ordered requirements.",
+    "realWorld": "Order-sensitive pipeline + parallel = subtle bugs — stick to sequential first."
+  }
+}

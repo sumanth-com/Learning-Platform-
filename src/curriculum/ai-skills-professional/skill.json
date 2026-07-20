@@ -1,0 +1,219 @@
+{
+  "id": "ai-week-12",
+  "title": "Professional Gen AI Mastery for Java Developers",
+  "description": "RAG, embeddings, vector databases, Spring AI, LangChain4j, agents, MCP, streaming, cost optimization, production patterns, testing, CI/CD, and career skills for Java backend engineers.",
+  "learningTopics": [
+    {
+      "id": "ai-w12-t1",
+      "title": "What is Retrieval-Augmented Generation (RAG)?"
+    },
+    {
+      "id": "ai-w12-t2",
+      "title": "Text Embeddings and Vector Representations"
+    },
+    {
+      "id": "ai-w12-t3",
+      "title": "Vector Databases: pgvector, Pinecone, and Chroma"
+    },
+    {
+      "id": "ai-w12-t4",
+      "title": "Similarity Search and Cosine Distance"
+    },
+    {
+      "id": "ai-w12-t5",
+      "title": "Document Chunking Strategies for RAG"
+    },
+    {
+      "id": "ai-w12-t6",
+      "title": "Tuning Retrieval Quality and Re-ranking"
+    },
+    {
+      "id": "ai-w12-t7",
+      "title": "Spring AI Overview for Java Developers"
+    },
+    {
+      "id": "ai-w12-t8",
+      "title": "Spring AI ChatClient and Prompt Templates"
+    },
+    {
+      "id": "ai-w12-t9",
+      "title": "Spring AI Embeddings and VectorStore"
+    },
+    {
+      "id": "ai-w12-t10",
+      "title": "Spring AI Function Calling and Tools"
+    },
+    {
+      "id": "ai-w12-t11",
+      "title": "LangChain4j Introduction"
+    },
+    {
+      "id": "ai-w12-t12",
+      "title": "LangChain4j Embedding Stores and Document Loaders"
+    },
+    {
+      "id": "ai-w12-t13",
+      "title": "Building a RAG Pipeline with LangChain4j"
+    },
+    {
+      "id": "ai-w12-t14",
+      "title": "Spring AI vs LangChain4j: When to Use Which"
+    },
+    {
+      "id": "ai-w12-t15",
+      "title": "AI Agent Architecture and ReAct Patterns"
+    },
+    {
+      "id": "ai-w12-t16",
+      "title": "Tool Calling Patterns in Production"
+    },
+    {
+      "id": "ai-w12-t17",
+      "title": "Model Context Protocol (MCP) Explained"
+    },
+    {
+      "id": "ai-w12-t18",
+      "title": "Building MCP Servers with Java"
+    },
+    {
+      "id": "ai-w12-t19",
+      "title": "Streaming LLM Responses in Java"
+    },
+    {
+      "id": "ai-w12-t20",
+      "title": "Server-Sent Events (SSE) in Spring Boot"
+    },
+    {
+      "id": "ai-w12-t21",
+      "title": "Token Usage, Pricing, and Cost Optimization"
+    },
+    {
+      "id": "ai-w12-t22",
+      "title": "Model Selection: GPT, Claude, Gemini, and Local Models"
+    },
+    {
+      "id": "ai-w12-t23",
+      "title": "Production AI Architecture Patterns"
+    },
+    {
+      "id": "ai-w12-t24",
+      "title": "Observability: Logging, Tracing, and Metrics for AI"
+    },
+    {
+      "id": "ai-w12-t25",
+      "title": "Testing AI Features in Java Applications"
+    },
+    {
+      "id": "ai-w12-t26",
+      "title": "Evals, Golden Datasets, and Regression Testing"
+    },
+    {
+      "id": "ai-w12-t27",
+      "title": "CI/CD Pipelines for AI-Enabled Services"
+    },
+    {
+      "id": "ai-w12-t28",
+      "title": "Feature Flags and Safe AI Rollouts"
+    },
+    {
+      "id": "ai-w12-t29",
+      "title": "Microservices Patterns with AI Components"
+    },
+    {
+      "id": "ai-w12-t30",
+      "title": "Event-Driven AI Workflows with Kafka"
+    },
+    {
+      "id": "ai-w12-t31",
+      "title": "Security in Gen AI Systems"
+    },
+    {
+      "id": "ai-w12-t32",
+      "title": "PII Handling and Data Governance in RAG"
+    },
+    {
+      "id": "ai-w12-t33",
+      "title": "Portfolio Projects for Gen AI Java Developers"
+    },
+    {
+      "id": "ai-w12-t34",
+      "title": "Interview Preparation: Gen AI for Java Backend"
+    },
+    {
+      "id": "ai-w12-t35",
+      "title": "Career Roadmap: 2-Year Java Dev to Gen AI Engineer"
+    }
+  ],
+  "tools": [
+    "Spring AI",
+    "LangChain4j",
+    "OpenAI API",
+    "pgvector",
+    "Docker",
+    "GitHub Actions",
+    "OpenTelemetry",
+    "Postman"
+  ],
+  "exercises": [
+    {
+      "id": "ai-w12-e1",
+      "title": "Build an embedding service with Spring AI and store vectors in pgvector"
+    },
+    {
+      "id": "ai-w12-e2",
+      "title": "Implement a basic RAG chatbot over your project documentation"
+    },
+    {
+      "id": "ai-w12-e3",
+      "title": "Add function calling so the LLM can query a Spring Data repository"
+    },
+    {
+      "id": "ai-w12-e4",
+      "title": "Stream chat responses to the browser using SSE in Spring Boot"
+    },
+    {
+      "id": "ai-w12-e5",
+      "title": "Load PDF documents with LangChain4j and answer questions about them"
+    },
+    {
+      "id": "ai-w12-e6",
+      "title": "Integrate an MCP tool that exposes your REST API to an AI agent"
+    },
+    {
+      "id": "ai-w12-e7",
+      "title": "Implement token-budget middleware to cap per-request LLM cost"
+    },
+    {
+      "id": "ai-w12-e8",
+      "title": "Unit-test an AI wrapper service with Mockito and WireMock"
+    },
+    {
+      "id": "ai-w12-e9",
+      "title": "Create a golden-dataset eval for prompt consistency"
+    },
+    {
+      "id": "ai-w12-e10",
+      "title": "Dockerize an AI microservice with health checks and secrets"
+    },
+    {
+      "id": "ai-w12-e11",
+      "title": "Add OpenTelemetry spans around LLM and embedding calls"
+    },
+    {
+      "id": "ai-w12-e12",
+      "title": "Build a simple cost dashboard from logged token usage"
+    },
+    {
+      "id": "ai-w12-e13",
+      "title": "Implement hybrid search combining keyword and vector retrieval"
+    },
+    {
+      "id": "ai-w12-e14",
+      "title": "Build a multi-tool agent that plans and executes Java service calls"
+    },
+    {
+      "id": "ai-w12-e15",
+      "title": "Capstone: deploy a production-ready RAG API with tests and CI"
+    }
+  ]
+}

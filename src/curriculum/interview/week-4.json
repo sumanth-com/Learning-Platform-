@@ -1,0 +1,284 @@
+[
+  {
+    "id": "w4-inheritance",
+    "category": "Inheritance",
+    "questions": [
+      {
+        "id": "w4-q01",
+        "question": "What is inheritance?",
+        "answer": "Inheritance is an OOP mechanism where a child class (subclass) acquires fields and methods from a parent class (superclass) using the extends keyword. It models an is-a relationship — for example, a SavingsAccount is an Account. The subclass can reuse, extend, or override parent behavior, which reduces duplication and supports polymorphism. In Java, all classes except Object inherit from exactly one direct superclass, and Object is the root of the class hierarchy.",
+        "realWorld": "In a banking application, a base Account class defines common properties (accountNumber, balance) and methods (deposit, withdraw). SavingsAccount and CurrentAccount extend Account and add specific rules such as interest calculation or overdraft limits. New account types can be added without rewriting core banking logic.",
+        "code": "class Account {\n    protected double balance;\n    public void deposit(double amount) { balance += amount; }\n}\n\nclass SavingsAccount extends Account {\n    private double interestRate = 4.5;\n    public double calculateInterest() { return balance * interestRate / 100; }\n}\n\npublic class InheritanceDemo {\n    public static void main(String[] args) {\n        SavingsAccount sa = new SavingsAccount();\n        sa.deposit(10000);\n        System.out.println(\"Interest: \" + sa.calculateInterest());\n    }\n}",
+        "output": "Interest: 450.0"
+      },
+      {
+        "id": "w4-q02",
+        "question": "Types of inheritance in Java.",
+        "answer": "Java supports single inheritance (one class extends one parent), multilevel inheritance (A extends B extends C), and hierarchical inheritance (multiple subclasses share one parent). Java does not support multiple inheritance with classes (one class extending multiple classes) to avoid the diamond problem. However, a class can implement multiple interfaces, achieving a form of multiple inheritance for behavior contracts. Hybrid inheritance combines these patterns in real applications.",
+        "realWorld": "An enterprise app might have Employee as a base class, Manager and Developer as hierarchical subclasses, and SeniorDeveloper extending Developer for multilevel inheritance. PaymentProcessor might implement both Auditable and Retryable interfaces without extending multiple classes.",
+        "code": "class Animal { void eat() { System.out.println(\"Eating\"); } }\nclass Mammal extends Animal { void breathe() { System.out.println(\"Breathing\"); } }\nclass Dog extends Mammal { void bark() { System.out.println(\"Bark\"); } }\nclass Cat extends Mammal { void meow() { System.out.println(\"Meow\"); } }\n\npublic class InheritanceTypes {\n    public static void main(String[] args) {\n        Dog dog = new Dog();\n        dog.eat(); dog.breathe(); dog.bark();\n    }\n}",
+        "output": "Eating\nBreathing\nBark"
+      },
+      {
+        "id": "w4-q03",
+        "question": "Why doesn't Java support multiple inheritance with classes?",
+        "answer": "Java avoids multiple class inheritance because of the diamond problem: if two parent classes provide the same method with different implementations, the compiler cannot determine which version the child should inherit. This creates ambiguity in method resolution and state management. Instead, Java uses single inheritance for classes and allows multiple interface inheritance, where default methods must be explicitly overridden if conflicting. This design keeps the type system predictable and maintainable.",
+        "realWorld": "Imagine a FlyingCar class trying to extend both Car and Airplane — both might define a start() method differently. Java forces you to compose behaviors (e.g., implement Flyable and Drivable interfaces) or use delegation, which leads to clearer, safer designs in large codebases like Spring services.",
+        "code": "interface Drivable { default void move() { System.out.println(\"Driving on road\"); } }\ninterface Flyable { default void move() { System.out.println(\"Flying in air\"); } }\n\nclass FlyingCar implements Drivable, Flyable {\n    @Override\n    public void move() { System.out.println(\"Driving and flying as needed\"); }\n}\n\npublic class MultipleInheritanceDemo {\n    public static void main(String[] args) {\n        new FlyingCar().move();\n    }\n}",
+        "output": "Driving and flying as needed"
+      },
+      {
+        "id": "w4-q04",
+        "question": "What is the super keyword?",
+        "answer": "super is a reference keyword used inside a subclass to access members of the immediate parent class. It has three main uses: calling the parent constructor with super(), invoking an overridden parent method with super.methodName(), and accessing parent fields with super.fieldName. The super() constructor call must be the first statement in a subclass constructor if used. It is essential when extending classes that require initialization through parent constructors.",
+        "realWorld": "In an e-commerce system, a DiscountedProduct extends Product. The subclass constructor calls super(name, price) to initialize common product fields, then applies discount logic. When overriding toString(), super.toString() is reused to avoid duplicating base formatting logic.",
+        "code": "class Product {\n    String name;\n    double price;\n    Product(String name, double price) { this.name = name; this.price = price; }\n    String details() { return name + \" - Rs.\" + price; }\n}\n\nclass DiscountedProduct extends Product {\n    double discount;\n    DiscountedProduct(String name, double price, double discount) {\n        super(name, price);\n        this.discount = discount;\n    }\n    @Override\n    String details() { return super.details() + \" (\" + discount + \"% off)\"; }\n}\n\npublic class SuperDemo {\n    public static void main(String[] args) {\n        System.out.println(new DiscountedProduct(\"Laptop\", 50000, 10).details());\n    }\n}",
+        "output": "Laptop - Rs.50000.0 (10.0% off)"
+      }
+    ]
+  },
+  {
+    "id": "w4-polymorphism",
+    "category": "Polymorphism",
+    "questions": [
+      {
+        "id": "w4-q05",
+        "question": "Difference between method overloading and overriding.",
+        "answer": "Method overloading occurs within the same class: multiple methods share a name but differ in parameter number, type, or order. It is resolved at compile time (static polymorphism). Method overriding occurs in a subclass: a method has the same name, return type (or covariant), and parameter list as a parent method. It is resolved at runtime based on the actual object type (dynamic polymorphism). Overloading improves API convenience; overriding enables specialized behavior in subclasses.",
+        "realWorld": "A PaymentService might overload processPayment() for credit card, UPI, and net banking parameters. A CreditCardPayment subclass overrides processPayment() to add card-specific validation, while the controller calls payment.processPayment() polymorphically.",
+        "code": "class Payment {\n    void pay(int amount) { System.out.println(\"Pay \" + amount); }\n    void pay(int amount, String currency) { System.out.println(\"Pay \" + amount + \" \" + currency); }\n}\n\nclass UpiPayment extends Payment {\n    @Override\n    void pay(int amount) { System.out.println(\"UPI pay \" + amount); }\n}\n\npublic class OverloadOverrideDemo {\n    public static void main(String[] args) {\n        Payment p = new UpiPayment();\n        p.pay(500);\n        p.pay(500, \"INR\");\n    }\n}",
+        "output": "UPI pay 500\nPay 500 INR"
+      },
+      {
+        "id": "w4-q06",
+        "question": "What is runtime polymorphism?",
+        "answer": "Runtime polymorphism (dynamic method dispatch) allows a reference variable of a parent type to point to a child object, and the JVM invokes the overridden method of the actual object at runtime. This requires inheritance, method overriding, and upcasting. It enables writing flexible code that works with supertypes while executing subtype-specific behavior. The decision of which method to call is deferred until runtime via virtual method tables.",
+        "realWorld": "A notification system defines a NotificationSender interface or base class. EmailSender, SmsSender, and PushSender override send(). The application calls sender.send(message) without knowing the concrete type, making it easy to plug in new channels in production.",
+        "code": "class Shape { void draw() { System.out.println(\"Drawing shape\"); } }\nclass Circle extends Shape { @Override void draw() { System.out.println(\"Drawing circle\"); } }\nclass Square extends Shape { @Override void draw() { System.out.println(\"Drawing square\"); } }\n\npublic class RuntimePolyDemo {\n    public static void main(String[] args) {\n        Shape s1 = new Circle();\n        Shape s2 = new Square();\n        s1.draw();\n        s2.draw();\n    }\n}",
+        "output": "Drawing circle\nDrawing square"
+      },
+      {
+        "id": "w4-q07",
+        "question": "What is compile-time polymorphism?",
+        "answer": "Compile-time polymorphism is resolved by the compiler before the program runs. In Java, it is primarily achieved through method overloading and operator overloading is not supported. The compiler selects the correct method based on the method signature at the call site. Because binding happens early, it is also called static polymorphism or early binding. It improves readability by allowing intuitive method names for different parameter combinations.",
+        "realWorld": "A utility class MathUtils might overload format() to accept int, double, or BigDecimal. Developers call one intuitive method name, and the compiler picks the right version — common in logging, formatting, and builder APIs across enterprise libraries.",
+        "code": "class Printer {\n    void print(String msg) { System.out.println(\"String: \" + msg); }\n    void print(int num) { System.out.println(\"Int: \" + num); }\n    void print(double num) { System.out.println(\"Double: \" + num); }\n}\n\npublic class CompileTimePolyDemo {\n    public static void main(String[] args) {\n        Printer p = new Printer();\n        p.print(\"Hello\");\n        p.print(42);\n        p.print(3.14);\n    }\n}",
+        "output": "String: Hello\nInt: 42\nDouble: 3.14"
+      }
+    ]
+  },
+  {
+    "id": "w4-abstraction",
+    "category": "Abstraction & Interfaces",
+    "questions": [
+      {
+        "id": "w4-q08",
+        "question": "What is abstraction?",
+        "answer": "Abstraction is the OOP principle of hiding complex implementation details and exposing only essential behavior to the user. It reduces cognitive load and decouples callers from internal changes. In Java, abstraction is achieved using abstract classes, interfaces, and access modifiers. Users interact with a simple contract (what an object does) without knowing how it does it. Abstraction is foundational for APIs, frameworks, and maintainable layered architectures.",
+        "realWorld": "When you call driver.getConnection() in JDBC, you use a simple abstraction over complex network protocols, driver implementations, and database handshakes. The application depends on the Connection interface, not vendor-specific code.",
+        "code": "abstract class Vehicle {\n    abstract void start();\n    void stop() { System.out.println(\"Vehicle stopped\"); }\n}\n\nclass Car extends Vehicle {\n    @Override void start() { System.out.println(\"Car engine started\"); }\n}\n\npublic class AbstractionDemo {\n    public static void main(String[] args) {\n        Vehicle v = new Car();\n        v.start();\n        v.stop();\n    }\n}",
+        "output": "Car engine started\nVehicle stopped"
+      },
+      {
+        "id": "w4-q09",
+        "question": "What is an abstract class?",
+        "answer": "An abstract class is declared with the abstract keyword and cannot be instantiated directly. It may contain abstract methods (without body) that subclasses must implement, as well as concrete methods and fields. Abstract classes are used when related classes share common state and partial implementation but need specialized behavior. They support constructors, instance variables, and all access modifiers. They represent a template for a family of classes.",
+        "realWorld": "In a payroll system, an abstract Employee class holds name, id, and calculateBaseSalary(), while FullTimeEmployee and Contractor override calculatePay() with different rules. Shared logic stays in the abstract class; variations live in subclasses.",
+        "code": "abstract class Employee {\n    String name;\n    Employee(String name) { this.name = name; }\n    abstract double calculatePay();\n    void printName() { System.out.println(name); }\n}\n\nclass FullTimeEmployee extends Employee {\n    double salary;\n    FullTimeEmployee(String name, double salary) { super(name); this.salary = salary; }\n    @Override double calculatePay() { return salary; }\n}\n\npublic class AbstractClassDemo {\n    public static void main(String[] args) {\n        Employee e = new FullTimeEmployee(\"Ravi\", 60000);\n        e.printName();\n        System.out.println(\"Pay: \" + e.calculatePay());\n    }\n}",
+        "output": "Ravi\nPay: 60000.0"
+      },
+      {
+        "id": "w4-q10",
+        "question": "Can an abstract class have constructors?",
+        "answer": "Yes. Abstract classes can have constructors, and they are invoked when a subclass object is created. The subclass constructor must call a parent constructor (explicitly or implicitly via super()). Abstract class constructors initialize shared state and enforce invariants for all subclasses. Even though you cannot do new AbstractClass(), the constructor runs as part of subclass instantiation. This is a common interview trap — abstract does not mean constructor-less.",
+        "realWorld": "A BaseRepository abstract class might require a DataSource in its constructor. Every JdbcUserRepository or JpaOrderRepository calls super(dataSource) to ensure database connectivity is set up consistently before subclass-specific queries run.",
+        "code": "abstract class BaseService {\n    String serviceName;\n    BaseService(String serviceName) {\n        this.serviceName = serviceName;\n        System.out.println(\"BaseService init: \" + serviceName);\n    }\n    abstract void execute();\n}\n\nclass OrderService extends BaseService {\n    OrderService() { super(\"OrderService\"); }\n    @Override void execute() { System.out.println(\"Processing orders\"); }\n}\n\npublic class AbstractConstructorDemo {\n    public static void main(String[] args) { new OrderService().execute(); }\n}",
+        "output": "BaseService init: OrderService\nProcessing orders"
+      },
+      {
+        "id": "w4-q11",
+        "question": "What is an interface?",
+        "answer": "An interface is a reference type in Java that defines a contract of abstract behavior. A class implements an interface using implements and must provide implementations for abstract methods (unless the class is abstract). Interfaces support multiple inheritance of type and, since Java 8, can include default and static methods. Since Java 9, they may have private methods. Interfaces define capabilities (can-do relationships) such as Serializable, Runnable, or custom domain contracts.",
+        "realWorld": "Spring Boot applications define service interfaces (UserService) and provide implementations (UserServiceImpl). Controllers depend on the interface, enabling easy mocking in tests and swapping implementations (in-memory vs database) without changing consumer code.",
+        "code": "interface Notifier {\n    void send(String message);\n    default void log(String message) { System.out.println(\"LOG: \" + message); }\n}\n\nclass EmailNotifier implements Notifier {\n    public void send(String message) { System.out.println(\"Email: \" + message); }\n}\n\npublic class InterfaceDemo {\n    public static void main(String[] args) {\n        Notifier n = new EmailNotifier();\n        n.send(\"Order confirmed\");\n        n.log(\"Notification sent\");\n    }\n}",
+        "output": "Email: Order confirmed\nLOG: Notification sent"
+      },
+      {
+        "id": "w4-q12",
+        "question": "Interface vs abstract class.",
+        "answer": "Use an interface for a pure behavior contract with multiple inheritance; use an abstract class when subclasses share common state and partial implementation. Interfaces cannot have instance fields (only constants); abstract classes can. A class extends one abstract class but implements many interfaces. Interfaces are ideal for defining roles (Comparable, AutoCloseable); abstract classes suit closely related class families. From Java 8 onward, interfaces with default methods blur the line, but the design intent differs: is-a hierarchy vs capability contract.",
+        "realWorld": "Animal abstract class might hold age and species with shared breathe() logic. Flyable and Swimmable interfaces let unrelated classes (Duck, Robot) expose capabilities without forcing a single inheritance tree — common in game engines and plugin architectures.",
+        "code": "abstract class Animal {\n    int age;\n    Animal(int age) { this.age = age; }\n    void breathe() { System.out.println(\"Breathing at age \" + age); }\n}\n\ninterface Flyable { void fly(); }\n\nclass Bird extends Animal implements Flyable {\n    Bird(int age) { super(age); }\n    public void fly() { System.out.println(\"Flying\"); }\n}\n\npublic class InterfaceVsAbstractDemo {\n    public static void main(String[] args) {\n        Bird b = new Bird(2);\n        b.breathe();\n        b.fly();\n    }\n}",
+        "output": "Breathing at age 2\nFlying"
+      },
+      {
+        "id": "w4-q13",
+        "question": "What are default methods?",
+        "answer": "Default methods were introduced in Java 8 and are instance methods in interfaces with a body, declared using the default keyword. They allow interfaces to evolve by adding new methods without breaking existing implementations. Implementing classes inherit the default implementation unless they override it. Default methods enable interface composition and are heavily used in the Collections Framework (e.g., Iterable.forEach). They cannot override Object methods like equals or hashCode.",
+        "realWorld": "Java's List interface added sort(Comparator) as a default method in Java 8. Existing custom List implementations compiled years earlier continued to work without modification while gaining new functionality.",
+        "code": "interface Greeter {\n    String name();\n    default void greet() { System.out.println(\"Hello, \" + name()); }\n}\n\nclass User implements Greeter {\n    private String name;\n    User(String name) { this.name = name; }\n    public String name() { return name; }\n}\n\npublic class DefaultMethodDemo {\n    public static void main(String[] args) { new User(\"Priya\").greet(); }\n}",
+        "output": "Hello, Priya"
+      },
+      {
+        "id": "w4-q14",
+        "question": "What are static methods in interfaces?",
+        "answer": "Static methods in interfaces, added in Java 8, belong to the interface itself and are called using InterfaceName.methodName(). They provide utility or factory behavior related to the interface contract without requiring an implementing object. They cannot be overridden by implementing classes. Static methods help group helper logic with the interface definition and keep implementation classes focused on contract fulfillment.",
+        "realWorld": "Comparator.comparing() and Comparator.naturalOrder() are static factory methods on the Comparator interface. They let developers build sorting logic fluently without writing boilerplate anonymous classes.",
+        "code": "interface MathOperation {\n    int operate(int a, int b);\n    static int add(int a, int b) { return a + b; }\n    static MathOperation multiplier(int factor) {\n        return (a, b) -> (a + b) * factor;\n    }\n}\n\npublic class StaticInterfaceDemo {\n    public static void main(String[] args) {\n        System.out.println(MathOperation.add(3, 4));\n        System.out.println(MathOperation.multiplier(2).operate(3, 4));\n    }\n}",
+        "output": "7\n14"
+      },
+      {
+        "id": "w4-q15",
+        "question": "What is multiple inheritance using interfaces?",
+        "answer": "Java allows a class to implement multiple interfaces, thereby inheriting multiple abstract contracts. The class must implement all abstract methods from all interfaces. If two interfaces provide conflicting default methods, the class must override and resolve the conflict explicitly. This achieves multiple inheritance of type without the diamond problem of multiple class inheritance. Interfaces define what a class can do; the class provides unified behavior.",
+        "realWorld": "A SmartDevice class might implement Switchable, Connectable, and Updatable interfaces. A home automation controller treats it polymorphically through each interface without caring about the concrete device type.",
+        "code": "interface Switchable { void turnOn(); }\ninterface Connectable { void connect(); }\n\nclass SmartLight implements Switchable, Connectable {\n    public void turnOn() { System.out.println(\"Light ON\"); }\n    public void connect() { System.out.println(\"Connected to WiFi\"); }\n}\n\npublic class MultiInterfaceDemo {\n    public static void main(String[] args) {\n        SmartLight light = new SmartLight();\n        light.connect();\n        light.turnOn();\n    }\n}",
+        "output": "Connected to WiFi\nLight ON"
+      }
+    ]
+  },
+  {
+    "id": "w4-packages",
+    "category": "Packages & Access Modifiers",
+    "questions": [
+      {
+        "id": "w4-q16",
+        "question": "What are packages?",
+        "answer": "A package is a namespace that groups related classes, interfaces, enums, and annotations. It is declared with the package keyword at the top of a source file and corresponds to a directory structure under src. Packages organize code, prevent naming conflicts, and control visibility. The standard convention is reverse domain naming (com.company.project.module). Classes in the same package can access package-private members.",
+        "realWorld": "A Spring Boot project uses packages like com.bank.app.controller, com.bank.app.service, and com.bank.app.repository to separate web, business, and data layers. This structure is standard in enterprise Java and helps teams navigate large codebases.",
+        "code": "// File: com/example/shapes/Circle.java\npackage com.example.shapes;\n\npublic class Circle {\n    private double radius;\n    public Circle(double radius) { this.radius = radius; }\n    public double area() { return Math.PI * radius * radius; }\n}\n\n// File: com/example/App.java\npackage com.example;\nimport com.example.shapes.Circle;\n\npublic class App {\n    public static void main(String[] args) {\n        System.out.println(new Circle(5).area());\n    }\n}",
+        "output": "78.53981633974483"
+      },
+      {
+        "id": "w4-q17",
+        "question": "Why do we use packages?",
+        "answer": "Packages provide logical organization, encapsulation at the module level, and access control through package-private visibility. They prevent class name collisions — java.util.Date and java.sql.Date can coexist. Packages make code reusable and maintainable by grouping related functionality. They also align with deployment units (JAR modules) and help build tools resolve dependencies. Good package design reflects domain boundaries and architectural layers.",
+        "realWorld": "In a microservices migration, teams split monolith packages into separate Maven modules (user-api, billing-core). Clear package boundaries make it obvious which code belongs where and reduce accidental coupling between services.",
+        "code": "package com.store.util;\n\npublic class TaxCalculator {\n    public static double calculate(double amount, double rate) {\n        return amount * rate / 100;\n    }\n}\n\n// Usage from another package:\n// import com.store.util.TaxCalculator;\n// double tax = TaxCalculator.calculate(1000, 18);",
+        "output": "tax = 180.0"
+      },
+      {
+        "id": "w4-q18",
+        "question": "Explain access modifiers.",
+        "answer": "Java has four access levels: public (accessible everywhere), protected (same package + subclasses), default/package-private (same package only, no keyword), and private (same class only). Access modifiers enforce encapsulation and hide implementation details. Fields are typically private; methods exposed to clients are public. Protected supports inheritance-friendly APIs. Choosing correct modifiers is critical for API design and preventing unintended dependencies.",
+        "realWorld": "In a library JAR, internal helper classes are package-private while public API classes are exposed. This lets maintainers refactor internals without breaking consumers — a principle used throughout the JDK and Spring Framework.",
+        "code": "public class BankAccount {\n    private double balance;           // only this class\n    protected String accountType;     // subclasses + package\n    String branchCode;                // package-private\n    public double getBalance() { return balance; }\n}\n\nclass SavingsAccount extends BankAccount {\n    void setType() { accountType = \"SAVINGS\"; }\n}",
+        "output": "balance accessible only via getBalance()"
+      }
+    ]
+  },
+  {
+    "id": "w4-exceptions",
+    "category": "Exception Handling",
+    "questions": [
+      {
+        "id": "w4-q19",
+        "question": "What is a checked exception?",
+        "answer": "A checked exception is an exception that extends Exception but not RuntimeException. The compiler enforces handling — you must catch it with try-catch or declare it with throws in the method signature. Checked exceptions represent recoverable, anticipated failure conditions such as I/O errors or SQL problems. They make failure paths explicit in the API contract. Examples include IOException, SQLException, and ClassNotFoundException.",
+        "realWorld": "When reading a customer file during batch processing, FileNotFoundException is checked. The developer must decide whether to retry, skip the file, or abort the job — the compiler ensures this decision is not accidentally ignored.",
+        "code": "import java.io.*;\n\npublic class CheckedExceptionDemo {\n    public static void main(String[] args) {\n        try {\n            BufferedReader br = new BufferedReader(new FileReader(\"data.txt\"));\n            System.out.println(br.readLine());\n            br.close();\n        } catch (IOException e) {\n            System.out.println(\"Handled: \" + e.getClass().getSimpleName());\n        }\n    }\n}",
+        "output": "Handled: FileNotFoundException"
+      },
+      {
+        "id": "w4-q20",
+        "question": "What is an unchecked exception?",
+        "answer": "An unchecked exception extends RuntimeException (or Error). The compiler does not require explicit handling. These typically represent programming bugs, invalid arguments, or logic errors that should be fixed in code rather than caught routinely. Examples include NullPointerException, IllegalArgumentException, and ArrayIndexOutOfBoundsException. Unchecked exceptions keep APIs cleaner when the error is unlikely to be recoverable at the call site.",
+        "realWorld": "Passing a negative withdrawal amount might throw IllegalArgumentException immediately. The fix is validation logic, not a try-catch in every caller — common in service-layer input validation across REST APIs.",
+        "code": "public class UncheckedExceptionDemo {\n    static void withdraw(double balance, double amount) {\n        if (amount <= 0) throw new IllegalArgumentException(\"Amount must be positive\");\n        if (amount > balance) throw new IllegalStateException(\"Insufficient funds\");\n        System.out.println(\"Withdrawn: \" + amount);\n    }\n    public static void main(String[] args) {\n        try { withdraw(1000, -50); }\n        catch (RuntimeException e) { System.out.println(e.getMessage()); }\n    }\n}",
+        "output": "Amount must be positive"
+      },
+      {
+        "id": "w4-q21",
+        "question": "Difference between throw and throws.",
+        "answer": "throw is a statement used inside a method body to explicitly create and throw an exception object at runtime. throws is used in a method signature to declare that the method may propagate checked exceptions to its caller. throw interrupts normal flow immediately; throws is a compile-time contract for responsibility transfer. A method can throw multiple types declared in throws, but throw sends one instance at a time.",
+        "realWorld": "A service method validateAge(int age) throws InvalidAgeException declares the contract, while throw new InvalidAgeException(\"Age must be 18+\") enforces it when validation fails. The controller layer catches and converts it to an HTTP 400 response.",
+        "code": "class InvalidAgeException extends Exception {\n    InvalidAgeException(String msg) { super(msg); }\n}\n\npublic class ThrowThrowsDemo {\n    static void validate(int age) throws InvalidAgeException {\n        if (age < 18) throw new InvalidAgeException(\"Too young\");\n        System.out.println(\"Valid age\");\n    }\n    public static void main(String[] args) {\n        try { validate(16); }\n        catch (InvalidAgeException e) { System.out.println(e.getMessage()); }\n    }\n}",
+        "output": "Too young"
+      },
+      {
+        "id": "w4-q22",
+        "question": "Why use finally?",
+        "answer": "The finally block contains cleanup code that should run whether an exception occurs or not. It executes after try and catch blocks (except in extreme cases like System.exit or JVM crash). finally is ideal for releasing resources — closing files, database connections, or unlocking locks. Since Java 7, try-with-resources is preferred for AutoCloseable resources, but finally remains important for non-closeable cleanup and legacy code.",
+        "realWorld": "Database access code uses finally to close Connection and Statement objects even when a SQLException occurs, preventing connection pool exhaustion in production — a classic cause of application downtime.",
+        "code": "import java.io.*;\n\npublic class FinallyDemo {\n    public static void main(String[] args) {\n        FileWriter fw = null;\n        try {\n            fw = new FileWriter(\"log.txt\");\n            fw.write(\"Transaction started\");\n            throw new RuntimeException(\"Simulated error\");\n        } catch (IOException e) {\n            System.out.println(\"IO Error\");\n        } catch (RuntimeException e) {\n            System.out.println(\"Runtime Error\");\n        } finally {\n            System.out.println(\"Cleanup always runs\");\n        }\n    }\n}",
+        "output": "Runtime Error\nCleanup always runs"
+      },
+      {
+        "id": "w4-q23",
+        "question": "Can finally be skipped?",
+        "answer": "In normal execution, finally almost always runs. However, it can be skipped in specific situations: calling System.exit() in try or catch, an infinite loop in try without exception, JVM crash, or fatal Error. If return is used in try or catch, finally still runs before the method actually returns (unless exit is called). If an exception is thrown in finally, it can mask the original exception. Understanding these edge cases is important for reliable resource management.",
+        "realWorld": "A batch job that calls System.exit(0) on success bypasses finally blocks in the shutdown path. Production systems prefer graceful shutdown hooks instead of System.exit to ensure logs and connections are properly closed.",
+        "code": "public class FinallySkipDemo {\n    static int test() {\n        try { return 1; }\n        finally { System.out.println(\"Finally runs before return\"); }\n    }\n    public static void main(String[] args) {\n        System.out.println(\"Result: \" + test());\n        try { System.exit(0); }\n        finally { System.out.println(\"Never printed\"); }\n    }\n}",
+        "output": "Finally runs before return\nResult: 1"
+      },
+      {
+        "id": "w4-q24",
+        "question": "What is a custom exception?",
+        "answer": "A custom exception is a user-defined class extending Exception (checked) or RuntimeException (unchecked). It represents domain-specific error conditions with meaningful names and optional extra fields. Custom exceptions improve code readability and allow targeted catch blocks. Best practice: extend Exception for recoverable business errors and RuntimeException for programming or unrecoverable faults. Include constructors for message and cause.",
+        "realWorld": "An e-commerce platform defines InsufficientStockException and PaymentDeclinedException. The order service throws them with order details; the API layer maps each to specific HTTP status codes and user-friendly messages.",
+        "code": "class InsufficientStockException extends Exception {\n    private final String productId;\n    InsufficientStockException(String productId) {\n        super(\"Out of stock: \" + productId);\n        this.productId = productId;\n    }\n    String getProductId() { return productId; }\n}\n\npublic class CustomExceptionDemo {\n    static void order(String id, int stock) throws InsufficientStockException {\n        if (stock == 0) throw new InsufficientStockException(id);\n        System.out.println(\"Order placed for \" + id);\n    }\n    public static void main(String[] args) throws InsufficientStockException {\n        order(\"SKU-101\", 0);\n    }\n}",
+        "output": "Exception in thread \"main\" InsufficientStockException: Out of stock: SKU-101"
+      },
+      {
+        "id": "w4-q25",
+        "question": "Difference between Error and Exception.",
+        "answer": "Both Error and Exception extend Throwable. Exception represents conditions an application should catch and handle — checked or unchecked. Error represents serious problems in the JVM or system that applications should generally not catch, such as OutOfMemoryError or StackOverflowError. Catching Error is discouraged because it usually indicates unrecoverable failure. Exceptions are part of normal application flow design; Errors signal infrastructure or resource exhaustion.",
+        "realWorld": "An OutOfMemoryError during heap exhaustion means the JVM cannot allocate more objects — the fix is increasing memory or fixing a leak, not a try-catch. A SQLException during a query is an Exception that can be retried or reported to the user.",
+        "code": "public class ErrorVsExceptionDemo {\n    public static void main(String[] args) {\n        try {\n            String s = null;\n            System.out.println(s.length()); // NullPointerException\n        } catch (Exception e) {\n            System.out.println(\"Caught Exception: \" + e.getClass().getSimpleName());\n        }\n        // Errors like OutOfMemoryError should not be routinely caught\n    }\n}",
+        "output": "Caught Exception: NullPointerException"
+      },
+      {
+        "id": "w4-q26",
+        "question": "What is the exception hierarchy?",
+        "answer": "All exceptions and errors inherit from Throwable. Throwable has two main branches: Error (JVM/system failures) and Exception (application-level issues). Exception splits into checked exceptions (direct subclasses of Exception excluding RuntimeException) and unchecked exceptions (RuntimeException and its subclasses). Understanding this tree helps decide handling strategy, design custom exceptions, and read stack traces effectively.",
+        "realWorld": "When reviewing a production stack trace, developers quickly identify whether the root cause is a programming bug (NullPointerException under RuntimeException), a recoverable I/O issue (IOException), or a critical JVM problem (OutOfMemoryError under Error).",
+        "code": "import java.io.IOException;\n\npublic class ExceptionHierarchyDemo {\n    public static void main(String[] args) {\n        System.out.println(new IOException() instanceof Exception);\n        System.out.println(new NullPointerException() instanceof RuntimeException);\n        System.out.println(new OutOfMemoryError() instanceof Error);\n        System.out.println(new IllegalArgumentException() instanceof Throwable);\n    }\n}",
+        "output": "true\ntrue\ntrue\ntrue"
+      }
+    ]
+  },
+  {
+    "id": "w4-file-io",
+    "category": "File I/O",
+    "questions": [
+      {
+        "id": "w4-q27",
+        "question": "How do you read a file in Java?",
+        "answer": "Java offers several approaches: classic IO with FileReader/BufferedReader, byte streams with FileInputStream, and modern NIO with Files.readAllLines() or Files.newBufferedReader(). For large files, use streaming with BufferedReader to avoid loading everything into memory. Always close resources using try-with-resources (Java 7+). Choose character streams for text and byte streams for binary data. NIO.2 (java.nio.file) is the preferred modern API.",
+        "realWorld": "A log analysis tool reads server log files line by line with BufferedReader, parsing each line for error patterns without loading multi-gigabyte files into memory — essential for production diagnostics.",
+        "code": "import java.nio.file.*;\nimport java.util.List;\n\npublic class ReadFileDemo {\n    public static void main(String[] args) throws Exception {\n        Path path = Files.writeString(Files.createTempFile(\"demo\", \".txt\"), \"Line1\\nLine2\\nLine3\");\n        List<String> lines = Files.readAllLines(path);\n        lines.forEach(System.out::println);\n    }\n}",
+        "output": "Line1\nLine2\nLine3"
+      },
+      {
+        "id": "w4-q28",
+        "question": "How do you write to a file?",
+        "answer": "Use FileWriter/BufferedWriter for character data, FileOutputStream for bytes, or NIO Files.writeString() and Files.write() for concise modern code. Append mode is available via StandardOpenOption.APPEND. Always handle IOException and use try-with-resources. For concurrent or high-performance writes, consider NIO channels or buffered streams. Ensure proper encoding (UTF-8) when writing text.",
+        "realWorld": "A payroll batch job writes employee salary reports to CSV files using BufferedWriter, appending daily transaction logs with APPEND mode so historical records are preserved across runs.",
+        "code": "import java.nio.file.*;\n\npublic class WriteFileDemo {\n    public static void main(String[] args) throws Exception {\n        Path path = Files.createTempFile(\"report\", \".txt\");\n        Files.writeString(path, \"Employee: Ravi\\nSalary: 60000\\n\");\n        Files.writeString(path, \"Bonus: 5000\\n\", StandardOpenOption.APPEND);\n        System.out.println(Files.readString(path));\n    }\n}",
+        "output": "Employee: Ravi\nSalary: 60000\nBonus: 5000"
+      },
+      {
+        "id": "w4-q29",
+        "question": "Difference between FileReader and BufferedReader.",
+        "answer": "FileReader is a low-level character stream that reads directly from a file one character at a time (or small chunks), which is inefficient for large files. BufferedReader wraps a Reader (including FileReader) and reads data in larger buffers, reducing system calls and improving performance. BufferedReader also provides convenient methods like readLine(), lines(), and mark/support. Best practice: always wrap FileReader with BufferedReader for text file reading.",
+        "realWorld": "Parsing a 500MB CSV export with raw FileReader is noticeably slow. Wrapping it in BufferedReader and using readLine() dramatically improves throughput — a standard pattern in ETL and data migration scripts.",
+        "code": "import java.io.*;\n\npublic class ReaderComparisonDemo {\n    public static void main(String[] args) throws Exception {\n        String data = \"Alpha\\nBeta\\nGamma\";\n        File temp = File.createTempFile(\"read\", \".txt\");\n        try (FileWriter fw = new FileWriter(temp)) { fw.write(data); }\n\n        try (BufferedReader br = new BufferedReader(new FileReader(temp))) {\n            String line;\n            while ((line = br.readLine()) != null) System.out.println(line);\n        }\n    }\n}",
+        "output": "Alpha\nBeta\nGamma"
+      }
+    ]
+  },
+  {
+    "id": "w4-design",
+    "category": "Application Design",
+    "questions": [
+      {
+        "id": "w4-q30",
+        "question": "How would you design a reusable Java application using OOP?",
+        "answer": "Apply SOLID principles: single responsibility per class, open for extension via interfaces/abstract classes, depend on abstractions not concretions. Organize code into layered packages (model, service, repository, util). Use encapsulation with private fields and public APIs. Favor composition over inheritance for flexibility. Define clear interfaces for external dependencies (database, file storage, notifications). Handle errors with a consistent exception strategy. Write code that is testable by injecting dependencies. This approach mirrors how Spring Boot and enterprise frameworks are structured.",
+        "realWorld": "A library management system separates Book (entity), BookRepository (data access interface), FileBookRepository (implementation), BookService (business logic), and LibraryApp (entry point). Swapping file storage for a database requires only a new repository implementation — the service layer stays unchanged.",
+        "code": "interface BookRepository { void save(String title); }\n\nclass FileBookRepository implements BookRepository {\n    public void save(String title) { System.out.println(\"Saved to file: \" + title); }\n}\n\nclass BookService {\n    private final BookRepository repo;\n    BookService(BookRepository repo) { this.repo = repo; }\n    void addBook(String title) { repo.save(title); }\n}\n\npublic class ReusableAppDemo {\n    public static void main(String[] args) {\n        BookService service = new BookService(new FileBookRepository());\n        service.addBook(\"Clean Code\");\n    }\n}",
+        "output": "Saved to file: Clean Code"
+      }
+    ]
+  }
+]

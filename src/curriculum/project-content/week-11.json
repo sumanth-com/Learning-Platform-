@@ -1,0 +1,52 @@
+{
+  "banking-database": {
+    "mode": "external",
+    "overview": "Production banking schema with accounts, transactions, customers, and optimized queries.\n\nFeatures to build:\n• ER Design & Normalization\n• Schema with Foreign Keys\n• Transaction Management\n• Performance Indexes\n• Flyway Migration Scripts\n\nRequirements:\n• Normalized schema (3NF)\n• Stored procedures for transfers\n• Indexes on frequently queried columns\n• Flyway migrations\n\nBonus:\n• Audit trail table with triggers",
+    "explanation": "Banking Database System is a expert-level project (Week 11). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: ER Design & Normalization, Schema with Foreign Keys, Transaction Management, Performance Indexes, Flyway Migration Scripts.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "Spring PetClinic — Database Integration Reference",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot + MySQL Database Tutorial",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "ecommerce-database": {
+    "mode": "external",
+    "overview": "E-commerce database with products, orders, customers, and advanced SQL queries.\n\nFeatures to build:\n• Product & Order Schema\n• Complex Join Queries\n• Sales Report Views\n• Spring Data JPA Integration\n• Paginated Product Search\n\nRequirements:\n• One-to-many and many-to-many relationships\n• JPQL queries with joins\n• Pagination and sorting\n• Composite indexes\n\nBonus:\n• Materialized view for sales dashboard",
+    "explanation": "E-Commerce Database is a expert-level project (Week 11). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Product & Order Schema, Complex Join Queries, Sales Report Views, Spring Data JPA Integration, Paginated Product Search.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "Spring Data JPA — E-Commerce Database",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot JPA & MySQL Integration",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "hospital-database": {
+    "mode": "external",
+    "overview": "Hospital database with patients, doctors, appointments, and Hibernate entity mappings.\n\nFeatures to build:\n• Hospital ER Model\n• Hibernate Entity Mappings\n• Lazy/Eager Loading Strategy\n• DTO Projections\n• JPA Auditing\n\nRequirements:\n• Entity relationships with cascade\n• Fetch join for appointment queries\n• DTO projections to avoid N+1\n• Created/Updated timestamps\n\nBonus:\n• Soft delete for patient records",
+    "explanation": "Hospital Database is a expert-level project (Week 11). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Hospital ER Model, Hibernate Entity Mappings, Lazy/Eager Loading Strategy, DTO Projections, JPA Auditing.",
+    "githubUrl": "https://github.com/spring-petclinic/spring-petclinic-microservices",
+    "githubLabel": "Hospital Database — Microservices + JPA",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Database Design with Spring Boot",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "crm-database": {
+    "mode": "external",
+    "overview": "CRM database with contacts, leads, activities, and dynamic query specifications.\n\nFeatures to build:\n• CRM Schema Design\n• Dynamic Filter Specifications\n• Lead Analytics Queries\n• Activity Log in MongoDB\n• Liquibase Migrations\n\nRequirements:\n• Relational schema for contacts/leads\n• Specification API for dynamic filters\n• MongoDB for activity logs\n• Liquibase migration scripts\n\nBonus:\n• Cross-database reporting query",
+    "explanation": "CRM Database is a expert-level project (Week 11). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: CRM Schema Design, Dynamic Filter Specifications, Lead Analytics Queries, Activity Log in MongoDB, Liquibase Migrations.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "CRM Database Schema — Spring Data JPA",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "JPA Entity Relationships Tutorial",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "inventory-database": {
+    "mode": "external",
+    "overview": "Inventory database with batch operations, connection pooling, and performance monitoring.\n\nFeatures to build:\n• Inventory Schema\n• Batch Insert/Update\n• HikariCP Configuration\n• Query Optimization\n• Performance Monitoring\n\nRequirements:\n• Batch operations for stock updates\n• HikariCP pool tuning\n• Explain plan analysis\n• Backup and restore scripts\n\nBonus:\n• Low stock alert stored procedure",
+    "explanation": "Inventory Database is a expert-level project (Week 11). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Inventory Schema, Batch Insert/Update, HikariCP Configuration, Query Optimization, Performance Monitoring.",
+    "githubUrl": "https://github.com/amigoscode/java-springboot-full-stack",
+    "githubLabel": "Inventory Database — Spring Boot + PostgreSQL",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot Database Migrations & JPA",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

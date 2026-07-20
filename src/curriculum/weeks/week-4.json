@@ -1,0 +1,1388 @@
+{
+  "id": 4,
+  "slug": "week-4",
+  "title": "Advanced OOP, Exception Handling & File Handling",
+  "goal": "Understand the remaining pillars of OOP, use inheritance and polymorphism correctly, handle runtime errors with exceptions, read and write files, build larger Java applications, and use AI to debug exceptions and improve code architecture.",
+  "description": "Week 4 covers concepts heavily used in Spring Boot, enterprise Java, and interviews — inheritance, polymorphism, abstraction, interfaces, packages, exception handling, and file I/O. One of the most important weeks.",
+  "estimatedHours": 22,
+  "difficulty": "medium",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Inheritance",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-inheritance",
+          "title": "Inheritance",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-what-inheritance",
+              "title": "What is Inheritance?"
+            },
+            {
+              "id": "d1-why-inheritance",
+              "title": "Why Inheritance?"
+            },
+            {
+              "id": "d1-types",
+              "title": "Types of Inheritance"
+            },
+            {
+              "id": "d1-single",
+              "title": "Single Inheritance"
+            },
+            {
+              "id": "d1-multilevel",
+              "title": "Multilevel Inheritance"
+            },
+            {
+              "id": "d1-hierarchical",
+              "title": "Hierarchical Inheritance"
+            },
+            {
+              "id": "d1-no-multiple",
+              "title": "Why Java doesn't support Multiple Inheritance with Classes"
+            },
+            {
+              "id": "d1-super",
+              "title": "super Keyword"
+            },
+            {
+              "id": "d1-super-constructor",
+              "title": "super()"
+            },
+            {
+              "id": "d1-overriding-intro",
+              "title": "Method Overriding Introduction"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Polymorphism",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-polymorphism",
+          "title": "Polymorphism",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d2-what-poly",
+              "title": "What is Polymorphism?"
+            },
+            {
+              "id": "d2-compile-time",
+              "title": "Compile Time Polymorphism"
+            },
+            {
+              "id": "d2-runtime",
+              "title": "Runtime Polymorphism"
+            },
+            {
+              "id": "d2-overloading",
+              "title": "Method Overloading"
+            },
+            {
+              "id": "d2-overriding",
+              "title": "Method Overriding"
+            },
+            {
+              "id": "d2-dynamic-dispatch",
+              "title": "Dynamic Method Dispatch"
+            },
+            {
+              "id": "d2-upcasting",
+              "title": "Upcasting"
+            },
+            {
+              "id": "d2-downcasting",
+              "title": "Downcasting (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Abstraction & Interfaces",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-abstraction",
+          "title": "Abstraction & Interfaces",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-what-abstraction",
+              "title": "What is Abstraction?"
+            },
+            {
+              "id": "d3-abstract-class",
+              "title": "Abstract Classes"
+            },
+            {
+              "id": "d3-abstract-methods",
+              "title": "Abstract Methods"
+            },
+            {
+              "id": "d3-interface",
+              "title": "Interface"
+            },
+            {
+              "id": "d3-multiple-inheritance",
+              "title": "Multiple Inheritance using Interfaces"
+            },
+            {
+              "id": "d3-default-methods",
+              "title": "Default Methods"
+            },
+            {
+              "id": "d3-static-interface",
+              "title": "Static Methods in Interfaces"
+            },
+            {
+              "id": "d3-functional-interface",
+              "title": "Functional Interface (Introduction)"
+            },
+            {
+              "id": "d3-interface-vs-abstract",
+              "title": "Difference Between Interface & Abstract Class"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Packages & Access Modifiers",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-packages",
+          "title": "Packages & Access Modifiers",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d4-packages",
+              "title": "Packages"
+            },
+            {
+              "id": "d4-import",
+              "title": "Import Statement"
+            },
+            {
+              "id": "d4-creating-packages",
+              "title": "Creating Packages"
+            },
+            {
+              "id": "d4-package-naming",
+              "title": "Package Naming"
+            },
+            {
+              "id": "d4-access-modifiers",
+              "title": "Access Modifiers"
+            },
+            {
+              "id": "d4-public",
+              "title": "public"
+            },
+            {
+              "id": "d4-private",
+              "title": "private"
+            },
+            {
+              "id": "d4-protected",
+              "title": "protected"
+            },
+            {
+              "id": "d4-default",
+              "title": "default"
+            },
+            {
+              "id": "d4-encapsulation-review",
+              "title": "Encapsulation Review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Exception Handling",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-exceptions",
+          "title": "Exception Handling",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d5-what-exception",
+              "title": "What is Exception?"
+            },
+            {
+              "id": "d5-why-handling",
+              "title": "Why Exception Handling?"
+            },
+            {
+              "id": "d5-hierarchy",
+              "title": "Exception Hierarchy"
+            },
+            {
+              "id": "d5-checked",
+              "title": "Checked Exceptions"
+            },
+            {
+              "id": "d5-unchecked",
+              "title": "Unchecked Exceptions"
+            },
+            {
+              "id": "d5-try",
+              "title": "try"
+            },
+            {
+              "id": "d5-catch",
+              "title": "catch"
+            },
+            {
+              "id": "d5-finally",
+              "title": "finally"
+            },
+            {
+              "id": "d5-throw",
+              "title": "throw"
+            },
+            {
+              "id": "d5-throws",
+              "title": "throws"
+            },
+            {
+              "id": "d5-multiple-catch",
+              "title": "Multiple catch"
+            },
+            {
+              "id": "d5-custom",
+              "title": "Custom Exceptions (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "File Handling",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-files",
+          "title": "File Handling",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-file-class",
+              "title": "File Class"
+            },
+            {
+              "id": "d6-reading",
+              "title": "Reading Files"
+            },
+            {
+              "id": "d6-writing",
+              "title": "Writing Files"
+            },
+            {
+              "id": "d6-buffered-reader",
+              "title": "BufferedReader"
+            },
+            {
+              "id": "d6-buffered-writer",
+              "title": "BufferedWriter"
+            },
+            {
+              "id": "d6-file-reader",
+              "title": "FileReader"
+            },
+            {
+              "id": "d6-file-writer",
+              "title": "FileWriter"
+            },
+            {
+              "id": "d6-reading-text",
+              "title": "Reading Text Files"
+            },
+            {
+              "id": "d6-writing-reports",
+              "title": "Writing Reports"
+            },
+            {
+              "id": "d6-exceptions-files",
+              "title": "Exception Handling with Files"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Revision",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d7-oop-revision",
+              "title": "OOP Revision"
+            },
+            {
+              "id": "d7-exception-practice",
+              "title": "Exception Practice"
+            },
+            {
+              "id": "d7-file-practice",
+              "title": "File Handling Practice"
+            },
+            {
+              "id": "d7-mock-test",
+              "title": "Mock Coding Test"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-inheritance",
+      "title": "Inheritance",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w4-d1-1",
+          "title": "What is Inheritance?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d1-2",
+          "title": "Why Inheritance?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d1-3",
+          "title": "Types of Inheritance",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d1-4",
+          "title": "Single Inheritance",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d1-5",
+          "title": "Multilevel Inheritance",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d1-6",
+          "title": "Hierarchical Inheritance",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d1-7",
+          "title": "Why Java doesn't support Multiple Inheritance with Classes",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w4-d1-8",
+          "title": "super Keyword",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d1-9",
+          "title": "super()",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d1-10",
+          "title": "Method Overriding Introduction",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-polymorphism",
+      "title": "Polymorphism",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w4-d2-1",
+          "title": "What is Polymorphism?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d2-2",
+          "title": "Compile Time Polymorphism",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d2-3",
+          "title": "Runtime Polymorphism",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d2-4",
+          "title": "Method Overloading",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d2-5",
+          "title": "Method Overriding",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d2-6",
+          "title": "Dynamic Method Dispatch",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w4-d2-7",
+          "title": "Upcasting",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d2-8",
+          "title": "Downcasting (Introduction)",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-abstraction-interfaces",
+      "title": "Abstraction & Interfaces",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w4-d3-1",
+          "title": "What is Abstraction?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d3-2",
+          "title": "Abstract Classes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d3-3",
+          "title": "Abstract Methods",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d3-4",
+          "title": "Interface",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d3-5",
+          "title": "Multiple Inheritance using Interfaces",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w4-d3-6",
+          "title": "Default Methods",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d3-7",
+          "title": "Static Methods in Interfaces",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d3-8",
+          "title": "Functional Interface (Introduction)",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w4-d3-9",
+          "title": "Difference Between Interface & Abstract Class",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-packages-access",
+      "title": "Packages & Access Modifiers",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w4-d4-1",
+          "title": "Packages",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d4-2",
+          "title": "Import Statement",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d4-3",
+          "title": "Creating Packages",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d4-4",
+          "title": "Package Naming",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d4-5",
+          "title": "Access Modifiers",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d4-6",
+          "title": "public",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d4-7",
+          "title": "private",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d4-8",
+          "title": "protected",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d4-9",
+          "title": "default",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d4-10",
+          "title": "Encapsulation Review",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-exception-handling",
+      "title": "Exception Handling",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w4-d5-1",
+          "title": "What is Exception?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d5-2",
+          "title": "Why Exception Handling?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d5-3",
+          "title": "Exception Hierarchy",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d5-4",
+          "title": "Checked Exceptions",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d5-5",
+          "title": "Unchecked Exceptions",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d5-6",
+          "title": "try",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d5-7",
+          "title": "catch",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d5-8",
+          "title": "finally",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d5-9",
+          "title": "throw",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d5-10",
+          "title": "throws",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d5-11",
+          "title": "Multiple catch",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d5-12",
+          "title": "Custom Exceptions (Introduction)",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-file-handling",
+      "title": "File Handling",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w4-d6-1",
+          "title": "File Class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d6-2",
+          "title": "Reading Files",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-3",
+          "title": "Writing Files",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-4",
+          "title": "BufferedReader",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-5",
+          "title": "BufferedWriter",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-6",
+          "title": "FileReader",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-7",
+          "title": "FileWriter",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-8",
+          "title": "Reading Text Files",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-9",
+          "title": "Writing Reports",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d6-10",
+          "title": "Exception Handling with Files",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision",
+      "title": "Revision",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w4-d7-1",
+          "title": "OOP Revision",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w4-d7-2",
+          "title": "Exception Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d7-3",
+          "title": "File Handling Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w4-d7-4",
+          "title": "Mock Coding Test",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-inheritance",
+      "category": "Inheritance",
+      "questions": [
+        {
+          "id": "pq-w4-1",
+          "title": "Animal → Dog",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-2",
+          "title": "Vehicle → Car",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-3",
+          "title": "Person → Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-4",
+          "title": "Person → Employee",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-5",
+          "title": "Shape → Circle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-6",
+          "title": "Shape → Rectangle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-7",
+          "title": "Employee → Manager",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-8",
+          "title": "Mobile → Smartphone",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-9",
+          "title": "Bank → Savings Account",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-10",
+          "title": "Product → Electronics",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-polymorphism",
+      "category": "Polymorphism",
+      "questions": [
+        {
+          "id": "pq-w4-11",
+          "title": "Method Overloading Calculator",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-12",
+          "title": "Area Calculator",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-13",
+          "title": "Method Overriding Animal Sounds",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-14",
+          "title": "Bank Interest Example",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-15",
+          "title": "Payment Gateway Example",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-16",
+          "title": "Vehicle Speed Example",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-17",
+          "title": "Employee Salary Example",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-18",
+          "title": "Runtime Polymorphism Demo",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w4-19",
+          "title": "Upcasting Example",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w4-20",
+          "title": "Dynamic Method Dispatch",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-abstract-interface",
+      "category": "Abstract Class & Interface",
+      "questions": [
+        {
+          "id": "pq-w4-21",
+          "title": "Abstract Shape",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-22",
+          "title": "Animal Abstract Class",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-23",
+          "title": "Payment Interface",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-24",
+          "title": "Vehicle Interface",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-25",
+          "title": "Notification Interface",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-26",
+          "title": "Bank Interface",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-27",
+          "title": "Employee Interface",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-28",
+          "title": "Student Interface",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-29",
+          "title": "Device Interface",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-30",
+          "title": "Smart Home Interface",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-exceptions",
+      "category": "Exception Handling",
+      "questions": [
+        {
+          "id": "pq-w4-31",
+          "title": "Divide by Zero",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-32",
+          "title": "Array Index Exception",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-33",
+          "title": "Null Pointer Exception",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w4-34",
+          "title": "Number Format Exception",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-35",
+          "title": "Multiple Catch Example",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-36",
+          "title": "Custom Exception",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w4-37",
+          "title": "ATM Exception Handling",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-38",
+          "title": "Student Marks Validation",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-file-handling",
+      "category": "File Handling",
+      "questions": [
+        {
+          "id": "pq-w4-39",
+          "title": "Read Student Details from File",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w4-40",
+          "title": "Write Employee Report to File",
+          "difficulty": "medium"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "library-management-oop",
+      "title": "Library Management System (OOP)",
+      "description": "Full OOP library system with inheritance, exception handling, and file storage.",
+      "features": [
+        {
+          "id": "p1-add-books",
+          "title": "Add Books"
+        },
+        {
+          "id": "p1-issue",
+          "title": "Issue Books"
+        },
+        {
+          "id": "p1-return",
+          "title": "Return Books"
+        },
+        {
+          "id": "p1-file-storage",
+          "title": "File Storage"
+        }
+      ],
+      "requirements": [
+        "Use inheritance",
+        "Handle exceptions properly",
+        "Persist data to file"
+      ],
+      "bonusFeatures": [
+        "Search books",
+        "Fine for late returns"
+      ]
+    },
+    {
+      "id": "bank-management-system",
+      "title": "Bank Management System",
+      "description": "Bank system with account operations, exception handling, and transaction persistence.",
+      "features": [
+        {
+          "id": "p2-account",
+          "title": "Account Creation"
+        },
+        {
+          "id": "p2-deposit",
+          "title": "Deposit"
+        },
+        {
+          "id": "p2-withdraw",
+          "title": "Withdraw"
+        },
+        {
+          "id": "p2-exceptions",
+          "title": "Exception Handling"
+        },
+        {
+          "id": "p2-save-transactions",
+          "title": "Save Transactions"
+        }
+      ],
+      "requirements": [
+        "Custom exceptions for insufficient funds",
+        "Save transactions to file"
+      ],
+      "bonusFeatures": [
+        "Transaction history report"
+      ]
+    },
+    {
+      "id": "hospital-management",
+      "title": "Hospital Management System",
+      "description": "Patient and doctor management with file-based record storage.",
+      "features": [
+        {
+          "id": "p3-patient",
+          "title": "Patient Registration"
+        },
+        {
+          "id": "p3-doctor",
+          "title": "Doctor Details"
+        },
+        {
+          "id": "p3-appointment",
+          "title": "Appointment"
+        },
+        {
+          "id": "p3-file-records",
+          "title": "Store Records in File"
+        }
+      ],
+      "requirements": [
+        "Use OOP design",
+        "Exception handling for invalid data",
+        "File persistence"
+      ],
+      "bonusFeatures": [
+        "Appointment scheduling conflicts check"
+      ]
+    },
+    {
+      "id": "employee-payroll",
+      "title": "Employee Payroll System",
+      "description": "Employee payroll with department management and file report generation.",
+      "features": [
+        {
+          "id": "p4-details",
+          "title": "Employee Details"
+        },
+        {
+          "id": "p4-salary",
+          "title": "Salary"
+        },
+        {
+          "id": "p4-department",
+          "title": "Department"
+        },
+        {
+          "id": "p4-file-report",
+          "title": "File Report Generation"
+        }
+      ],
+      "requirements": [
+        "Inheritance for employee types",
+        "Generate payroll report file"
+      ],
+      "bonusFeatures": [
+        "Tax deduction calculation"
+      ]
+    },
+    {
+      "id": "student-report-card",
+      "title": "Student Report Card Generator",
+      "description": "Generate student report cards and store as files.",
+      "features": [
+        {
+          "id": "p5-details",
+          "title": "Student Details"
+        },
+        {
+          "id": "p5-marks",
+          "title": "Marks"
+        },
+        {
+          "id": "p5-grade",
+          "title": "Grade"
+        },
+        {
+          "id": "p5-store-file",
+          "title": "Store Report as File"
+        }
+      ],
+      "requirements": [
+        "Exception handling for invalid marks",
+        "Write formatted report to file"
+      ],
+      "bonusFeatures": [
+        "Class-wise report summary"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-4",
+    "title": "AI for Debugging & Refactoring",
+    "description": "Use AI to understand stack traces, debug exceptions, refactor code, and improve architecture — essential for enterprise Java development.",
+    "learningTopics": [
+      {
+        "id": "ai-w4-t1",
+        "title": "What is AI-assisted debugging?"
+      },
+      {
+        "id": "ai-w4-t2",
+        "title": "Understanding Java stack traces"
+      },
+      {
+        "id": "ai-w4-t3",
+        "title": "Explaining exceptions with AI"
+      },
+      {
+        "id": "ai-w4-t4",
+        "title": "Refactoring using AI"
+      },
+      {
+        "id": "ai-w4-t5",
+        "title": "AI-generated documentation"
+      },
+      {
+        "id": "ai-w4-t6",
+        "title": "AI code review"
+      },
+      {
+        "id": "ai-w4-t7",
+        "title": "AI for writing unit test ideas"
+      },
+      {
+        "id": "ai-w4-t8",
+        "title": "AI limitations in debugging"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w4-e1",
+        "title": "Explain a NullPointerException."
+      },
+      {
+        "id": "ai-w4-e2",
+        "title": "Ask AI why ArrayIndexOutOfBoundsException occurs."
+      },
+      {
+        "id": "ai-w4-e3",
+        "title": "An exception stack trace and understand every line."
+      },
+      {
+        "id": "ai-w4-e4",
+        "title": "Refactor duplicated code."
+      },
+      {
+        "id": "ai-w4-e5",
+        "title": "Improve inheritance design."
+      },
+      {
+        "id": "ai-w4-e6",
+        "title": "Compare: interface vs abstract class."
+      },
+      {
+        "id": "ai-w4-e7",
+        "title": "Generate JavaDoc comments."
+      },
+      {
+        "id": "ai-w4-e8",
+        "title": "Explain SOLID principles with simple examples."
+      },
+      {
+        "id": "ai-w4-e9",
+        "title": "Suggest cleaner package structures."
+      },
+      {
+        "id": "ai-w4-e10",
+        "title": "Review your complete mini project."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-4",
+    "repository": "java-week-4-advanced-oop",
+    "description": "Create repository java-week-4-advanced-oop and upload all Week 4 programs.",
+    "files": [
+      {
+        "id": "gh-w4-f1",
+        "path": "InheritanceExamples.java"
+      },
+      {
+        "id": "gh-w4-f2",
+        "path": "PolymorphismExamples.java"
+      },
+      {
+        "id": "gh-w4-f3",
+        "path": "AbstractClassDemo.java"
+      },
+      {
+        "id": "gh-w4-f4",
+        "path": "InterfaceDemo.java"
+      },
+      {
+        "id": "gh-w4-f5",
+        "path": "ExceptionHandlingDemo.java"
+      },
+      {
+        "id": "gh-w4-f6",
+        "path": "FileHandlingDemo.java"
+      },
+      {
+        "id": "gh-w4-f7",
+        "path": "LibraryManagementSystem.java"
+      },
+      {
+        "id": "gh-w4-f8",
+        "path": "BankManagementSystem.java"
+      },
+      {
+        "id": "gh-w4-f9",
+        "path": "HospitalManagementSystem.java"
+      },
+      {
+        "id": "gh-w4-f10",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w4-oop",
+      "category": "OOP",
+      "questions": [
+        {
+          "id": "iq-w4-1",
+          "question": "What is inheritance in Java?",
+          "answer": "Mechanism where a child class acquires properties and behaviors of a parent class using extends keyword."
+        },
+        {
+          "id": "iq-w4-2",
+          "question": "Difference between method overloading and overriding?",
+          "answer": "Overloading: same method name, different parameters (compile-time). Overriding: same signature in subclass (runtime)."
+        },
+        {
+          "id": "iq-w4-3",
+          "question": "What is polymorphism?",
+          "answer": "Ability of an object to take many forms — compile-time (overloading) and runtime (overriding)."
+        },
+        {
+          "id": "iq-w4-4",
+          "question": "Abstract class vs Interface?",
+          "answer": "Abstract class can have constructors and state; interface is a contract with abstract methods (Java 8+ default/static methods)."
+        }
+      ]
+    },
+    {
+      "id": "iq-w4-java",
+      "category": "Java",
+      "questions": [
+        {
+          "id": "iq-w4-5",
+          "question": "Checked vs Unchecked exceptions?",
+          "answer": "Checked must be handled at compile time (IOException); unchecked extend RuntimeException (NullPointerException)."
+        },
+        {
+          "id": "iq-w4-6",
+          "question": "What is the finally block?",
+          "answer": "Always executes after try/catch, used for cleanup regardless of exception."
+        },
+        {
+          "id": "iq-w4-7",
+          "question": "Difference between throw and throws?",
+          "answer": "throw explicitly throws an exception; throws declares exceptions a method may throw."
+        }
+      ]
+    },
+    {
+      "id": "iq-w4-ai",
+      "category": "AI",
+      "questions": [
+        {
+          "id": "iq-w4-8",
+          "question": "How can AI help debug Java exceptions?",
+          "answer": "Explain stack traces, identify root cause, suggest fixes — but always verify and understand the fix yourself."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w4-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions across inheritance, polymorphism, abstraction, exceptions, and files",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w4-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 mini projects with OOP, exceptions, and file handling",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w4-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to java-week-4-advanced-oop repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w4-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 18
+      }
+    },
+    {
+      "id": "del-w4-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 4 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 30
+      }
+    }
+  ]
+}

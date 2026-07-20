@@ -1,0 +1,42 @@
+{
+  "ai-t1": {
+    "answer": "AI builds systems that recognize patterns, decide, and generate text/code. For Java learners, it's a study partner — explains concepts and reviews code. It does not replace knowing fundamentals.",
+    "realWorld": "Use AI to explain a for-loop, then type and run the example yourself. Understanding sticks when you write code, not only read."
+  },
+  "ai-t2": {
+    "answer": "Generative AI creates new text, code, or images from learned patterns. ChatGPT and Claude generate token by token. Output may be right, partly right, or wrong — always verify.",
+    "realWorld": "AI drafts a grade calculator — you run it, fix empty-input bugs, and learn more from debugging than from reading."
+  },
+  "ai-t3": {
+    "answer": "An LLM predicts the next token from huge training data. That produces fluent answers but not guaranteed facts. It estimates likely text, not a database lookup.",
+    "realWorld": "Copilot autocompletes Java from your file context — sometimes perfect, sometimes invents methods that don't exist on String."
+  },
+  "ai-t4": {
+    "answer": "A prompt is your instruction to the model: question, task, or context. Better prompts → better answers. Think of it as a mini spec for the AI.",
+    "realWorld": "Bad: 'Java arrays.' Good: 'Explain arrays for a beginner with declaration, init, and a loop example under 100 words.'"
+  },
+  "ai-t5": {
+    "answer": "Good prompts include: goal, your level, desired format, and limits ('no topics I haven't learned'). Specific beats vague every time.",
+    "realWorld": "'Week 1 student — one if-else grading example with int score and println, commented branches.'"
+  },
+  "ai-t6": {
+    "answer": "Hallucination = confident false info: fake APIs, wrong syntax, invented citations. More common for rare libraries and version-specific details.",
+    "realWorld": "AI suggests String.reverse() — doesn't exist. JDK docs + compiler catch it immediately."
+  },
+  "ai-t7": {
+    "answer": "Wrong answers come from training gaps, ambiguous prompts, missing live data, or the model sounding confident over being correct. Stay skeptical.",
+    "realWorld": "AI says use == for String names — you fix with equals() and add a test. The mistake reinforced your knowledge."
+  },
+  "ai-t8": {
+    "answer": "Ethics: don't paste secrets/PII into public tools, disclose AI help when required, know bias in training data. Protect users and company data.",
+    "realWorld": "Before pasting prod code into chat: allowed by policy? Could customer data leak?"
+  },
+  "ai-t9": {
+    "answer": "Trust AI for explanations and small snippets you can compile. Cross-check docs for anything important. Trust but verify.",
+    "realWorld": "int vs double — confirm with a 5-line main() experiment, not blind copy."
+  },
+  "ai-t10": {
+    "answer": "Don't trust AI alone for security, legal, or production deploys. Don't submit homework you don't understand. Test every generated snippet.",
+    "realWorld": "AI suggests MD5 for passwords — you reject and use BCrypt. That's professional judgment."
+  }
+}

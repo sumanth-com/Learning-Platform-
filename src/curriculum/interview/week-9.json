@@ -1,0 +1,225 @@
+[
+  {
+    "id": "w9-security-basics",
+    "category": "Spring Security Fundamentals",
+    "questions": [
+      {
+        "id": "w9-q01",
+        "question": "What is Spring Security?",
+        "answer": "Spring Security is a powerful, customizable authentication and authorization framework for Java applications. It protects web applications and REST APIs through a filter chain, supports form login, HTTP Basic, OAuth2, JWT, and method-level security. It integrates seamlessly with Spring Boot via spring-boot-starter-security and provides default security (all endpoints protected) out of the box.",
+        "realWorld": "Every production Spring Boot API handling user accounts, payments, or sensitive data uses Spring Security to enforce who can access what."
+      },
+      {
+        "id": "w9-q02",
+        "question": "What is Authentication?",
+        "answer": "Authentication is the process of verifying a user's identity—answering 'Who are you?'. It confirms that credentials (username/password, token, certificate) belong to a valid user. Successful authentication creates a SecurityContext holding the authenticated principal. Common mechanisms: form login, JWT bearer tokens, OAuth2, API keys.",
+        "realWorld": "Logging into a banking app with username and password—the server verifies credentials against stored hashes before granting access."
+      },
+      {
+        "id": "w9-q03",
+        "question": "What is Authorization?",
+        "answer": "Authorization determines what an authenticated user is allowed to do—answering 'What can you access?'. It checks roles and permissions before allowing access to resources or endpoints. Authentication must happen first; authorization uses the authenticated identity to enforce access rules. Example: authenticated users can read profiles, but only ADMIN role can delete users.",
+        "realWorld": "A logged-in employee can view their payslip (authorized) but cannot view other employees' payslips (forbidden)—even though they are authenticated."
+      },
+      {
+        "id": "w9-q04",
+        "question": "Difference between Authentication and Authorization.",
+        "answer": "Authentication verifies identity (login)—it happens first. Authorization checks permissions (access control)—it happens after authentication. Analogy: authentication is showing your ID at building entrance; authorization is which floors your badge unlocks. A request can fail authentication (401 Unauthorized—invalid credentials) or authorization (403 Forbidden—valid user but insufficient permissions).",
+        "code": "401 Unauthorized → \"Who are you?\" failed (bad token/password)\n403 Forbidden      → \"Who are you?\" OK, but \"Can you do this?\" NO"
+      }
+    ]
+  },
+  {
+    "id": "w9-jwt",
+    "category": "JWT (JSON Web Tokens)",
+    "questions": [
+      {
+        "id": "w9-q05",
+        "question": "What is JWT?",
+        "answer": "JWT (JSON Web Token) is a compact, URL-safe token format for securely transmitting claims between parties. After authentication, the server issues a signed JWT containing user identity and roles. The client sends it in the Authorization header (Bearer token) on subsequent requests. The server validates the signature without querying a session store—ideal for stateless REST APIs and microservices.",
+        "realWorld": "Mobile apps and SPAs store JWTs after login and attach them to every API call—enabling scalable, session-free authentication."
+      },
+      {
+        "id": "w9-q06",
+        "question": "Explain JWT structure.",
+        "answer": "A JWT has three Base64URL-encoded parts separated by dots: Header — algorithm (HS256, RS256) and token type (JWT); Payload — claims (sub=user ID, roles, exp=expiry, iat=issued at); Signature — cryptographic hash of header + payload + secret/private key, proving integrity. Format: xxxxx.yyyyy.zzzzz. The payload is encoded, not encrypted—never store sensitive data like passwords in JWT claims.",
+        "code": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMiLCJyb2xlIjoiVVNFUiIsImV4cCI6MTcwMDAwMDAwMH0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\n\nHeader:  {\"alg\":\"HS256\",\"typ\":\"JWT\"}\nPayload: {\"sub\":\"123\",\"role\":\"USER\",\"exp\":1700000000}\nSignature: HMACSHA256(header.payload, secret)"
+      },
+      {
+        "id": "w9-q07",
+        "question": "Why is JWT stateless?",
+        "answer": "JWT is stateless because the server does not store session data—all user information needed for authorization is encoded in the token itself (claims). Each request is self-contained: the server validates the signature and reads claims without a database or session store lookup. This enables horizontal scaling (any server instance can validate tokens), simplifies microservices, and eliminates server-side session management overhead.",
+        "realWorld": "In a Kubernetes cluster with 10 API pods, any pod can validate a JWT using the shared secret—no sticky sessions or Redis session store required."
+      },
+      {
+        "id": "w9-q08",
+        "question": "Difference between JWT and Session.",
+        "answer": "Sessions are server-side: after login, the server stores session data (in memory, Redis, DB) and sends a session ID cookie; each request requires a server lookup. JWT is client-side: the token carries claims; the server only validates the signature—no storage. Sessions are easier to invalidate (delete session); JWTs persist until expiry unless using blocklists/refresh tokens. Sessions suit traditional web apps; JWTs suit REST APIs, mobile, and microservices.",
+        "realWorld": "E-commerce website with server-rendered pages often uses sessions. React SPA + Spring Boot API typically uses JWT."
+      }
+    ]
+  },
+  {
+    "id": "w9-password",
+    "category": "Password Security",
+    "questions": [
+      {
+        "id": "w9-q09",
+        "question": "What is BCrypt?",
+        "answer": "BCrypt is a password hashing algorithm based on Blowfish cipher, designed to be slow and resistant to brute-force attacks. It automatically incorporates a random salt and configurable work factor (cost/rounds)—higher rounds mean slower hashing and greater security. Spring Security's BCryptPasswordEncoder is the standard choice. BCrypt produces a fixed-length hash string that includes the salt and cost factor.",
+        "code": "BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);\nString hash = encoder.encode(\"myPassword123\");\n// $2a$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy\n\nboolean matches = encoder.matches(\"myPassword123\", hash); // true"
+      },
+      {
+        "id": "w9-q10",
+        "question": "Why should passwords be hashed?",
+        "answer": "Passwords must never be stored in plain text. If the database is breached, hashed passwords prevent attackers from immediately using credentials. Hashing is one-way—you cannot reverse a hash to get the original password. Login compares hash(input) with stored hash. Use strong algorithms (BCrypt, Argon2)—not MD5 or SHA-1, which are fast and vulnerable to rainbow table attacks. Each password gets a unique salt to prevent identical passwords producing identical hashes.",
+        "realWorld": "The 2012 LinkedIn breach exposed MD5-hashed passwords—millions were cracked within days. BCrypt-hashed databases are far more resistant."
+      },
+      {
+        "id": "w9-q11",
+        "question": "What is PasswordEncoder?",
+        "answer": "PasswordEncoder is a Spring Security interface for encoding and verifying passwords. Methods: encode(rawPassword) returns a hashed password for storage; matches(rawPassword, encodedPassword) verifies login credentials. BCryptPasswordEncoder is the default implementation. Register it as a @Bean and inject into UserService for registration (encode) and authentication (matches via DaoAuthenticationProvider).",
+        "code": "@Bean\npublic PasswordEncoder passwordEncoder() {\n    return new BCryptPasswordEncoder();\n}\n\n// Registration\nuser.setPassword(encoder.encode(dto.getPassword()));\n\n// Login — Spring Security calls matches() internally"
+      },
+      {
+        "id": "w9-q12",
+        "question": "What is UserDetailsService?",
+        "answer": "UserDetailsService is a Spring Security interface with one method: loadUserByUsername(String username). It retrieves user details (username, encoded password, authorities/roles) from your database and returns a UserDetails object. Spring Security calls it during authentication to fetch credentials for comparison. Implement it to connect Spring Security to your user storage.",
+        "code": "@Service\npublic class CustomUserDetailsService implements UserDetailsService {\n    @Override\n    public UserDetails loadUserByUsername(String email) {\n        User user = userRepository.findByEmail(email)\n            .orElseThrow(() -> new UsernameNotFoundException(email));\n        return org.springframework.security.core.userdetails.User\n            .withUsername(user.getEmail())\n            .password(user.getPassword())\n            .roles(user.getRole())\n            .build();\n    }\n}"
+      }
+    ]
+  },
+  {
+    "id": "w9-spring-components",
+    "category": "Spring Security Components",
+    "questions": [
+      {
+        "id": "w9-q13",
+        "question": "What is SecurityFilterChain?",
+        "answer": "SecurityFilterChain is the core configuration bean (Spring Security 6+) that defines how HTTP requests are secured. You configure it via a @Bean method returning SecurityFilterChain, specifying which endpoints are public/permitAll, which require authentication, CSRF settings, session policy (STATELESS for JWT), and custom filters (JWT filter). It replaces the deprecated WebSecurityConfigurerAdapter.",
+        "code": "@Bean\nSecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.csrf(csrf -> csrf.disable())\n        .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))\n        .authorizeHttpRequests(auth -> auth\n            .requestMatchers(\"/api/auth/**\").permitAll()\n            .anyRequest().authenticated())\n        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}"
+      },
+      {
+        "id": "w9-q14",
+        "question": "What is AuthenticationManager?",
+        "answer": "AuthenticationManager is Spring Security's central authentication processor. Its authenticate(Authentication) method delegates to configured AuthenticationProviders (e.g., DaoAuthenticationProvider for username/password). On success, it returns a fully authenticated Authentication object; on failure, it throws AuthenticationException. In JWT flows, it validates credentials during login; the JWT filter bypasses it for subsequent token-based requests.",
+        "realWorld": "Login endpoint calls authenticationManager.authenticate() with username/password token—on success, your code generates and returns a JWT."
+      },
+      {
+        "id": "w9-q15",
+        "question": "What is a Security Context?",
+        "answer": "SecurityContext holds the Authentication object for the currently executing thread—it represents who is logged in for the current request. SecurityContextHolder (ThreadLocal storage) provides access: SecurityContextHolder.getContext().getAuthentication(). Spring Security populates it after successful authentication (login or JWT validation). Method security (@PreAuthorize) and authorization decisions read from the SecurityContext.",
+        "code": "Authentication auth = SecurityContextHolder.getContext().getAuthentication();\nString username = auth.getName();\nCollection<? extends GrantedAuthority> roles = auth.getAuthorities();"
+      },
+      {
+        "id": "w9-q16",
+        "question": "What is Role-Based Access Control (RBAC)?",
+        "answer": "RBAC restricts system access based on user roles (ADMIN, USER, MANAGER). Users are assigned roles; roles grant permissions to resources or actions. In Spring Security, roles map to GrantedAuthority (prefixed with ROLE_). Configure endpoint access (.hasRole(\"ADMIN\")) or method security (@PreAuthorize(\"hasRole('ADMIN')\")). RBAC simplifies permission management compared to assigning individual permissions per user.",
+        "code": "http.authorizeHttpRequests(auth -> auth\n    .requestMatchers(\"/api/admin/**\").hasRole(\"ADMIN\")\n    .requestMatchers(\"/api/user/**\").hasAnyRole(\"USER\", \"ADMIN\"));\n\n@PreAuthorize(\"hasRole('ADMIN')\")\npublic void deleteUser(Long id) { ... }"
+      }
+    ]
+  },
+  {
+    "id": "w9-authorization",
+    "category": "Authorization & Method Security",
+    "questions": [
+      {
+        "id": "w9-q17",
+        "question": "Difference between Roles and Authorities.",
+        "answer": "In Spring Security, both are represented as GrantedAuthority. Roles are authorities prefixed with ROLE_ (e.g., ROLE_ADMIN)—checked via hasRole(\"ADMIN\"). Authorities are generic permissions without the prefix (e.g., READ_USERS, DELETE_POST)—checked via hasAuthority(\"READ_USERS\"). hasRole(\"ADMIN\") internally checks for ROLE_ADMIN authority. Roles are coarse-grained groupings; authorities are fine-grained permissions. A user can have multiple authorities.",
+        "code": ".roles(\"ADMIN\", \"USER\")     → ROLE_ADMIN, ROLE_USER\n.authorities(\"READ\", \"WRITE\") → READ, WRITE (no prefix)\n\n@PreAuthorize(\"hasAuthority('DELETE_USERS')\")  // fine-grained\n@PreAuthorize(\"hasRole('ADMIN')\")              // role-based"
+      },
+      {
+        "id": "w9-q18",
+        "question": "What is @PreAuthorize?",
+        "answer": "@PreAuthorize is a method-level security annotation that evaluates a SpEL expression before method execution. If the expression returns false, AccessDeniedException is thrown (403). Enable with @EnableMethodSecurity. Supports hasRole(), hasAuthority(), #parameter references, and custom beans. More flexible than URL-based security for fine-grained business logic authorization.",
+        "code": "@EnableMethodSecurity\n@Service\npublic class ReportService {\n    @PreAuthorize(\"hasRole('ADMIN')\")\n    public Report getConfidentialReport() { ... }\n\n    @PreAuthorize(\"#userId == authentication.principal.id\")\n    public Profile getProfile(Long userId) { ... }\n}"
+      },
+      {
+        "id": "w9-q19",
+        "question": "What are Spring Security Filters?",
+        "answer": "Spring Security uses a chain of servlet filters (DelegatingFilterProxy → FilterChainProxy) that process every HTTP request before it reaches controllers. Key filters: SecurityContextPersistenceFilter, UsernamePasswordAuthenticationFilter (form login), BearerTokenAuthenticationFilter/JwtAuthenticationFilter (JWT), ExceptionTranslationFilter (401/403 handling), FilterSecurityInterceptor (authorization). Custom JWT filters are added via addFilterBefore() in SecurityFilterChain configuration.",
+        "realWorld": "Request flow: JwtFilter extracts Bearer token → validates signature → sets SecurityContext → AuthorizationFilter checks roles → Controller executes."
+      }
+    ]
+  },
+  {
+    "id": "w9-web-security",
+    "category": "Web Security Concepts",
+    "questions": [
+      {
+        "id": "w9-q20",
+        "question": "What is CSRF?",
+        "answer": "CSRF (Cross-Site Request Forgery) is an attack where a malicious site tricks a user's browser into sending authenticated requests to another site (e.g., transferring money using the user's active session cookie). Spring Security enables CSRF protection by default for session-based apps using synchronizer tokens. For stateless JWT APIs, CSRF is typically disabled because tokens are not sent automatically by browsers—they require explicit Authorization headers.",
+        "realWorld": "Traditional form-based web apps need CSRF tokens in forms. REST APIs with JWT in Authorization header are not vulnerable to classic CSRF."
+      },
+      {
+        "id": "w9-q21",
+        "question": "What is CORS?",
+        "answer": "CORS (Cross-Origin Resource Sharing) is a browser security mechanism that restricts web pages from making requests to a different domain than the one serving the page. A React app on localhost:3000 calling an API on localhost:8080 triggers CORS checks. The server must respond with Access-Control-Allow-Origin headers. Configure in Spring via @CrossOrigin, WebMvcConfigurer, or SecurityFilterChain.cors().",
+        "code": "@Bean\nCorsConfigurationSource corsConfigurationSource() {\n    CorsConfiguration config = new CorsConfiguration();\n    config.setAllowedOrigins(List.of(\"http://localhost:3000\"));\n    config.setAllowedMethods(List.of(\"GET\", \"POST\", \"PUT\", \"DELETE\"));\n    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();\n    source.registerCorsConfiguration(\"/api/**\", config);\n    return source;\n}"
+      },
+      {
+        "id": "w9-q22",
+        "question": "What is SQL Injection?",
+        "answer": "SQL Injection injects malicious SQL through user input when queries are built via string concatenation, potentially bypassing authentication or extracting data. In Spring Boot apps using Spring Data JPA with parameterized queries (@Query with ?1, derived methods), SQL injection risk is minimal. Risk remains with native queries built by string concatenation or JDBC without PreparedStatement. Always use parameterized queries and validate input.",
+        "code": "// SAFE — JPA derived query\nOptional<User> findByEmail(String email);\n\n// UNSAFE — native query with concatenation\n@Query(value = \"SELECT * FROM users WHERE name = '\" + name + \"'\", nativeQuery = true)"
+      },
+      {
+        "id": "w9-q23",
+        "question": "What is XSS?",
+        "answer": "XSS (Cross-Site Scripting) injects malicious JavaScript into web pages viewed by other users. Stored XSS persists in the database (e.g., comment with <script>alert('hack')</script>); Reflected XSS reflects input in the response. Prevention: escape output in templates, use Content-Security-Policy headers, validate/sanitize input, and set HttpOnly cookies. Spring MVC auto-escapes Thymeleaf output; REST APIs returning JSON to SPAs must sanitize on the frontend too.",
+        "realWorld": "A forum allowing raw HTML in posts without sanitization can execute scripts in other users' browsers, stealing session cookies or JWTs from localStorage."
+      },
+      {
+        "id": "w9-q24",
+        "question": "What is API Security?",
+        "answer": "API Security encompasses practices to protect REST APIs from unauthorized access and attacks: authentication (JWT, OAuth2, API keys), authorization (RBAC, scopes), HTTPS/TLS encryption in transit, input validation, rate limiting, CORS configuration, security headers (HSTS, X-Content-Type-Options), logging and monitoring, and protecting against OWASP Top 10 (injection, broken auth, sensitive data exposure). API security is defense-in-depth—no single measure is sufficient.",
+        "realWorld": "Production APIs combine JWT auth, HTTPS, rate limiting (Bucket4j), input validation (@Valid), and WAF (Cloudflare/AWS) for comprehensive protection."
+      },
+      {
+        "id": "w9-q25",
+        "question": "How do you secure REST APIs?",
+        "answer": "Key practices: (1) Use HTTPS everywhere; (2) Implement authentication (JWT/OAuth2) via Spring Security; (3) Enforce authorization with roles and @PreAuthorize; (4) Validate all input with Bean Validation; (5) Disable CSRF for stateless APIs, configure CORS properly; (6) Use parameterized queries (JPA) to prevent SQL injection; (7) Hash passwords with BCrypt; (8) Set short JWT expiry and use refresh tokens; (9) Return proper status codes without leaking stack traces; (10) Add rate limiting and security headers; (11) Log security events; (12) Keep dependencies updated.",
+        "code": "@RestController\n@RequestMapping(\"/api/admin\")\n@PreAuthorize(\"hasRole('ADMIN')\")  // class-level auth\npublic class AdminController {\n    @PostMapping\n    public User create(@Valid @RequestBody UserDto dto) { ... }\n}"
+      }
+    ]
+  },
+  {
+    "id": "w9-jwt-management",
+    "category": "JWT Management & OAuth",
+    "questions": [
+      {
+        "id": "w9-q26",
+        "question": "How do you store JWT tokens?",
+        "answer": "Client-side storage options: HttpOnly Secure Cookie — most secure against XSS (JavaScript cannot read it), but requires CSRF protection; localStorage — easy for SPAs but vulnerable to XSS stealing tokens; sessionStorage — cleared on tab close, same XSS risk. Never store JWTs in plain cookies without HttpOnly. Best practice for SPAs: short-lived access token in memory + refresh token in HttpOnly cookie. Never log or expose tokens in URLs.",
+        "realWorld": "Many production apps use access JWT in memory (JavaScript variable) and refresh token in HttpOnly cookie for balance of security and UX."
+      },
+      {
+        "id": "w9-q27",
+        "question": "What is Refresh Token?",
+        "answer": "A refresh token is a long-lived token used solely to obtain new access tokens without re-authenticating with credentials. Access tokens have short expiry (15–60 min) limiting damage if stolen; refresh tokens last days/weeks and are stored securely (HttpOnly cookie). Client sends refresh token to /api/auth/refresh; server validates it and issues a new access token. Enables logout invalidation by deleting refresh tokens server-side.",
+        "code": "POST /api/auth/login     → { accessToken, refreshToken }\nPOST /api/auth/refresh   → { accessToken }  (send refreshToken)\nPOST /api/auth/logout    → invalidate refreshToken in DB"
+      },
+      {
+        "id": "w9-q28",
+        "question": "How does Logout work with JWT?",
+        "answer": "JWT logout is challenging because tokens are stateless—the server cannot 'delete' a JWT already issued. Strategies: (1) Client-side — remove token from storage (simple but token remains valid until expiry); (2) Token blocklist — store revoked token JTIs in Redis until expiry; (3) Refresh token invalidation — delete refresh token from DB on logout (most practical); (4) Short access token expiry — limits window of abuse. Production apps combine short-lived access tokens with server-side refresh token revocation.",
+        "realWorld": "Logout endpoint deletes the refresh token from the database and clears the HttpOnly cookie; access token expires naturally within 15 minutes."
+      },
+      {
+        "id": "w9-q29",
+        "question": "What is OAuth? (Basic understanding)",
+        "answer": "OAuth 2.0 is an authorization framework allowing users to grant third-party applications limited access without sharing passwords. Example: 'Login with Google'—the app receives an access token from Google, not your Google password. Key roles: Resource Owner (user), Client (your app), Authorization Server (Google), Resource Server (Google API). OAuth handles authorization delegation; OpenID Connect (OIDC) adds authentication on top. Spring Security supports OAuth2 client and resource server.",
+        "realWorld": "'Sign in with Google/GitHub' buttons use OAuth2—users authorize your app to read their profile without giving you their password."
+      },
+      {
+        "id": "w9-q30",
+        "question": "Explain the complete login flow in a Spring Boot application using JWT.",
+        "answer": "Complete JWT login flow: (1) Client sends POST /api/auth/login with username/password; (2) AuthController delegates to AuthenticationManager; (3) AuthenticationManager calls UserDetailsService.loadUserByUsername() to fetch user from DB; (4) DaoAuthenticationProvider compares password using PasswordEncoder.matches(); (5) On success, JwtService generates access token (short expiry) and optionally refresh token with claims (sub, roles, exp); (6) Tokens returned to client; (7) Client stores tokens and sends Authorization: Bearer <token> on subsequent requests; (8) JwtAuthenticationFilter intercepts request, validates signature/expiry, extracts claims, sets SecurityContext; (9) Authorization rules (@PreAuthorize, SecurityFilterChain) enforce access; (10) Controller processes request. Registration flow: encode password with BCrypt before saving to DB.",
+        "code": "// 1. Login\nPOST /api/auth/login { \"email\":\"a@mail.com\", \"password\":\"secret\" }\n\n// 2. Server validates → generates JWT\n{ \"accessToken\": \"eyJ...\", \"refreshToken\": \"eyJ...\" }\n\n// 3. Protected request\nGET /api/users/me\nAuthorization: Bearer eyJ...\n\n// 4. JwtFilter validates → SecurityContext set → Controller runs",
+        "realWorld": "This flow powers most modern Spring Boot + React/Angular applications—stateless, scalable, and secure when combined with HTTPS, BCrypt, short expiry, and refresh token rotation."
+      }
+    ]
+  }
+]

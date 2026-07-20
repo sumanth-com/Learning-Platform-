@@ -1,0 +1,62 @@
+{
+  "ai-w12-e1": {
+    "answer": "Build embedding service: Spring AI EmbeddingModel → save vectors in pgvector. Ingest 10 text chunks.",
+    "realWorld": "Verify with SELECT count(*) FROM vector_store; similarity query returns relevant chunk."
+  },
+  "ai-w12-e2": {
+    "answer": "RAG chatbot: user question → retrieve top-k chunks → prompt with context → answer. Cite source doc name.",
+    "realWorld": "Ask 'How do I run tests?' — answer must quote your README, not hallucinate."
+  },
+  "ai-w12-e3": {
+    "answer": "Function calling: LLM invokes method to fetch live data from Spring Data repo (e.g. order by id).",
+    "realWorld": "Question 'status of order 42' → tool call → DB → natural language reply."
+  },
+  "ai-w12-e4": {
+    "answer": "Stream ChatClient response via SSE endpoint. Browser shows tokens as they arrive.",
+    "realWorld": "WebFlux Flux<String> or SseEmitter — pick what matches your stack."
+  },
+  "ai-w12-e5": {
+    "answer": "LangChain4j: load PDF from resources, split, embed, answer questions about content.",
+    "realWorld": "Compare DX with Spring AI on same PDF — note preferences."
+  },
+  "ai-w12-e6": {
+    "answer": "MCP or tool wrapper exposing one read-only REST endpoint to an agent. Document setup.",
+    "realWorld": "Even a minimal tool teaches protocol thinking for future IDE integrations."
+  },
+  "ai-w12-e7": {
+    "answer": "Middleware rejects requests exceeding token budget (estimate prompt length). Return 429 with clear message.",
+    "realWorld": "Prevent runaway costs from huge pasted logs."
+  },
+  "ai-w12-e8": {
+    "answer": "Unit test AiService with @MockBean ChatModel. Assert prompt includes retrieved context string.",
+    "realWorld": "No network in CI — fast, deterministic tests."
+  },
+  "ai-w12-e9": {
+    "answer": "Golden dataset: 10 question/expected_source pairs. Script scores retrieval hit rate.",
+    "realWorld": "Regression when you change chunk size — eval catches quality drop."
+  },
+  "ai-w12-e10": {
+    "answer": "Dockerfile: JRE, non-root user, health check /actuator/health, secrets from env. Push to registry.",
+    "realWorld": "Same container discipline as non-AI microservices."
+  },
+  "ai-w12-e11": {
+    "answer": "OpenTelemetry span around chat() and embed() with attributes for model and duration.",
+    "realWorld": "Jaeger trace shows LLM call as 80% latency — focus optimization there."
+  },
+  "ai-w12-e12": {
+    "answer": "Log tokens per request to DB or metrics. Simple dashboard: daily cost estimate.",
+    "realWorld": "product_owner sees $/day — informs model downgrade decisions."
+  },
+  "ai-w12-e13": {
+    "answer": "Hybrid search: BM25 keyword + vector merge scores. Improves exact SKU/code lookup.",
+    "realWorld": "Query 'ERR-4521' needs keyword; 'refund process' needs semantic."
+  },
+  "ai-w12-e14": {
+    "answer": "Multi-tool agent: plan → call weather API tool → call calendar tool → summarize. Cap steps.",
+    "realWorld": "maxIterations=5 prevents infinite agent loops and cost blowup."
+  },
+  "ai-w12-e15": {
+    "answer": "Capstone: RAG API with tests, eval, Docker, CI, README architecture diagram. Deploy optional.",
+    "realWorld": "This project is your Gen AI interview centerpiece — polish README and demo video."
+  }
+}

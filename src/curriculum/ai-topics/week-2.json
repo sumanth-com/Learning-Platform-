@@ -1,0 +1,46 @@
+{
+  "ai-w2-t1": {
+    "answer": "Prompt engineering is writing clear instructions so AI returns useful answers. Include: goal, context, format, and limits. Vague prompts → vague or wrong code.",
+    "realWorld": "Bad: 'fix my loop.' Good: paste method, failing input, expected output. You get a fix you can compile and test."
+  },
+  "ai-w2-t2": {
+    "answer": "A strong prompt has five parts: **Role** ('Java tutor'), **Context** (JDK 21, your error), **Task** ('explain line 12'), **Format** ('bullet list'), **Constraints** ('no external libraries').",
+    "realWorld": "Structured prompts feel like mini tickets — the same skill you use for Jira."
+  },
+  "ai-w2-t3": {
+    "answer": "Context is background AI needs: language, framework, file snippet, what you already tried. Without it, AI guesses your stack wrong.",
+    "realWorld": "Paste 15 lines around the bug, not the whole 500-line file — focused context beats noise."
+  },
+  "ai-w2-t4": {
+    "answer": "Constraints bound the answer: 'Java only', 'no recursion', 'under 20 lines', 'beginner level'. They stop AI from over-engineering.",
+    "realWorld": "'Solve without Streams' keeps Week 2 practice aligned with loops you're learning."
+  },
+  "ai-w2-t5": {
+    "answer": "Examples in prompts show the pattern you want: sample input/output, or a similar solved problem. One example beats long description.",
+    "realWorld": "Show one grade-calculation example; ask AI to write another for attendance — output matches your style."
+  },
+  "ai-w2-t6": {
+    "answer": "Iterative prompting: refine in rounds. Round 1: explain. Round 2: 'What if array is empty?' Round 3: 'Add JUnit test.' Reference previous answers.",
+    "realWorld": "Like code review threads — each message builds on the last."
+  },
+  "ai-w2-t7": {
+    "answer": "To explain code: paste the snippet, ask 'trace with i=0,1,2' or 'explain in plain English'. Verify by running yourself.",
+    "realWorld": "Use AI to understand a confusing for-loop from GitHub, then rewrite in your own words in comments."
+  },
+  "ai-w2-t8": {
+    "answer": "Debug prompts need: full error message, stack trace, code, expected vs actual. Read trace bottom-up to **Caused by**.",
+    "realWorld": "NullPointerException on line 24 — paste lines 20–30, not just 'it doesn't work.'"
+  },
+  "ai-w2-t9": {
+    "answer": "Ask AI for optimization only after you have working code. Request Big-O and trade-offs. Small data: readable loops often beat clever tricks.",
+    "realWorld": "AI suggests HashSet for duplicate check — good. For 10 elements, nested loop is fine too."
+  },
+  "ai-w2-t10": {
+    "answer": "AI test ideas cover happy path well. You add: null, empty, boundary, negative. Ask 'what edge cases am I missing?'",
+    "realWorld": "Calculator: AI lists divide-by-zero; you still write the assert yourself."
+  },
+  "ai-w2-t11": {
+    "answer": "AI limits: invents APIs, wrong Java version behavior, confident nonsense. Always compile, run, and diff before trusting.",
+    "realWorld": "AI suggests String.reverse() — doesn't exist. JDK docs + compiler catch it in seconds."
+  }
+}

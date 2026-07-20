@@ -1,0 +1,52 @@
+{
+  "library-management-oop": {
+    "mode": "external",
+    "overview": "Full OOP library system with inheritance, exception handling, and file storage.\n\nFeatures to build:\n• Add Books\n• Issue Books\n• Return Books\n• File Storage\n\nRequirements:\n• Use inheritance\n• Handle exceptions properly\n• Persist data to file\n\nBonus:\n• Search books\n• Fine for late returns",
+    "explanation": "Library Management System (OOP) is a intermediate-level project (Week 4). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Add Books, Issue Books, Return Books, File Storage.",
+    "githubUrl": "https://github.com/mehmetpekdemir/Library-Management-System",
+    "githubLabel": "Library Management System — Spring Boot + JPA",
+    "youtubeUrl": "https://www.youtube.com/watch?v=VmLP05Ignyk",
+    "youtubeLabel": "Library Management System in Java (JSP + Servlet + MySQL)",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "bank-management-system": {
+    "mode": "external",
+    "overview": "Bank system with account operations, exception handling, and transaction persistence.\n\nFeatures to build:\n• Account Creation\n• Deposit\n• Withdraw\n• Exception Handling\n• Save Transactions\n\nRequirements:\n• Custom exceptions for insufficient funds\n• Save transactions to file\n\nBonus:\n• Transaction history report",
+    "explanation": "Bank Management System is a intermediate-level project (Week 4). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Account Creation, Deposit, Withdraw, Exception Handling, Save Transactions.",
+    "githubUrl": "https://github.com/shawkyebrahim2514/Banking-System-Application",
+    "githubLabel": "Banking System Application — Java OOP + MySQL",
+    "youtubeUrl": "https://www.youtube.com/watch?v=xk4_1vDr-kk",
+    "youtubeLabel": "Java OOP Full Course — Bro Code",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "hospital-management": {
+    "mode": "external",
+    "overview": "Patient and doctor management with file-based record storage.\n\nFeatures to build:\n• Patient Registration\n• Doctor Details\n• Appointment\n• Store Records in File\n\nRequirements:\n• Use OOP design\n• Exception handling for invalid data\n• File persistence\n\nBonus:\n• Appointment scheduling conflicts check",
+    "explanation": "Hospital Management System is a intermediate-level project (Week 4). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Patient Registration, Doctor Details, Appointment, Store Records in File.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "Spring PetClinic — Clinic / Hospital Management Sample",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DevV8lWLBPE",
+    "youtubeLabel": "Spring Boot + Database Full Tutorial",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "employee-payroll": {
+    "mode": "external",
+    "overview": "Employee payroll with department management and file report generation.\n\nFeatures to build:\n• Employee Details\n• Salary\n• Department\n• File Report Generation\n\nRequirements:\n• Inheritance for employee types\n• Generate payroll report file\n\nBonus:\n• Tax deduction calculation",
+    "explanation": "Employee Payroll System is a intermediate-level project (Week 4). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Employee Details, Salary, Department, File Report Generation.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Java OOP Examples — Baeldung (eugenp/tutorials)",
+    "youtubeUrl": "https://www.youtube.com/watch?v=YGZIdT8xiG8",
+    "youtubeLabel": "Employee Management System — Java + MySQL Project",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "student-report-card": {
+    "mode": "external",
+    "overview": "Generate student report cards and store as files.\n\nFeatures to build:\n• Student Details\n• Marks\n• Grade\n• Store Report as File\n\nRequirements:\n• Exception handling for invalid marks\n• Write formatted report to file\n\nBonus:\n• Class-wise report summary",
+    "explanation": "Student Report Card Generator is a intermediate-level project (Week 4). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Student Details, Marks, Grade, Store Report as File.",
+    "githubUrl": "https://github.com/kunal-kushwaha/DSA-Bootcamp-Java",
+    "githubLabel": "Kunal Kushwaha — Java DSA Bootcamp (OOP + Projects)",
+    "youtubeUrl": "https://www.youtube.com/watch?v=6T_HgnjoYwI",
+    "youtubeLabel": "15 Java Projects for Beginners — freeCodeCamp",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

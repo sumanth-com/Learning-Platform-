@@ -1,0 +1,52 @@
+{
+  "authentication-service": {
+    "mode": "external",
+    "overview": "Standalone authentication service with JWT and role management.\n\nFeatures to build:\n• Register\n• Login\n• JWT\n• BCrypt\n• Role Management\n\nRequirements:\n• Spring Security\n• JWT token generation & validation\n• BCrypt password hashing\n• USER and ADMIN roles\n\nBonus:\n• Refresh token support",
+    "explanation": "Authentication Service is a expert-level project (Week 9). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Register, Login, JWT, BCrypt, Role Management.",
+    "githubUrl": "https://github.com/spring-projects/spring-security-samples",
+    "githubLabel": "Spring Security Official Samples",
+    "youtubeUrl": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+    "youtubeLabel": "Spring Security Full Course — JWT & Auth",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "employee-portal": {
+    "mode": "external",
+    "overview": "Employee portal with role-based dashboards and profile management.\n\nFeatures to build:\n• Login\n• Profile\n• Admin Dashboard\n• Employee Dashboard\n• Role-Based Access\n\nRequirements:\n• JWT authentication\n• RBAC with @PreAuthorize\n• Separate admin and employee endpoints\n\nBonus:\n• Profile photo upload",
+    "explanation": "Employee Portal is a expert-level project (Week 9). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Login, Profile, Admin Dashboard, Employee Dashboard, Role-Based Access.",
+    "githubUrl": "https://github.com/spring-projects/spring-authorization-server",
+    "githubLabel": "Spring Authorization Server — OAuth2 / JWT",
+    "youtubeUrl": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+    "youtubeLabel": "Secure REST APIs with Spring Security",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "hospital-portal": {
+    "mode": "external",
+    "overview": "Multi-role hospital portal with doctor, patient, and admin access.\n\nFeatures to build:\n• Doctor Login\n• Patient Login\n• Admin Login\n• Appointment APIs\n• JWT Authentication\n\nRequirements:\n• Multiple roles (DOCTOR, PATIENT, ADMIN)\n• JWT-protected appointment APIs\n• Spring Security\n\nBonus:\n• Role-specific appointment views",
+    "explanation": "Hospital Portal is a expert-level project (Week 9). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Doctor Login, Patient Login, Admin Login, Appointment APIs, JWT Authentication.",
+    "githubUrl": "https://github.com/spring-petclinic/spring-petclinic-angular",
+    "githubLabel": "PetClinic Angular + Spring Portal",
+    "youtubeUrl": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+    "youtubeLabel": "Spring Security for Web Portals",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "ecommerce-auth": {
+    "mode": "external",
+    "overview": "E-commerce authentication with customer and admin login flows.\n\nFeatures to build:\n• Customer Login\n• Admin Login\n• Password Reset\n• Token Validation\n\nRequirements:\n• JWT authentication\n• Customer and Admin roles\n• Password reset flow\n\nBonus:\n• Email verification on registration",
+    "explanation": "E-Commerce Authentication is a expert-level project (Week 9). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Customer Login, Admin Login, Password Reset, Token Validation.",
+    "githubUrl": "https://github.com/spring-projects/spring-security-samples",
+    "githubLabel": "E-Commerce Auth Patterns — Spring Security",
+    "youtubeUrl": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+    "youtubeLabel": "Authentication & Authorization in Spring",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "student-portal": {
+    "mode": "external",
+    "overview": "Student portal with faculty and admin access for courses and attendance.\n\nFeatures to build:\n• Student Login\n• Faculty Login\n• Admin Login\n• Course APIs\n• Attendance APIs\n\nRequirements:\n• Three roles (STUDENT, FACULTY, ADMIN)\n• JWT-protected course and attendance APIs\n• RBAC\n\nBonus:\n• Attendance report for faculty",
+    "explanation": "Student Portal is a expert-level project (Week 9). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Student Login, Faculty Login, Admin Login, Course APIs, Attendance APIs.",
+    "githubUrl": "https://github.com/amigoscode/full-stack-professional",
+    "githubLabel": "Full Stack Portal — Spring Boot + React",
+    "youtubeUrl": "https://www.youtube.com/watch?v=caCJAJC41Rk",
+    "youtubeLabel": "Login & Registration with Spring Security",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

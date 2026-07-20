@@ -1,0 +1,52 @@
+{
+  "employee-management-java8": {
+    "mode": "external",
+    "overview": "Employee management using Streams, Lambda, and Comparator.\n\nFeatures to build:\n• Filter Employees\n• Sort Employees\n• Search Employees\n• Department Wise Display\n\nRequirements:\n• Use Streams for filtering and sorting\n• Use Lambda expressions\n• Use Comparator\n\nBonus:\n• Export department summary",
+    "explanation": "Employee Management System (Java 8) is a advanced-level project (Week 6). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Filter Employees, Sort Employees, Search Employees, Department Wise Display.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Java 8 Features — Baeldung (Streams, Lambda)",
+    "youtubeUrl": "https://www.youtube.com/watch?v=1VIxkAlt7DE",
+    "youtubeLabel": "Java 8 Streams & Lambda Expressions",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "student-analytics": {
+    "mode": "external",
+    "overview": "Analytics dashboard using Streams and Optional.\n\nFeatures to build:\n• Highest Marks\n• Average Marks\n• Failed Students\n• Rank List\n\nRequirements:\n• Use Streams for analytics\n• Use Optional for safe lookups\n\nBonus:\n• Subject-wise analytics",
+    "explanation": "Student Analytics Dashboard is a advanced-level project (Week 6). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Highest Marks, Average Marks, Failed Students, Rank List.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Java 8 Streams Analytics — Baeldung Tutorials Repo",
+    "youtubeUrl": "https://www.youtube.com/watch?v=1VIxkAlt7DE",
+    "youtubeLabel": "Process Data with Java 8 Streams",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "ticket-booking-concurrent": {
+    "mode": "external",
+    "overview": "Concurrent ticket booking with thread safety.\n\nFeatures to build:\n• Multiple Users\n• Concurrent Booking\n• Thread Safety\n\nRequirements:\n• Use multithreading\n• Use synchronization for seat booking\n\nBonus:\n• Waiting queue for sold-out seats",
+    "explanation": "Online Ticket Booking System is a advanced-level project (Week 6). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Multiple Users, Concurrent Booking, Thread Safety.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Java Concurrency — Baeldung Examples",
+    "youtubeUrl": "https://www.youtube.com/watch?v=r_MbozUl2YQ",
+    "youtubeLabel": "Java Multithreading & Concurrency",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "task-scheduler": {
+    "mode": "external",
+    "overview": "Background task scheduler using Executor Service.\n\nFeatures to build:\n• Schedule Tasks\n• Execute in Background\n• Multiple Threads\n\nRequirements:\n• Use ExecutorService\n• Support scheduled and immediate execution\n\nBonus:\n• Task status tracking",
+    "explanation": "Task Scheduler is a advanced-level project (Week 6). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Schedule Tasks, Execute in Background, Multiple Threads.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Scheduled Tasks & Thread Pools — Baeldung",
+    "youtubeUrl": "https://www.youtube.com/watch?v=r_MbozUl2YQ",
+    "youtubeLabel": "Threads & Executors in Java",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "payroll-processor": {
+    "mode": "external",
+    "overview": "Parallel payroll processing with Streams and Executor Framework.\n\nFeatures to build:\n• Parallel Salary Processing\n• Bonus Calculation\n• Department Reports\n\nRequirements:\n• Use Streams for data processing\n• Use Executor Framework for parallel tasks\n• Use Collections\n\nBonus:\n• Tax deduction calculation",
+    "explanation": "Employee Payroll Processor is a advanced-level project (Week 6). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Parallel Salary Processing, Bonus Calculation, Department Reports.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Payroll Logic with Streams — Java 8",
+    "youtubeUrl": "https://www.youtube.com/watch?v=YGZIdT8xiG8",
+    "youtubeLabel": "Employee Payroll System — Java Project",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

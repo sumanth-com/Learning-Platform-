@@ -1,0 +1,42 @@
+{
+  "ai-w3-e1": {
+    "answer": "Paste Student class. Ask: encapsulation, naming, constructor issues. Fix top 2 findings yourself.",
+    "realWorld": "Public fields → private + getters is the most common Week 3 win."
+  },
+  "ai-w3-e2": {
+    "answer": "List all single-letter variables in your file. Ask AI for better names. Rename in IDE (refactor tool).",
+    "realWorld": "IDE rename is safer than AI find-replace — catches references."
+  },
+  "ai-w3-e3": {
+    "answer": "Ask AI why encapsulation matters — then explain aloud without reading. Add private balance + deposit() to a class.",
+    "realWorld": "Interview classic: 'Why private fields?' — control validation in one place."
+  },
+  "ai-w3-e4": {
+    "answer": "List your classes and fields. Ask for PlantUML or text UML. Draw correct version by hand.",
+    "realWorld": "Wrong multiplicity on diagram → wrong DB schema later."
+  },
+  "ai-w3-e5": {
+    "answer": "Ask AI to find duplicate code blocks. Extract one shared method. Run tests.",
+    "realWorld": "Copy-pasted validation in 3 methods → one validateAge() helper."
+  },
+  "ai-w3-e6": {
+    "answer": "Paste constructors. Ask for improvements: validation, chaining, defaults. Apply one fix.",
+    "realWorld": "Constructor setting negative age — add guard clause."
+  },
+  "ai-w3-e7": {
+    "answer": "Generate JavaDoc for public methods. Edit wrong descriptions. Match team style (@param, @return).",
+    "realWorld": "JavaDoc is contract for API consumers — worth getting right on libraries."
+  },
+  "ai-w3-e8": {
+    "answer": "Ask: 'What design mistakes do you see?' — god class, tight coupling, static abuse. Pick one to fix.",
+    "realWorld": "Utility class with 20 static methods — split by domain."
+  },
+  "ai-w3-e9": {
+    "answer": "Describe two designs; ask AI to compare. You choose with reasoning — AI doesn't know your deadlines.",
+    "realWorld": "Inheritance vs composition for Employee types — trade-off discussion for interviews."
+  },
+  "ai-w3-e10": {
+    "answer": "Ask for SOLID in simple terms with Java examples. Explain one principle without notes.",
+    "realWorld": "Single Responsibility: UserService saves users; EmailService sends mail — not one class doing both."
+  }
+}

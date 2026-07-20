@@ -1,0 +1,170 @@
+[
+  {
+    "id": "w1-fundamentals",
+    "category": "Java Fundamentals",
+    "questions": [
+      {
+        "id": "w1-q01",
+        "question": "What is Java?",
+        "answer": "Java is a high-level, object-oriented programming language developed by Sun Microsystems (now Oracle). It follows the 'Write Once, Run Anywhere' philosophy by compiling source code to platform-neutral bytecode that runs on the JVM. Java is widely used for enterprise backends, Android development, cloud services, and large-scale distributed systems because of its strong typing, mature ecosystem, and built-in security features.",
+        "realWorld": "Major banks, e-commerce platforms like Amazon, and Android apps all rely on Java for backend services and mobile applications due to its stability and scalability."
+      },
+      {
+        "id": "w1-q02",
+        "question": "Why is Java platform independent?",
+        "answer": "Java achieves platform independence through bytecode and the JVM. Source code (.java) is compiled into bytecode (.class), which is not tied to any specific operating system or CPU. The JVM on each platform interprets or JIT-compiles that bytecode into native machine instructions. As long as a compatible JVM exists, the same bytecode runs identically on Windows, Linux, or macOS.",
+        "realWorld": "A Spring Boot microservice built on a developer's Windows laptop can be deployed to a Linux Docker container in AWS without recompiling for that OS—the same JAR runs on both."
+      },
+      {
+        "id": "w1-q03",
+        "question": "Difference between JDK, JVM and JRE.",
+        "answer": "The JDK (Java Development Kit) is the full toolkit for developing Java applications—it includes the compiler (javac), debugger, libraries, and a JRE. The JRE (Java Runtime Environment) provides everything needed to run Java programs: the JVM, core class libraries, and supporting files, but no development tools. The JVM (Java Virtual Machine) is the engine that executes bytecode—it manages memory, garbage collection, and platform-specific translation.",
+        "realWorld": "Developers install the JDK to write and compile code; end users or production servers often need only a JRE (or a JDK that includes it) to run packaged applications."
+      },
+      {
+        "id": "w1-q04",
+        "question": "What is bytecode?",
+        "answer": "Bytecode is the intermediate, platform-independent instruction set produced when javac compiles .java source files into .class files. It is not human-readable source and not native machine code—it is designed for the JVM to interpret or compile at runtime. This layer is what makes Java portable: the same bytecode file can run on any machine with a compatible JVM.",
+        "realWorld": "When you build a Maven project, the compiled .class files in target/classes contain bytecode that gets packaged into a JAR and executed identically across dev, staging, and production environments.",
+        "code": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, bytecode!\");\n    }\n}",
+        "output": "After javac Hello.java → Hello.class (bytecode, not readable text)\nAfter java Hello → Hello, bytecode!"
+      },
+      {
+        "id": "w1-q05",
+        "question": "What is the main() method?",
+        "answer": "The main() method is the standard entry point for a standalone Java application. It must be public, static, return void, and accept a String array parameter: public static void main(String[] args). The JVM looks for this exact signature when you run a class with java ClassName. Without it, the program compiles but cannot be launched as an executable application.",
+        "realWorld": "Every Spring Boot app ultimately starts from a main method (e.g., SpringApplication.run) that bootstraps the entire server and dependency injection container.",
+        "code": "public class App {\n    public static void main(String[] args) {\n        System.out.println(\"Application started\");\n    }\n}",
+        "output": "Application started"
+      },
+      {
+        "id": "w1-q06",
+        "question": "Why is Java object-oriented?",
+        "answer": "Java was designed as an object-oriented language from the ground up—almost everything lives inside a class, and programs are built by creating and interacting with objects. OOP helps organize code around real-world entities with data and behavior bundled together, which improves modularity, reuse, and maintainability. While Java supports some non-OOP constructs (primitives, static methods), its core model is class-based OOP.",
+        "realWorld": "In a banking system, concepts like Account, Customer, and Transaction are modeled as classes with encapsulated data and methods, making the codebase easier for teams to extend and test."
+      },
+      {
+        "id": "w1-q07",
+        "question": "What happens when you run a Java program?",
+        "answer": "When you execute java ClassName, the JVM loads the class (via the class loader), verifies bytecode for security, allocates memory in heap and stack, and invokes main(). The JVM then interprets or JIT-compiles bytecode to native code, executes instructions, manages objects and garbage collection, and terminates when main() finishes or System.exit() is called.",
+        "realWorld": "Starting a Tomcat server triggers the JVM to load thousands of classes, initialize thread pools, and run the main/bootstrap class that listens on port 8080 for HTTP requests."
+      },
+      {
+        "id": "w1-q08",
+        "question": "What is the difference between compile-time and runtime errors?",
+        "answer": "Compile-time errors are caught by the compiler before the program runs—syntax mistakes, type mismatches, missing semicolons, or undefined variables. The JVM never sees the program until these are fixed. Runtime errors occur while the program is executing—NullPointerException, ArrayIndexOutOfBoundsException, or division by zero. The code compiled successfully but failed due to logic or unexpected data during execution.",
+        "realWorld": "A typo in a method name is a compile-time error caught in the IDE; a null customer object causing NPE during checkout is a runtime error discovered only when that code path runs in production.",
+        "code": "// Compile-time error: int x = \"hello\";\n// Runtime error:\nint[] arr = {1, 2, 3};\nSystem.out.println(arr[10]);",
+        "output": "Compile-time: javac fails with 'incompatible types'\nRuntime: Exception in thread \"main\" java.lang.ArrayIndexOutOfBoundsException: 10"
+      }
+    ]
+  },
+  {
+    "id": "w1-data-types",
+    "category": "Variables & Data Types",
+    "questions": [
+      {
+        "id": "w1-q09",
+        "question": "What are variables?",
+        "answer": "A variable is a named memory location that stores a value which can change during program execution. In Java, every variable has a type declared at creation, and you must assign a compatible value before use in many contexts. Variables make code readable and allow programs to process dynamic data such as user input, counters, or calculation results.",
+        "realWorld": "In an e-commerce cart, variables like itemCount, totalPrice, and discountApplied hold state that updates as the user adds or removes products.",
+        "code": "int itemCount = 3;\ndouble totalPrice = 149.99;\nString productName = \"Wireless Mouse\";",
+        "output": "Variables hold values: itemCount=3, totalPrice=149.99, productName=Wireless Mouse"
+      },
+      {
+        "id": "w1-q10",
+        "question": "What are primitive data types?",
+        "answer": "Java has eight primitive types that store simple values directly: byte, short, int, long (integers), float and double (floating-point), char (single character), and boolean (true/false). Primitives are not objects—they hold raw values on the stack (when local) and have default values (0, 0.0, false, '\\u0000'). Wrapper classes like Integer and Double exist when object semantics are needed.",
+        "realWorld": "Age counters, loop indices, and price calculations typically use int and double primitives for performance; boolean flags control feature toggles in application logic.",
+        "code": "byte b = 127;\nint age = 25;\ndouble price = 19.99;\nchar grade = 'A';\nboolean isActive = true;",
+        "output": "b=127, age=25, price=19.99, grade=A, isActive=true"
+      },
+      {
+        "id": "w1-q11",
+        "question": "Difference between int and double.",
+        "answer": "int is a 32-bit integer type that stores whole numbers without fractional parts—ideal for counts, indices, and IDs. double is a 64-bit floating-point type that stores decimal numbers with approximate precision—ideal for measurements, prices, and scientific calculations. Assigning a double to an int requires explicit casting and truncates the decimal portion.",
+        "realWorld": "Use int for quantity of items in an order; use double for unit price and tax calculations where cents matter.",
+        "code": "int quantity = 5;\ndouble unitPrice = 9.99;\ndouble total = quantity * unitPrice;\nint rounded = (int) total;\nSystem.out.println(total + \" -> \" + rounded);",
+        "output": "49.95 -> 49"
+      },
+      {
+        "id": "w1-q12",
+        "question": "What is type casting?",
+        "answer": "Type casting converts a value from one data type to another. Widening (implicit) casts safely promote smaller types to larger ones, like int to double. Narrowing (explicit) casts shrink larger or different types and may lose data, like double to int or long to int. Casting is essential when mixing numeric types or when an API expects a specific type.",
+        "realWorld": "Converting a double GPS coordinate to an integer tile index for a map grid requires explicit casting with awareness of precision loss.",
+        "code": "double salary = 75000.75;\nint annual = (int) salary;\nSystem.out.println(annual);",
+        "output": "75000"
+      },
+      {
+        "id": "w1-q13",
+        "question": "Implicit vs explicit casting.",
+        "answer": "Implicit casting (widening) happens automatically when Java can safely convert without data loss—for example, assigning an int to a double or a byte to an int. Explicit casting (narrowing) requires the programmer to write the target type in parentheses, such as (int) 3.14, because Java cannot guarantee the result will fit or retain precision. Explicit casts are a deliberate choice and can cause overflow or truncation.",
+        "realWorld": "Calculating a percentage may implicitly widen int operands to double for division; storing the result back into an int budget field requires explicit cast and rounding logic.",
+        "code": "int a = 10;\ndouble b = a;        // implicit widening\nint c = (int) 9.99;  // explicit narrowing\nSystem.out.println(b + \", \" + c);",
+        "output": "10.0, 9"
+      }
+    ]
+  },
+  {
+    "id": "w1-operators",
+    "category": "Operators & Language Basics",
+    "questions": [
+      {
+        "id": "w1-q14",
+        "question": "What are operators?",
+        "answer": "Operators are symbols that perform operations on operands—variables, literals, or expressions. Java provides arithmetic (+, -, *, /, %), relational (==, !=, <, >), logical (&&, ||, !), assignment (=, +=, -=), increment/decrement (++, --), and bitwise operators. Operator precedence determines evaluation order; parentheses override default rules for clarity.",
+        "realWorld": "Order total calculations combine arithmetic operators; login validation uses logical && to check username and password together.",
+        "code": "int x = 10, y = 3;\nSystem.out.println(x / y);\nSystem.out.println(x % y);\nSystem.out.println(x > y && y > 0);",
+        "output": "3\n1\ntrue"
+      },
+      {
+        "id": "w1-q15",
+        "question": "Difference between = and ==.",
+        "answer": "The single equals sign (=) is the assignment operator—it stores the right-hand value into the left-hand variable. The double equals (==) is the equality comparison operator—it checks whether two values are equal and returns a boolean. A common beginner mistake is using = inside an if condition, which assigns instead of compares and often causes logic bugs.",
+        "realWorld": "Setting status = \"ACTIVE\" updates a field; checking if (status.equals(\"ACTIVE\")) controls whether a user can access a feature.",
+        "code": "int score = 85;\nSystem.out.println(score == 85);\nSystem.out.println(score == 90);",
+        "output": "true\nfalse"
+      },
+      {
+        "id": "w1-q16",
+        "question": "Why use final?",
+        "answer": "The final keyword prevents reassignment after initialization. A final variable must be assigned once and cannot change, making constants and immutable references explicit. final on a method prevents overriding; on a class, it prevents inheritance. Using final improves readability, thread safety for constants, and helps the compiler optimize code.",
+        "realWorld": "API base URLs, tax rates, and maximum retry counts are declared final static so they cannot be accidentally modified at runtime.",
+        "code": "final double PI = 3.14159;\nfinal int MAX_USERS = 100;\n// PI = 3.14; // compile-time error",
+        "output": "Compile error if reassignment attempted: 'cannot assign a value to final variable PI'"
+      },
+      {
+        "id": "w1-q17",
+        "question": "What are comments?",
+        "answer": "Comments are non-executable text that document code for humans. Java supports single-line comments (//), multi-line comments (/* */), and Javadoc comments (/** */) for generating API documentation. Good comments explain why something is done, not what is obvious from the code. The compiler ignores comments entirely—they do not affect bytecode.",
+        "realWorld": "Teams use Javadoc on public APIs so IDEs show method descriptions; inline comments explain business rules like 'discount applies only on weekdays.'"
+      },
+      {
+        "id": "w1-q18",
+        "question": "What are identifiers?",
+        "answer": "Identifiers are names given to classes, methods, variables, packages, and other program elements. They must start with a letter, underscore, or dollar sign, followed by letters, digits, or those symbols. They cannot be Java keywords and are case-sensitive—count and Count are different. Conventions use camelCase for variables/methods and PascalCase for classes.",
+        "realWorld": "Meaningful identifiers like calculateMonthlyPayment and CustomerRepository make code self-documenting in code reviews and onboarding."
+      },
+      {
+        "id": "w1-q19",
+        "question": "What are keywords?",
+        "answer": "Keywords are reserved words with special meaning to the Java compiler—they define structure and behavior and cannot be used as identifiers. Examples include class, public, static, void, if, else, return, and new. Java has about 50 keywords (plus literals true, false, null). Attempting to name a variable int or class causes a compile-time error.",
+        "realWorld": "Understanding keywords helps read stack traces and framework code—you immediately recognize class, interface, extends, and implements as structural declarations."
+      }
+    ]
+  },
+  {
+    "id": "w1-io",
+    "category": "Input & Output",
+    "questions": [
+      {
+        "id": "w1-q20",
+        "question": "What is the Scanner class?",
+        "answer": "Scanner is a utility class in java.util that parses primitive types and strings from various input sources—typically System.in for console input. Common methods include nextInt(), nextDouble(), nextLine(), and hasNext(). It simplifies reading user input but should be closed when done to free resources. In production apps, input often comes from files, HTTP requests, or databases instead of the console.",
+        "realWorld": "CLI tools and beginner exercises use Scanner for interactive prompts; production services receive input via REST controllers or message queues rather than stdin.",
+        "code": "import java.util.Scanner;\n\npublic class Demo {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Enter your name: \");\n        String name = sc.nextLine();\n        System.out.println(\"Hello, \" + name + \"!\");\n        sc.close();\n    }\n}",
+        "output": "Enter your name: Alice\nHello, Alice!"
+      }
+    ]
+  }
+]

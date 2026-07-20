@@ -1,0 +1,1398 @@
+{
+  "id": 7,
+  "slug": "week-7",
+  "title": "JDBC, MySQL, Maven, Logging & Unit Testing",
+  "goal": "Connect Java applications to MySQL, perform CRUD using JDBC, understand database design basics, manage projects with Maven, write logs, write basic unit tests, build a complete Java CRUD application, and use AI for SQL, JDBC debugging, and test generation.",
+  "description": "Week 7 focuses on connecting Java with databases and learning the tools every backend developer uses daily — JDBC, MySQL, Maven, logging, and unit testing.",
+  "estimatedHours": 24,
+  "difficulty": "medium",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Database Fundamentals",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-db-fundamentals",
+          "title": "Database Fundamentals",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-what-db",
+              "title": "What is a Database?"
+            },
+            {
+              "id": "d1-dbms-rdbms",
+              "title": "DBMS vs RDBMS"
+            },
+            {
+              "id": "d1-relational-concepts",
+              "title": "Relational Database Concepts"
+            },
+            {
+              "id": "d1-tables",
+              "title": "Tables"
+            },
+            {
+              "id": "d1-rows",
+              "title": "Rows"
+            },
+            {
+              "id": "d1-columns",
+              "title": "Columns"
+            },
+            {
+              "id": "d1-primary-key",
+              "title": "Primary Key"
+            },
+            {
+              "id": "d1-foreign-key",
+              "title": "Foreign Key"
+            },
+            {
+              "id": "d1-constraints",
+              "title": "Constraints"
+            },
+            {
+              "id": "d1-data-types",
+              "title": "Data Types"
+            },
+            {
+              "id": "d1-db-design",
+              "title": "Database Design Basics"
+            },
+            {
+              "id": "d1-normalization",
+              "title": "Normalization (1NF, 2NF, 3NF)"
+            },
+            {
+              "id": "d1-er-diagram",
+              "title": "ER Diagram Basics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "MySQL",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-mysql",
+          "title": "MySQL",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d2-install",
+              "title": "Installing MySQL"
+            },
+            {
+              "id": "d2-workbench",
+              "title": "MySQL Workbench"
+            },
+            {
+              "id": "d2-create-db",
+              "title": "Creating Database"
+            },
+            {
+              "id": "d2-create-tables",
+              "title": "Creating Tables"
+            },
+            {
+              "id": "d2-insert",
+              "title": "Insert"
+            },
+            {
+              "id": "d2-update",
+              "title": "Update"
+            },
+            {
+              "id": "d2-delete",
+              "title": "Delete"
+            },
+            {
+              "id": "d2-select",
+              "title": "Select"
+            },
+            {
+              "id": "d2-where",
+              "title": "WHERE"
+            },
+            {
+              "id": "d2-order-by",
+              "title": "ORDER BY"
+            },
+            {
+              "id": "d2-group-by",
+              "title": "GROUP BY"
+            },
+            {
+              "id": "d2-having",
+              "title": "HAVING"
+            },
+            {
+              "id": "d2-limit",
+              "title": "LIMIT"
+            },
+            {
+              "id": "d2-aggregate",
+              "title": "Aggregate Functions"
+            },
+            {
+              "id": "d2-inner-join",
+              "title": "INNER JOIN"
+            },
+            {
+              "id": "d2-left-join",
+              "title": "LEFT JOIN"
+            },
+            {
+              "id": "d2-right-join",
+              "title": "RIGHT JOIN"
+            },
+            {
+              "id": "d2-self-join",
+              "title": "SELF JOIN"
+            },
+            {
+              "id": "d2-union",
+              "title": "UNION"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "JDBC",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-jdbc",
+          "title": "JDBC",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-what-jdbc",
+              "title": "What is JDBC?"
+            },
+            {
+              "id": "d3-architecture",
+              "title": "JDBC Architecture"
+            },
+            {
+              "id": "d3-drivers",
+              "title": "JDBC Drivers"
+            },
+            {
+              "id": "d3-api",
+              "title": "JDBC API"
+            },
+            {
+              "id": "d3-driver-manager",
+              "title": "DriverManager"
+            },
+            {
+              "id": "d3-connection",
+              "title": "Connection"
+            },
+            {
+              "id": "d3-statement",
+              "title": "Statement"
+            },
+            {
+              "id": "d3-prepared-statement",
+              "title": "PreparedStatement"
+            },
+            {
+              "id": "d3-callable-statement",
+              "title": "CallableStatement"
+            },
+            {
+              "id": "d3-resultset",
+              "title": "ResultSet"
+            },
+            {
+              "id": "d3-execute-query",
+              "title": "Execute Query"
+            },
+            {
+              "id": "d3-execute-update",
+              "title": "Execute Update"
+            },
+            {
+              "id": "d3-transactions",
+              "title": "Transactions"
+            },
+            {
+              "id": "d3-batch",
+              "title": "Batch Processing"
+            },
+            {
+              "id": "d3-connection-pooling",
+              "title": "Connection Pooling (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "CRUD Operations",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-crud",
+          "title": "CRUD Operations",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d4-insert",
+              "title": "Insert Record"
+            },
+            {
+              "id": "d4-update",
+              "title": "Update Record"
+            },
+            {
+              "id": "d4-delete",
+              "title": "Delete Record"
+            },
+            {
+              "id": "d4-fetch-single",
+              "title": "Fetch Single Record"
+            },
+            {
+              "id": "d4-fetch-multiple",
+              "title": "Fetch Multiple Records"
+            },
+            {
+              "id": "d4-search",
+              "title": "Search Records"
+            },
+            {
+              "id": "d4-pagination",
+              "title": "Pagination (Introduction)"
+            },
+            {
+              "id": "d4-exception-handling",
+              "title": "Exception Handling with JDBC"
+            },
+            {
+              "id": "d4-dao-pattern",
+              "title": "DAO Pattern (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Maven",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-maven",
+          "title": "Maven",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d5-what-maven",
+              "title": "What is Maven?"
+            },
+            {
+              "id": "d5-why-maven",
+              "title": "Why Maven?"
+            },
+            {
+              "id": "d5-structure",
+              "title": "Maven Project Structure"
+            },
+            {
+              "id": "d5-pom",
+              "title": "pom.xml"
+            },
+            {
+              "id": "d5-dependencies",
+              "title": "Dependencies"
+            },
+            {
+              "id": "d5-plugins",
+              "title": "Plugins"
+            },
+            {
+              "id": "d5-lifecycle",
+              "title": "Build Lifecycle"
+            },
+            {
+              "id": "d5-packaging",
+              "title": "Packaging"
+            },
+            {
+              "id": "d5-repository",
+              "title": "Maven Repository"
+            },
+            {
+              "id": "d5-dependency-mgmt",
+              "title": "Dependency Management"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Logging & Unit Testing",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-logging",
+          "title": "Logging",
+          "estimatedMinutes": 90,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-why-logging",
+              "title": "Why Logging?"
+            },
+            {
+              "id": "d6-log-levels",
+              "title": "Logging Levels"
+            },
+            {
+              "id": "d6-slf4j",
+              "title": "SLF4J"
+            },
+            {
+              "id": "d6-logback",
+              "title": "Logback"
+            },
+            {
+              "id": "d6-log4j",
+              "title": "Log4j (Overview)"
+            },
+            {
+              "id": "d6-console-logs",
+              "title": "Console Logs"
+            },
+            {
+              "id": "d6-file-logs",
+              "title": "File Logs"
+            }
+          ]
+        },
+        {
+          "id": "day6-testing",
+          "title": "Unit Testing",
+          "estimatedMinutes": 90,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-junit-intro",
+              "title": "Introduction to JUnit"
+            },
+            {
+              "id": "d6-test-cases",
+              "title": "Test Cases"
+            },
+            {
+              "id": "d6-assertions",
+              "title": "Assertions"
+            },
+            {
+              "id": "d6-test-lifecycle",
+              "title": "Test Lifecycle"
+            },
+            {
+              "id": "d6-test-naming",
+              "title": "Test Naming"
+            },
+            {
+              "id": "d6-mockito",
+              "title": "Basic Mockito (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Revision",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d7-jdbc-practice",
+              "title": "JDBC Practice"
+            },
+            {
+              "id": "d7-sql-practice",
+              "title": "SQL Practice"
+            },
+            {
+              "id": "d7-maven-practice",
+              "title": "Maven Practice"
+            },
+            {
+              "id": "d7-testing-practice",
+              "title": "Testing Practice"
+            },
+            {
+              "id": "d7-mock-assessment",
+              "title": "Mock Assessment"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-db-fundamentals",
+      "title": "Database Fundamentals",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w7-d1-1",
+          "title": "What is a Database?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d1-2",
+          "title": "DBMS vs RDBMS",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d1-3",
+          "title": "Relational Database Concepts",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d1-4",
+          "title": "Primary Key & Foreign Key",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d1-5",
+          "title": "Constraints & Data Types",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d1-6",
+          "title": "Database Design Basics",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d1-7",
+          "title": "Normalization (1NF, 2NF, 3NF)",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w7-d1-8",
+          "title": "ER Diagram Basics",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-mysql",
+      "title": "MySQL",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w7-d2-1",
+          "title": "Installing MySQL & Workbench",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d2-2",
+          "title": "Creating Database & Tables",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d2-3",
+          "title": "Insert / Update / Delete",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d2-4",
+          "title": "SELECT & WHERE",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d2-5",
+          "title": "ORDER BY / GROUP BY / HAVING",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d2-6",
+          "title": "Aggregate Functions",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d2-7",
+          "title": "INNER / LEFT / RIGHT JOIN",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d2-8",
+          "title": "SELF JOIN & UNION",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-jdbc",
+      "title": "JDBC",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w7-d3-1",
+          "title": "JDBC Architecture & Drivers",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d3-2",
+          "title": "DriverManager & Connection",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d3-3",
+          "title": "Statement vs PreparedStatement",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d3-4",
+          "title": "ResultSet & Execute Query/Update",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d3-5",
+          "title": "Transactions & Batch Processing",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w7-d3-6",
+          "title": "Connection Pooling (Introduction)",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-crud",
+      "title": "CRUD Operations",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w7-d4-1",
+          "title": "Insert / Update / Delete Records",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d4-2",
+          "title": "Fetch Single & Multiple Records",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d4-3",
+          "title": "Search Records & Pagination",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d4-4",
+          "title": "Exception Handling with JDBC",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d4-5",
+          "title": "DAO Pattern (Introduction)",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-maven",
+      "title": "Maven",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w7-d5-1",
+          "title": "What is Maven & Why Maven?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d5-2",
+          "title": "Maven Project Structure",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d5-3",
+          "title": "pom.xml & Dependencies",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d5-4",
+          "title": "Plugins & Build Lifecycle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d5-5",
+          "title": "Packaging & Maven Repository",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d5-6",
+          "title": "Dependency Management",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-logging-testing",
+      "title": "Logging & Unit Testing",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w7-d6-1",
+          "title": "Logging Levels & SLF4J",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d6-2",
+          "title": "Logback & Log4j Overview",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d6-3",
+          "title": "Console & File Logs",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d6-4",
+          "title": "Introduction to JUnit",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w7-d6-5",
+          "title": "Test Cases & Assertions",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d6-6",
+          "title": "Test Lifecycle & Naming",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d6-7",
+          "title": "Basic Mockito (Introduction)",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision",
+      "title": "Revision",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w7-d7-1",
+          "title": "JDBC Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d7-2",
+          "title": "SQL Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d7-3",
+          "title": "Maven Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d7-4",
+          "title": "Testing Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w7-d7-5",
+          "title": "Mock Assessment",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-sql",
+      "category": "SQL Practice",
+      "questions": [
+        {
+          "id": "pq-w7-1",
+          "title": "Create Student Table",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-2",
+          "title": "Create Employee Table",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-3",
+          "title": "Insert 10 Records",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-4",
+          "title": "Update Employee Salary",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-5",
+          "title": "Delete Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-6",
+          "title": "Find Highest Salary",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-7",
+          "title": "Find Lowest Salary",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-8",
+          "title": "Count Employees",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-9",
+          "title": "Average Salary",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-10",
+          "title": "Employees by Department",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-jdbc",
+      "category": "JDBC",
+      "questions": [
+        {
+          "id": "pq-w7-11",
+          "title": "Connect Java to MySQL",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-12",
+          "title": "Insert Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-13",
+          "title": "Update Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-14",
+          "title": "Delete Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-15",
+          "title": "Fetch All Students",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-16",
+          "title": "Search Student by ID",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-17",
+          "title": "Search Student by Name",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-18",
+          "title": "Employee CRUD",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-19",
+          "title": "Product CRUD",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-20",
+          "title": "Library CRUD",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-prepared-statement",
+      "category": "PreparedStatement",
+      "questions": [
+        {
+          "id": "pq-w7-21",
+          "title": "Secure Login Query",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-22",
+          "title": "Student Registration",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-23",
+          "title": "Product Search",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-24",
+          "title": "Employee Update",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-25",
+          "title": "Delete by ID",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-resultset",
+      "category": "ResultSet",
+      "questions": [
+        {
+          "id": "pq-w7-26",
+          "title": "Print Student Records",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-27",
+          "title": "Print Employee Records",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-28",
+          "title": "Convert ResultSet to Objects",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-29",
+          "title": "Iterate ResultSet",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-30",
+          "title": "Display Table Data",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-maven",
+      "category": "Maven",
+      "questions": [
+        {
+          "id": "pq-w7-31",
+          "title": "Create Maven Project",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-32",
+          "title": "Add MySQL Dependency",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-33",
+          "title": "Add JUnit Dependency",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-34",
+          "title": "Build Project",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-35",
+          "title": "Package Project",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-unit-testing",
+      "category": "Unit Testing",
+      "questions": [
+        {
+          "id": "pq-w7-36",
+          "title": "Test Calculator Class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-37",
+          "title": "Test Student Service",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-38",
+          "title": "Test Employee Service",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w7-39",
+          "title": "Test String Utility",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w7-40",
+          "title": "Test Number Utility",
+          "difficulty": "easy"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "student-management-jdbc",
+      "title": "Student Management System",
+      "description": "Full CRUD student management system backed by MySQL.",
+      "features": [
+        {
+          "id": "p1-add",
+          "title": "Add Student"
+        },
+        {
+          "id": "p1-update",
+          "title": "Update Student"
+        },
+        {
+          "id": "p1-delete",
+          "title": "Delete Student"
+        },
+        {
+          "id": "p1-search",
+          "title": "Search Student"
+        },
+        {
+          "id": "p1-view",
+          "title": "View Students"
+        }
+      ],
+      "requirements": [
+        "Use JDBC with PreparedStatement",
+        "MySQL database",
+        "DAO pattern"
+      ],
+      "bonusFeatures": [
+        "Export student list to CSV"
+      ]
+    },
+    {
+      "id": "employee-management-jdbc",
+      "title": "Employee Management System",
+      "description": "Employee CRUD with department filtering and salary search.",
+      "features": [
+        {
+          "id": "p2-crud",
+          "title": "Employee CRUD"
+        },
+        {
+          "id": "p2-dept-filter",
+          "title": "Department Filter"
+        },
+        {
+          "id": "p2-salary-search",
+          "title": "Salary Search"
+        }
+      ],
+      "requirements": [
+        "Use JDBC",
+        "MySQL database",
+        "PreparedStatement for all queries"
+      ],
+      "bonusFeatures": [
+        "Salary statistics dashboard"
+      ]
+    },
+    {
+      "id": "library-management-jdbc",
+      "title": "Library Management System",
+      "description": "Library system for managing books, issuing, and returns.",
+      "features": [
+        {
+          "id": "p3-add-books",
+          "title": "Add Books"
+        },
+        {
+          "id": "p3-issue",
+          "title": "Issue Books"
+        },
+        {
+          "id": "p3-return",
+          "title": "Return Books"
+        },
+        {
+          "id": "p3-search",
+          "title": "Search Books"
+        }
+      ],
+      "requirements": [
+        "Use JDBC",
+        "MySQL database",
+        "Track book availability"
+      ],
+      "bonusFeatures": [
+        "Overdue book alerts"
+      ]
+    },
+    {
+      "id": "inventory-management-jdbc",
+      "title": "Inventory Management System",
+      "description": "Product inventory with quantity tracking and low stock alerts.",
+      "features": [
+        {
+          "id": "p4-crud",
+          "title": "Product CRUD"
+        },
+        {
+          "id": "p4-quantity",
+          "title": "Quantity Update"
+        },
+        {
+          "id": "p4-low-stock",
+          "title": "Low Stock Alert"
+        }
+      ],
+      "requirements": [
+        "Use JDBC",
+        "MySQL database",
+        "Transaction support for quantity updates"
+      ],
+      "bonusFeatures": [
+        "Reorder threshold configuration"
+      ]
+    },
+    {
+      "id": "hospital-management-jdbc",
+      "title": "Hospital Management System",
+      "description": "Hospital system for patient registration, doctors, and appointments.",
+      "features": [
+        {
+          "id": "p5-patient",
+          "title": "Patient Registration"
+        },
+        {
+          "id": "p5-doctor",
+          "title": "Doctor Information"
+        },
+        {
+          "id": "p5-appointment",
+          "title": "Appointment Records"
+        }
+      ],
+      "requirements": [
+        "Use JDBC",
+        "MySQL database",
+        "Relational schema with foreign keys"
+      ],
+      "bonusFeatures": [
+        "Appointment scheduling conflict check"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-7",
+    "title": "AI for Database Design & SQL Optimization",
+    "description": "Use AI to generate SQL queries, design schemas, optimize queries, debug JDBC code, and generate unit tests.",
+    "learningTopics": [
+      {
+        "id": "ai-w7-t1",
+        "title": "Using AI to generate SQL queries"
+      },
+      {
+        "id": "ai-w7-t2",
+        "title": "AI for database schema design"
+      },
+      {
+        "id": "ai-w7-t3",
+        "title": "AI for ER diagram suggestions"
+      },
+      {
+        "id": "ai-w7-t4",
+        "title": "AI for query optimization"
+      },
+      {
+        "id": "ai-w7-t5",
+        "title": "AI for explaining execution plans"
+      },
+      {
+        "id": "ai-w7-t6",
+        "title": "AI for writing CRUD operations"
+      },
+      {
+        "id": "ai-w7-t7",
+        "title": "AI for generating unit tests"
+      },
+      {
+        "id": "ai-w7-t8",
+        "title": "AI for JDBC debugging"
+      },
+      {
+        "id": "ai-w7-t9",
+        "title": "AI for code documentation"
+      },
+      {
+        "id": "ai-w7-t10",
+        "title": "AI limitations in SQL generation"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w7-e1",
+        "title": "Design a Student database."
+      },
+      {
+        "id": "ai-w7-e2",
+        "title": "Generate SQL tables for a Library system."
+      },
+      {
+        "id": "ai-w7-e3",
+        "title": "Explain INNER JOIN with examples."
+      },
+      {
+        "id": "ai-w7-e4",
+        "title": "Optimize a slow SQL query."
+      },
+      {
+        "id": "ai-w7-e5",
+        "title": "Review your JDBC code."
+      },
+      {
+        "id": "ai-w7-e6",
+        "title": "Generate JUnit test cases."
+      },
+      {
+        "id": "ai-w7-e7",
+        "title": "Explain SQL normalization."
+      },
+      {
+        "id": "ai-w7-e8",
+        "title": "Create an ER diagram for your project."
+      },
+      {
+        "id": "ai-w7-e9",
+        "title": "Suggest indexes for better performance."
+      },
+      {
+        "id": "ai-w7-e10",
+        "title": "Identify SQL injection vulnerabilities and show how PreparedStatement prevents them."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-7",
+    "repository": "java-week-7-jdbc",
+    "description": "Create repository java-week-7-jdbc and upload all Week 7 programs and SQL scripts.",
+    "files": [
+      {
+        "id": "gh-w7-f1",
+        "path": "JDBCConnection.java"
+      },
+      {
+        "id": "gh-w7-f2",
+        "path": "StudentDAO.java"
+      },
+      {
+        "id": "gh-w7-f3",
+        "path": "EmployeeDAO.java"
+      },
+      {
+        "id": "gh-w7-f4",
+        "path": "ProductDAO.java"
+      },
+      {
+        "id": "gh-w7-f5",
+        "path": "LibraryDAO.java"
+      },
+      {
+        "id": "gh-w7-f6",
+        "path": "StudentManagementSystem.java"
+      },
+      {
+        "id": "gh-w7-f7",
+        "path": "InventoryManagementSystem.java"
+      },
+      {
+        "id": "gh-w7-f8",
+        "path": "HospitalManagementSystem.java"
+      },
+      {
+        "id": "gh-w7-f9",
+        "path": "schema.sql"
+      },
+      {
+        "id": "gh-w7-f10",
+        "path": "data.sql"
+      },
+      {
+        "id": "gh-w7-f11",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w7-sql",
+      "category": "SQL & Database",
+      "questions": [
+        {
+          "id": "iq-w7-1",
+          "question": "What is the difference between DBMS and RDBMS?",
+          "answer": "DBMS stores data in files without relations. RDBMS stores data in tables with relationships using keys — MySQL, PostgreSQL are RDBMS."
+        },
+        {
+          "id": "iq-w7-2",
+          "question": "What is normalization?",
+          "answer": "Process of organizing data to reduce redundancy — 1NF (atomic values), 2NF (no partial dependency), 3NF (no transitive dependency)."
+        },
+        {
+          "id": "iq-w7-3",
+          "question": "Difference between INNER JOIN and LEFT JOIN?",
+          "answer": "INNER JOIN returns only matching rows from both tables. LEFT JOIN returns all rows from left table plus matching rows from right (NULL if no match)."
+        }
+      ]
+    },
+    {
+      "id": "iq-w7-jdbc",
+      "category": "JDBC",
+      "questions": [
+        {
+          "id": "iq-w7-4",
+          "question": "What is JDBC?",
+          "answer": "Java Database Connectivity — API for connecting Java applications to relational databases using drivers, connections, statements, and result sets."
+        },
+        {
+          "id": "iq-w7-5",
+          "question": "Difference between Statement and PreparedStatement?",
+          "answer": "Statement executes static SQL and is vulnerable to SQL injection. PreparedStatement uses parameterized queries — safer, faster for repeated execution."
+        },
+        {
+          "id": "iq-w7-6",
+          "question": "What is the DAO pattern?",
+          "answer": "Data Access Object — separates business logic from database access. DAO classes encapsulate CRUD operations for a specific entity."
+        }
+      ]
+    },
+    {
+      "id": "iq-w7-maven",
+      "category": "Maven & Testing",
+      "questions": [
+        {
+          "id": "iq-w7-7",
+          "question": "What is Maven and why use it?",
+          "answer": "Build automation and dependency management tool. Standardizes project structure, manages libraries via pom.xml, and handles compile/test/package lifecycle."
+        },
+        {
+          "id": "iq-w7-8",
+          "question": "What is JUnit used for?",
+          "answer": "Unit testing framework for Java — write test methods with assertions to verify code behavior. Supports @BeforeEach, @AfterEach, and test lifecycle hooks."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w7-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions across SQL, JDBC, PreparedStatement, ResultSet, Maven, and Unit Testing",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w7-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 JDBC-backed management system projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w7-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to java-week-7-jdbc repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 11
+      }
+    },
+    {
+      "id": "del-w7-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 20
+      }
+    },
+    {
+      "id": "del-w7-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 7 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 30
+      }
+    }
+  ]
+}

@@ -1,0 +1,640 @@
+{
+  "ai-e1": {
+    "title": "Explain JDK vs JVM vs JRE.",
+    "answer": "**JDK** = write & compile (javac, tools). **JRE** = run apps (JVM + libraries). **JVM** = executes bytecode on any OS.",
+    "realWorld": "Laptop has JDK for coding. Server runs your JAR with a JVM — same bytecode, different OS.",
+    "code": "public class Hello {\n  public static void main(String[] args) {\n    System.out.println(\"Runs on JVM!\");\n  }\n}"
+  },
+  "ai-e2": {
+    "title": "Explain variables like you're 10 years old.",
+    "answer": "Variables store values: `int age = 12;` `String name = \"Riya\";` Type is fixed; you can reassign compatible values.",
+    "realWorld": "Game stats: health, coins, playerName — updated as the program runs.",
+    "code": "int age = 10;\nString name = \"Riya\";\nSystem.out.println(name + \" is \" + age);"
+  },
+  "ai-e3": {
+    "title": "Generate a Java Hello World and explain every line.",
+    "answer": "`public class HelloWorld` — class name. `public static void main` — entry point. `System.out.println` — print line. Braces close method and class.",
+    "realWorld": "`java HelloWorld` → JVM runs main() → output in terminal. Every Java app starts here.",
+    "code": "public class HelloWorld {\n  public static void main(String[] args) {\n    System.out.println(\"Hello, World!\");\n  }\n}"
+  },
+  "ai-e4": {
+    "title": "Explain why a syntax error occurs.",
+    "answer": "Syntax error = compiler can't parse code: missing `;`, bad braces, typos. Fix the line javac reports before running.",
+    "realWorld": "Missing semicolon → red squiggle → add `;` → compiles.",
+    "code": "int score = 95;\nSystem.out.println(score);"
+  },
+  "ai-e5": {
+    "title": "A broken Java program and ask it to find the bug.",
+    "answer": "Find bugs: read error line, check recent edits, print variables, fix one issue at a time. Logic bugs compile but give wrong output — trace step by step.",
+    "realWorld": "NPE on null.length() — add null check before calling methods.",
+    "code": "System.out.println(\"Sum: \" + (a + b)); // not just \"Sum\""
+  },
+  "ai-e6": {
+    "title": "Compare: two AI responses for the same Java question.",
+    "answer": "Compare AI answers: accurate? clear? compiles? Compare two responses — pick correct + simple over fancy + wrong.",
+    "realWorld": "'int always worse than double' — misleading. 'int for counts, double for prices' — correct."
+  },
+  "ai-e7": {
+    "title": "Suggest better variable names for your code.",
+    "answer": "Names describe purpose: studentCount not n, isLoggedIn not flag. camelCase in Java. Booleans often start with is/has.",
+    "realWorld": "passingScore and grade beat x and s in code review.",
+    "code": "int maxAttendance = 100;\ndouble examAverage = 89.5;"
+  },
+  "ai-e8": {
+    "title": "Explain type casting with examples.",
+    "answer": "Casting: int→double automatic. double→int needs (int) and drops decimals. Watch int division: 7/2 is 3, 7/2.0 is 3.5.",
+    "realWorld": "(int)(29.97/2) = 14 — know when losing decimals is OK.",
+    "code": "double price = 9.99;\nint rounded = (int) price; // 9"
+  },
+  "ai-e9": {
+    "title": "Create a quiz on Java basics.",
+    "answer": "Self-quiz: main signature? 4 primitives? javac vs java? Fix `String name = Alex`. What is bytecode? == vs =?",
+    "realWorld": "Cover answers, write from memory, then check — best prep for tests and interviews."
+  },
+  "ai-e10": {
+    "title": "Review your Student Information System project and suggest improvements.",
+    "answer": "Project review: meaningful names, input validation, no magic numbers, small methods, test empty list and bad input.",
+    "realWorld": "Clean GitHub README + validation shows you think like a developer, not a copy-paster."
+  },
+  "ai-w2-e1": {
+    "title": "Explain if-else with real-life examples.",
+    "answer": "Ask AI to explain if-else with a real scenario (ticket pricing, grades). Then write your own version without looking.",
+    "realWorld": "Prompt: 'Explain if-else using movie ticket discount for seniors and students. Java only, with println.'",
+    "code": "int age = 65;\nif (age >= 60) System.out.println(\"Senior discount\");\nelse System.out.println(\"Full price\");"
+  },
+  "ai-w2-e2": {
+    "title": "Explain loops visually.",
+    "answer": "Ask AI to draw a loop as a table: iteration, i, output. Redraw the table by hand to verify.",
+    "realWorld": "Visual trace of a for-loop printing stars — catches off-by-one errors early.",
+    "code": "for (int i = 1; i <= 3; i++) System.out.println(\"*\".repeat(i));"
+  },
+  "ai-w2-e3": {
+    "title": "Dry-run a Fibonacci program.",
+    "answer": "Dry-run Fibonacci: track a, b each iteration on paper. Compare with AI's trace. Mismatch = learning moment.",
+    "realWorld": "Interviewers ask dry-runs — AI is practice partner, not answer sheet.",
+    "code": "int a=0,b=1;\nfor(int i=0;i<5;i++){ System.out.print(a+\" \"); int n=a+b; a=b; b=n; }"
+  },
+  "ai-w2-e4": {
+    "title": "Explain recursion without code (preview only).",
+    "answer": "Ask AI to explain recursion as 'function calling itself until base case' — no code yet. Draw the call stack on paper.",
+    "realWorld": "Preview before Week 8+ recursion deep-dive: factorial as 5! = 5 × 4!."
+  },
+  "ai-w2-e5": {
+    "title": "Optimize a nested loop.",
+    "answer": "Paste nested loop finding duplicates. Ask for O(n) approach. Implement both; compare on array size 1000 vs 100000.",
+    "realWorld": "Measure, don't guess — AI's Big-O advice is theory until you time it."
+  },
+  "ai-w2-e6": {
+    "title": "A program with logical bugs and identify them yourself before checking its answer.",
+    "answer": "Find bugs yourself first (15 min). Then ask AI. Compare solutions — did you miss the same bug?",
+    "realWorld": "Logic bug: loop uses <= length causing ArrayIndexOutOfBounds — classic AI and human catch."
+  },
+  "ai-w2-e7": {
+    "title": "Create five loop practice problems.",
+    "answer": "Ask AI for 5 loop problems at your level. Solve without solution first. Use AI only for hints.",
+    "realWorld": "Generating practice beats passive reading — you need reps, not paragraphs."
+  },
+  "ai-w2-e8": {
+    "title": "Generate edge cases for a calculator program.",
+    "answer": "Calculator edge cases: divide by zero, overflow, empty input, invalid operator. List them, then write tests.",
+    "realWorld": "AI lists cases; you own the test code — that's job-ready behavior."
+  },
+  "ai-w2-e9": {
+    "title": "Review your code for readability.",
+    "answer": "Paste messy loop code. Ask: 'rename variables and add one comment per block.' Apply changes line by line.",
+    "realWorld": "Readability refactors are safe first AI-assisted edits — behavior stays same."
+  },
+  "ai-w2-e10": {
+    "title": "Explain why your program is slow.",
+    "answer": "Paste slow code. Ask why it's slow (complexity, repeated work). Fix one issue and re-time.",
+    "realWorld": "Nested loop + repeated array scan — AI points to HashMap; you implement and verify."
+  },
+  "ai-w3-e1": {
+    "title": "Review your Student class.",
+    "answer": "Paste Student class. Ask: encapsulation, naming, constructor issues. Fix top 2 findings yourself.",
+    "realWorld": "Public fields → private + getters is the most common Week 3 win."
+  },
+  "ai-w3-e2": {
+    "title": "Suggest better variable names.",
+    "answer": "List all single-letter variables in your file. Ask AI for better names. Rename in IDE (refactor tool).",
+    "realWorld": "IDE rename is safer than AI find-replace — catches references."
+  },
+  "ai-w3-e3": {
+    "title": "Explain why encapsulation is useful.",
+    "answer": "Ask AI why encapsulation matters — then explain aloud without reading. Add private balance + deposit() to a class.",
+    "realWorld": "Interview classic: 'Why private fields?' — control validation in one place."
+  },
+  "ai-w3-e4": {
+    "title": "Generate a UML diagram from your classes.",
+    "answer": "List your classes and fields. Ask for PlantUML or text UML. Draw correct version by hand.",
+    "realWorld": "Wrong multiplicity on diagram → wrong DB schema later."
+  },
+  "ai-w3-e5": {
+    "title": "Identify duplicate code.",
+    "answer": "Ask AI to find duplicate code blocks. Extract one shared method. Run tests.",
+    "realWorld": "Copy-pasted validation in 3 methods → one validateAge() helper."
+  },
+  "ai-w3-e6": {
+    "title": "Suggest improvements for constructors.",
+    "answer": "Paste constructors. Ask for improvements: validation, chaining, defaults. Apply one fix.",
+    "realWorld": "Constructor setting negative age — add guard clause."
+  },
+  "ai-w3-e7": {
+    "title": "Create JavaDoc comments.",
+    "answer": "Generate JavaDoc for public methods. Edit wrong descriptions. Match team style (@param, @return).",
+    "realWorld": "JavaDoc is contract for API consumers — worth getting right on libraries."
+  },
+  "ai-w3-e8": {
+    "title": "Find design mistakes.",
+    "answer": "Ask: 'What design mistakes do you see?' — god class, tight coupling, static abuse. Pick one to fix.",
+    "realWorld": "Utility class with 20 static methods — split by domain."
+  },
+  "ai-w3-e9": {
+    "title": "Compare: two class designs.",
+    "answer": "Describe two designs; ask AI to compare. You choose with reasoning — AI doesn't know your deadlines.",
+    "realWorld": "Inheritance vs composition for Employee types — trade-off discussion for interviews."
+  },
+  "ai-w3-e10": {
+    "title": "Explain SOLID principles at a beginner level.",
+    "answer": "Ask for SOLID in simple terms with Java examples. Explain one principle without notes.",
+    "realWorld": "Single Responsibility: UserService saves users; EmailService sends mail — not one class doing both."
+  },
+  "ai-w4-e1": {
+    "title": "Explain a NullPointerException.",
+    "answer": "Trigger NPE in a small program. Paste trace. Ask AI to explain each frame. Fix with null check.",
+    "realWorld": "String s = null; s.length() — classic first NPE lesson.",
+    "code": "if (s != null) System.out.println(s.length());"
+  },
+  "ai-w4-e2": {
+    "title": "Ask AI why ArrayIndexOutOfBoundsException occurs.",
+    "answer": "Ask why ArrayIndexOutOfBounds happens. Relate to loop condition using array.length incorrectly.",
+    "realWorld": "for (i=0; i<=arr.length; i++) — should be i < arr.length."
+  },
+  "ai-w4-e3": {
+    "title": "An exception stack trace and understand every line.",
+    "answer": "Paste full stack trace. Label: crash site, root cause, your fix line.",
+    "realWorld": "Reading traces calmly is a skill — practice on homework bugs before on-call."
+  },
+  "ai-w4-e4": {
+    "title": "Refactor duplicated code.",
+    "answer": "Find duplicated if/else blocks. Ask AI to extract method. Verify output unchanged.",
+    "realWorld": "Same validation in add() and update() → validateStudent() once."
+  },
+  "ai-w4-e5": {
+    "title": "Improve inheritance design.",
+    "answer": "Describe inheritance hierarchy. Ask if design fits Liskov. Simplify if subclass breaks parent contract.",
+    "realWorld": "Square extends Rectangle with setWidth breaking area — classic design smell."
+  },
+  "ai-w4-e6": {
+    "title": "Compare: interface vs abstract class.",
+    "answer": "Ask: interface vs abstract class for your scenario. Build tiny example of each.",
+    "realWorld": "Multiple inheritance of type → interface. Shared base code → abstract class."
+  },
+  "ai-w4-e7": {
+    "title": "Generate JavaDoc comments.",
+    "answer": "Generate JavaDoc for one class. Open in IDE preview. Fix errors.",
+    "realWorld": "Good JavaDoc shows in IDE hover — teammates read it daily."
+  },
+  "ai-w4-e8": {
+    "title": "Explain SOLID principles with simple examples.",
+    "answer": "SOLID with examples: one principle per day. Single Responsibility first — split a fat class.",
+    "realWorld": "Interview: name SOLID letters and one Java example each."
+  },
+  "ai-w4-e9": {
+    "title": "Suggest cleaner package structures.",
+    "answer": "List your packages. Ask if structure is clear. Move one misplaced class.",
+    "realWorld": "model classes in controller package — move to model/ for standard layout."
+  },
+  "ai-w4-e10": {
+    "title": "Review your complete mini project.",
+    "answer": "Full project review: bugs, structure, naming. Fix highest-impact issue before marking done.",
+    "realWorld": "Portfolio project with one solid README + clean package structure impresses recruiters."
+  },
+  "ai-w5-e1": {
+    "title": "Ask AI which collection should be used for different scenarios.",
+    "answer": "Describe 3 scenarios (lookup, sort, queue). Ask which Java collection. Justify each answer.",
+    "realWorld": "LRU cache → LinkedHashMap; priority tasks → PriorityQueue."
+  },
+  "ai-w5-e2": {
+    "title": "Compare: ArrayList vs LinkedList using AI.",
+    "answer": "Compare ArrayList vs LinkedList with AI. Write micro-benchmark for get(5000) on 10k list.",
+    "realWorld": "ArrayList wins random access — measure proves textbook claim."
+  },
+  "ai-w5-e3": {
+    "title": "Compare: HashMap vs TreeMap.",
+    "answer": "HashMap vs TreeMap: when need sorted keys? Write 5-line example of each.",
+    "realWorld": "TreeMap for range queries on keys; HashMap for plain speed."
+  },
+  "ai-w5-e4": {
+    "title": "Explain HashSet internally.",
+    "answer": "Ask how HashSet avoids duplicates internally (hashCode, equals). Implement contains duplicate check both ways.",
+    "realWorld": "Understanding equals/hashCode contract prevents Set bugs with custom objects."
+  },
+  "ai-w5-e5": {
+    "title": "Review your Student Management System.",
+    "answer": "Review Student Management System for collection misuse. Fix one hot path.",
+    "realWorld": "Linear search in list on every login → Map by studentId."
+  },
+  "ai-w5-e6": {
+    "title": "Optimize nested loops using collections.",
+    "answer": "Replace nested loop duplicate-finder with HashSet. Same results, time both.",
+    "realWorld": "Classic optimization exercise — appears in interviews and real code review."
+  },
+  "ai-w5-e7": {
+    "title": "Explain Big O notation with examples.",
+    "answer": "Ask Big-O of your methods. Explain n² loop aloud in 30 seconds.",
+    "realWorld": "Interview: 'What's complexity of this nested for?' — practice here."
+  },
+  "ai-w5-e8": {
+    "title": "Generate edge test cases.",
+    "answer": "List edge tests for a method using collections. Implement 3 as JUnit or main asserts.",
+    "realWorld": "Empty list, null list, list with null element — define expected behavior."
+  },
+  "ai-w5-e9": {
+    "title": "Suggest better collection choices.",
+    "answer": "Paste code using Vector or Hashtable. Ask for modern alternative. Migrate if safe.",
+    "realWorld": "Legacy synchronized collections → ArrayList + Collections.synchronizedList or concurrent types."
+  },
+  "ai-w5-e10": {
+    "title": "Explain memory usage of different collections.",
+    "answer": "Ask memory difference: ArrayList of 1M Integers vs int[]. Discuss boxing cost.",
+    "realWorld": "Production lesson: primitives in tight memory paths matter at scale."
+  },
+  "ai-w6-e1": {
+    "title": "Convert a for loop into a Stream.",
+    "answer": "Convert for-loop filtering list to stream().filter().collect(). Same output, compare readability.",
+    "realWorld": "Team code review often debates loop vs Stream — know both.",
+    "code": "list.stream().filter(x -> x > 0).collect(Collectors.toList());"
+  },
+  "ai-w6-e2": {
+    "title": "Explain a complex Lambda Expression.",
+    "answer": "Paste complex lambda. Ask line-by-line explanation. Rewrite in plain loop.",
+    "realWorld": "If you can't read it as a loop, don't ship it."
+  },
+  "ai-w6-e3": {
+    "title": "Compare: Streams vs Loops.",
+    "answer": "Compare Streams vs loops: debugging, performance, readability. When would you choose each?",
+    "realWorld": "Breakpoints in loops are easier for juniors — valid reason to prefer loops."
+  },
+  "ai-w6-e4": {
+    "title": "Optimize collection processing.",
+    "answer": "Optimize list processing: remove repeated stream passes. Combine filter+map in one pipeline.",
+    "realWorld": "Three separate streams over same list → one pipeline, one pass."
+  },
+  "ai-w6-e5": {
+    "title": "Explain synchronization visually.",
+    "answer": "Ask visual explanation of synchronized block. Draw two threads and lock.",
+    "realWorld": "Only one thread inside synchronized method at a time — mutex concept."
+  },
+  "ai-w6-e6": {
+    "title": "Identify race conditions.",
+    "answer": "Write buggy shared counter. Ask AI why race happens. Fix with synchronization or AtomicInteger.",
+    "realWorld": "Classic interview: why counter++ is not atomic."
+  },
+  "ai-w6-e7": {
+    "title": "Improve thread performance.",
+    "answer": "ExecutorService: submit tasks, shutdown, awaitTermination. Ask for thread pool sizing basics.",
+    "realWorld": "Fixed pool of 4 for 4-core CPU — starting point, not law."
+  },
+  "ai-w6-e8": {
+    "title": "Review Stream code readability.",
+    "answer": "Review Stream code for readability. Split long pipeline or add method references.",
+    "realWorld": "Extract .filter(this::isActive) — named predicate reads better."
+  },
+  "ai-w6-e9": {
+    "title": "Explain Executor Service with a real-world analogy.",
+    "answer": "Ask ExecutorService analogy (workers, queue). Implement 3 tasks printing thread name.",
+    "realWorld": "Thread pool = limited workers pulling jobs from queue — factory floor model."
+  },
+  "ai-w6-e10": {
+    "title": "Generate test cases for multithreaded code.",
+    "answer": "Generate concurrent test scenarios. Expect flakiness — use CountDownLatch for coordination.",
+    "realWorld": "Multithreaded tests are hard — AI gives ideas; you stabilize with proper sync."
+  },
+  "ai-w7-e1": {
+    "title": "Design a Student database.",
+    "answer": "Design Student DB: tables, PKs, FKs. Ask AI, then draw your own ER diagram and compare.",
+    "realWorld": "student, course, enrollment — standard academic schema pattern."
+  },
+  "ai-w7-e2": {
+    "title": "Generate SQL tables for a Library system.",
+    "answer": "Generate Library CREATE TABLE scripts. Run in Docker Postgres. Fix type errors.",
+    "realWorld": "book_copy_status ENUM or VARCHAR — pick one, document in README."
+  },
+  "ai-w7-e3": {
+    "title": "Explain INNER JOIN with examples.",
+    "answer": "Ask INNER JOIN explanation with 3-row example. Write join query yourself, verify row count.",
+    "realWorld": "Only matching rows appear — unmatched books without loans excluded."
+  },
+  "ai-w7-e4": {
+    "title": "Optimize a slow SQL query.",
+    "answer": "Paste slow query. Run EXPLAIN. Ask AI for rewrite. Compare execution time.",
+    "realWorld": "Subquery in SELECT → JOIN often faster — measure both."
+  },
+  "ai-w7-e5": {
+    "title": "Review your JDBC code.",
+    "answer": "Paste JDBC connection + query code. Ask for try-with-resources and PreparedStatement fixes.",
+    "realWorld": "Leak from unclosed Connection — try-with-resources standard fix."
+  },
+  "ai-w7-e6": {
+    "title": "Generate JUnit test cases.",
+    "answer": "Ask JUnit ideas for a DAO. Implement 2 tests with H2 in-memory DB.",
+    "realWorld": "@DataJpaTest or plain JDBC test — isolate DB layer."
+  },
+  "ai-w7-e7": {
+    "title": "Explain SQL normalization.",
+    "answer": "Ask 1NF, 2NF, 3NF with one example each. Find one violation in a denormalized table you design.",
+    "realWorld": "Repeating course name on every enrollment row → normalize to course table."
+  },
+  "ai-w7-e8": {
+    "title": "Create an ER diagram for your project.",
+    "answer": "Describe project entities; get ER from AI. Redraw correctly for portfolio README.",
+    "realWorld": "Visual ER in README helps recruiters understand your capstone in 10 seconds."
+  },
+  "ai-w7-e9": {
+    "title": "Suggest indexes for better performance.",
+    "answer": "List your frequent WHERE/JOIN columns. Ask which indexes help. Create one, re-EXPLAIN.",
+    "realWorld": "Index on foreign keys used in JOINs — common win."
+  },
+  "ai-w7-e10": {
+    "title": "Identify SQL injection vulnerabilities and show how PreparedStatement prevents them.",
+    "answer": "Show vulnerable string concat SQL. Ask AI to fix with PreparedStatement. Explain injection in one sentence.",
+    "realWorld": "'; DROP TABLE users; -- classic — parameters prevent it.",
+    "code": "PreparedStatement ps = conn.prepareStatement(\"SELECT * FROM users WHERE id = ?\");\nps.setLong(1, userId);"
+  },
+  "ai-w8-e1": {
+    "title": "Generate API documentation.",
+    "answer": "Paste controller code. Ask for OpenAPI-style doc. Compare with springdoc output.",
+    "realWorld": "Accurate docs = fewer Slack questions from frontend."
+  },
+  "ai-w8-e2": {
+    "title": "Review your REST API design.",
+    "answer": "Describe your API. Ask REST design review: nouns, verbs, status codes. Fix one endpoint.",
+    "realWorld": "POST /createUser → POST /users — resource-oriented naming."
+  },
+  "ai-w8-e3": {
+    "title": "Suggest better endpoint names.",
+    "answer": "List endpoints. Ask for better names and URI structure. Apply one rename with deprecation plan.",
+    "realWorld": "/getAllStudents → GET /students — HTTP verb carries action."
+  },
+  "ai-w8-e4": {
+    "title": "Explain HTTP status codes.",
+    "answer": "Ask when to use 200, 201, 400, 401, 404, 500. Map each to your API scenario.",
+    "realWorld": "201 + Location header on create; 404 when student id not found."
+  },
+  "ai-w8-e5": {
+    "title": "Generate Postman test cases.",
+    "answer": "Generate Postman tests for login + protected route. Import and run.",
+    "realWorld": "Test script stores JWT from login, uses in next request header."
+  },
+  "ai-w8-e6": {
+    "title": "Generate JSON request bodies.",
+    "answer": "Ask sample JSON request bodies for your DTOs. Validate against @Valid annotations.",
+    "realWorld": "Missing required field → 400 with field errors — test that case."
+  },
+  "ai-w8-e7": {
+    "title": "Create API validation rules.",
+    "answer": "List validation rules AI suggests: email format, password length, @NotNull. Add to DTO.",
+    "realWorld": "@Email, @Size(min=8) on RegisterRequest — standard pattern."
+  },
+  "ai-w8-e8": {
+    "title": "Review REST best practices.",
+    "answer": "REST checklist: stateless, cache headers, HATEOAS optional, consistent errors. Score your API.",
+    "realWorld": "Same error JSON shape on all 400s — {code, message, field}."
+  },
+  "ai-w8-e9": {
+    "title": "Identify security issues in an API.",
+    "answer": "Paste API with hardcoded secrets or no auth. Ask security review. Fix findings.",
+    "realWorld": "API key in query string → move to Authorization header."
+  },
+  "ai-w8-e10": {
+    "title": "Explain REST architecture with real-world examples.",
+    "answer": "Ask REST architecture: client, gateway, service, DB. Draw for your project.",
+    "realWorld": "Mobile → API Gateway → Spring Boot → PostgreSQL — interview whiteboard staple."
+  },
+  "ai-w9-e1": {
+    "title": "Review your Spring Security configuration.",
+    "answer": "Paste SecurityConfig. Ask what's missing: CSRF, CORS, permitAll too broad. Fix one issue.",
+    "realWorld": "/admin/** permitAll by mistake — lock to ROLE_ADMIN."
+  },
+  "ai-w9-e2": {
+    "title": "Identify security vulnerabilities in your API.",
+    "answer": "Ask security review of your API: auth on all routes?, SQL injection?, mass assignment?",
+    "realWorld": "Binding entity directly from request → DTO + validation instead."
+  },
+  "ai-w9-e3": {
+    "title": "Explain JWT token flow step by step.",
+    "answer": "Ask JWT flow: login → token → Authorization header → filter validates → SecurityContext.",
+    "realWorld": "Once you can draw the flow, Spring Security config makes sense."
+  },
+  "ai-w9-e4": {
+    "title": "Compare: JWT vs Sessions.",
+    "answer": "Compare JWT vs server sessions: stateless vs stateful, logout, scale. Pick for your app type.",
+    "realWorld": "SPA + mobile often JWT; traditional web app may use session cookies."
+  },
+  "ai-w9-e5": {
+    "title": "Generate secure password validation rules.",
+    "answer": "Generate password rules: length, upper, digit, special. Implement in validator + test.",
+    "realWorld": "@Pattern or custom validator on RegisterRequest.password."
+  },
+  "ai-w9-e6": {
+    "title": "Review your login API.",
+    "answer": "Review login endpoint: rate limit?, generic error messages?, BCrypt?",
+    "realWorld": "'Invalid credentials' not 'User not found' — prevents user enumeration."
+  },
+  "ai-w9-e7": {
+    "title": "Explain BCrypt hashing.",
+    "answer": "BCrypt hashes passwords one-way with salt. Never store plain text. Spring: BCryptPasswordEncoder.",
+    "realWorld": "passwordEncoder.encode(raw) on register; matches() on login."
+  },
+  "ai-w9-e8": {
+    "title": "Suggest secure REST API practices.",
+    "answer": "Secure REST checklist: HTTPS, auth, validation, rate limit, CORS whitelist, no secrets in repo.",
+    "realWorld": "Score your project; fix top gap before portfolio demo."
+  },
+  "ai-w9-e9": {
+    "title": "Create authentication flow diagrams.",
+    "answer": "Ask for auth flow diagram: register, login, refresh, protected call. Draw and label components.",
+    "realWorld": "Diagram in README shows security thinking to interviewers."
+  },
+  "ai-w9-e10": {
+    "title": "Identify common authentication mistakes.",
+    "answer": "Common mistakes: JWT in localStorage XSS risk, long-lived tokens, no HTTPS, default admin password.",
+    "realWorld": "httpOnly cookie for token — discuss trade-offs with AI, decide consciously."
+  },
+  "ai-w10-e1": {
+    "title": "Generate OpenAPI/Swagger documentation for your API.",
+    "answer": "Add springdoc to Spring Boot. Generate OpenAPI. Export JSON to repo.",
+    "realWorld": "CI fails if undocumented endpoint added — optional advanced step."
+  },
+  "ai-w10-e2": {
+    "title": "Create a Postman collection with test scripts.",
+    "answer": "Build Postman collection with tests for 3 endpoints. Share export.json in repo.",
+    "realWorld": "pm.environment.set('token', json.token) — chain auth tests."
+  },
+  "ai-w10-e3": {
+    "title": "Review your REST API endpoint naming and URI design.",
+    "answer": "Review URI design: plural nouns, no verbs in path, nested resources max 2 levels.",
+    "realWorld": "/students/5/courses better than /getStudentCourses?studentId=5."
+  },
+  "ai-w10-e4": {
+    "title": "Explain when to use 400 vs 422 vs 409 status codes.",
+    "answer": "400 bad request (malformed), 422 unprocessable (valid JSON, business rule fail), 409 conflict (duplicate).",
+    "realWorld": "Duplicate email register → 409 Conflict, not 500."
+  },
+  "ai-w10-e5": {
+    "title": "Suggest pagination and filtering query parameters.",
+    "answer": "Add ?page=0&size=20&sort=name,asc. Document in OpenAPI. AI suggests defaults.",
+    "realWorld": "Pageable in Spring: PageRequest.of(page, size, Sort.by(\"name\"))."
+  },
+  "ai-w10-e6": {
+    "title": "Review your DTO and mapper pattern implementation.",
+    "answer": "Review Entity→DTO mapping. Ask if MapStruct or manual mapper is cleaner. Avoid exposing entities.",
+    "realWorld": "UserDTO without password hash — security + stable API contract."
+  },
+  "ai-w10-e7": {
+    "title": "Identify missing validation rules in your API.",
+    "answer": "Scan DTOs for missing @NotNull, @Email, @Size. Add validation messages.",
+    "realWorld": "Clear message: 'Email must be valid' helps frontend show errors."
+  },
+  "ai-w10-e8": {
+    "title": "Generate API test cases for edge cases.",
+    "answer": "Edge API tests: empty body, huge payload, wrong Content-Type, expired token.",
+    "realWorld": "413 or 400 on 10MB JSON when limit is 1MB — define and test."
+  },
+  "ai-w10-e9": {
+    "title": "Suggest rate limiting and CORS configuration.",
+    "answer": "Rate limiting (Bucket4j, gateway) and CORS allowed origins — AI suggests config snippets.",
+    "realWorld": "CORS * in prod is risky — whitelist frontend domain only."
+  },
+  "ai-w10-e10": {
+    "title": "Optimize your API response structure for production.",
+    "answer": "Trim API responses: no internal ids leak, pagination meta, HATEOAS links optional.",
+    "realWorld": "{data:[], page:0, total:100} — consistent envelope helps clients."
+  },
+  "ai-w11-e1": {
+    "title": "Generate an ER diagram for a banking system.",
+    "answer": "Generate banking ER: Customer, Account, Transaction. Draw and implement 3 Flyway scripts.",
+    "realWorld": "Portfolio piece: schema + ER image in README."
+  },
+  "ai-w11-e2": {
+    "title": "Design a normalized schema for an e-commerce platform.",
+    "answer": "E-commerce schema to 3NF. Identify duplicate product name on order lines — normalize.",
+    "realWorld": "product table + order_line references product_id."
+  },
+  "ai-w11-e3": {
+    "title": "Write a complex SQL query with CTEs and window functions.",
+    "answer": "Write CTE query: top 3 products by revenue per category. Run and verify counts.",
+    "realWorld": "Window functions — common data interview question."
+  },
+  "ai-w11-e4": {
+    "title": "Optimize a slow query using EXPLAIN plan analysis.",
+    "answer": "Slow query + EXPLAIN. Apply index or rewrite. Document before/after ms.",
+    "realWorld": "Proof in README: 'Query 2s → 40ms with index on status, created_at.'"
+  },
+  "ai-w11-e5": {
+    "title": "Recommend indexes for your most-used queries.",
+    "answer": "List top 5 queries from your app. Ask index recommendations. Add one, measure.",
+    "realWorld": "Partial index WHERE status = 'ACTIVE' — smaller, faster for hot path."
+  },
+  "ai-w11-e6": {
+    "title": "Debug an N+1 query problem in Hibernate.",
+    "answer": "Reproduce N+1: log SQL count in test. Fix with @EntityGraph or JOIN FETCH.",
+    "realWorld": "1 + N queries → 1 query — dramatic improvement on list endpoints."
+  },
+  "ai-w11-e7": {
+    "title": "Generate MongoDB aggregation pipeline queries.",
+    "answer": "MongoDB aggregation for monthly sales. Import sample docs, run pipeline.",
+    "realWorld": "$match date range → $group by month → $sort."
+  },
+  "ai-w11-e8": {
+    "title": "Create Flyway migration scripts for your schema.",
+    "answer": "Flyway V1 baseline + V2 add column migration. Run on clean DB.",
+    "realWorld": "mvn flyway:migrate — same flow as team CI."
+  },
+  "ai-w11-e9": {
+    "title": "Explain lazy vs eager loading trade-offs for your entities.",
+    "answer": "Lazy vs eager on @ManyToOne: default lazy, eager only when always needed. Explain trade-off for your entity.",
+    "realWorld": "Eager Order→Customer loads customers always — often N+1 or over-fetch."
+  },
+  "ai-w11-e10": {
+    "title": "Review your database schema for normalization issues.",
+    "answer": "Review schema for denormalization without reason, missing FKs, nullable everything.",
+    "realWorld": "NOT NULL on required fields — data quality at DB layer."
+  },
+  "ai-w12-e1": {
+    "title": "Build an embedding service with Spring AI and store vectors in pgvector",
+    "answer": "Build embedding service: Spring AI EmbeddingModel → save vectors in pgvector. Ingest 10 text chunks.",
+    "realWorld": "Verify with SELECT count(*) FROM vector_store; similarity query returns relevant chunk."
+  },
+  "ai-w12-e2": {
+    "title": "Implement a basic RAG chatbot over your project documentation",
+    "answer": "RAG chatbot: user question → retrieve top-k chunks → prompt with context → answer. Cite source doc name.",
+    "realWorld": "Ask 'How do I run tests?' — answer must quote your README, not hallucinate."
+  },
+  "ai-w12-e3": {
+    "title": "Add function calling so the LLM can query a Spring Data repository",
+    "answer": "Function calling: LLM invokes method to fetch live data from Spring Data repo (e.g. order by id).",
+    "realWorld": "Question 'status of order 42' → tool call → DB → natural language reply."
+  },
+  "ai-w12-e4": {
+    "title": "Stream chat responses to the browser using SSE in Spring Boot",
+    "answer": "Stream ChatClient response via SSE endpoint. Browser shows tokens as they arrive.",
+    "realWorld": "WebFlux Flux<String> or SseEmitter — pick what matches your stack."
+  },
+  "ai-w12-e5": {
+    "title": "Load PDF documents with LangChain4j and answer questions about them",
+    "answer": "LangChain4j: load PDF from resources, split, embed, answer questions about content.",
+    "realWorld": "Compare DX with Spring AI on same PDF — note preferences."
+  },
+  "ai-w12-e6": {
+    "title": "Integrate an MCP tool that exposes your REST API to an AI agent",
+    "answer": "MCP or tool wrapper exposing one read-only REST endpoint to an agent. Document setup.",
+    "realWorld": "Even a minimal tool teaches protocol thinking for future IDE integrations."
+  },
+  "ai-w12-e7": {
+    "title": "Implement token-budget middleware to cap per-request LLM cost",
+    "answer": "Middleware rejects requests exceeding token budget (estimate prompt length). Return 429 with clear message.",
+    "realWorld": "Prevent runaway costs from huge pasted logs."
+  },
+  "ai-w12-e8": {
+    "title": "Unit-test an AI wrapper service with Mockito and WireMock",
+    "answer": "Unit test AiService with @MockBean ChatModel. Assert prompt includes retrieved context string.",
+    "realWorld": "No network in CI — fast, deterministic tests."
+  },
+  "ai-w12-e9": {
+    "title": "Create a golden-dataset eval for prompt consistency",
+    "answer": "Golden dataset: 10 question/expected_source pairs. Script scores retrieval hit rate.",
+    "realWorld": "Regression when you change chunk size — eval catches quality drop."
+  },
+  "ai-w12-e10": {
+    "title": "Dockerize an AI microservice with health checks and secrets",
+    "answer": "Dockerfile: JRE, non-root user, health check /actuator/health, secrets from env. Push to registry.",
+    "realWorld": "Same container discipline as non-AI microservices."
+  },
+  "ai-w12-e11": {
+    "title": "Add OpenTelemetry spans around LLM and embedding calls",
+    "answer": "OpenTelemetry span around chat() and embed() with attributes for model and duration.",
+    "realWorld": "Jaeger trace shows LLM call as 80% latency — focus optimization there."
+  },
+  "ai-w12-e12": {
+    "title": "Build a simple cost dashboard from logged token usage",
+    "answer": "Log tokens per request to DB or metrics. Simple dashboard: daily cost estimate.",
+    "realWorld": "product_owner sees $/day — informs model downgrade decisions."
+  },
+  "ai-w12-e13": {
+    "title": "Implement hybrid search combining keyword and vector retrieval",
+    "answer": "Hybrid search: BM25 keyword + vector merge scores. Improves exact SKU/code lookup.",
+    "realWorld": "Query 'ERR-4521' needs keyword; 'refund process' needs semantic."
+  },
+  "ai-w12-e14": {
+    "title": "Build a multi-tool agent that plans and executes Java service calls",
+    "answer": "Multi-tool agent: plan → call weather API tool → call calendar tool → summarize. Cap steps.",
+    "realWorld": "maxIterations=5 prevents infinite agent loops and cost blowup."
+  },
+  "ai-w12-e15": {
+    "title": "Capstone: deploy a production-ready RAG API with tests and CI",
+    "answer": "Capstone: RAG API with tests, eval, Docker, CI, README architecture diagram. Deploy optional.",
+    "realWorld": "This project is your Gen AI interview centerpiece — polish README and demo video."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "ai-w4-t1": {
+    "answer": "AI-assisted debugging: you reproduce the bug, paste evidence, AI suggests causes. You verify — never merge blind.",
+    "realWorld": "Stack trace + 10 lines of code → hypothesis list → test each."
+  },
+  "ai-w4-t2": {
+    "answer": "Stack trace reads bottom-up. Top = where it crashed. **Caused by** = root. Your code appears with file:line.",
+    "realWorld": "Exception at Service.java:45, caused by NullPointer at User.java:12 — fix line 12 first."
+  },
+  "ai-w4-t3": {
+    "answer": "Ask AI to explain exceptions in plain English: NPE, ArrayIndexOutOfBounds, NumberFormat. Map to your line of code.",
+    "realWorld": "'NPE at getName()' → object was null before method call."
+  },
+  "ai-w4-t4": {
+    "answer": "Refactor prompts: 'Extract duplicate logic, keep behavior.' Small steps + run after each.",
+    "realWorld": "Duplicate if-blocks in switch cases → shared helper method."
+  },
+  "ai-w4-t5": {
+    "answer": "AI generates JavaDoc from signatures. Review @param names and descriptions — often wrong on complex types.",
+    "realWorld": "Multi-line JavaDoc on public API — first draft from AI, accuracy from you."
+  },
+  "ai-w4-t6": {
+    "answer": "Code review via AI: ask for bugs, not style only. Cross-check with your own read — AI misses logic errors.",
+    "realWorld": "AI misses off-by-one; you catch it in manual review — both layers matter."
+  },
+  "ai-w4-t7": {
+    "answer": "Ask for unit test **ideas**, not full suites. You implement — tests teach the code.",
+    "realWorld": "Method parseDate — AI lists null, empty, invalid format, leap year."
+  },
+  "ai-w4-t8": {
+    "answer": "AI can't run your code or see production data. Heisenbugs and race conditions need logs and debugger, not chat alone.",
+    "realWorld": "Intermittent failure — AI guesses; you add logging and reproduce."
+  }
+}

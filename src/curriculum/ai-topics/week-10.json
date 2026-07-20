@@ -1,0 +1,42 @@
+{
+  "ai-w10-t1": {
+    "answer": "Production AI integration: wrapper service, timeouts, retries, circuit breaker, structured logging. Same patterns as payment or email APIs.",
+    "realWorld": "AiClient interface + OpenAiImpl — swap provider without changing controllers."
+  },
+  "ai-w10-t2": {
+    "answer": "springdoc-openapi generates Swagger from annotations. AI polishes @Operation descriptions — verify against real behavior.",
+    "realWorld": "Swagger UI at /swagger-ui.html — share with QA and frontend."
+  },
+  "ai-w10-t3": {
+    "answer": "AI drafts Postman collection from OpenAPI. Import, add environment vars, write test scripts.",
+    "realWorld": "Collection in repo — new teammate imports and hits all endpoints in 5 minutes."
+  },
+  "ai-w10-t4": {
+    "answer": "API docs need: auth instructions, error format, pagination, rate limits, examples. AI outlines; you fill truth.",
+    "realWorld": "README link to Swagger + sample curl for copy-paste."
+  },
+  "ai-w10-t5": {
+    "answer": "Test APIs: happy path, validation errors, auth failure, edge payloads. AI lists cases; Newman runs in CI.",
+    "realWorld": "Contract tests catch breaking JSON field renames before mobile release."
+  },
+  "ai-w10-t6": {
+    "answer": "AI reviews API for consistency: naming, status codes, error shape, versioning.",
+    "realWorld": "v1 and v2 different error JSON — AI flags; you standardize."
+  },
+  "ai-w10-t7": {
+    "answer": "Prompt APIs expose templated AI calls to clients — hide raw provider keys server-side.",
+    "realWorld": "POST /api/summarize {text} — server calls OpenAI, returns summary."
+  },
+  "ai-w10-t8": {
+    "answer": "Validate AI responses: JSON schema, max length, required fields before returning to client.",
+    "realWorld": "Jackson + @Valid on response DTO; reject malformed model output."
+  },
+  "ai-w10-t9": {
+    "answer": "Log AI errors with correlation id, status, latency — not full prompts with PII. Alert on error rate spike.",
+    "realWorld": "OpenAI 503 → retry; sustained failures → circuit open, graceful degradation."
+  },
+  "ai-w10-t10": {
+    "answer": "Optimize: cache identical prompts, smaller model for simple tasks, stream responses, batch where allowed.",
+    "realWorld": "FAQ answers cached 1 hour — same question, zero token cost."
+  }
+}

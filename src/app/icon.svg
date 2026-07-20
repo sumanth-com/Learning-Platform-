@@ -1,0 +1,21 @@
+<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sl-ring" x1="6" y1="38" x2="38" y2="6" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1"/>
+      <stop offset="0.5" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="sl-core" x1="12" y1="32" x2="32" y2="12" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#312e81"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="42" height="42" rx="13" stroke="url(#sl-ring)" stroke-width="1.5" fill="#09090b"/>
+  <rect x="4" y="4" width="36" height="36" rx="10" fill="url(#sl-core)"/>
+  <path d="M12 28.5C15 26.5 18 26.5 22 28.5C26 26.5 29 26.5 32 28.5V31C29 29 26 29 22 31C18 29 15 29 12 31V28.5Z" fill="white" fill-opacity="0.9"/>
+  <path d="M22 28.5V31" stroke="#6366f1" stroke-width="1.25" stroke-linecap="round"/>
+  <path d="M14 26L22 14L30 26" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="22" cy="12.5" r="2.5" fill="#22d3ee"/>
+  <circle cx="22" cy="12.5" r="5" stroke="#22d3ee" stroke-width="1" opacity="0.35"/>
+  <path d="M22 8.5V10M19.5 9.25L20.5 10.75M24.5 9.25L23.5 10.75" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.85"/>
+</svg>

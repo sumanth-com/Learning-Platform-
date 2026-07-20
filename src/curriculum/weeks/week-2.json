@@ -1,0 +1,1356 @@
+{
+  "id": 2,
+  "slug": "week-2",
+  "title": "Control Statements, Loops, Methods & Problem Solving",
+  "goal": "Make decisions using conditions, solve problems with loops, break programs into reusable methods, write clean modular code, and use AI to debug and optimize code rather than generate complete solutions.",
+  "description": "Week 2 builds logic-building skills through conditional statements, loops, methods, pattern problems, debugging, and AI-assisted learning.",
+  "estimatedHours": 18,
+  "difficulty": "easy",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Conditional Statements",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-conditions",
+          "title": "Conditional Statements",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d1-intro-decision",
+              "title": "Introduction to Decision Making"
+            },
+            {
+              "id": "d1-if",
+              "title": "if Statement"
+            },
+            {
+              "id": "d1-if-else",
+              "title": "if-else Statement"
+            },
+            {
+              "id": "d1-nested-if",
+              "title": "Nested if"
+            },
+            {
+              "id": "d1-else-if",
+              "title": "else-if Ladder"
+            },
+            {
+              "id": "d1-switch",
+              "title": "switch Statement"
+            },
+            {
+              "id": "d1-switch-expr",
+              "title": "Modern Switch Expressions (Java 17+)"
+            },
+            {
+              "id": "d1-ternary",
+              "title": "Ternary Operator"
+            },
+            {
+              "id": "d1-best-practices",
+              "title": "Best Practices for Conditions"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Loops",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-loops",
+          "title": "Loops",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d2-why-loops",
+              "title": "Why Loops?"
+            },
+            {
+              "id": "d2-for",
+              "title": "for Loop"
+            },
+            {
+              "id": "d2-while",
+              "title": "while Loop"
+            },
+            {
+              "id": "d2-do-while",
+              "title": "do-while Loop"
+            },
+            {
+              "id": "d2-infinite",
+              "title": "Infinite Loops"
+            },
+            {
+              "id": "d2-nested",
+              "title": "Nested Loops"
+            },
+            {
+              "id": "d2-control-vars",
+              "title": "Loop Control Variables"
+            },
+            {
+              "id": "d2-optimization",
+              "title": "Loop Optimization"
+            },
+            {
+              "id": "d2-dry-run",
+              "title": "Dry Run Techniques"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Loop Control Statements",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-loop-control",
+          "title": "Loop Control Statements",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-break",
+              "title": "break"
+            },
+            {
+              "id": "d3-continue",
+              "title": "continue"
+            },
+            {
+              "id": "d3-return",
+              "title": "return"
+            },
+            {
+              "id": "d3-labels",
+              "title": "Labels"
+            },
+            {
+              "id": "d3-nested-control",
+              "title": "Nested Loop Control"
+            },
+            {
+              "id": "d3-mistakes",
+              "title": "Common Mistakes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Methods",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-methods",
+          "title": "Methods",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d4-what-methods",
+              "title": "What are Methods?"
+            },
+            {
+              "id": "d4-why-methods",
+              "title": "Why Methods?"
+            },
+            {
+              "id": "d4-syntax",
+              "title": "Method Syntax"
+            },
+            {
+              "id": "d4-calling",
+              "title": "Calling Methods"
+            },
+            {
+              "id": "d4-parameters",
+              "title": "Parameters"
+            },
+            {
+              "id": "d4-arguments",
+              "title": "Arguments"
+            },
+            {
+              "id": "d4-return-type",
+              "title": "Return Type"
+            },
+            {
+              "id": "d4-void",
+              "title": "void Methods"
+            },
+            {
+              "id": "d4-static",
+              "title": "Static Methods"
+            },
+            {
+              "id": "d4-overloading",
+              "title": "Method Overloading (Introduction)"
+            },
+            {
+              "id": "d4-pass-by-value",
+              "title": "Pass by Value"
+            },
+            {
+              "id": "d4-local-vars",
+              "title": "Local Variables"
+            },
+            {
+              "id": "d4-scope",
+              "title": "Scope of Variables"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Pattern Logic",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-patterns",
+          "title": "Pattern Logic",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d5-understanding",
+              "title": "Understanding Pattern Problems"
+            },
+            {
+              "id": "d5-row-col",
+              "title": "Row & Column Logic"
+            },
+            {
+              "id": "d5-space",
+              "title": "Space Logic"
+            },
+            {
+              "id": "d5-star",
+              "title": "Star Patterns"
+            },
+            {
+              "id": "d5-number",
+              "title": "Number Patterns"
+            },
+            {
+              "id": "d5-character",
+              "title": "Character Patterns"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Debugging & Code Quality",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-debugging",
+          "title": "Debugging & Code Quality",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-dry-run",
+              "title": "Dry Running Code"
+            },
+            {
+              "id": "d6-infinite-loops",
+              "title": "Finding Infinite Loops"
+            },
+            {
+              "id": "d6-beginner-mistakes",
+              "title": "Common Beginner Mistakes"
+            },
+            {
+              "id": "d6-refactoring",
+              "title": "Code Refactoring"
+            },
+            {
+              "id": "d6-breaking-methods",
+              "title": "Breaking Large Programs into Methods"
+            },
+            {
+              "id": "d6-naming",
+              "title": "Naming Methods Properly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Weekly Revision",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Weekly Revision",
+          "estimatedMinutes": 180,
+          "difficulty": "easy",
+          "items": [
+            {
+              "id": "d7-revision",
+              "title": "Revision"
+            },
+            {
+              "id": "d7-practice",
+              "title": "Practice"
+            },
+            {
+              "id": "d7-debugging",
+              "title": "Debugging Session"
+            },
+            {
+              "id": "d7-mock-test",
+              "title": "Mock Test"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-conditional-statements",
+      "title": "Conditional Statements",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-w2-d1-1",
+          "title": "Introduction to Decision Making",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d1-2",
+          "title": "if Statement",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d1-3",
+          "title": "if-else Statement",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d1-4",
+          "title": "Nested if",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d1-5",
+          "title": "else-if Ladder",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d1-6",
+          "title": "switch Statement",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d1-7",
+          "title": "Modern Switch Expressions (Java 17+)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d1-8",
+          "title": "Ternary Operator",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d1-9",
+          "title": "Best Practices for Conditions",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-loops",
+      "title": "Loops",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-w2-d2-1",
+          "title": "Why Loops?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d2-2",
+          "title": "for Loop",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d2-3",
+          "title": "while Loop",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d2-4",
+          "title": "do-while Loop",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d2-5",
+          "title": "Infinite Loops",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d2-6",
+          "title": "Nested Loops",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d2-7",
+          "title": "Loop Control Variables",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d2-8",
+          "title": "Loop Optimization",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d2-9",
+          "title": "Dry Run Techniques",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-loop-control",
+      "title": "Loop Control Statements",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w2-d3-1",
+          "title": "break",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d3-2",
+          "title": "continue",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d3-3",
+          "title": "return",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d3-4",
+          "title": "Labels",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w2-d3-5",
+          "title": "Nested Loop Control",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w2-d3-6",
+          "title": "Common Mistakes",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-methods",
+      "title": "Methods",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w2-d4-1",
+          "title": "What are Methods?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-2",
+          "title": "Why Methods?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-3",
+          "title": "Method Syntax",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-4",
+          "title": "Calling Methods",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-5",
+          "title": "Parameters",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-6",
+          "title": "Arguments",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-7",
+          "title": "Return Type",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d4-8",
+          "title": "void Methods",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-9",
+          "title": "Static Methods",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d4-10",
+          "title": "Method Overloading (Introduction)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d4-11",
+          "title": "Pass by Value",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d4-12",
+          "title": "Local Variables",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d4-13",
+          "title": "Scope of Variables",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-pattern-logic",
+      "title": "Pattern Logic",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w2-d5-1",
+          "title": "Understanding Pattern Problems",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d5-2",
+          "title": "Row & Column Logic",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d5-3",
+          "title": "Space Logic",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d5-4",
+          "title": "Star Patterns",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d5-5",
+          "title": "Number Patterns",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d5-6",
+          "title": "Character Patterns",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-debugging-quality",
+      "title": "Debugging & Code Quality",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w2-d6-1",
+          "title": "Dry Running Code",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d6-2",
+          "title": "Finding Infinite Loops",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d6-3",
+          "title": "Common Beginner Mistakes",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d6-4",
+          "title": "Code Refactoring",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d6-5",
+          "title": "Breaking Large Programs into Methods",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d6-6",
+          "title": "Naming Methods Properly",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-weekly-revision",
+      "title": "Weekly Revision",
+      "estimatedMinutes": 180,
+      "difficulty": "easy",
+      "items": [
+        {
+          "id": "t-w2-d7-1",
+          "title": "Revision",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d7-2",
+          "title": "Practice",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w2-d7-3",
+          "title": "Debugging Session",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w2-d7-4",
+          "title": "Mock Test",
+          "difficulty": "medium"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-if-else",
+      "category": "if / else",
+      "questions": [
+        {
+          "id": "pq-w2-1",
+          "title": "Check Positive or Negative",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-2",
+          "title": "Check Even or Odd",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-3",
+          "title": "Find Greatest of Two Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-4",
+          "title": "Find Greatest of Three Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-5",
+          "title": "Find Smallest of Three Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-6",
+          "title": "Check Leap Year",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-7",
+          "title": "Check Voting Eligibility",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-8",
+          "title": "Check Pass or Fail",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-9",
+          "title": "Find Grade using Marks",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-10",
+          "title": "Check Alphabet or Digit",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-switch",
+      "category": "switch",
+      "questions": [
+        {
+          "id": "pq-w2-11",
+          "title": "Simple Calculator using Switch",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-12",
+          "title": "Print Day of Week",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-13",
+          "title": "Print Month Name",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-14",
+          "title": "Menu Driven Calculator",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-15",
+          "title": "Convert Number to Day",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-loops",
+      "category": "Loops",
+      "questions": [
+        {
+          "id": "pq-w2-16",
+          "title": "Print 1 to 10",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-17",
+          "title": "Print 10 to 1",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-18",
+          "title": "Print Even Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-19",
+          "title": "Print Odd Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-20",
+          "title": "Sum of First N Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-21",
+          "title": "Sum of Even Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-22",
+          "title": "Multiplication Table",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-23",
+          "title": "Reverse Table",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-24",
+          "title": "Factorial",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-25",
+          "title": "Fibonacci Series",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-26",
+          "title": "Reverse Number",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-27",
+          "title": "Palindrome Number",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-28",
+          "title": "Armstrong Number",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w2-29",
+          "title": "Count Digits",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-30",
+          "title": "Sum of Digits",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-methods",
+      "category": "Methods",
+      "questions": [
+        {
+          "id": "pq-w2-31",
+          "title": "Method to Add Two Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-32",
+          "title": "Method to Find Maximum",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-33",
+          "title": "Method to Find Minimum",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-34",
+          "title": "Method to Check Prime",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-35",
+          "title": "Method to Calculate Factorial",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-36",
+          "title": "Method to Reverse Number",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-37",
+          "title": "Method to Calculate Power",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-38",
+          "title": "Method to Find Average",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-39",
+          "title": "Method with Return Type",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-40",
+          "title": "Method without Return Type",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-patterns",
+      "category": "Pattern Programs (Practice)",
+      "questions": [
+        {
+          "id": "pq-w2-p1",
+          "title": "Square Star Pattern",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-p2",
+          "title": "Rectangle Pattern",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w2-p3",
+          "title": "Right Triangle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-p4",
+          "title": "Inverted Triangle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-p5",
+          "title": "Pyramid",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-p6",
+          "title": "Reverse Pyramid",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-p7",
+          "title": "Diamond (Introduction)",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w2-p8",
+          "title": "Floyd's Triangle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-p9",
+          "title": "Number Triangle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w2-p10",
+          "title": "Character Triangle",
+          "difficulty": "medium"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "bank-atm-simulation",
+      "title": "Bank ATM Simulation",
+      "description": "Menu-driven ATM simulation using switch, methods, and loops.",
+      "features": [
+        {
+          "id": "p1-deposit",
+          "title": "Deposit"
+        },
+        {
+          "id": "p1-withdraw",
+          "title": "Withdraw"
+        },
+        {
+          "id": "p1-balance",
+          "title": "Balance Enquiry"
+        },
+        {
+          "id": "p1-exit",
+          "title": "Exit"
+        }
+      ],
+      "requirements": [
+        "Use switch for menu",
+        "Use methods for each operation",
+        "Use loops for continuous operation"
+      ],
+      "bonusFeatures": [
+        "Transaction history",
+        "PIN validation"
+      ]
+    },
+    {
+      "id": "student-result-system",
+      "title": "Student Result System",
+      "description": "Calculate student results with grades and pass/fail status.",
+      "features": [
+        {
+          "id": "p2-marks",
+          "title": "Enter Marks"
+        },
+        {
+          "id": "p2-total",
+          "title": "Calculate Total"
+        },
+        {
+          "id": "p2-percentage",
+          "title": "Percentage"
+        },
+        {
+          "id": "p2-grade",
+          "title": "Grade"
+        },
+        {
+          "id": "p2-pass-fail",
+          "title": "Pass/Fail"
+        }
+      ],
+      "requirements": [
+        "Use if-else for grading",
+        "Use methods for calculations"
+      ],
+      "bonusFeatures": [
+        "Multiple students",
+        "Subject-wise breakdown"
+      ]
+    },
+    {
+      "id": "number-utility-app",
+      "title": "Number Utility Application",
+      "description": "Utility app for common number operations.",
+      "features": [
+        {
+          "id": "p3-reverse",
+          "title": "Reverse Number"
+        },
+        {
+          "id": "p3-palindrome",
+          "title": "Palindrome"
+        },
+        {
+          "id": "p3-armstrong",
+          "title": "Armstrong"
+        },
+        {
+          "id": "p3-prime",
+          "title": "Prime"
+        },
+        {
+          "id": "p3-factorial",
+          "title": "Factorial"
+        }
+      ],
+      "requirements": [
+        "Use methods for each utility",
+        "Use loops where needed"
+      ],
+      "bonusFeatures": [
+        "Menu-driven interface"
+      ]
+    },
+    {
+      "id": "restaurant-billing",
+      "title": "Restaurant Billing System",
+      "description": "Restaurant order and billing system with discount and GST.",
+      "features": [
+        {
+          "id": "p4-menu",
+          "title": "Menu"
+        },
+        {
+          "id": "p4-quantity",
+          "title": "Quantity"
+        },
+        {
+          "id": "p4-bill",
+          "title": "Bill"
+        },
+        {
+          "id": "p4-discount",
+          "title": "Discount"
+        },
+        {
+          "id": "p4-gst",
+          "title": "GST"
+        }
+      ],
+      "requirements": [
+        "Use switch for menu selection",
+        "Use loops for multiple items",
+        "Use methods for bill calculation"
+      ],
+      "bonusFeatures": [
+        "Print formatted receipt"
+      ]
+    },
+    {
+      "id": "pattern-generator",
+      "title": "Pattern Generator",
+      "description": "Menu-driven pattern generator for star and number patterns.",
+      "features": [
+        {
+          "id": "p5-menu",
+          "title": "Menu Driven"
+        },
+        {
+          "id": "p5-star-patterns",
+          "title": "Different Star Patterns"
+        },
+        {
+          "id": "p5-number-patterns",
+          "title": "Number Patterns"
+        }
+      ],
+      "requirements": [
+        "Menu-driven pattern selection",
+        "Implement at least 3 patterns"
+      ],
+      "bonusFeatures": [
+        "Character patterns",
+        "Custom size input"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-2",
+    "title": "AI for Learning and Debugging",
+    "description": "Learn prompt engineering for debugging, optimizing, and understanding code — not for generating complete solutions.",
+    "learningTopics": [
+      {
+        "id": "ai-w2-t1",
+        "title": "What is Prompt Engineering?"
+      },
+      {
+        "id": "ai-w2-t2",
+        "title": "Anatomy of a Good Prompt"
+      },
+      {
+        "id": "ai-w2-t3",
+        "title": "Context"
+      },
+      {
+        "id": "ai-w2-t4",
+        "title": "Constraints"
+      },
+      {
+        "id": "ai-w2-t5",
+        "title": "Examples"
+      },
+      {
+        "id": "ai-w2-t6",
+        "title": "Iterative Prompting"
+      },
+      {
+        "id": "ai-w2-t7",
+        "title": "Asking AI to Explain Code"
+      },
+      {
+        "id": "ai-w2-t8",
+        "title": "Asking AI to Debug Code"
+      },
+      {
+        "id": "ai-w2-t9",
+        "title": "Asking AI to Optimize Code"
+      },
+      {
+        "id": "ai-w2-t10",
+        "title": "Asking AI to Generate Test Cases"
+      },
+      {
+        "id": "ai-w2-t11",
+        "title": "AI Limitations"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w2-e1",
+        "title": "Explain if-else with real-life examples."
+      },
+      {
+        "id": "ai-w2-e2",
+        "title": "Explain loops visually."
+      },
+      {
+        "id": "ai-w2-e3",
+        "title": "Dry-run a Fibonacci program."
+      },
+      {
+        "id": "ai-w2-e4",
+        "title": "Explain recursion without code (preview only)."
+      },
+      {
+        "id": "ai-w2-e5",
+        "title": "Optimize a nested loop."
+      },
+      {
+        "id": "ai-w2-e6",
+        "title": "A program with logical bugs and identify them yourself before checking its answer."
+      },
+      {
+        "id": "ai-w2-e7",
+        "title": "Create five loop practice problems."
+      },
+      {
+        "id": "ai-w2-e8",
+        "title": "Generate edge cases for a calculator program."
+      },
+      {
+        "id": "ai-w2-e9",
+        "title": "Review your code for readability."
+      },
+      {
+        "id": "ai-w2-e10",
+        "title": "Explain why your program is slow."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-2",
+    "repository": "java-week-2",
+    "description": "Create repository java-week-2 and upload all Week 2 programs.",
+    "files": [
+      {
+        "id": "gh-w2-f1",
+        "path": "IfElsePrograms.java"
+      },
+      {
+        "id": "gh-w2-f2",
+        "path": "SwitchPrograms.java"
+      },
+      {
+        "id": "gh-w2-f3",
+        "path": "LoopPrograms.java"
+      },
+      {
+        "id": "gh-w2-f4",
+        "path": "PatternPrograms.java"
+      },
+      {
+        "id": "gh-w2-f5",
+        "path": "MethodsDemo.java"
+      },
+      {
+        "id": "gh-w2-f6",
+        "path": "ATMSystem.java"
+      },
+      {
+        "id": "gh-w2-f7",
+        "path": "StudentResult.java"
+      },
+      {
+        "id": "gh-w2-f8",
+        "path": "NumberUtility.java"
+      },
+      {
+        "id": "gh-w2-f9",
+        "path": "RestaurantBilling.java"
+      },
+      {
+        "id": "gh-w2-f10",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w2-java",
+      "category": "Java",
+      "questions": [
+        {
+          "id": "iq-w2-1",
+          "question": "Difference between if-else and switch?",
+          "answer": "if-else handles complex conditions and ranges; switch is cleaner for fixed discrete values."
+        },
+        {
+          "id": "iq-w2-2",
+          "question": "Difference between for, while, and do-while?",
+          "answer": "for is count-controlled; while checks before loop; do-while executes at least once."
+        },
+        {
+          "id": "iq-w2-3",
+          "question": "What is method overloading?",
+          "answer": "Same method name with different parameter lists in the same class."
+        }
+      ]
+    },
+    {
+      "id": "iq-w2-oop",
+      "category": "OOP",
+      "questions": [
+        {
+          "id": "iq-w2-4",
+          "question": "What is pass by value in Java?",
+          "answer": "Java passes copies of values for primitives; object references are passed by value too."
+        }
+      ]
+    },
+    {
+      "id": "iq-w2-ai",
+      "category": "AI",
+      "questions": [
+        {
+          "id": "iq-w2-5",
+          "question": "How should you use AI while learning to code?",
+          "answer": "Use it to explain, debug, and optimize — try solving problems yourself first."
+        },
+        {
+          "id": "iq-w2-6",
+          "question": "What makes a good prompt?",
+          "answer": "Clear context, specific constraints, examples, and iterative refinement."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w2-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions (+ 10 pattern programs as bonus practice)",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w2-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 mini projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w2-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to java-week-2 repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w2-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 21
+      }
+    },
+    {
+      "id": "del-w2-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 2 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 25
+      }
+    }
+  ]
+}

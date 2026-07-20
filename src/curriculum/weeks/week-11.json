@@ -1,0 +1,1296 @@
+{
+  "id": 11,
+  "slug": "week-11",
+  "title": "Advanced Database Engineering",
+  "goal": "Become comfortable designing, optimizing, and integrating production databases with Spring Boot — covering ER modeling, advanced SQL, Hibernate, Spring Data JPA, MongoDB, and database best practices.",
+  "description": "Week 11 goes deep on database engineering. Basic MySQL and JDBC were covered in Week 7 — this week focuses on advanced SQL, performance, Hibernate/JPA mastery, MongoDB, and production database practices.",
+  "estimatedHours": 28,
+  "difficulty": "hard",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Database Design",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-db-design",
+          "title": "Database Design",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-er-diagram",
+              "title": "ER Diagram"
+            },
+            {
+              "id": "d1-data-modeling",
+              "title": "Data Modeling"
+            },
+            {
+              "id": "d1-primary-key",
+              "title": "Primary Key"
+            },
+            {
+              "id": "d1-foreign-key",
+              "title": "Foreign Key"
+            },
+            {
+              "id": "d1-candidate-key",
+              "title": "Candidate Key"
+            },
+            {
+              "id": "d1-composite-key",
+              "title": "Composite Key"
+            },
+            {
+              "id": "d1-surrogate-key",
+              "title": "Surrogate Key"
+            },
+            {
+              "id": "d1-cardinality",
+              "title": "Cardinality"
+            },
+            {
+              "id": "d1-normalization",
+              "title": "Normalization"
+            },
+            {
+              "id": "d1-denormalization",
+              "title": "Denormalization"
+            },
+            {
+              "id": "d1-naming-standards",
+              "title": "Database Naming Standards"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Advanced SQL",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-advanced-sql",
+          "title": "Advanced SQL",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d2-joins-revision",
+              "title": "Joins Revision"
+            },
+            {
+              "id": "d2-subqueries",
+              "title": "Subqueries"
+            },
+            {
+              "id": "d2-cte",
+              "title": "Common Table Expressions (CTE)"
+            },
+            {
+              "id": "d2-window-functions",
+              "title": "Window Functions"
+            },
+            {
+              "id": "d2-ranking",
+              "title": "Ranking Functions"
+            },
+            {
+              "id": "d2-views",
+              "title": "Views"
+            },
+            {
+              "id": "d2-materialized-views",
+              "title": "Materialized Views"
+            },
+            {
+              "id": "d2-stored-procedures",
+              "title": "Stored Procedures"
+            },
+            {
+              "id": "d2-functions",
+              "title": "Functions"
+            },
+            {
+              "id": "d2-triggers",
+              "title": "Triggers"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Performance",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-performance",
+          "title": "Performance",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d3-indexes",
+              "title": "Indexes"
+            },
+            {
+              "id": "d3-composite-indexes",
+              "title": "Composite Indexes"
+            },
+            {
+              "id": "d3-explain-plan",
+              "title": "Explain Plan"
+            },
+            {
+              "id": "d3-query-optimization",
+              "title": "Query Optimization"
+            },
+            {
+              "id": "d3-batch-insert",
+              "title": "Batch Insert"
+            },
+            {
+              "id": "d3-batch-update",
+              "title": "Batch Update"
+            },
+            {
+              "id": "d3-batch-delete",
+              "title": "Batch Delete"
+            },
+            {
+              "id": "d3-transactions",
+              "title": "Transactions"
+            },
+            {
+              "id": "d3-locks",
+              "title": "Locks"
+            },
+            {
+              "id": "d3-deadlocks",
+              "title": "Deadlocks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Hibernate",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-hibernate",
+          "title": "Hibernate",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d4-entity-lifecycle",
+              "title": "Entity Lifecycle"
+            },
+            {
+              "id": "d4-persistence-context",
+              "title": "Persistence Context"
+            },
+            {
+              "id": "d4-dirty-checking",
+              "title": "Dirty Checking"
+            },
+            {
+              "id": "d4-lazy-loading",
+              "title": "Lazy Loading"
+            },
+            {
+              "id": "d4-eager-loading",
+              "title": "Eager Loading"
+            },
+            {
+              "id": "d4-cascade",
+              "title": "Cascade"
+            },
+            {
+              "id": "d4-fetch-join",
+              "title": "Fetch Join"
+            },
+            {
+              "id": "d4-entity-graph",
+              "title": "Entity Graph"
+            },
+            {
+              "id": "d4-dto-projection",
+              "title": "DTO Projection"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Spring Data JPA",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-spring-data-jpa",
+          "title": "Spring Data JPA",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d5-derived-queries",
+              "title": "Derived Queries"
+            },
+            {
+              "id": "d5-jpql",
+              "title": "JPQL"
+            },
+            {
+              "id": "d5-native-queries",
+              "title": "Native Queries"
+            },
+            {
+              "id": "d5-specifications",
+              "title": "Specifications"
+            },
+            {
+              "id": "d5-criteria-api",
+              "title": "Criteria API"
+            },
+            {
+              "id": "d5-pagination",
+              "title": "Pagination"
+            },
+            {
+              "id": "d5-sorting",
+              "title": "Sorting"
+            },
+            {
+              "id": "d5-auditing",
+              "title": "Auditing"
+            },
+            {
+              "id": "d5-soft-delete",
+              "title": "Soft Delete"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "MongoDB",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-mongodb",
+          "title": "MongoDB",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d6-nosql",
+              "title": "NoSQL"
+            },
+            {
+              "id": "d6-documents",
+              "title": "Documents"
+            },
+            {
+              "id": "d6-collections",
+              "title": "Collections"
+            },
+            {
+              "id": "d6-crud",
+              "title": "CRUD"
+            },
+            {
+              "id": "d6-aggregation",
+              "title": "Aggregation"
+            },
+            {
+              "id": "d6-indexes",
+              "title": "Indexes"
+            },
+            {
+              "id": "d6-spring-data-mongo",
+              "title": "Spring Data MongoDB"
+            },
+            {
+              "id": "d6-mongo-template",
+              "title": "MongoTemplate"
+            },
+            {
+              "id": "d6-repository",
+              "title": "Repository"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Database Best Practices",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-best-practices",
+          "title": "Database Best Practices",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d7-connection-pooling",
+              "title": "Connection Pooling"
+            },
+            {
+              "id": "d7-hikaricp",
+              "title": "HikariCP"
+            },
+            {
+              "id": "d7-backup",
+              "title": "Backup"
+            },
+            {
+              "id": "d7-restore",
+              "title": "Restore"
+            },
+            {
+              "id": "d7-migration",
+              "title": "Migration"
+            },
+            {
+              "id": "d7-flyway",
+              "title": "Flyway"
+            },
+            {
+              "id": "d7-liquibase",
+              "title": "Liquibase"
+            },
+            {
+              "id": "d7-db-security",
+              "title": "Database Security"
+            },
+            {
+              "id": "d7-sql-injection",
+              "title": "SQL Injection Prevention"
+            },
+            {
+              "id": "d7-performance-monitoring",
+              "title": "Performance Monitoring"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-db-design",
+      "title": "Database Design",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w11-d1-1",
+          "title": "ER Diagram & Data Modeling",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d1-2",
+          "title": "Primary, Foreign & Candidate Keys",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d1-3",
+          "title": "Composite & Surrogate Keys",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d1-4",
+          "title": "Cardinality & Normalization",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d1-5",
+          "title": "Denormalization & Naming Standards",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-advanced-sql",
+      "title": "Advanced SQL",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w11-d2-1",
+          "title": "Subqueries & CTEs",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d2-2",
+          "title": "Window & Ranking Functions",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d2-3",
+          "title": "Views & Materialized Views",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d2-4",
+          "title": "Stored Procedures & Functions",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d2-5",
+          "title": "Triggers",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-performance",
+      "title": "Performance",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w11-d3-1",
+          "title": "Indexes & Composite Indexes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d3-2",
+          "title": "Explain Plan & Query Optimization",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d3-3",
+          "title": "Batch Insert / Update / Delete",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d3-4",
+          "title": "Transactions, Locks & Deadlocks",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-hibernate",
+      "title": "Hibernate",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w11-d4-1",
+          "title": "Entity Lifecycle & Persistence Context",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d4-2",
+          "title": "Lazy vs Eager Loading",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d4-3",
+          "title": "Cascade & Fetch Join",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d4-4",
+          "title": "Entity Graph & DTO Projection",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-spring-data-jpa",
+      "title": "Spring Data JPA",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w11-d5-1",
+          "title": "Derived Queries & JPQL",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d5-2",
+          "title": "Native Queries & Specifications",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d5-3",
+          "title": "Criteria API",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d5-4",
+          "title": "Pagination, Sorting & Auditing",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d5-5",
+          "title": "Soft Delete",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-mongodb",
+      "title": "MongoDB",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w11-d6-1",
+          "title": "NoSQL, Documents & Collections",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w11-d6-2",
+          "title": "CRUD & Aggregation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d6-3",
+          "title": "MongoDB Indexes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d6-4",
+          "title": "Spring Data MongoDB & MongoTemplate",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-db-best-practices",
+      "title": "Database Best Practices",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w11-d7-1",
+          "title": "Connection Pooling & HikariCP",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d7-2",
+          "title": "Backup, Restore & Migration",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w11-d7-3",
+          "title": "Flyway & Liquibase",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d7-4",
+          "title": "Database Security & SQL Injection Prevention",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w11-d7-5",
+          "title": "Performance Monitoring",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-sql",
+      "category": "SQL",
+      "questions": [
+        {
+          "id": "pq-w11-1",
+          "title": "Multi-table Join Query",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-2",
+          "title": "Subquery with IN Clause",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-3",
+          "title": "CTE for Hierarchical Data",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-4",
+          "title": "Window Function Row Number",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-5",
+          "title": "Ranking Employees by Salary",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-6",
+          "title": "Create View for Reports",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-7",
+          "title": "Stored Procedure for Transfer",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-8",
+          "title": "SQL Function for Calculation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-9",
+          "title": "Trigger on Insert",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-10",
+          "title": "Complex Aggregation Query",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-indexes",
+      "category": "Indexes",
+      "questions": [
+        {
+          "id": "pq-w11-11",
+          "title": "Create Single Column Index",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w11-12",
+          "title": "Create Composite Index",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-13",
+          "title": "Analyze Explain Plan",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-14",
+          "title": "Optimize Slow SELECT Query",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-15",
+          "title": "Index for JOIN Performance",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-jpql",
+      "category": "JPQL",
+      "questions": [
+        {
+          "id": "pq-w11-16",
+          "title": "JPQL Find by Department",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-17",
+          "title": "JPQL Join Query",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-18",
+          "title": "JPQL Aggregate Query",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-19",
+          "title": "JPQL Update Query",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-20",
+          "title": "JPQL vs Native Query",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-hibernate",
+      "category": "Hibernate",
+      "questions": [
+        {
+          "id": "pq-w11-21",
+          "title": "One-to-Many Mapping",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-22",
+          "title": "Many-to-Many Mapping",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-23",
+          "title": "Lazy vs Eager Loading",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-24",
+          "title": "Cascade Operations",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-25",
+          "title": "DTO Projection with Entity Graph",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-mongodb",
+      "category": "MongoDB",
+      "questions": [
+        {
+          "id": "pq-w11-26",
+          "title": "MongoDB Insert Document",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w11-27",
+          "title": "MongoDB Find with Filter",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w11-28",
+          "title": "MongoDB Update Document",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-29",
+          "title": "MongoDB Aggregation Pipeline",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-30",
+          "title": "MongoDB Index Creation",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-spring-data",
+      "category": "Spring Data",
+      "questions": [
+        {
+          "id": "pq-w11-31",
+          "title": "Derived Query Method",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w11-32",
+          "title": "Custom JPQL Repository Query",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-33",
+          "title": "Specification for Dynamic Filter",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-34",
+          "title": "Paginated Repository Query",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-35",
+          "title": "Soft Delete with @SQLDelete",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-performance",
+      "category": "Performance",
+      "questions": [
+        {
+          "id": "pq-w11-36",
+          "title": "Batch Insert 1000 Records",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-37",
+          "title": "Batch Update Optimization",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-38",
+          "title": "Transaction Isolation Example",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w11-39",
+          "title": "Connection Pool Configuration",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w11-40",
+          "title": "Query Cache Optimization",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "banking-database",
+      "title": "Banking Database System",
+      "description": "Production banking schema with accounts, transactions, customers, and optimized queries.",
+      "features": [
+        {
+          "id": "p1-er-design",
+          "title": "ER Design & Normalization"
+        },
+        {
+          "id": "p1-schema",
+          "title": "Schema with Foreign Keys"
+        },
+        {
+          "id": "p1-transactions",
+          "title": "Transaction Management"
+        },
+        {
+          "id": "p1-indexes",
+          "title": "Performance Indexes"
+        },
+        {
+          "id": "p1-migration",
+          "title": "Flyway Migration Scripts"
+        }
+      ],
+      "requirements": [
+        "Normalized schema (3NF)",
+        "Stored procedures for transfers",
+        "Indexes on frequently queried columns",
+        "Flyway migrations"
+      ],
+      "bonusFeatures": [
+        "Audit trail table with triggers"
+      ]
+    },
+    {
+      "id": "ecommerce-database",
+      "title": "E-Commerce Database",
+      "description": "E-commerce database with products, orders, customers, and advanced SQL queries.",
+      "features": [
+        {
+          "id": "p2-schema",
+          "title": "Product & Order Schema"
+        },
+        {
+          "id": "p2-joins",
+          "title": "Complex Join Queries"
+        },
+        {
+          "id": "p2-views",
+          "title": "Sales Report Views"
+        },
+        {
+          "id": "p2-jpa",
+          "title": "Spring Data JPA Integration"
+        },
+        {
+          "id": "p2-pagination",
+          "title": "Paginated Product Search"
+        }
+      ],
+      "requirements": [
+        "One-to-many and many-to-many relationships",
+        "JPQL queries with joins",
+        "Pagination and sorting",
+        "Composite indexes"
+      ],
+      "bonusFeatures": [
+        "Materialized view for sales dashboard"
+      ]
+    },
+    {
+      "id": "hospital-database",
+      "title": "Hospital Database",
+      "description": "Hospital database with patients, doctors, appointments, and Hibernate entity mappings.",
+      "features": [
+        {
+          "id": "p3-er",
+          "title": "Hospital ER Model"
+        },
+        {
+          "id": "p3-entities",
+          "title": "Hibernate Entity Mappings"
+        },
+        {
+          "id": "p3-lazy-eager",
+          "title": "Lazy/Eager Loading Strategy"
+        },
+        {
+          "id": "p3-dto",
+          "title": "DTO Projections"
+        },
+        {
+          "id": "p3-auditing",
+          "title": "JPA Auditing"
+        }
+      ],
+      "requirements": [
+        "Entity relationships with cascade",
+        "Fetch join for appointment queries",
+        "DTO projections to avoid N+1",
+        "Created/Updated timestamps"
+      ],
+      "bonusFeatures": [
+        "Soft delete for patient records"
+      ]
+    },
+    {
+      "id": "crm-database",
+      "title": "CRM Database",
+      "description": "CRM database with contacts, leads, activities, and dynamic query specifications.",
+      "features": [
+        {
+          "id": "p4-schema",
+          "title": "CRM Schema Design"
+        },
+        {
+          "id": "p4-specifications",
+          "title": "Dynamic Filter Specifications"
+        },
+        {
+          "id": "p4-aggregation",
+          "title": "Lead Analytics Queries"
+        },
+        {
+          "id": "p4-mongo",
+          "title": "Activity Log in MongoDB"
+        },
+        {
+          "id": "p4-migration",
+          "title": "Liquibase Migrations"
+        }
+      ],
+      "requirements": [
+        "Relational schema for contacts/leads",
+        "Specification API for dynamic filters",
+        "MongoDB for activity logs",
+        "Liquibase migration scripts"
+      ],
+      "bonusFeatures": [
+        "Cross-database reporting query"
+      ]
+    },
+    {
+      "id": "inventory-database",
+      "title": "Inventory Database",
+      "description": "Inventory database with batch operations, connection pooling, and performance monitoring.",
+      "features": [
+        {
+          "id": "p5-schema",
+          "title": "Inventory Schema"
+        },
+        {
+          "id": "p5-batch",
+          "title": "Batch Insert/Update"
+        },
+        {
+          "id": "p5-hikaricp",
+          "title": "HikariCP Configuration"
+        },
+        {
+          "id": "p5-optimization",
+          "title": "Query Optimization"
+        },
+        {
+          "id": "p5-monitoring",
+          "title": "Performance Monitoring"
+        }
+      ],
+      "requirements": [
+        "Batch operations for stock updates",
+        "HikariCP pool tuning",
+        "Explain plan analysis",
+        "Backup and restore scripts"
+      ],
+      "bonusFeatures": [
+        "Low stock alert stored procedure"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-11",
+    "title": "AI for Database Engineering",
+    "description": "Use AI for ER diagram generation, schema design, SQL optimization, index recommendations, Hibernate debugging, and migration scripts.",
+    "learningTopics": [
+      {
+        "id": "ai-w11-t1",
+        "title": "AI ER Diagram Generation"
+      },
+      {
+        "id": "ai-w11-t2",
+        "title": "AI Schema Design"
+      },
+      {
+        "id": "ai-w11-t3",
+        "title": "AI SQL Generation"
+      },
+      {
+        "id": "ai-w11-t4",
+        "title": "AI Query Optimization"
+      },
+      {
+        "id": "ai-w11-t5",
+        "title": "AI Index Recommendations"
+      },
+      {
+        "id": "ai-w11-t6",
+        "title": "AI Performance Analysis"
+      },
+      {
+        "id": "ai-w11-t7",
+        "title": "AI MongoDB Queries"
+      },
+      {
+        "id": "ai-w11-t8",
+        "title": "AI Hibernate Debugging"
+      },
+      {
+        "id": "ai-w11-t9",
+        "title": "AI Database Documentation"
+      },
+      {
+        "id": "ai-w11-t10",
+        "title": "AI Migration Scripts"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w11-e1",
+        "title": "Generate an ER diagram for a banking system."
+      },
+      {
+        "id": "ai-w11-e2",
+        "title": "Design a normalized schema for an e-commerce platform."
+      },
+      {
+        "id": "ai-w11-e3",
+        "title": "Write a complex SQL query with CTEs and window functions."
+      },
+      {
+        "id": "ai-w11-e4",
+        "title": "Optimize a slow query using EXPLAIN plan analysis."
+      },
+      {
+        "id": "ai-w11-e5",
+        "title": "Recommend indexes for your most-used queries."
+      },
+      {
+        "id": "ai-w11-e6",
+        "title": "Debug an N+1 query problem in Hibernate."
+      },
+      {
+        "id": "ai-w11-e7",
+        "title": "Generate MongoDB aggregation pipeline queries."
+      },
+      {
+        "id": "ai-w11-e8",
+        "title": "Create Flyway migration scripts for your schema."
+      },
+      {
+        "id": "ai-w11-e9",
+        "title": "Explain lazy vs eager loading trade-offs for your entities."
+      },
+      {
+        "id": "ai-w11-e10",
+        "title": "Review your database schema for normalization issues."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-11",
+    "repository": "springboot-week-4-database",
+    "description": "Create repository springboot-week-4-database and upload all Week 11 database engineering projects and scripts.",
+    "files": [
+      {
+        "id": "gh-w11-f1",
+        "path": "BankingDatabase/"
+      },
+      {
+        "id": "gh-w11-f2",
+        "path": "ECommerceDatabase/"
+      },
+      {
+        "id": "gh-w11-f3",
+        "path": "HospitalDatabase/"
+      },
+      {
+        "id": "gh-w11-f4",
+        "path": "CRMDatabase/"
+      },
+      {
+        "id": "gh-w11-f5",
+        "path": "InventoryDatabase/"
+      },
+      {
+        "id": "gh-w11-f6",
+        "path": "sql/advanced-queries.sql"
+      },
+      {
+        "id": "gh-w11-f7",
+        "path": "migrations/"
+      },
+      {
+        "id": "gh-w11-f8",
+        "path": "mongodb/"
+      },
+      {
+        "id": "gh-w11-f9",
+        "path": "ER-Diagrams/"
+      },
+      {
+        "id": "gh-w11-f10",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w11-design",
+      "category": "Database Design",
+      "questions": [
+        {
+          "id": "iq-w11-1",
+          "question": "Difference between normalization and denormalization?",
+          "answer": "Normalization reduces redundancy by splitting tables (1NF→3NF). Denormalization intentionally adds redundancy for read performance — used in analytics/reporting."
+        },
+        {
+          "id": "iq-w11-2",
+          "question": "Surrogate key vs natural key?",
+          "answer": "Surrogate key is system-generated (auto-increment ID). Natural key exists in data (email, SSN). Surrogate keys are preferred for stability and simplicity."
+        },
+        {
+          "id": "iq-w11-3",
+          "question": "What is an ER diagram?",
+          "answer": "Entity-Relationship diagram — visual model showing entities, attributes, relationships, and cardinality. Foundation for database schema design."
+        }
+      ]
+    },
+    {
+      "id": "iq-w11-performance",
+      "category": "Performance & SQL",
+      "questions": [
+        {
+          "id": "iq-w11-4",
+          "question": "How do indexes improve query performance?",
+          "answer": "Indexes create sorted data structures (B-tree) allowing fast lookups without full table scans. Trade-off: faster reads, slower writes, extra storage."
+        },
+        {
+          "id": "iq-w11-5",
+          "question": "What is the N+1 query problem?",
+          "answer": "Loading N entities triggers N additional queries for related data. Fix with fetch joins, entity graphs, or batch fetching in Hibernate/JPA."
+        },
+        {
+          "id": "iq-w11-6",
+          "question": "Difference between JPQL and native SQL?",
+          "answer": "JPQL is object-oriented, database-independent, uses entity names. Native SQL uses actual table/column names, database-specific, useful for complex queries."
+        }
+      ]
+    },
+    {
+      "id": "iq-w11-nosql",
+      "category": "MongoDB & Best Practices",
+      "questions": [
+        {
+          "id": "iq-w11-7",
+          "question": "When to use MongoDB vs MySQL?",
+          "answer": "MongoDB: flexible schema, nested documents, horizontal scaling, rapid iteration. MySQL: structured data, complex joins, ACID transactions, relational integrity."
+        },
+        {
+          "id": "iq-w11-8",
+          "question": "What is Flyway/Liquibase?",
+          "answer": "Database migration tools — version-controlled schema changes applied automatically. Flyway uses SQL scripts; Liquibase supports XML/YAML/SQL with rollback support."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w11-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions across SQL, Indexes, JPQL, Hibernate, MongoDB, Spring Data, and Performance",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w11-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 database engineering projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w11-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to springboot-week-4-database repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w11-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 20
+      }
+    },
+    {
+      "id": "del-w11-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 11 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 8
+      }
+    }
+  ]
+}

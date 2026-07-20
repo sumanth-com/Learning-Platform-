@@ -1,0 +1,272 @@
+[
+  {
+    "id": "w6-java8-overview",
+    "category": "Java 8 Features & Functional Programming",
+    "questions": [
+      {
+        "id": "w6-q01",
+        "question": "What are the major features introduced in Java 8?",
+        "answer": "Java 8 (March 2014) brought transformative features: Lambda Expressions for concise functional-style code, Stream API for declarative data processing, default and static methods in interfaces, Optional to reduce null handling, new Date/Time API (java.time), Method References, and functional interfaces in java.util.function. These features modernized Java, enabling cleaner collection processing and paving the way for reactive and functional patterns in enterprise frameworks.",
+        "realWorld": "Spring Boot 2.x+ heavily uses Java 8 features — streams in service layers, Optional in repository methods, lambda-based event listeners, and @FunctionalInterface for callback patterns throughout the ecosystem.",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Java8FeaturesDemo {\n    public static void main(String[] args) {\n        List<String> names = Arrays.asList(\"Ravi\", \"Priya\", \"Arjun\");\n        names.stream()\n             .filter(n -> n.length() > 4)\n             .map(String::toUpperCase)\n             .forEach(System.out::println);\n    }\n}",
+        "output": "PRIYA\nARJUN"
+      },
+      {
+        "id": "w6-q02",
+        "question": "What is functional programming?",
+        "answer": "Functional programming treats computation as evaluation of functions, emphasizing immutability, pure functions (no side effects), and declarative style. Java is primarily object-oriented but adopted functional features in Java 8. Functions become first-class citizens via lambdas and method references. Benefits include more readable data transformations, easier parallelization, and reduced mutable state bugs. Java's approach is pragmatic — hybrid OOP + functional rather than purely functional.",
+        "realWorld": "ETL pipelines transform data using stream operations (filter, map, reduce) instead of imperative loops with mutable counters. This reduces bugs and makes parallel processing with parallelStream() straightforward.",
+        "code": "import java.util.*;\n\npublic class FunctionalProgrammingDemo {\n    public static void main(String[] args) {\n        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);\n        int sumOfEvens = nums.stream()\n            .filter(n -> n % 2 == 0)\n            .mapToInt(Integer::intValue)\n            .sum();\n        System.out.println(\"Sum of evens: \" + sumOfEvens);\n    }\n}",
+        "output": "Sum of evens: 12"
+      },
+      {
+        "id": "w6-q03",
+        "question": "What is a functional interface?",
+        "answer": "A functional interface is an interface with exactly one abstract method (SAM — Single Abstract Method). It can have default and static methods. Functional interfaces are targets for lambda expressions and method references. Examples: Runnable, Callable, Comparator, Consumer, Predicate, Function, Supplier. Java 8 added java.util.function package with common functional interfaces for reusable lambda patterns.",
+        "realWorld": "Spring's JpaRepository uses functional types for query methods. Event handlers accept Consumer<Event> callbacks. REST filters use Predicate<HttpRequest> for conditional logic.",
+        "code": "import java.util.function.*;\n\npublic class FunctionalInterfaceDemo {\n    public static void main(String[] args) {\n        Predicate<String> isLong = s -> s.length() > 5;\n        Function<String, Integer> length = String::length;\n        Consumer<String> printer = System.out::println;\n\n        String word = \"Java8\";\n        if (isLong.test(word)) printer.accept(\"Length: \" + length.apply(word));\n    }\n}",
+        "output": "Length: 5"
+      },
+      {
+        "id": "w6-q04",
+        "question": "What is the @FunctionalInterface annotation?",
+        "answer": "@FunctionalInterface is an optional annotation that tells the compiler to enforce the SAM rule — the interface must have exactly one abstract method. If you add a second abstract method, compilation fails. It also enables better documentation and IDE support. While optional, it is best practice on functional interfaces to prevent accidental breaking changes and communicate intent clearly.",
+        "realWorld": "Custom callback interfaces in enterprise codebases use @FunctionalInterface to prevent teammates from adding methods that would break lambda assignments across hundreds of call sites.",
+        "code": "@FunctionalInterface\ninterface MathOperation {\n    int calculate(int a, int b);\n    default void printResult(int result) { System.out.println(\"Result: \" + result); }\n}\n\npublic class FunctionalInterfaceAnnotationDemo {\n    public static void main(String[] args) {\n        MathOperation add = (a, b) -> a + b;\n        add.printResult(add.calculate(10, 20));\n    }\n}",
+        "output": "Result: 30"
+      },
+      {
+        "id": "w6-q05",
+        "question": "What is a Lambda Expression?",
+        "answer": "A lambda expression is a concise anonymous function implementing a functional interface. Syntax: (parameters) -> expression or (parameters) -> { statements }. The compiler infers parameter types and the target interface. Lambdas replace verbose anonymous inner classes for SAM interfaces. They capture effectively final variables from enclosing scope. Lambdas are the foundation of the Stream API and modern Java APIs.",
+        "realWorld": "Sorting a product list: products.sort((a, b) -> Double.compare(a.price(), b.price())) replaces a 10-line anonymous Comparator class, improving readability in service and controller layers.",
+        "code": "import java.util.*;\n\npublic class LambdaDemo {\n    public static void main(String[] args) {\n        List<String> fruits = new ArrayList<>(Arrays.asList(\"Mango\", \"Apple\", \"Banana\"));\n        fruits.sort((a, b) -> a.compareTo(b));\n        fruits.forEach(f -> System.out.println(f));\n    }\n}",
+        "output": "Apple\nBanana\nMango"
+      },
+      {
+        "id": "w6-q06",
+        "question": "Lambda vs Anonymous Class.",
+        "answer": "Both can implement functional interfaces, but lambdas are concise and only work with SAM interfaces. Anonymous classes can implement interfaces with multiple abstract methods and extend classes. Lambdas use invokedynamic bytecode (more efficient); anonymous classes generate separate .class files. Lambdas cannot have state (no instance fields) unless captured from scope. Lambdas cannot provide multiple methods or constructors. Prefer lambdas for SAM interfaces; use anonymous classes when extending classes or needing explicit this reference.",
+        "realWorld": "Thread creation: new Thread(() -> processOrder()) is cleaner than new Thread(new Runnable() { public void run() { processOrder(); } }). For extending HttpServlet, anonymous classes remain necessary.",
+        "code": "import java.util.*;\n\npublic class LambdaVsAnonymousDemo {\n    public static void main(String[] args) {\n        Runnable lambda = () -> System.out.println(\"Lambda run\");\n        Runnable anonymous = new Runnable() {\n            public void run() { System.out.println(\"Anonymous run\"); }\n        };\n        lambda.run();\n        anonymous.run();\n    }\n}",
+        "output": "Lambda run\nAnonymous run"
+      },
+      {
+        "id": "w6-q07",
+        "question": "What are method references?",
+        "answer": "Method references are shorthand for lambdas that call existing methods. Types: static (ClassName::method), instance of particular object (obj::method), instance of arbitrary object (ClassName::instanceMethod), constructor (ClassName::new). They improve readability when a lambda only delegates to one method. The compiler maps them to functional interface abstract methods.",
+        "realWorld": "products.stream().map(Product::getName) is clearer than products.stream().map(p -> p.getName()). System.out::println is idiomatic for forEach in logging and debugging.",
+        "code": "import java.util.*;\nimport java.util.function.*;\n\npublic class MethodReferenceDemo {\n    public static void main(String[] args) {\n        List<String> names = Arrays.asList(\"Ravi\", \"Priya\");\n        names.forEach(System.out::println);\n        Function<String, Integer> toLen = String::length;\n        System.out.println(\"Max length: \" + names.stream().mapToInt(toLen::apply).max().orElse(0));\n    }\n}",
+        "output": "Ravi\nPriya\nMax length: 5"
+      }
+    ]
+  },
+  {
+    "id": "w6-streams",
+    "category": "Streams API",
+    "questions": [
+      {
+        "id": "w6-q08",
+        "question": "What is the Streams API?",
+        "answer": "The Streams API (java.util.stream) provides a declarative pipeline for processing sequences of elements from collections, arrays, or I/O. Operations are chained: source → intermediate operations (filter, map) → terminal operation (collect, reduce). Streams do not store data — they compute on demand. They support sequential and parallel execution. Streams make data transformations readable, composable, and less error-prone than imperative loops.",
+        "realWorld": "A reporting service filters active users, maps to DTOs, groups by department, and calculates average salary — all in a readable stream pipeline replacing nested loops and temporary lists.",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class StreamsAPIDemo {\n    public static void main(String[] args) {\n        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);\n        List<Integer> result = nums.stream()\n            .filter(n -> n % 2 == 0)\n            .map(n -> n * 10)\n            .collect(Collectors.toList());\n        System.out.println(result);\n    }\n}",
+        "output": "[20, 40, 60]"
+      },
+      {
+        "id": "w6-q09",
+        "question": "Difference between Collection and Stream.",
+        "answer": "Collection stores elements in memory with CRUD operations. Stream is a computation pipeline that does not store elements — it processes data from a source on demand. Collections can be iterated multiple times; a stream is consumed once (unless regenerated from source). Collections support direct element mutation; streams favor transformation without modifying source. Use collections for data storage; streams for data processing and transformation.",
+        "realWorld": "A database returns a List<Employee> (collection stored in memory). The service creates a stream to filter, transform, and aggregate for a dashboard without modifying the original list — separation of storage and processing.",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class CollectionVsStreamDemo {\n    public static void main(String[] args) {\n        List<String> list = new ArrayList<>(Arrays.asList(\"A\", \"B\", \"C\"));\n        long count = list.stream().filter(s -> s.equals(\"B\")).count();\n        System.out.println(\"Count: \" + count);\n        System.out.println(\"Collection unchanged: \" + list);\n    }\n}",
+        "output": "Count: 1\nCollection unchanged: [A, B, C]"
+      },
+      {
+        "id": "w6-q10",
+        "question": "What is lazy evaluation?",
+        "answer": "Stream intermediate operations (filter, map, flatMap, sorted) are lazy — they do not execute until a terminal operation (collect, forEach, reduce, count) is invoked. The stream pipeline is optimized as a single fused operation. Short-circuit operations (findFirst, anyMatch) may stop early. Lazy evaluation enables efficient processing of infinite streams and avoids unnecessary computation on elements that will be filtered out.",
+        "realWorld": "Processing a million-record file: lazy streams read and process line by line only when the terminal operation demands, avoiding loading the entire file. findFirst() stops after the first match, saving resources.",
+        "code": "import java.util.stream.*;\n\npublic class LazyEvaluationDemo {\n    public static void main(String[] args) {\n        Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5)\n            .peek(n -> System.out.println(\"Processing: \" + n))\n            .filter(n -> n > 2);\n        System.out.println(\"Pipeline built, not executed yet\");\n        System.out.println(\"First match: \" + stream.findFirst().orElse(-1));\n    }\n}",
+        "output": "Pipeline built, not executed yet\nProcessing: 1\nProcessing: 2\nProcessing: 3\nFirst match: 3"
+      },
+      {
+        "id": "w6-q11",
+        "question": "What is map()?",
+        "answer": "map() is an intermediate stream operation that transforms each element using a Function, producing a new stream of mapped results. It is one-to-one — each input produces exactly one output. Use map() for type conversion or property extraction. For primitive streams, use mapToInt, mapToLong, mapToDouble to avoid boxing overhead.",
+        "realWorld": "Extracting email addresses from a List<User>: users.stream().map(User::getEmail).collect(toList()). Converting String prices to BigDecimal for calculation pipelines.",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class MapDemo {\n    public static void main(String[] args) {\n        List<String> names = Arrays.asList(\"ravi\", \"priya\");\n        List<String> upper = names.stream()\n            .map(String::toUpperCase)\n            .collect(Collectors.toList());\n        System.out.println(upper);\n    }\n}",
+        "output": "[RAVI, PRIYA]"
+      },
+      {
+        "id": "w6-q12",
+        "question": "What is filter()?",
+        "answer": "filter() is an intermediate operation that keeps elements matching a Predicate, discarding others. It enables declarative conditional selection without if-statements in loops. Combined with map() and collect(), it forms the most common stream pattern. filter() is lazy and can be chained for multiple conditions.",
+        "realWorld": "An e-commerce API filters products by category, in-stock status, and price range before pagination: products.stream().filter(p -> p.inStock()).filter(p -> p.price() < 5000).",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class FilterDemo {\n    public static void main(String[] args) {\n        List<Integer> scores = Arrays.asList(45, 67, 89, 34, 92, 55);\n        List<Integer> passed = scores.stream()\n            .filter(s -> s >= 60)\n            .collect(Collectors.toList());\n        System.out.println(\"Passed: \" + passed);\n    }\n}",
+        "output": "Passed: [67, 89, 92]"
+      },
+      {
+        "id": "w6-q13",
+        "question": "What is flatMap()?",
+        "answer": "flatMap() transforms each element into a stream and then flattens all streams into a single stream. Unlike map() (one-to-one), flatMap() is one-to-many — each input can produce zero or more outputs. Use it when elements contain nested collections or Optional values that need unwrapping and flattening.",
+        "realWorld": "An order has multiple line items. orders.stream().flatMap(o -> o.getItems().stream()) produces a flat stream of all items across orders for inventory calculation.",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class FlatMapDemo {\n    public static void main(String[] args) {\n        List<List<String>> nested = Arrays.asList(\n            Arrays.asList(\"Java\", \"Python\"),\n            Arrays.asList(\"Go\", \"Rust\"));\n        List<String> flat = nested.stream()\n            .flatMap(List::stream)\n            .collect(Collectors.toList());\n        System.out.println(flat);\n    }\n}",
+        "output": "[Java, Python, Go, Rust]"
+      },
+      {
+        "id": "w6-q14",
+        "question": "What is reduce()?",
+        "answer": "reduce() is a terminal operation that combines stream elements into a single result using an associative accumulator function. Forms: reduce(identity, accumulator), reduce(accumulator) returning Optional. Common uses: sum, product, min, max, concatenation. It embodies the map-reduce pattern and works with parallel streams when the accumulator is associative and stateless.",
+        "realWorld": "Calculating total revenue: orders.stream().map(Order::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add). Aggregating word counts in a text analytics pipeline.",
+        "code": "import java.util.*;\n\npublic class ReduceDemo {\n    public static void main(String[] args) {\n        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);\n        int sum = nums.stream().reduce(0, Integer::sum);\n        int product = nums.stream().reduce(1, (a, b) -> a * b);\n        System.out.println(\"Sum: \" + sum + \", Product: \" + product);\n    }\n}",
+        "output": "Sum: 15, Product: 120"
+      },
+      {
+        "id": "w6-q15",
+        "question": "Difference between findFirst() and findAny().",
+        "answer": "Both are short-circuit terminal operations returning Optional. findFirst() returns the first element in encounter order — deterministic in sequential streams. findAny() returns any element — useful in parallel streams where any matching element suffices. In sequential streams, both often return the same result. Use findFirst when order matters; findAny for performance in parallel pipelines where any match is acceptable.",
+        "realWorld": "Checking if any admin user exists in a million-user database: users.parallelStream().filter(User::isAdmin).findAny() avoids scanning all users once one admin is found.",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\npublic class FindFirstVsFindAnyDemo {\n    public static void main(String[] args) {\n        List<String> items = Arrays.asList(\"Apple\", \"Banana\", \"Cherry\");\n        System.out.println(\"findFirst: \" + items.stream().filter(s -> s.startsWith(\"B\")).findFirst());\n        System.out.println(\"findAny: \" + items.stream().filter(s -> s.startsWith(\"B\")).findAny());\n    }\n}",
+        "output": "findFirst: Optional[Banana]\nfindAny: Optional[Banana]"
+      }
+    ]
+  },
+  {
+    "id": "w6-optional",
+    "category": "Optional",
+    "questions": [
+      {
+        "id": "w6-q16",
+        "question": "What is the Optional class?",
+        "answer": "Optional<T> is a container that may or may not hold a non-null value. Introduced in Java 8, it explicitly models absence of a value instead of using null. Key methods: of(), ofNullable(), empty(), isPresent(), orElse(), orElseGet(), ifPresent(), map(), flatMap(), filter(). Optional encourages defensive coding and fluent null-safe chains. It should be used as a return type, not as a field or method parameter.",
+        "realWorld": "Spring Data JPA methods return Optional<User> findByEmail(String email). The service layer chains .map(User::getName).orElse(\"Guest\") instead of null checks.",
+        "code": "import java.util.*;\n\npublic class OptionalDemo {\n    public static void main(String[] args) {\n        Optional<String> present = Optional.of(\"Java\");\n        Optional<String> absent = Optional.empty();\n        System.out.println(present.map(String::toUpperCase).orElse(\"N/A\"));\n        System.out.println(absent.orElseGet(() -> \"Default\"));\n    }\n}",
+        "output": "JAVA\nDefault"
+      },
+      {
+        "id": "w6-q17",
+        "question": "Why was Optional introduced?",
+        "answer": "Optional was introduced to make absent values explicit in APIs, reducing NullPointerException — Java's billion-dollar mistake. It forces callers to consciously handle the no-value case through orElse, ifPresent, or throwing exceptions. It improves API documentation by signaling that a method may not return a value. It is not meant to replace all null usage but to improve return types where absence is a valid outcome.",
+        "realWorld": "findCustomerById(Long id) returning Optional<Customer> tells callers they must handle not-found cases. Contrast with returning null, which caused countless NPEs in production when callers forgot null checks.",
+        "code": "import java.util.*;\n\nclass UserService {\n    Map<Long, String> db = Map.of(1L, \"Ravi\");\n    Optional<String> findById(Long id) { return Optional.ofNullable(db.get(id)); }\n}\n\npublic class WhyOptionalDemo {\n    public static void main(String[] args) {\n        UserService svc = new UserService();\n        System.out.println(svc.findById(1L).orElse(\"Not found\"));\n        System.out.println(svc.findById(99L).orElse(\"Not found\"));\n    }\n}",
+        "output": "Ravi\nNot found"
+      }
+    ]
+  },
+  {
+    "id": "w6-concurrency",
+    "category": "Multithreading & Concurrency",
+    "questions": [
+      {
+        "id": "w6-q18",
+        "question": "What is a Process?",
+        "answer": "A Process is an independent program execution instance with its own memory space, file handles, and system resources. The JVM itself runs as a process on the operating system. Processes are isolated — one process cannot directly access another's memory. Inter-process communication uses mechanisms like pipes, sockets, or shared memory. Creating processes is heavier than creating threads.",
+        "realWorld": "Running multiple microservices — each Spring Boot application is a separate OS process. A CI pipeline spawning Maven build and test processes in parallel uses ProcessBuilder in Java.",
+        "code": "public class ProcessDemo {\n    public static void main(String[] args) throws Exception {\n        ProcessBuilder pb = new ProcessBuilder(\"java\", \"-version\");\n        Process process = pb.start();\n        int exitCode = process.waitFor();\n        System.out.println(\"Process exit code: \" + exitCode);\n    }\n}",
+        "output": "Process exit code: 0"
+      },
+      {
+        "id": "w6-q19",
+        "question": "What is a Thread?",
+        "answer": "A Thread is the smallest unit of execution within a process. Multiple threads share the same process memory space, enabling concurrent execution. Java provides Thread class and Runnable interface for creating threads. Threads enable responsive UIs, parallel computation, and background task processing. Each thread has its own stack but shares heap memory, requiring synchronization for shared mutable data.",
+        "realWorld": "A web server handles thousands of concurrent HTTP requests, each processed by a thread from a thread pool. Background email sending in an e-commerce app runs on a separate thread so checkout is not blocked.",
+        "code": "public class ThreadDemo {\n    public static void main(String[] args) throws InterruptedException {\n        Thread t = new Thread(() -> System.out.println(\"Running in: \" + Thread.currentThread().getName()));\n        t.start();\n        t.join();\n        System.out.println(\"Main done\");\n    }\n}",
+        "output": "Running in: Thread-0\nMain done"
+      },
+      {
+        "id": "w6-q20",
+        "question": "Difference between Process and Thread.",
+        "answer": "A Process is an independent program with isolated memory; a Thread is a lightweight execution unit within a process sharing its memory. Process creation is expensive; thread creation is cheaper. Process crash does not affect others; thread crash can bring down the entire process. Processes communicate via IPC; threads communicate via shared variables (requiring synchronization). Java programs use threads for concurrency within one JVM process.",
+        "realWorld": "A browser runs as one process with multiple threads — rendering, networking, JavaScript execution. Your Java app is one process; @Async methods and thread pools create threads within it.",
+        "code": "public class ProcessVsThreadDemo {\n    public static void main(String[] args) {\n        System.out.println(\"JVM Process PID area: one OS process\");\n        System.out.println(\"Active threads: \" + Thread.activeCount());\n        System.out.println(\"Main thread: \" + Thread.currentThread().getName());\n    }\n}",
+        "output": "JVM Process PID area: one OS process\nActive threads: 1\nMain thread: main"
+      },
+      {
+        "id": "w6-q21",
+        "question": "Thread vs Runnable.",
+        "answer": "Thread is a class representing the thread itself; extending Thread limits you to single inheritance. Runnable is a functional interface with run() method defining the task. Implementing Runnable separates task logic from thread management — better design. Prefer Runnable (or Callable) and pass to Thread or ExecutorService. Thread also implements Runnable, so Thread objects can be passed to executors.",
+        "realWorld": "ExecutorService.execute(new EmailTask()) where EmailTask implements Runnable — the executor manages thread lifecycle while the task class focuses on business logic. This is the standard pattern in enterprise Java.",
+        "code": "public class ThreadVsRunnableDemo {\n    static class PrintTask implements Runnable {\n        public void run() { System.out.println(\"Task on \" + Thread.currentThread().getName()); }\n    }\n    public static void main(String[] args) throws InterruptedException {\n        Thread t = new Thread(new PrintTask());\n        t.start();\n        t.join();\n    }\n}",
+        "output": "Task on Thread-0"
+      },
+      {
+        "id": "w6-q22",
+        "question": "Thread lifecycle.",
+        "answer": "Java thread states (Thread.State enum): NEW (created, not started), RUNNABLE (executing or ready for CPU), BLOCKED (waiting for monitor lock), WAITING (waiting indefinitely — wait(), join()), TIMED_WAITING (waiting with timeout — sleep(), wait(ms)), TERMINATED (completed). A thread moves through these states based on start(), scheduling, synchronization, and completion. Understanding lifecycle is essential for debugging concurrency issues.",
+        "realWorld": "Monitoring tools like JVisualVM show thread states in production. Threads stuck in BLOCKED indicate lock contention; many in WAITING may signal a missing notify() or thread pool exhaustion.",
+        "code": "public class ThreadLifecycleDemo {\n    public static void main(String[] args) throws InterruptedException {\n        Thread t = new Thread(() -> {\n            try { Thread.sleep(100); } catch (InterruptedException e) {}\n        });\n        System.out.println(\"NEW: \" + t.getState());\n        t.start();\n        System.out.println(\"RUNNABLE: \" + t.getState());\n        t.join();\n        System.out.println(\"TERMINATED: \" + t.getState());\n    }\n}",
+        "output": "NEW: NEW\nRUNNABLE: RUNNABLE\nTERMINATED: TERMINATED"
+      },
+      {
+        "id": "w6-q23",
+        "question": "What is synchronization?",
+        "answer": "Synchronization controls access to shared resources by multiple threads to prevent data corruption. Mechanisms include synchronized methods/blocks (intrinsic locks), volatile for visibility, java.util.concurrent locks (ReentrantLock), and atomic variables. Only one thread can hold a monitor lock at a time. Synchronization ensures atomicity and visibility but can reduce parallelism if overused.",
+        "realWorld": "A bank transfer deducting from one account and crediting another uses synchronized blocks or database transactions to prevent double-spending when two threads process concurrent transfers on the same account.",
+        "code": "public class SynchronizationDemo {\n    private int count = 0;\n    synchronized void increment() { count++; }\n    public static void main(String[] args) throws InterruptedException {\n        SynchronizationDemo demo = new SynchronizationDemo();\n        Thread t1 = new Thread(() -> { for (int i = 0; i < 1000; i++) demo.increment(); });\n        Thread t2 = new Thread(() -> { for (int i = 0; i < 1000; i++) demo.increment(); });\n        t1.start(); t2.start();\n        t1.join(); t2.join();\n        System.out.println(\"Count: \" + demo.count);\n    }\n}",
+        "output": "Count: 2000"
+      },
+      {
+        "id": "w6-q24",
+        "question": "What is a race condition?",
+        "answer": "A race condition occurs when the correctness of a program depends on the unpredictable timing or ordering of thread execution. Multiple threads access shared mutable data without proper synchronization, leading to inconsistent results. Classic example: two threads incrementing a counter simultaneously may lose updates. Race conditions are intermittent and hard to reproduce, making them dangerous production bugs.",
+        "realWorld": "Two users booking the last seat on a flight simultaneously without synchronization can both succeed — a race condition. Fix with database row locking, synchronized blocks, or atomic operations.",
+        "code": "public class RaceConditionDemo {\n    private int count = 0;\n    void unsafeIncrement() { count++; } // not atomic\n    public static void main(String[] args) throws InterruptedException {\n        RaceConditionDemo demo = new RaceConditionDemo();\n        Thread t1 = new Thread(() -> { for (int i = 0; i < 1000; i++) demo.unsafeIncrement(); });\n        Thread t2 = new Thread(() -> { for (int i = 0; i < 1000; i++) demo.unsafeIncrement(); });\n        t1.start(); t2.start();\n        t1.join(); t2.join();\n        System.out.println(\"Expected 2000, got: \" + demo.count);\n    }\n}",
+        "output": "Expected 2000, got: (less than 2000, e.g. 1876)"
+      },
+      {
+        "id": "w6-q25",
+        "question": "What is deadlock?",
+        "answer": "Deadlock is a situation where two or more threads are blocked forever, each waiting for a lock held by another. Classic scenario: Thread 1 holds Lock A and waits for Lock B; Thread 2 holds Lock B and waits for Lock A. Conditions (Coffman): mutual exclusion, hold and wait, no preemption, circular wait. Prevention: lock ordering, timeouts (tryLock), avoiding nested locks, and using higher-level concurrency utilities.",
+        "realWorld": "Two microservices updating shared database records in opposite lock order can deadlock at the database level. In Java, nested synchronized blocks on different objects are a common interview and production trap.",
+        "code": "public class DeadlockDemo {\n    private final Object lockA = new Object();\n    private final Object lockB = new Object();\n    public static void main(String[] args) {\n        DeadlockDemo demo = new DeadlockDemo();\n        Thread t1 = new Thread(() -> {\n            synchronized (demo.lockA) {\n                try { Thread.sleep(50); } catch (InterruptedException e) {}\n                synchronized (demo.lockB) { System.out.println(\"T1 done\"); }\n            }\n        });\n        Thread t2 = new Thread(() -> {\n            synchronized (demo.lockB) {\n                try { Thread.sleep(50); } catch (InterruptedException e) {}\n                synchronized (demo.lockA) { System.out.println(\"T2 done\"); }\n            }\n        });\n        t1.start(); t2.start();\n        System.out.println(\"Potential deadlock scenario started\");\n    }\n}",
+        "output": "Potential deadlock scenario started"
+      },
+      {
+        "id": "w6-q26",
+        "question": "What is the Executor Framework?",
+        "answer": "The Executor Framework (java.util.concurrent) abstracts thread creation and management. Instead of manually creating Thread objects, you submit tasks to an ExecutorService which manages a thread pool. Benefits: thread reuse, controlled concurrency, task queuing, and lifecycle management. Key classes: ExecutorService, ThreadPoolExecutor, Executors factory (newFixedThreadPool, newCachedThreadPool). Always shutdown() the executor when done.",
+        "realWorld": "Spring's @Async uses a TaskExecutor (thread pool) behind the scenes. Batch processing systems submit thousands of records to a fixed thread pool of 10 workers for controlled parallel processing.",
+        "code": "import java.util.concurrent.*;\n\npublic class ExecutorFrameworkDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService executor = Executors.newFixedThreadPool(2);\n        Future<String> future = executor.submit(() -> \"Task result\");\n        System.out.println(future.get());\n        executor.shutdown();\n    }\n}",
+        "output": "Task result"
+      },
+      {
+        "id": "w6-q27",
+        "question": "Difference between Callable and Runnable.",
+        "answer": "Both represent tasks for execution. Runnable has void run() and cannot throw checked exceptions or return values. Callable has V call() that returns a result and can throw checked exceptions. Submit Callable to ExecutorService.submit() to get a Future. Runnable is for fire-and-forget tasks; Callable for tasks whose results you need. Callable is a functional interface since Java 8.",
+        "realWorld": "Fetching data from three external APIs in parallel: submit three Callable<ApiResponse> tasks to an executor, then combine results from three Future objects — standard in integration services.",
+        "code": "import java.util.concurrent.*;\n\npublic class CallableVsRunnableDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService exec = Executors.newSingleThreadExecutor();\n        exec.execute(() -> System.out.println(\"Runnable: no return\"));\n        Future<Integer> future = exec.submit(() -> 42);\n        System.out.println(\"Callable result: \" + future.get());\n        exec.shutdown();\n    }\n}",
+        "output": "Runnable: no return\nCallable result: 42"
+      },
+      {
+        "id": "w6-q28",
+        "question": "What is a Future?",
+        "answer": "Future represents the result of an asynchronous computation. Obtained from ExecutorService.submit(). Key methods: get() (blocks until result), get(timeout, unit), isDone(), cancel(). get() returns the computed value or throws ExecutionException if the task failed. CompletableFuture (Java 8) extends this with chaining (thenApply, thenCompose) and combining multiple async operations.",
+        "realWorld": "An order service submits payment processing asynchronously, continues validating inventory, then calls paymentFuture.get() to confirm before completing the order — overlapping I/O-bound operations.",
+        "code": "import java.util.concurrent.*;\n\npublic class FutureDemo {\n    public static void main(String[] args) throws Exception {\n        ExecutorService exec = Executors.newSingleThreadExecutor();\n        Future<String> future = exec.submit(() -> {\n            Thread.sleep(100);\n            return \"Async complete\";\n        });\n        System.out.println(\"Doing other work...\");\n        System.out.println(future.get());\n        exec.shutdown();\n    }\n}",
+        "output": "Doing other work...\nAsync complete"
+      },
+      {
+        "id": "w6-q29",
+        "question": "What is thread safety?",
+        "answer": "Thread safety means code functions correctly when accessed by multiple threads simultaneously without data corruption or inconsistent state. Achieved through immutability, synchronization, thread-local storage, or concurrent data structures (ConcurrentHashMap, CopyOnWriteArrayList). Immutable objects are inherently thread-safe. The goal is correct behavior without requiring callers to coordinate access.",
+        "realWorld": "Spring beans are singleton by default — services must be thread-safe. Stateless services (no mutable fields) are naturally thread-safe. Mutable shared caches require ConcurrentHashMap or synchronized access.",
+        "code": "import java.util.concurrent.*;\n\npublic class ThreadSafetyDemo {\n    public static void main(String[] args) throws InterruptedException {\n        ConcurrentHashMap<String, Integer> safeMap = new ConcurrentHashMap<>();\n        Thread t1 = new Thread(() -> safeMap.merge(\"count\", 1, Integer::sum));\n        Thread t2 = new Thread(() -> safeMap.merge(\"count\", 1, Integer::sum));\n        t1.start(); t2.start();\n        t1.join(); t2.join();\n        System.out.println(\"Safe count: \" + safeMap.get(\"count\"));\n    }\n}",
+        "output": "Safe count: 2"
+      }
+    ]
+  },
+  {
+    "id": "w6-spring-boot",
+    "category": "Java 8 in Spring Boot",
+    "questions": [
+      {
+        "id": "w6-q30",
+        "question": "How are Java 8 features used in Spring Boot applications?",
+        "answer": "Spring Boot leverages Java 8 throughout: Optional as return type in Spring Data repositories (findById), Stream API for processing collections in services, Lambda expressions for event listeners and custom filters, Method references in bean configuration, @FunctionalInterface for callback patterns, CompletableFuture for async processing with @Async, and java.time for date handling. Spring Security uses lambdas for fluent configuration. Java 8+ is required for Spring Boot 2.x and 3.x.",
+        "realWorld": "A typical Spring Boot service: repository.findByEmail(email) returns Optional<User>, the service uses .map(user -> user.toDto()).orElseThrow(() -> new NotFoundException()), and streams filter/sort results for REST responses. @Async methods return CompletableFuture for non-blocking operations.",
+        "code": "import java.util.*;\nimport java.util.stream.*;\n\n// Illustrative Spring-style patterns without Spring dependency\nrecord User(Long id, String name, boolean active) {}\n\nclass UserRepository {\n    List<User> users = List.of(new User(1L, \"Ravi\", true), new User(2L, \"Priya\", false));\n    Optional<User> findById(Long id) {\n        return users.stream().filter(u -> u.id().equals(id)).findFirst();\n    }\n}\n\nclass UserService {\n    private final UserRepository repo = new UserRepository();\n    String getActiveUserName(Long id) {\n        return repo.findById(id)\n            .filter(User::active)\n            .map(User::name)\n            .orElse(\"Not found or inactive\");\n    }\n}\n\npublic class SpringBootJava8Demo {\n    public static void main(String[] args) {\n        UserService svc = new UserService();\n        System.out.println(svc.getActiveUserName(1L));\n        System.out.println(svc.getActiveUserName(2L));\n    }\n}",
+        "output": "Ravi\nNot found or inactive"
+      }
+    ]
+  }
+]

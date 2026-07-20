@@ -1,0 +1,52 @@
+{
+  "student-management-collections": {
+    "mode": "external",
+    "overview": "Student CRUD with sorting and search using collections.\n\nFeatures to build:\n• Add Student\n• Remove Student\n• Search Student\n• Sort Student\n• Display Student\n\nRequirements:\n• Use ArrayList\n• Use Comparator for sorting\n\nBonus:\n• Filter by department",
+    "explanation": "Student Management System is a intermediate-level project (Week 5). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Add Student, Remove Student, Search Student, Sort Student, Display Student.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Java Collections — Baeldung Examples",
+    "youtubeUrl": "https://www.youtube.com/watch?v=GdAhl29kdDw",
+    "youtubeLabel": "Java Collections Framework — Full Tutorial",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "library-book-management": {
+    "mode": "external",
+    "overview": "Library system with book issue/return using ArrayList and HashMap.\n\nFeatures to build:\n• Add Book\n• Remove Book\n• Search Book\n• Issue Book\n• Return Book\n\nRequirements:\n• Use ArrayList for books\n• Use HashMap for issued books tracking\n\nBonus:\n• Due date tracking",
+    "explanation": "Library Book Management is a intermediate-level project (Week 5). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Add Book, Remove Book, Search Book, Issue Book, Return Book.",
+    "githubUrl": "https://github.com/mehmetpekdemir/Library-Management-System",
+    "githubLabel": "Library Book Management — Spring Data JPA",
+    "youtubeUrl": "https://www.youtube.com/watch?v=KtDcPQkHU7o",
+    "youtubeLabel": "Library Management — Core Java + JDBC (Part 1)",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "employee-directory": {
+    "mode": "external",
+    "overview": "Employee lookup and filtering with HashMap and ArrayList.\n\nFeatures to build:\n• Employee Search\n• Department Filter\n• Salary Sort\n• Employee ID Lookup\n\nRequirements:\n• Use HashMap for ID lookup\n• Use ArrayList for employee list\n\nBonus:\n• Export department report",
+    "explanation": "Employee Directory is a intermediate-level project (Week 5). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Employee Search, Department Filter, Salary Sort, Employee ID Lookup.",
+    "githubUrl": "https://github.com/aljalo/BankManagementSystem",
+    "githubLabel": "Bank / Account Management — Java Collections + OOP",
+    "youtubeUrl": "https://www.youtube.com/watch?v=GdAhl29kdDw",
+    "youtubeLabel": "Collections + ArrayList Deep Dive",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "online-shopping-cart": {
+    "mode": "external",
+    "overview": "Shopping cart with product management using List and Map.\n\nFeatures to build:\n• Add Product\n• Remove Product\n• Quantity\n• Total Price\n• Cart Summary\n\nRequirements:\n• Use List for cart items\n• Use Map for product catalog\n\nBonus:\n• Apply discount codes",
+    "explanation": "Online Shopping Cart is a intermediate-level project (Week 5). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Add Product, Remove Product, Quantity, Total Price, Cart Summary.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "HashMap & Cart Logic — Baeldung Java Tutorials",
+    "youtubeUrl": "https://www.youtube.com/watch?v=1Ob6N1kWqEY",
+    "youtubeLabel": "Shopping Cart with Java Collections",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "hospital-appointment": {
+    "mode": "external",
+    "overview": "Patient queue and appointment management with Queue and HashMap.\n\nFeatures to build:\n• Queue Patients\n• Doctor Allocation\n• Priority Cases\n• Appointment History\n\nRequirements:\n• Use Queue and PriorityQueue\n• Use HashMap for doctor-patient mapping\n\nBonus:\n• Emergency priority handling",
+    "explanation": "Hospital Appointment System is a intermediate-level project (Week 5). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Queue Patients, Doctor Allocation, Priority Cases, Appointment History.",
+    "githubUrl": "https://github.com/spring-projects/spring-petclinic",
+    "githubLabel": "Spring PetClinic — Appointments & Visits",
+    "youtubeUrl": "https://www.youtube.com/watch?v=GdAhl29kdDw",
+    "youtubeLabel": "Java Collections for Scheduling Lists",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

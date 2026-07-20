@@ -1,0 +1,1408 @@
+{
+  "id": 6,
+  "slug": "week-6",
+  "title": "Java 8 Features, Functional Programming & Multithreading",
+  "goal": "Write cleaner Java code using Java 8 features, understand functional programming, process collections with Streams, use Lambda expressions confidently, understand multithreading, create concurrent applications, and use AI to optimize code.",
+  "description": "Week 6 covers Java 8, functional programming, Streams, Optional, Date/Time API, and multithreading — heavily used in modern Spring Boot and commonly asked in interviews. Complete this before JDBC or Spring Boot.",
+  "estimatedHours": 22,
+  "difficulty": "medium",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Java 8 Introduction",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-java8-intro",
+          "title": "Java 8 Introduction",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-why-java8",
+              "title": "Why Java 8?"
+            },
+            {
+              "id": "d1-features-overview",
+              "title": "Java 8 Features Overview"
+            },
+            {
+              "id": "d1-functional-programming",
+              "title": "Functional Programming"
+            },
+            {
+              "id": "d1-imperative-vs-functional",
+              "title": "Imperative vs Functional Programming"
+            },
+            {
+              "id": "d1-anonymous-classes",
+              "title": "Anonymous Classes"
+            },
+            {
+              "id": "d1-functional-interfaces",
+              "title": "Functional Interfaces"
+            },
+            {
+              "id": "d1-functional-annotation",
+              "title": "@FunctionalInterface Annotation"
+            },
+            {
+              "id": "d1-predicate",
+              "title": "Predicate"
+            },
+            {
+              "id": "d1-function",
+              "title": "Function"
+            },
+            {
+              "id": "d1-consumer",
+              "title": "Consumer"
+            },
+            {
+              "id": "d1-supplier",
+              "title": "Supplier"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Lambda Expressions",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-lambda",
+          "title": "Lambda Expressions",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d2-what-lambda",
+              "title": "What is Lambda?"
+            },
+            {
+              "id": "d2-syntax",
+              "title": "Lambda Syntax"
+            },
+            {
+              "id": "d2-parameters",
+              "title": "Lambda with Parameters"
+            },
+            {
+              "id": "d2-return-values",
+              "title": "Lambda with Return Values"
+            },
+            {
+              "id": "d2-collections",
+              "title": "Lambda in Collections"
+            },
+            {
+              "id": "d2-vs-anonymous",
+              "title": "Lambda vs Anonymous Class"
+            },
+            {
+              "id": "d2-method-ref",
+              "title": "Method References"
+            },
+            {
+              "id": "d2-constructor-ref",
+              "title": "Constructor References"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Streams API",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-streams",
+          "title": "Streams API",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-what-streams",
+              "title": "What are Streams?"
+            },
+            {
+              "id": "d3-pipeline",
+              "title": "Stream Pipeline"
+            },
+            {
+              "id": "d3-creating",
+              "title": "Creating Streams"
+            },
+            {
+              "id": "d3-filter",
+              "title": "filter()"
+            },
+            {
+              "id": "d3-map",
+              "title": "map()"
+            },
+            {
+              "id": "d3-flatmap",
+              "title": "flatMap()"
+            },
+            {
+              "id": "d3-distinct",
+              "title": "distinct()"
+            },
+            {
+              "id": "d3-sorted",
+              "title": "sorted()"
+            },
+            {
+              "id": "d3-limit",
+              "title": "limit()"
+            },
+            {
+              "id": "d3-skip",
+              "title": "skip()"
+            },
+            {
+              "id": "d3-collect",
+              "title": "collect()"
+            },
+            {
+              "id": "d3-count",
+              "title": "count()"
+            },
+            {
+              "id": "d3-min",
+              "title": "min()"
+            },
+            {
+              "id": "d3-max",
+              "title": "max()"
+            },
+            {
+              "id": "d3-reduce",
+              "title": "reduce()"
+            },
+            {
+              "id": "d3-anymatch",
+              "title": "anyMatch()"
+            },
+            {
+              "id": "d3-allmatch",
+              "title": "allMatch()"
+            },
+            {
+              "id": "d3-nonematch",
+              "title": "noneMatch()"
+            },
+            {
+              "id": "d3-findfirst",
+              "title": "findFirst()"
+            },
+            {
+              "id": "d3-findany",
+              "title": "findAny()"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Optional API & Date Time API",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-optional-datetime",
+          "title": "Optional API & Date Time API",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d4-optional",
+              "title": "Optional"
+            },
+            {
+              "id": "d4-optional-class",
+              "title": "Optional Class"
+            },
+            {
+              "id": "d4-of",
+              "title": "of()"
+            },
+            {
+              "id": "d4-ofnullable",
+              "title": "ofNullable()"
+            },
+            {
+              "id": "d4-empty",
+              "title": "empty()"
+            },
+            {
+              "id": "d4-ispresent",
+              "title": "isPresent()"
+            },
+            {
+              "id": "d4-ifpresent",
+              "title": "ifPresent()"
+            },
+            {
+              "id": "d4-orelse",
+              "title": "orElse()"
+            },
+            {
+              "id": "d4-orelseget",
+              "title": "orElseGet()"
+            },
+            {
+              "id": "d4-orelsethrow",
+              "title": "orElseThrow()"
+            },
+            {
+              "id": "d4-datetime-api",
+              "title": "Date & Time API"
+            },
+            {
+              "id": "d4-localdate",
+              "title": "LocalDate"
+            },
+            {
+              "id": "d4-localtime",
+              "title": "LocalTime"
+            },
+            {
+              "id": "d4-localdatetime",
+              "title": "LocalDateTime"
+            },
+            {
+              "id": "d4-period",
+              "title": "Period"
+            },
+            {
+              "id": "d4-duration",
+              "title": "Duration"
+            },
+            {
+              "id": "d4-formatting",
+              "title": "Date Formatting"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Multithreading",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-multithreading",
+          "title": "Multithreading",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d5-process-vs-thread",
+              "title": "Process vs Thread"
+            },
+            {
+              "id": "d5-what-multithreading",
+              "title": "What is Multithreading?"
+            },
+            {
+              "id": "d5-creating-threads",
+              "title": "Creating Threads"
+            },
+            {
+              "id": "d5-thread-class",
+              "title": "Thread Class"
+            },
+            {
+              "id": "d5-runnable",
+              "title": "Runnable Interface"
+            },
+            {
+              "id": "d5-lifecycle",
+              "title": "Thread Lifecycle"
+            },
+            {
+              "id": "d5-priorities",
+              "title": "Thread Priorities"
+            },
+            {
+              "id": "d5-sleep",
+              "title": "sleep()"
+            },
+            {
+              "id": "d5-join",
+              "title": "join()"
+            },
+            {
+              "id": "d5-yield",
+              "title": "yield()"
+            },
+            {
+              "id": "d5-synchronization",
+              "title": "Synchronization"
+            },
+            {
+              "id": "d5-race-condition",
+              "title": "Race Condition"
+            },
+            {
+              "id": "d5-deadlock",
+              "title": "Deadlock (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Executor Framework",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-executor",
+          "title": "Executor Framework",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d6-executor-service",
+              "title": "Executor Service"
+            },
+            {
+              "id": "d6-fixed-pool",
+              "title": "Fixed Thread Pool"
+            },
+            {
+              "id": "d6-cached-pool",
+              "title": "Cached Thread Pool"
+            },
+            {
+              "id": "d6-scheduled",
+              "title": "Scheduled Executor"
+            },
+            {
+              "id": "d6-future",
+              "title": "Future"
+            },
+            {
+              "id": "d6-callable",
+              "title": "Callable"
+            },
+            {
+              "id": "d6-thread-safety",
+              "title": "Thread Safety"
+            },
+            {
+              "id": "d6-concurrent-collections",
+              "title": "Concurrent Collections (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Revision",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d7-java8-revision",
+              "title": "Java 8 Revision"
+            },
+            {
+              "id": "d7-stream-practice",
+              "title": "Stream Practice"
+            },
+            {
+              "id": "d7-thread-practice",
+              "title": "Multithreading Practice"
+            },
+            {
+              "id": "d7-mock-test",
+              "title": "Mock Coding Test"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-java8-intro",
+      "title": "Java 8 Introduction",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w6-d1-1",
+          "title": "Why Java 8?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d1-2",
+          "title": "Java 8 Features Overview",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d1-3",
+          "title": "Functional Programming",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d1-4",
+          "title": "Imperative vs Functional Programming",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d1-5",
+          "title": "Anonymous Classes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d1-6",
+          "title": "Functional Interfaces",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d1-7",
+          "title": "@FunctionalInterface Annotation",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d1-8",
+          "title": "Predicate",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d1-9",
+          "title": "Function",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d1-10",
+          "title": "Consumer",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d1-11",
+          "title": "Supplier",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-lambda",
+      "title": "Lambda Expressions",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w6-d2-1",
+          "title": "What is Lambda?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d2-2",
+          "title": "Lambda Syntax",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d2-3",
+          "title": "Lambda with Parameters",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d2-4",
+          "title": "Lambda with Return Values",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d2-5",
+          "title": "Lambda in Collections",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d2-6",
+          "title": "Lambda vs Anonymous Class",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d2-7",
+          "title": "Method References",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d2-8",
+          "title": "Constructor References",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-streams",
+      "title": "Streams API",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w6-d3-1",
+          "title": "What are Streams?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d3-2",
+          "title": "Stream Pipeline",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d3-3",
+          "title": "Creating Streams",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d3-4",
+          "title": "filter()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d3-5",
+          "title": "map()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d3-6",
+          "title": "flatMap()",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d3-7",
+          "title": "distinct()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d3-8",
+          "title": "sorted()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d3-9",
+          "title": "collect()",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d3-10",
+          "title": "reduce()",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-optional-datetime",
+      "title": "Optional & Date Time API",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w6-d4-1",
+          "title": "Optional Class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d4-2",
+          "title": "of() / ofNullable() / empty()",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d4-3",
+          "title": "isPresent() / ifPresent()",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d4-4",
+          "title": "orElse() / orElseGet() / orElseThrow()",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d4-5",
+          "title": "LocalDate",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d4-6",
+          "title": "LocalTime",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d4-7",
+          "title": "LocalDateTime",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d4-8",
+          "title": "Period & Duration",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d4-9",
+          "title": "Date Formatting",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-multithreading",
+      "title": "Multithreading",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w6-d5-1",
+          "title": "Process vs Thread",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d5-2",
+          "title": "Thread Class & Runnable",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d5-3",
+          "title": "Thread Lifecycle",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d5-4",
+          "title": "sleep() / join() / yield()",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d5-5",
+          "title": "Synchronization",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d5-6",
+          "title": "Race Condition",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d5-7",
+          "title": "Deadlock (Introduction)",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-executor",
+      "title": "Executor Framework",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w6-d6-1",
+          "title": "Executor Service",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d6-2",
+          "title": "Fixed Thread Pool",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d6-3",
+          "title": "Cached Thread Pool",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d6-4",
+          "title": "Scheduled Executor",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d6-5",
+          "title": "Future & Callable",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d6-6",
+          "title": "Thread Safety",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d6-7",
+          "title": "Concurrent Collections (Introduction)",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision",
+      "title": "Revision",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w6-d7-1",
+          "title": "Java 8 Revision",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w6-d7-2",
+          "title": "Stream Practice",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w6-d7-3",
+          "title": "Multithreading Practice",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w6-d7-4",
+          "title": "Mock Coding Test",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-lambda",
+      "category": "Lambda",
+      "questions": [
+        {
+          "id": "pq-w6-1",
+          "title": "Lambda for Addition",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-2",
+          "title": "Lambda for Multiplication",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-3",
+          "title": "Lambda with String",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-4",
+          "title": "Lambda using Predicate",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-5",
+          "title": "Lambda using Consumer",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-6",
+          "title": "Lambda using Supplier",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-7",
+          "title": "Lambda using Function",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-8",
+          "title": "Method Reference Example",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-9",
+          "title": "Constructor Reference Example",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w6-10",
+          "title": "Sort using Lambda",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-streams",
+      "category": "Streams",
+      "questions": [
+        {
+          "id": "pq-w6-11",
+          "title": "Filter Even Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-12",
+          "title": "Filter Odd Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-13",
+          "title": "Find Maximum",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-14",
+          "title": "Find Minimum",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-15",
+          "title": "Remove Duplicates",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-16",
+          "title": "Sort Employees",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-17",
+          "title": "Sort Students",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-18",
+          "title": "Count Elements",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-19",
+          "title": "Average Marks",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-20",
+          "title": "Sum of Salaries",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-21",
+          "title": "Find Highest Salary",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-22",
+          "title": "Group Employees by Department",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w6-23",
+          "title": "Convert List to Map",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w6-24",
+          "title": "Find Duplicate Elements",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-25",
+          "title": "Find First Element",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-optional",
+      "category": "Optional",
+      "questions": [
+        {
+          "id": "pq-w6-26",
+          "title": "Safe User Name Lookup",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-27",
+          "title": "Optional Student",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-28",
+          "title": "Optional Employee",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-29",
+          "title": "Avoid NullPointerException",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-30",
+          "title": "Optional Chaining",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "cat-multithreading",
+      "category": "Multithreading",
+      "questions": [
+        {
+          "id": "pq-w6-31",
+          "title": "Print Numbers using Thread",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-32",
+          "title": "Runnable Example",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-33",
+          "title": "Thread Sleep Example",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w6-34",
+          "title": "Thread Join Example",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-35",
+          "title": "Producer Thread",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-36",
+          "title": "Consumer Thread",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w6-37",
+          "title": "Synchronization Example",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w6-38",
+          "title": "Ticket Booking Thread",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w6-39",
+          "title": "Bank Transaction Thread",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w6-40",
+          "title": "Download Manager Simulation",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "employee-management-java8",
+      "title": "Employee Management System (Java 8)",
+      "description": "Employee management using Streams, Lambda, and Comparator.",
+      "features": [
+        {
+          "id": "p1-filter",
+          "title": "Filter Employees"
+        },
+        {
+          "id": "p1-sort",
+          "title": "Sort Employees"
+        },
+        {
+          "id": "p1-search",
+          "title": "Search Employees"
+        },
+        {
+          "id": "p1-department",
+          "title": "Department Wise Display"
+        }
+      ],
+      "requirements": [
+        "Use Streams for filtering and sorting",
+        "Use Lambda expressions",
+        "Use Comparator"
+      ],
+      "bonusFeatures": [
+        "Export department summary"
+      ]
+    },
+    {
+      "id": "student-analytics",
+      "title": "Student Analytics Dashboard",
+      "description": "Analytics dashboard using Streams and Optional.",
+      "features": [
+        {
+          "id": "p2-highest",
+          "title": "Highest Marks"
+        },
+        {
+          "id": "p2-average",
+          "title": "Average Marks"
+        },
+        {
+          "id": "p2-failed",
+          "title": "Failed Students"
+        },
+        {
+          "id": "p2-rank",
+          "title": "Rank List"
+        }
+      ],
+      "requirements": [
+        "Use Streams for analytics",
+        "Use Optional for safe lookups"
+      ],
+      "bonusFeatures": [
+        "Subject-wise analytics"
+      ]
+    },
+    {
+      "id": "ticket-booking-concurrent",
+      "title": "Online Ticket Booking System",
+      "description": "Concurrent ticket booking with thread safety.",
+      "features": [
+        {
+          "id": "p3-multiple-users",
+          "title": "Multiple Users"
+        },
+        {
+          "id": "p3-concurrent",
+          "title": "Concurrent Booking"
+        },
+        {
+          "id": "p3-thread-safety",
+          "title": "Thread Safety"
+        }
+      ],
+      "requirements": [
+        "Use multithreading",
+        "Use synchronization for seat booking"
+      ],
+      "bonusFeatures": [
+        "Waiting queue for sold-out seats"
+      ]
+    },
+    {
+      "id": "task-scheduler",
+      "title": "Task Scheduler",
+      "description": "Background task scheduler using Executor Service.",
+      "features": [
+        {
+          "id": "p4-schedule",
+          "title": "Schedule Tasks"
+        },
+        {
+          "id": "p4-background",
+          "title": "Execute in Background"
+        },
+        {
+          "id": "p4-multiple-threads",
+          "title": "Multiple Threads"
+        }
+      ],
+      "requirements": [
+        "Use ExecutorService",
+        "Support scheduled and immediate execution"
+      ],
+      "bonusFeatures": [
+        "Task status tracking"
+      ]
+    },
+    {
+      "id": "payroll-processor",
+      "title": "Employee Payroll Processor",
+      "description": "Parallel payroll processing with Streams and Executor Framework.",
+      "features": [
+        {
+          "id": "p5-parallel",
+          "title": "Parallel Salary Processing"
+        },
+        {
+          "id": "p5-bonus",
+          "title": "Bonus Calculation"
+        },
+        {
+          "id": "p5-reports",
+          "title": "Department Reports"
+        }
+      ],
+      "requirements": [
+        "Use Streams for data processing",
+        "Use Executor Framework for parallel tasks",
+        "Use Collections"
+      ],
+      "bonusFeatures": [
+        "Tax deduction calculation"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-6",
+    "title": "AI-Assisted Refactoring & Performance Optimization",
+    "description": "Use AI to convert loops to Streams, write Lambdas, explain pipelines, identify inefficiencies, and suggest thread-safe implementations.",
+    "learningTopics": [
+      {
+        "id": "ai-w6-t1",
+        "title": "AI for converting traditional loops into Streams"
+      },
+      {
+        "id": "ai-w6-t2",
+        "title": "AI for writing Lambda Expressions"
+      },
+      {
+        "id": "ai-w6-t3",
+        "title": "AI for explaining complex Stream pipelines"
+      },
+      {
+        "id": "ai-w6-t4",
+        "title": "AI for identifying inefficient code"
+      },
+      {
+        "id": "ai-w6-t5",
+        "title": "AI for suggesting thread-safe implementations"
+      },
+      {
+        "id": "ai-w6-t6",
+        "title": "AI for generating unit test ideas"
+      },
+      {
+        "id": "ai-w6-t7",
+        "title": "AI for performance analysis"
+      },
+      {
+        "id": "ai-w6-t8",
+        "title": "AI limitations in optimization"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w6-e1",
+        "title": "Convert a for loop into a Stream."
+      },
+      {
+        "id": "ai-w6-e2",
+        "title": "Explain a complex Lambda Expression."
+      },
+      {
+        "id": "ai-w6-e3",
+        "title": "Compare: Streams vs Loops."
+      },
+      {
+        "id": "ai-w6-e4",
+        "title": "Optimize collection processing."
+      },
+      {
+        "id": "ai-w6-e5",
+        "title": "Explain synchronization visually."
+      },
+      {
+        "id": "ai-w6-e6",
+        "title": "Identify race conditions."
+      },
+      {
+        "id": "ai-w6-e7",
+        "title": "Improve thread performance."
+      },
+      {
+        "id": "ai-w6-e8",
+        "title": "Review Stream code readability."
+      },
+      {
+        "id": "ai-w6-e9",
+        "title": "Explain Executor Service with a real-world analogy."
+      },
+      {
+        "id": "ai-w6-e10",
+        "title": "Generate test cases for multithreaded code."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-6",
+    "repository": "java-week-6-java8",
+    "description": "Create repository java-week-6-java8 and upload all Week 6 programs.",
+    "files": [
+      {
+        "id": "gh-w6-f1",
+        "path": "LambdaExamples.java"
+      },
+      {
+        "id": "gh-w6-f2",
+        "path": "StreamExamples.java"
+      },
+      {
+        "id": "gh-w6-f3",
+        "path": "OptionalExamples.java"
+      },
+      {
+        "id": "gh-w6-f4",
+        "path": "DateTimeExamples.java"
+      },
+      {
+        "id": "gh-w6-f5",
+        "path": "ThreadExamples.java"
+      },
+      {
+        "id": "gh-w6-f6",
+        "path": "ExecutorExamples.java"
+      },
+      {
+        "id": "gh-w6-f7",
+        "path": "EmployeeAnalytics.java"
+      },
+      {
+        "id": "gh-w6-f8",
+        "path": "TicketBookingSystem.java"
+      },
+      {
+        "id": "gh-w6-f9",
+        "path": "TaskScheduler.java"
+      },
+      {
+        "id": "gh-w6-f10",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w6-java8",
+      "category": "Java 8",
+      "questions": [
+        {
+          "id": "iq-w6-1",
+          "question": "What is a Lambda Expression?",
+          "answer": "Anonymous function implementing a functional interface — (params) -> expression or body."
+        },
+        {
+          "id": "iq-w6-2",
+          "question": "Difference between map() and flatMap()?",
+          "answer": "map() transforms each element 1:1; flatMap() flattens nested structures (Stream of Streams to Stream)."
+        },
+        {
+          "id": "iq-w6-3",
+          "question": "What is Optional?",
+          "answer": "Container that may or may not contain a value — avoids NullPointerException with safe API."
+        }
+      ]
+    },
+    {
+      "id": "iq-w6-collections",
+      "category": "Collections",
+      "questions": [
+        {
+          "id": "iq-w6-4",
+          "question": "Intermediate vs Terminal Stream operations?",
+          "answer": "Intermediate (filter, map) return streams; terminal (collect, forEach) produce results and close the stream."
+        }
+      ]
+    },
+    {
+      "id": "iq-w6-java",
+      "category": "Java",
+      "questions": [
+        {
+          "id": "iq-w6-5",
+          "question": "Difference between Thread and Runnable?",
+          "answer": "Thread is a class — extend and override run(). Runnable is an interface — implement run() and pass to Thread."
+        },
+        {
+          "id": "iq-w6-6",
+          "question": "What is synchronization?",
+          "answer": "Mechanism to control access to shared resources by multiple threads — synchronized keyword or locks."
+        },
+        {
+          "id": "iq-w6-7",
+          "question": "What is ExecutorService?",
+          "answer": "Higher-level API for managing thread pools — submit tasks without manually creating threads."
+        }
+      ]
+    },
+    {
+      "id": "iq-w6-ai",
+      "category": "AI",
+      "questions": [
+        {
+          "id": "iq-w6-8",
+          "question": "How can AI help refactor to Java 8?",
+          "answer": "Convert loops to Streams, suggest Lambdas, explain pipelines, identify thread-safety issues — always verify output."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w6-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions across Lambda, Streams, Optional, and Multithreading",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w6-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 Java 8 and multithreading projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w6-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to java-week-6-java8 repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w6-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 18
+      }
+    },
+    {
+      "id": "del-w6-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 6 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 30
+      }
+    }
+  ]
+}

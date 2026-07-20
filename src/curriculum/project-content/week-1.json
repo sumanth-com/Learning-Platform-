@@ -1,0 +1,52 @@
+{
+  "student-info-system": {
+    "mode": "inline",
+    "overview": "Console application to collect and display student details.\n\nFeatures to build:\n• Name\n• Age\n• Roll Number\n• Branch\n• College\n• Display Details\n\nRequirements:\n• Use Scanner for input\n• Store data in variables\n• Display formatted output",
+    "explanation": "Scanner reads each field from the keyboard. String fields use nextLine(); integers use nextInt() followed by nextLine() to consume the leftover newline. Variables store name, age, roll, branch, and college. printf formats a clean summary table. Always call sc.close() when done.",
+    "code": "import java.util.Scanner;\n\npublic class StudentInfo {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        System.out.print(\"Student name: \");\n        String name = sc.nextLine();\n        System.out.print(\"Age: \");\n        int age = sc.nextInt();\n        sc.nextLine();\n        System.out.print(\"Roll number: \");\n        int roll = sc.nextInt();\n        sc.nextLine();\n        System.out.print(\"Branch: \");\n        String branch = sc.nextLine();\n        System.out.print(\"College: \");\n        String college = sc.nextLine();\n\n        System.out.println(\"\\n--- Student Details ---\");\n        System.out.printf(\"Name    : %s%n\", name);\n        System.out.printf(\"Age     : %d%n\", age);\n        System.out.printf(\"Roll No : %d%n\", roll);\n        System.out.printf(\"Branch  : %s%n\", branch);\n        System.out.printf(\"College : %s%n\", college);\n\n        sc.close();\n    }\n}",
+    "filename": "StudentInfo.java",
+    "sampleInput": "Student name: Riya Sharma\nAge: 19\nRoll number: 101\nBranch: CSE\nCollege: Prathyu Academy",
+    "sampleOutput": "\n--- Student Details ---\nName    : Riya Sharma\nAge     : 19\nRoll No : 101\nBranch  : CSE\nCollege : Prathyu Academy",
+    "runInstructions": "javac StudentInfo.java\njava StudentInfo"
+  },
+  "simple-calculator": {
+    "mode": "inline",
+    "overview": "Menu-driven calculator with basic arithmetic operations.\n\nFeatures to build:\n• Addition\n• Subtraction\n• Multiplication\n• Division\n• Modulus\n\nRequirements:\n• Handle division by zero\n• Use switch-case or if-else for operations",
+    "explanation": "A menu-driven calculator using switch on the user's choice. Each case performs one operation (+, -, *, /, %). Division checks for zero before dividing. Scanner reads choice and two numbers as doubles so division gives decimal results.",
+    "code": "import java.util.Scanner;\n\npublic class SimpleCalculator {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.println(\"1. Addition\\n2. Subtraction\\n3. Multiplication\\n4. Division\\n5. Modulus\");\n        System.out.print(\"Choice: \");\n        int choice = sc.nextInt();\n        System.out.print(\"First number: \");\n        double a = sc.nextDouble();\n        System.out.print(\"Second number: \");\n        double b = sc.nextDouble();\n\n        switch (choice) {\n            case 1 -> System.out.println(\"Result: \" + (a + b));\n            case 2 -> System.out.println(\"Result: \" + (a - b));\n            case 3 -> System.out.println(\"Result: \" + (a * b));\n            case 4 -> {\n                if (b == 0) System.out.println(\"Cannot divide by zero.\");\n                else System.out.println(\"Result: \" + (a / b));\n            }\n            case 5 -> System.out.println(\"Result: \" + (a % b));\n            default -> System.out.println(\"Invalid choice.\");\n        }\n        sc.close();\n    }\n}",
+    "filename": "SimpleCalculator.java",
+    "sampleInput": "1. Addition\\n2. Subtraction\\n3. Multiplication\\n4. Division\\n5. Modulus\\nChoice: 1\\nFirst number: 10\\nSecond number: 4",
+    "sampleOutput": "Result: 14.0",
+    "runInstructions": "javac SimpleCalculator.java\njava SimpleCalculator"
+  },
+  "bmi-calculator": {
+    "mode": "inline",
+    "overview": "Calculate Body Mass Index from height and weight input.\n\nFeatures to build:\n• Height (Input)\n• Weight (Input)\n• BMI (Output)\n• Category (Output)\n\nRequirements:\n• Validate input ranges\n• Display BMI category based on result",
+    "explanation": "BMI = weight / (height × height). Input is validated so height and weight must be positive. if-else if chain maps BMI ranges to categories (Underweight, Normal, Overweight, Obese) using standard WHO thresholds.",
+    "code": "import java.util.Scanner;\n\npublic class BMICalculator {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Height (m): \");\n        double height = sc.nextDouble();\n        System.out.print(\"Weight (kg): \");\n        double weight = sc.nextDouble();\n\n        if (height <= 0 || weight <= 0) {\n            System.out.println(\"Invalid input.\");\n            sc.close();\n            return;\n        }\n\n        double bmi = weight / (height * height);\n        System.out.printf(\"BMI: %.2f%n\", bmi);\n\n        String category;\n        if (bmi < 18.5) category = \"Underweight\";\n        else if (bmi < 25) category = \"Normal\";\n        else if (bmi < 30) category = \"Overweight\";\n        else category = \"Obese\";\n        System.out.println(\"Category: \" + category);\n        sc.close();\n    }\n}",
+    "filename": "BMICalculator.java",
+    "sampleInput": "Height (m): 1.75\\nWeight (kg): 70",
+    "sampleOutput": "BMI: 22.86\\nCategory: Normal",
+    "runInstructions": "javac BMICalculator.java\njava BMICalculator"
+  },
+  "student-grade-calculator": {
+    "mode": "inline",
+    "overview": "Calculate total, average, and percentage from 5 subject marks.\n\nFeatures to build:\n• 5 Subjects (Input)\n• Total (Output)\n• Average (Output)\n• Percentage (Output)\n\nRequirements:\n• Accept marks for 5 subjects\n• Calculate and display results",
+    "explanation": "A for loop reads marks for 5 subjects into an array and accumulates total. Average = total / 5.0 (note the 5.0 double literal so division is not integer). Percentage equals average when each subject is out of 100.",
+    "code": "import java.util.Scanner;\n\npublic class GradeCalculator {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int total = 0;\n        int[] marks = new int[5];\n\n        for (int i = 0; i < 5; i++) {\n            System.out.print(\"Subject \" + (i + 1) + \" marks: \");\n            marks[i] = sc.nextInt();\n            total += marks[i];\n        }\n\n        double average = total / 5.0;\n        double percentage = average;\n\n        System.out.println(\"Total      : \" + total);\n        System.out.printf(\"Average    : %.2f%n\", average);\n        System.out.printf(\"Percentage : %.2f%%%n\", percentage);\n        sc.close();\n    }\n}",
+    "filename": "GradeCalculator.java",
+    "sampleInput": "Subject 1 marks: 85\\nSubject 2 marks: 90\\nSubject 3 marks: 78\\nSubject 4 marks: 92\\nSubject 5 marks: 88",
+    "sampleOutput": "Total      : 433\\nAverage    : 86.60\\nPercentage : 86.60%",
+    "runInstructions": "javac GradeCalculator.java\njava GradeCalculator"
+  },
+  "electricity-bill-calculator": {
+    "mode": "inline",
+    "overview": "Calculate electricity bill amount based on units consumed.\n\nFeatures to build:\n• Units (Input)\n• Bill Amount (Output)\n\nRequirements:\n• Read units consumed\n• Apply tariff/slab logic and display bill amount",
+    "explanation": "Slab-based billing: first 100 units at Rs. 3.5/unit, next 100 at Rs. 4.5, above 200 at Rs. 6.0. if-else if picks the correct tariff. Invalid negative units are rejected early with return.",
+    "code": "import java.util.Scanner;\n\npublic class ElectricityBill {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Units consumed: \");\n        int units = sc.nextInt();\n\n        if (units < 0) {\n            System.out.println(\"Invalid units.\");\n            sc.close();\n            return;\n        }\n\n        double bill;\n        if (units <= 100) bill = units * 3.5;\n        else if (units <= 200) bill = 100 * 3.5 + (units - 100) * 4.5;\n        else bill = 100 * 3.5 + 100 * 4.5 + (units - 200) * 6.0;\n\n        System.out.printf(\"Bill Amount: Rs. %.2f%n\", bill);\n        sc.close();\n    }\n}",
+    "filename": "ElectricityBill.java",
+    "sampleInput": "Units consumed: 250",
+    "sampleOutput": "Bill Amount: Rs. 1225.00",
+    "runInstructions": "javac ElectricityBill.java\njava ElectricityBill"
+  }
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "id": "w2-control-flow",
+    "category": "Control Flow & Loops",
+    "questions": [
+      {
+        "id": "w2-q01",
+        "question": "Difference between if and switch.",
+        "answer": "if-else evaluates boolean conditions and supports ranges, complex logic, and any expression that returns true or false. switch compares a single expression against discrete constant values (case labels)—traditionally integers, chars, enums, and since Java 7, Strings. switch is cleaner for many fixed options; if-else is more flexible for varied conditions. Modern switch expressions (Java 14+) can return values and use arrow syntax.",
+        "realWorld": "Use switch for menu-driven CLI apps or status codes (PENDING, APPROVED, REJECTED); use if-else for range checks like credit score tiers or age-based pricing.",
+        "code": "int day = 3;\nif (day == 1) System.out.println(\"Mon\");\nelse if (day == 2) System.out.println(\"Tue\");\n\nswitch (day) {\n    case 1 -> System.out.println(\"Mon\");\n    case 2 -> System.out.println(\"Tue\");\n    case 3 -> System.out.println(\"Wed\");\n    default -> System.out.println(\"Other\");\n}",
+        "output": "Wed\nWed"
+      },
+      {
+        "id": "w2-q02",
+        "question": "When should switch be preferred?",
+        "answer": "Prefer switch when you compare one variable against many known, constant values—especially enums, status codes, or menu options. It improves readability, reduces nested if-else chains, and allows the compiler to optimize via jump tables. Avoid switch for range checks, floating-point comparisons, or complex boolean logic—if-else is better there.",
+        "realWorld": "Payment processors switch on transaction type (CREDIT, DEBIT, UPI) to route to the correct handler; enums make this type-safe and exhaustive."
+      },
+      {
+        "id": "w2-q03",
+        "question": "Difference between while and do-while.",
+        "answer": "A while loop checks the condition before each iteration—the body may never execute if the condition is false initially. A do-while loop executes the body at least once, then checks the condition at the bottom. Use while when zero iterations is valid; use do-while when you need guaranteed first execution, such as prompting until valid input.",
+        "realWorld": "A login retry loop often uses do-while: prompt for credentials at least once, then repeat until success or max attempts.",
+        "code": "int count = 5;\nwhile (count < 5) { System.out.println(\"while\"); count++; }\n\ncount = 5;\ndo { System.out.println(\"do-while\"); count++; } while (count < 5);",
+        "output": "(while prints nothing)\ndo-while"
+      },
+      {
+        "id": "w2-q04",
+        "question": "Difference between for and while.",
+        "answer": "A for loop bundles initialization, condition, and update in one header—ideal when the number of iterations is known or a counter drives the loop. A while loop only has a condition—better when iterations depend on external state that changes inside the loop. Both are equivalent in power; for loops express iteration intent more clearly for indexed access.",
+        "realWorld": "Processing each row in a fixed-size batch uses for; reading from a stream until EOF uses while.",
+        "code": "for (int i = 0; i < 3; i++) System.out.print(i + \" \");\nSystem.out.println();\n\nint j = 0;\nwhile (j < 3) { System.out.print(j + \" \"); j++; }",
+        "output": "0 1 2 \n0 1 2"
+      },
+      {
+        "id": "w2-q05",
+        "question": "What is an infinite loop?",
+        "answer": "An infinite loop repeats indefinitely because its termination condition never becomes false—often due to a missing increment, wrong comparison, or always-true condition. It can freeze a program or consume CPU unless broken externally. Sometimes infinite loops are intentional, such as server event loops that run until shutdown.",
+        "realWorld": "Accidental infinite loops in batch jobs can peg CPU and stall deployments; intentional ones power game loops and message consumers waiting for events.",
+        "code": "// Infinite loop (do not run in production):\n// while (true) { System.out.println(\"Running...\"); }\n\nint i = 0;\nwhile (i < 5) {\n    System.out.println(i);\n    i++; // without i++, this would be infinite\n}",
+        "output": "0\n1\n2\n3\n4"
+      },
+      {
+        "id": "w2-q06",
+        "question": "What is loop initialization?",
+        "answer": "Loop initialization sets up the starting state before the first iteration—typically declaring and assigning a counter or iterator variable. In a for loop it appears in the first part of the header: for (int i = 0; ...). In while loops, initialization usually happens just before the loop. Proper initialization ensures the loop starts from a known, correct state.",
+        "realWorld": "Paginating API results initializes page = 1 or offset = 0 before fetching records in a loop until no more pages remain.",
+        "code": "for (int i = 0; i < 3; i++) {\n    System.out.println(\"i starts at 0, now: \" + i);\n}",
+        "output": "i starts at 0, now: 0\ni starts at 0, now: 1\ni starts at 0, now: 2"
+      },
+      {
+        "id": "w2-q07",
+        "question": "What is loop termination?",
+        "answer": "Loop termination is the condition that stops repeated execution—when it evaluates to false, the loop exits. It must eventually be reachable, or the loop runs forever. Termination often depends on a counter reaching a limit, a flag being set, or a sentinel value detected. Designing clear termination conditions prevents infinite loops and off-by-one errors.",
+        "realWorld": "A retry loop terminates when the HTTP call succeeds or retryCount reaches MAX_RETRIES—both are explicit exit conditions.",
+        "code": "int retries = 0;\nwhile (retries < 3) {\n    System.out.println(\"Attempt \" + (retries + 1));\n    retries++; // moves toward termination\n}",
+        "output": "Attempt 1\nAttempt 2\nAttempt 3"
+      },
+      {
+        "id": "w2-q08",
+        "question": "Difference between break and continue.",
+        "answer": "break immediately exits the innermost loop or switch—it stops all further iterations. continue skips the rest of the current iteration and jumps to the next condition check. Use break when you have found what you need or must stop entirely; use continue when the current item should be skipped but the loop should keep running.",
+        "realWorld": "Searching a list breaks when the target ID is found; validating records continues past invalid entries while processing valid ones.",
+        "code": "for (int i = 1; i <= 5; i++) {\n    if (i == 3) continue;\n    if (i == 5) break;\n    System.out.println(i);\n}",
+        "output": "1\n2\n4"
+      },
+      {
+        "id": "w2-q09",
+        "question": "How do you debug an infinite loop?",
+        "answer": "First identify whether the loop is truly infinite or just long-running. Add logging inside the loop to print counter and condition variables each iteration. Verify the update step runs and moves toward termination. Use a debugger with breakpoints to inspect variable values. Temporarily add a safety counter or max-iteration guard. Check for conditions that can never become false, such as comparing wrong variables.",
+        "realWorld": "Developers attach a debugger in IntelliJ, pause execution, and inspect loop variables; adding log lines like 'iteration={} condition={}' quickly reveals stuck state in staging."
+      }
+    ]
+  },
+  {
+    "id": "w2-methods",
+    "category": "Methods & Functions",
+    "questions": [
+      {
+        "id": "w2-q10",
+        "question": "What is a method?",
+        "answer": "A method is a named block of code inside a class that performs a specific task. It can accept parameters, return a value, and be called repeatedly from other parts of the program. Methods define behavior in OOP and break programs into manageable, reusable units with clear signatures: access modifier, return type, name, and parameter list.",
+        "realWorld": "A UserService class exposes methods like authenticate(), register(), and resetPassword() that controllers call without duplicating logic.",
+        "code": "public static int square(int n) {\n    return n * n;\n}\n\npublic static void main(String[] args) {\n    System.out.println(square(5));\n}",
+        "output": "25"
+      },
+      {
+        "id": "w2-q11",
+        "question": "Why do we use methods?",
+        "answer": "Methods promote reuse—you write logic once and call it many times. They improve readability by giving meaningful names to operations, simplify testing by isolating behavior, and reduce duplication (DRY principle). Methods also encapsulate complexity so callers interact through a simple interface without knowing implementation details.",
+        "realWorld": "Tax calculation logic lives in one calculateTax() method used by checkout, invoicing, and refund modules—fix a bug once, all callers benefit."
+      },
+      {
+        "id": "w2-q12",
+        "question": "What is a parameter?",
+        "answer": "A parameter is a variable declared in a method signature that acts as a placeholder for values passed in at call time. Parameters define what data a method expects and their types. They are local to the method and initialized when the method is invoked with corresponding arguments.",
+        "realWorld": "void sendEmail(String recipient, String subject, String body) declares three parameters that callers must supply.",
+        "code": "public static void greet(String name) { // 'name' is a parameter\n    System.out.println(\"Hello, \" + name);\n}",
+        "output": "greet(\"Sam\") → Hello, Sam"
+      },
+      {
+        "id": "w2-q13",
+        "question": "What is an argument?",
+        "answer": "An argument is the actual value passed to a method when it is called. If a parameter is the variable in the definition, the argument is the concrete value at the call site. The number, order, and types of arguments must match the method's parameter list (or valid overload resolution).",
+        "realWorld": "Calling processOrder(101, true) passes arguments 101 and true to match parameters orderId and expressShipping.",
+        "code": "public static void main(String[] args) {\n    greet(\"Alice\"); // \"Alice\" is the argument\n}",
+        "output": "Hello, Alice"
+      },
+      {
+        "id": "w2-q14",
+        "question": "Difference between parameter and argument.",
+        "answer": "Parameters appear in the method declaration—they define the interface. Arguments appear in the method call—they supply actual data. The same method might be called with different arguments each time; parameters remain fixed in the signature. Interview tip: 'parameter = definition, argument = invocation.'",
+        "realWorld": "A method signature int multiply(int a, int b) has parameters a and b; multiply(4, 5) passes arguments 4 and 5."
+      },
+      {
+        "id": "w2-q15",
+        "question": "What is method overloading?",
+        "answer": "Method overloading defines multiple methods with the same name but different parameter lists—different number, types, or order of parameters. Return type alone does not distinguish overloads. The compiler resolves the correct method at compile time based on arguments. Overloading improves API ergonomics by providing sensible defaults for related operations.",
+        "realWorld": "println() is overloaded for int, String, boolean, etc.; your own formatAmount(double) and formatAmount(double, String currency) serve different use cases.",
+        "code": "static int add(int a, int b) { return a + b; }\nstatic double add(double a, double b) { return a + b; }\nstatic int add(int a, int b, int c) { return a + b + c; }\n\nSystem.out.println(add(2, 3));\nSystem.out.println(add(2.5, 3.1));",
+        "output": "5\n5.6"
+      },
+      {
+        "id": "w2-q16",
+        "question": "What is a return type?",
+        "answer": "The return type declares what kind of value a method sends back to the caller—int, String, boolean, custom class, etc. Methods with a non-void return type must use return with a compatible value on all code paths (unless an exception is thrown). The caller can use the returned value in expressions, assignments, or further method calls.",
+        "realWorld": "Repository methods return Optional<User> or List<Order> so callers receive typed results without parsing raw data structures.",
+        "code": "public static String toUpper(String input) {\n    return input.toUpperCase();\n}\n\nString result = toUpper(\"java\");\nSystem.out.println(result);",
+        "output": "JAVA"
+      },
+      {
+        "id": "w2-q17",
+        "question": "What is a void method?",
+        "answer": "A void method declares that it returns nothing to the caller. It performs an action—printing, updating state, sending a message—without producing a value for use in an expression. void methods may use a bare return; to exit early but cannot return a value. Attempting to assign the result of a void call causes a compile error.",
+        "realWorld": "void saveToDatabase(Order order) persists data; void logError(String msg) writes to logs—neither needs to return a value to the caller.",
+        "code": "public static void printBanner() {\n    System.out.println(\"=== App v1.0 ===\");\n}\n\nprintBanner();",
+        "output": "=== App v1.0 ==="
+      },
+      {
+        "id": "w2-q18",
+        "question": "What happens if a method has no return statement?",
+        "answer": "For void methods, omitting return is fine—the method implicitly returns at the closing brace. For non-void methods, every code path must return a value; otherwise the compiler reports an error ('missing return statement'). If some branches return and others do not, that is also a compile-time error. Unchecked exceptions can terminate a path without return.",
+        "realWorld": "A method computing discount with if/else branches must return in both branches; missing else return fails compilation before deployment.",
+        "code": "public static int abs(int n) {\n    if (n >= 0) return n;\n    return -n; // all paths must return int\n}",
+        "output": "abs(-7) → 7"
+      },
+      {
+        "id": "w2-q19",
+        "question": "Can we call one method from another?",
+        "answer": "Yes—methods in the same class call each other directly by name. One method can invoke another to compose higher-level behavior from smaller steps. This is fundamental to structured programming: main() calls initialize(), which calls loadConfig(), and so on. Static methods call other static methods; instance methods call both instance and static methods (with appropriate syntax).",
+        "realWorld": "placeOrder() internally calls validateCart(), reserveInventory(), and chargePayment()—each a separate testable method.",
+        "code": "static int doubleIt(int x) { return x * 2; }\nstatic int quadruple(int x) { return doubleIt(doubleIt(x)); }\n\nSystem.out.println(quadruple(3));",
+        "output": "12"
+      },
+      {
+        "id": "w2-q20",
+        "question": "What is recursion? (Basic understanding)",
+        "answer": "Recursion is when a method calls itself to solve a problem by breaking it into smaller subproblems of the same form. Every recursive method needs a base case (stopping condition) and a recursive case that moves toward the base case. Without a base case, recursion causes stack overflow. Classic examples include factorial, Fibonacci, and tree traversal.",
+        "realWorld": "File system walkers recursively list directories; JSON parsers recursively descend nested objects.",
+        "code": "static int factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}\n\nSystem.out.println(factorial(5));",
+        "output": "120"
+      },
+      {
+        "id": "w2-q21",
+        "question": "Can a method return multiple values?",
+        "answer": "Java methods can return only one value per return statement. To return multiple results, wrap them in an object—array, List, record, or custom class. Another pattern is passing a mutable container as a parameter for the method to fill. Java 16+ records make returning paired or grouped values clean and readable.",
+        "realWorld": "A geocoding method returns a record Location(double lat, double lng) instead of two separate return values.",
+        "code": "record MinMax(int min, int max) {}\n\nstatic MinMax range(int[] arr) {\n    int min = arr[0], max = arr[0];\n    for (int v : arr) {\n        if (v < min) min = v;\n        if (v > max) max = v;\n    }\n    return new MinMax(min, max);\n}",
+        "output": "range(new int[]{3, 1, 9}) → MinMax[min=1, max=9]"
+      },
+      {
+        "id": "w2-q22",
+        "question": "What is pass by value in Java?",
+        "answer": "Java is always pass-by-value. For primitives, the method receives a copy of the value—changes inside the method do not affect the original variable. For objects, the reference value (memory address) is copied, not the object itself—both references point to the same object, so mutating object fields is visible outside, but reassigning the parameter does not change the caller's reference.",
+        "realWorld": "Passing an Account object lets a method update the balance (visible to caller) but reassigning the parameter to a new Account does not change the caller's variable.",
+        "code": "static void tryChange(int x, int[] arr) {\n    x = 100;\n    arr[0] = 99;\n}\n\nint n = 1;\nint[] a = {1, 2};\ntryChange(n, a);\nSystem.out.println(n + \", \" + a[0]);",
+        "output": "1, 99"
+      }
+    ]
+  },
+  {
+    "id": "w2-scope-static",
+    "category": "Scope & Static Methods",
+    "questions": [
+      {
+        "id": "w2-q23",
+        "question": "What is variable scope?",
+        "answer": "Scope defines where a variable is visible and accessible. In Java, variables declared inside a block (method, loop, if) are local to that block. Variables declared as instance fields are accessible throughout the class (and by other classes per access modifiers). Scope prevents naming collisions and limits lifetime—local variables are destroyed when their block ends.",
+        "realWorld": "A loop variable i declared inside for exists only within the loop; instance fields like userId persist for the object's lifetime.",
+        "code": "static void demo() {\n    int x = 10;\n    if (x > 0) {\n        int y = 5;\n        System.out.println(x + y);\n    }\n    // System.out.println(y); // compile error: y out of scope\n}",
+        "output": "15"
+      },
+      {
+        "id": "w2-q24",
+        "question": "What are local variables?",
+        "answer": "Local variables are declared inside methods, constructors, or blocks. They have no default value—you must assign before use. They exist only during execution of that block and are stored on the stack. Local variables cannot use access modifiers and are not visible outside their declaring block.",
+        "realWorld": "Temporary variables like subtotal, taxAmount, and formattedDate inside checkout() are locals—created per invocation and discarded after.",
+        "code": "public static void main(String[] args) {\n    int count = 0; // local to main\n    count++;\n    System.out.println(count);\n}",
+        "output": "1"
+      },
+      {
+        "id": "w2-q25",
+        "question": "What are static methods?",
+        "answer": "Static methods belong to the class, not to any instance. They are called via ClassName.method() without creating an object. They can access static fields and other static methods but not instance members directly (no this). Utility methods like Math.max and main() are static. Static methods cannot be overridden in the polymorphic sense—they are resolved at compile time.",
+        "realWorld": "Collections.sort(), Integer.parseInt(), and factory methods like User.fromJson() are common static methods in enterprise codebases.",
+        "code": "class Utils {\n    static int add(int a, int b) { return a + b; }\n}\n\nSystem.out.println(Utils.add(4, 6));",
+        "output": "10"
+      }
+    ]
+  }
+]

@@ -1,0 +1,247 @@
+{
+  "id": "db",
+  "title": "DB Interview Questions",
+  "subtitle": "30 Database & SQL questions",
+  "categories": [
+    {
+      "id": "db-fundamentals",
+      "category": "Database Fundamentals",
+      "questions": [
+        {
+          "id": "db-q01",
+          "question": "What is database normalization?",
+          "answer": "Normalization is the process of organizing data into tables to reduce redundancy and improve integrity. It applies normal forms (1NF through 5NF, practically up to 3NF/BCNF). 1NF: atomic values, no repeating groups. 2NF: no partial dependencies on composite keys. 3NF: no transitive dependencies (non-key columns depend only on the primary key). Normalized schemas avoid update anomalies—changing data in one place updates it everywhere—and save storage by not duplicating facts.",
+          "realWorld": "Instead of storing customer name and address on every order row, you split into customers and orders tables linked by customer_id. Updating a customer's address happens once in the customers table.",
+          "code": "-- Denormalized (bad): order stores customer details repeatedly\n-- orders(order_id, customer_name, customer_email, product, qty)\n\n-- Normalized (3NF):\nCREATE TABLE customers (\n    customer_id SERIAL PRIMARY KEY,\n    name VARCHAR(100) NOT NULL,\n    email VARCHAR(255) UNIQUE NOT NULL\n);\n\nCREATE TABLE orders (\n    order_id SERIAL PRIMARY KEY,\n    customer_id INT NOT NULL REFERENCES customers(customer_id),\n    product_id INT NOT NULL,\n    quantity INT NOT NULL\n);"
+        },
+        {
+          "id": "db-q02",
+          "question": "What is denormalization and when would you use it?",
+          "answer": "Denormalization intentionally introduces redundancy into a normalized schema to improve read performance. You duplicate data that could be joined, avoiding expensive JOINs on hot query paths. Use it for read-heavy analytics dashboards, reporting tables, caching layers, or when latency matters more than storage. Trade-offs: faster reads but slower writes (must update duplicated data), and risk of inconsistency if updates aren't synchronized. Common pattern: maintain normalized OLTP tables and denormalized read replicas or materialized views.",
+          "realWorld": "An e-commerce product listing page needs product name, category name, average rating, and price in one query. A denormalized product_summary table pre-joins these fields, updated by triggers or batch jobs, cutting page load from 200ms to 20ms.",
+          "code": "-- Denormalized read table for fast catalog queries\nCREATE TABLE product_catalog_view (\n    product_id INT PRIMARY KEY,\n    product_name VARCHAR(200),\n    category_name VARCHAR(100),  -- duplicated from categories table\n    avg_rating DECIMAL(3,2),     -- computed aggregate stored\n    price DECIMAL(10,2)\n);\n\nSELECT product_name, category_name, avg_rating, price\nFROM product_catalog_view\nWHERE category_name = 'Electronics';"
+        },
+        {
+          "id": "db-q03",
+          "question": "What is a primary key?",
+          "answer": "A primary key uniquely identifies each row in a table. It must be NOT NULL and unique—no two rows share the same key value. A table has at most one primary key, which can be a single column or composite (multiple columns). Primary keys are indexed automatically for fast lookups. Common choices: auto-increment integers (SERIAL/BIGSERIAL), UUIDs (distributed systems), or natural keys (ISBN for books—use carefully). In JPA, @Id marks the primary key field; @GeneratedValue configures auto-generation strategy.",
+          "realWorld": "Every employee row has employee_id as primary key. Even if two employees share a name, the ID distinguishes them. APIs expose /employees/42 where 42 is the primary key.",
+          "code": "@Entity\n@Table(name = \"employees\")\npublic class Employee {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    @Column(nullable = false)\n    private String name;\n}\n\n-- SQL equivalent:\n-- CREATE TABLE employees (\n--     id BIGSERIAL PRIMARY KEY,\n--     name VARCHAR(100) NOT NULL\n-- );"
+        },
+        {
+          "id": "db-q04",
+          "question": "What is a foreign key?",
+          "answer": "A foreign key is a column (or set of columns) that references the primary key of another table, establishing a referential relationship. It enforces referential integrity: you cannot insert a child row with a non-existent parent ID, and deletes/updates on the parent can be restricted (RESTRICT), cascaded (CASCADE), or set to null (SET NULL). Foreign keys model one-to-many and many-to-one relationships. In JPA, @ManyToOne with @JoinColumn creates a foreign key column.",
+          "realWorld": "orders.customer_id references customers.customer_id. You cannot create an order for customer_id=999 if that customer doesn't exist. Deleting a customer with CASCADE deletes their orders; with RESTRICT, deletion is blocked until orders are removed.",
+          "code": "@Entity\npublic class Order {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    @ManyToOne(fetch = FetchType.LAZY)\n    @JoinColumn(name = \"customer_id\", nullable = false)\n    private Customer customer;\n}\n\n-- ALTER TABLE orders\n-- ADD CONSTRAINT fk_orders_customer\n-- FOREIGN KEY (customer_id) REFERENCES customers(id)\n-- ON DELETE RESTRICT;"
+        },
+        {
+          "id": "db-q05",
+          "question": "What is a composite key?",
+          "answer": "A composite key consists of two or more columns that together uniquely identify a row—neither column alone is unique. Used in junction/association tables (many-to-many), historical records, or when natural uniqueness spans multiple attributes. Example: order_items(order_id, product_id) where the same product can appear in many orders but only once per order. In JPA, use @EmbeddedId with an embeddable class or @IdClass. Composite keys are harder to reference in APIs—surrogate keys (auto-generated ID) are often preferred for simplicity.",
+          "realWorld": "A student_course_enrollment table uses (student_id, course_id, semester) as composite key—a student enrolls in the same course each semester as a separate record, but only once per semester.",
+          "code": "@Embeddable\npublic class EnrollmentId implements Serializable {\n    private Long studentId;\n    private Long courseId;\n    private String semester;\n}\n\n@Entity\npublic class Enrollment {\n    @EmbeddedId\n    private EnrollmentId id;\n\n    private LocalDate enrolledDate;\n}\n\n-- CREATE TABLE enrollment (\n--     student_id INT,\n--     course_id INT,\n--     semester VARCHAR(10),\n--     enrolled_date DATE,\n--     PRIMARY KEY (student_id, course_id, semester)\n-- );"
+        },
+        {
+          "id": "db-q06",
+          "question": "What are database indexes and why use them?",
+          "answer": "An index is a data structure (typically B-tree) that speeds up data retrieval at the cost of extra storage and slower writes. Without an index, the database performs a full table scan. Indexes accelerate WHERE, JOIN, and ORDER BY on indexed columns. Create indexes on columns frequently used in filters and joins; avoid over-indexing (each INSERT/UPDATE must update indexes). Types include single-column, composite (multi-column), unique, and partial indexes. Use EXPLAIN to verify index usage.",
+          "realWorld": "A users table with 10 million rows: querying WHERE email = 'x@y.com' without an index scans all rows (seconds). With a unique index on email, lookup takes milliseconds.",
+          "code": "-- Single column index\nCREATE INDEX idx_orders_customer_id ON orders(customer_id);\n\n-- Composite index (order matters: leftmost prefix rule)\nCREATE INDEX idx_orders_status_date ON orders(status, created_at);\n\n-- Query that uses composite index:\nSELECT * FROM orders\nWHERE status = 'PENDING' AND created_at > '2025-01-01';"
+        },
+        {
+          "id": "db-q07",
+          "question": "Clustered vs Non-Clustered Index — what is the difference?",
+          "answer": "A clustered index determines the physical order of rows in the table—there can be only one per table (usually the primary key). Data pages are stored in index key order, making range scans very fast. A non-clustered index is a separate structure with index key + pointer (row ID or clustered key) to the actual row— a table can have many. Lookups via non-clustered index may require a key lookup (bookmark lookup) to fetch remaining columns. In PostgreSQL, clustered indexes work differently (CLUSTER command reorders physically); MySQL InnoDB primary key is clustered by default.",
+          "realWorld": "SQL Server: primary key on orders(order_id) is clustered—fetching orders by ID range reads sequentially from disk. A non-clustered index on customer_id lets you find all orders for a customer quickly, then looks up full rows.",
+          "code": "-- SQL Server example\nCREATE TABLE orders (\n    order_id INT PRIMARY KEY,        -- clustered by default\n    customer_id INT NOT NULL,\n    order_date DATE\n);\n\nCREATE NONCLUSTERED INDEX idx_customer\nON orders(customer_id)\nINCLUDE (order_date);  -- covering index avoids key lookup"
+        },
+        {
+          "id": "db-q08",
+          "question": "What is a database transaction?",
+          "answer": "A transaction is a logical unit of work comprising one or more SQL operations that succeed or fail as a whole. It begins with BEGIN/START TRANSACTION, ends with COMMIT (persist changes) or ROLLBACK (undo all changes in the transaction). Transactions ensure consistency when multiple related changes must happen together—transfer money (debit + credit), create order (order + inventory update). In Spring, @Transactional demarcates transactional boundaries; propagation and isolation can be configured.",
+          "realWorld": "Bank transfer: debit account A and credit account B must both succeed or both fail. If credit fails after debit, rollback restores account A's balance.",
+          "code": "@Service\npublic class TransferService {\n\n    @Transactional\n    public void transfer(Long fromId, Long toId, BigDecimal amount) {\n        Account from = accountRepo.findById(fromId)\n            .orElseThrow(() -> new NotFoundException(\"Source account\"));\n        Account to = accountRepo.findById(toId)\n            .orElseThrow(() -> new NotFoundException(\"Target account\"));\n\n        from.debit(amount);\n        to.credit(amount);\n        // Both saves commit together; exception triggers rollback\n    }\n}"
+        },
+        {
+          "id": "db-q09",
+          "question": "Explain ACID properties.",
+          "answer": "ACID guarantees reliable transactions: Atomicity—all operations in a transaction complete or none do (rollback on failure). Consistency—transaction brings database from one valid state to another, honoring all constraints (FK, CHECK, UNIQUE). Isolation—concurrent transactions don't interfere; each appears to run alone (controlled by isolation level). Durability—once committed, data survives crashes (written to disk/WAL). ACID is foundational for relational databases and financial systems. NoSQL databases may relax ACID for scalability (eventual consistency).",
+          "realWorld": "Online payment: atomicity ensures charge and order creation aren't half-done. Consistency prevents negative balance. Isolation prevents two users buying the last item simultaneously without proper locking. Durability means committed payment survives server crash.",
+          "code": "-- Atomicity demo: both succeed or both rollback\nBEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\n-- If any constraint fails:\nROLLBACK;\n-- Otherwise:\nCOMMIT;"
+        },
+        {
+          "id": "db-q10",
+          "question": "What are transaction isolation levels?",
+          "answer": "Isolation levels control how concurrent transactions interact, balancing consistency vs performance. READ UNCOMMITTED: can read uncommitted data (dirty reads)—rarely used. READ COMMITTED: only committed data visible (default in PostgreSQL, Oracle). REPEATABLE READ: same query in transaction returns same rows (default in MySQL InnoDB). SERIALIZABLE: strictest—transactions appear sequential; prevents phantom reads but highest locking overhead. Problems without proper isolation: dirty read, non-repeatable read, phantom read. Spring: @Transactional(isolation = Isolation.REPEATABLE_READ).",
+          "realWorld": "Report generation uses REPEATABLE READ so row counts don't change mid-report. High-throughput inventory might use READ COMMITTED with optimistic locking (@Version) instead of SERIALIZABLE to avoid lock contention.",
+          "code": "@Transactional(isolation = Isolation.REPEATABLE_READ)\npublic Report generateMonthlyReport() {\n    long countAtStart = orderRepo.countByMonth(currentMonth);\n    // ... heavy computation ...\n    long countAtEnd = orderRepo.countByMonth(currentMonth);\n    // countAtStart == countAtEnd guaranteed under REPEATABLE READ\n    return new Report(countAtStart, computeRevenue());\n}"
+        },
+        {
+          "id": "db-q11",
+          "question": "What are deadlocks and how do you prevent them?",
+          "answer": "A deadlock occurs when two or more transactions hold locks and each waits for a lock held by another—creating a circular wait. The database detects deadlocks and aborts one transaction (victim) with a deadlock error. Prevention strategies: acquire locks in consistent order across transactions, keep transactions short, use lower isolation levels, prefer optimistic locking (@Version), avoid user interaction inside transactions, and retry on deadlock exceptions. Monitoring slow queries and lock waits helps identify deadlock-prone code paths.",
+          "realWorld": "Transaction A locks row 1 then waits for row 2. Transaction B locks row 2 then waits for row 1. Database kills one transaction; Spring @RetryableOnDeadlock pattern retries the failed transfer.",
+          "code": "@Retryable(retryFor = DeadlockLoserDataAccessException.class, maxAttempts = 3)\n@Transactional\npublic void updateInventory(Long productA, Long productB) {\n    // Always lock in ascending ID order to prevent circular waits\n    Long first = Math.min(productA, productB);\n    Long second = Math.max(productA, productB);\n    productRepo.findByIdWithLock(first);\n    productRepo.findByIdWithLock(second);\n    // update both...\n}"
+        }
+      ]
+    },
+    {
+      "id": "db-advanced-sql",
+      "category": "Advanced SQL",
+      "questions": [
+        {
+          "id": "db-q12",
+          "question": "What is a CTE (Common Table Expression)?",
+          "answer": "A CTE is a temporary named result set defined with WITH clause, used within a single SQL statement. It improves readability by breaking complex queries into logical steps and can reference itself (recursive CTE) for hierarchical data. CTEs are not stored permanently—they exist only for the query execution. PostgreSQL 12+ can inline or materialize CTEs. Use for multi-step aggregations, recursive org charts, and replacing nested subqueries for clarity.",
+          "realWorld": "Generate an organizational hierarchy: recursive CTE starts with CEO, joins employees whose manager_id matches previous level. Also used for running totals before window functions were widely adopted.",
+          "code": "WITH regional_sales AS (\n    SELECT region, SUM(amount) AS total\n    FROM orders\n    GROUP BY region\n),\ntop_regions AS (\n    SELECT region FROM regional_sales WHERE total > 100000\n)\nSELECT o.*\nFROM orders o\nJOIN top_regions tr ON o.region = tr.region;\n\n-- Recursive CTE: employee hierarchy\nWITH RECURSIVE emp_tree AS (\n    SELECT id, name, manager_id, 1 AS depth\n    FROM employees WHERE manager_id IS NULL\n    UNION ALL\n    SELECT e.id, e.name, e.manager_id, t.depth + 1\n    FROM employees e\n    JOIN emp_tree t ON e.manager_id = t.id\n)\nSELECT * FROM emp_tree;"
+        },
+        {
+          "id": "db-q13",
+          "question": "What are SQL window functions?",
+          "answer": "Window functions perform calculations across a set of rows related to the current row without collapsing results into a single row (unlike GROUP BY). Defined with OVER (PARTITION BY ... ORDER BY ...). Common functions: ROW_NUMBER(), RANK(), DENSE_RANK(), LAG(), LEAD(), SUM() OVER, AVG() OVER. Use for rankings, running totals, moving averages, and comparing rows to peers. Each row retains its identity while gaining analytic columns.",
+          "realWorld": "Sales leaderboard: rank salespeople by revenue per region without losing individual sale rows. Find each order's difference from the customer's average order value using AVG() OVER (PARTITION BY customer_id).",
+          "code": "SELECT\n    employee_id,\n    sale_date,\n    amount,\n    SUM(amount) OVER (\n        PARTITION BY employee_id\n        ORDER BY sale_date\n        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS running_total,\n    RANK() OVER (\n        PARTITION BY department\n        ORDER BY amount DESC\n    ) AS dept_rank\nFROM sales;"
+        },
+        {
+          "id": "db-q14",
+          "question": "What are stored procedures?",
+          "answer": "A stored procedure is precompiled SQL logic stored in the database server, invoked with CALL procedure_name(). Benefits: reduced network traffic (one call vs many queries), centralized business logic, and permission control (grant EXECUTE without table access). Drawbacks: harder to version control, test, and debug compared to application code; database vendor lock-in. In modern Java/Spring apps, business logic typically lives in the service layer; stored procedures remain useful for complex batch operations, reporting, and legacy integrations.",
+          "realWorld": "Nightly ETL job calls sp_generate_monthly_report() directly in the database—processing millions of rows without transferring data to the app server. Legacy Oracle systems have decades of PL/SQL procedures.",
+          "code": "-- PostgreSQL stored procedure\nCREATE OR REPLACE PROCEDURE deactivate_inactive_users(days INT)\nLANGUAGE plpgsql\nAS $$\nBEGIN\n    UPDATE users\n    SET active = false\n    WHERE last_login < NOW() - (days || ' days')::INTERVAL;\nEND;\n$$;\n\nCALL deactivate_inactive_users(90);\n\n-- Spring JPA can call via @Procedure or native query"
+        },
+        {
+          "id": "db-q15",
+          "question": "What are database triggers?",
+          "answer": "Triggers are automatic actions executed before or after INSERT, UPDATE, or DELETE on a table (or DDL events). Use cases: audit logging, enforcing complex constraints, maintaining denormalized columns, or validating data. BEFORE triggers can modify or reject the row; AFTER triggers run side effects once the change is committed to the row. Risks: hidden logic hard to trace, performance impact on every row change, debugging complexity. Prefer application-level logic in Spring services unless you need guaranteed enforcement regardless of access path.",
+          "realWorld": "Audit trigger writes old/new values to audit_log on every UPDATE to the salaries table—compliance requirement that can't be bypassed by any application. Trigger updates product_catalog_view when products table changes.",
+          "code": "CREATE OR REPLACE FUNCTION audit_salary_change()\nRETURNS TRIGGER AS $$\nBEGIN\n    INSERT INTO salary_audit(employee_id, old_salary, new_salary, changed_at)\n    VALUES (OLD.id, OLD.salary, NEW.salary, NOW());\n    RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\nCREATE TRIGGER trg_salary_audit\nAFTER UPDATE OF salary ON employees\nFOR EACH ROW\nEXECUTE FUNCTION audit_salary_change();"
+        },
+        {
+          "id": "db-q16",
+          "question": "What is an EXPLAIN plan and how do you use it?",
+          "answer": "EXPLAIN (or EXPLAIN ANALYZE) shows how the database executes a query—scan types (sequential vs index), join methods, estimated vs actual row counts, and cost. Use it to diagnose slow queries and verify indexes are used. Red flags: Seq Scan on large tables, Nested Loop with high row counts, high cost estimates. EXPLAIN ANALYZE actually runs the query and shows real timings. In JPA/Hibernate, enable show_sql and use datasource-proxy or p6spy to capture generated SQL, then EXPLAIN it in the database.",
+          "realWorld": "Dashboard query takes 8 seconds. EXPLAIN ANALYZE reveals Seq Scan on orders (5M rows) because filter uses a function on indexed column: WHERE DATE(created_at) = '2025-01-01'. Fix: range query on created_at directly.",
+          "code": "EXPLAIN ANALYZE\nSELECT o.*, c.name\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE o.status = 'PENDING'\n  AND o.created_at >= '2025-01-01'\n  AND o.created_at < '2025-02-01';\n\n-- Look for: Index Scan vs Seq Scan, actual rows, execution time"
+        }
+      ]
+    },
+    {
+      "id": "db-jpa",
+      "category": "JPA & Hibernate",
+      "questions": [
+        {
+          "id": "db-q17",
+          "question": "What is JPQL?",
+          "answer": "Java Persistence Query Language (JPQL) is an object-oriented query language that operates on entity names and fields, not table/column names. It is database-independent and translated by Hibernate to SQL. Syntax similar to SQL but uses class names: SELECT u FROM User u WHERE u.email = :email. Supports JOIN, GROUP BY, subqueries, and bulk UPDATE/DELETE. Use @Query on Spring Data repositories. Criteria API and Specification pattern offer type-safe dynamic queries as alternatives.",
+          "realWorld": "Repository method finds active users regardless of whether the underlying database is PostgreSQL or MySQL—JPQL references User entity, Hibernate generates dialect-specific SQL.",
+          "code": "public interface UserRepository extends JpaRepository<User, Long> {\n\n    @Query(\"SELECT u FROM User u WHERE u.active = true AND u.role = :role\")\n    List<User> findActiveByRole(@Param(\"role\") String role);\n\n    @Query(\"SELECT u FROM User u JOIN u.orders o WHERE o.status = 'COMPLETED'\")\n    List<User> findUsersWithCompletedOrders();\n\n    @Modifying\n    @Query(\"UPDATE User u SET u.active = false WHERE u.lastLogin < :cutoff\")\n    int deactivateInactive(@Param(\"cutoff\") LocalDateTime cutoff);\n}"
+        },
+        {
+          "id": "db-q18",
+          "question": "What is Hibernate and how does it relate to JPA?",
+          "answer": "Hibernate is the most widely used JPA implementation—it maps Java objects to relational tables (ORM). JPA defines the standard annotations and API (@Entity, EntityManager); Hibernate provides the engine that generates SQL, manages caching, and handles lazy loading. Spring Boot uses Hibernate by default via spring-boot-starter-data-jpa. Hibernate adds extensions: @Formula, Envers (auditing), custom types. It translates entity operations to SQL, tracks changes (dirty checking), and manages the persistence context (Session).",
+          "realWorld": "You define @Entity class Product; Hibernate auto-creates/updates schema (with ddl-auto), generates INSERT/UPDATE SQL, and maps ResultSet rows back to Product objects—eliminating boilerplate JDBC code.",
+          "code": "@Entity\n@Table(name = \"products\")\npublic class Product {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n    private String name;\n\n    @Column(name = \"unit_price\")\n    private BigDecimal price;\n\n    @Version\n    private Long version;  // optimistic locking\n}\n\n// Hibernate generates:\n// INSERT INTO products (name, unit_price, version) VALUES (?, ?, ?)"
+        },
+        {
+          "id": "db-q19",
+          "question": "What is lazy loading in JPA/Hibernate?",
+          "answer": "Lazy loading defers fetching of associated entities/collections until they are accessed. @ManyToOne(fetch = FetchType.LAZY) loads the parent without joining the related entity; accessing parent.getOrders() triggers a separate SELECT. Default for @OneToMany and @ManyToMany. Benefits: avoid loading unnecessary data, faster initial queries. Risk: LazyInitializationException if accessed outside an open persistence context (session). Solutions: JOIN FETCH in JPQL, @EntityGraph, or @Transactional service methods that access lazy fields within the transaction.",
+          "realWorld": "Loading a User for a profile header doesn't fetch their 500 orders. When the orders page opens, orders are loaded on demand. Forgetting @Transactional on the service method causes LazyInitializationException in the controller.",
+          "code": "@Entity\npublic class Customer {\n    @OneToMany(mappedBy = \"customer\", fetch = FetchType.LAZY)\n    private List<Order> orders = new ArrayList<>();\n}\n\n// Safe: load within transaction\n@Transactional(readOnly = true)\npublic CustomerDto getCustomerWithOrders(Long id) {\n    Customer c = customerRepo.findById(id).orElseThrow();\n    c.getOrders().size(); // triggers lazy load inside transaction\n    return CustomerDto.from(c);\n}\n\n// Or use JOIN FETCH:\n@Query(\"SELECT c FROM Customer c JOIN FETCH c.orders WHERE c.id = :id\")\nOptional<Customer> findWithOrders(@Param(\"id\") Long id);"
+        },
+        {
+          "id": "db-q20",
+          "question": "What is eager loading in JPA/Hibernate?",
+          "answer": "Eager loading fetches associated entities immediately with the parent—typically via JOIN in the initial SQL. @ManyToOne(fetch = FetchType.EAGER) always loads the related entity. Default for @ManyToOne and @OneToOne. Convenient when you always need the association, but causes N+1-like over-fetching when loading collections of parents (each parent pulls its eager associations). Can lead to Cartesian product joins if multiple eager collections are fetched. Prefer LAZY by default; use JOIN FETCH or EntityGraph when you know you need associations.",
+          "realWorld": "Order always needs Customer info—EAGER on Order.customer loads customer in same query. But listing 1000 orders eagerly loads 1000 customers individually if not joined—performance disaster without careful query design.",
+          "code": "@Entity\npublic class Order {\n    @ManyToOne(fetch = FetchType.EAGER)  // default for @ManyToOne\n    @JoinColumn(name = \"customer_id\")\n    private Customer customer;\n}\n\n// Better approach: LAZY + explicit fetch when needed\n@Query(\"SELECT o FROM Order o JOIN FETCH o.customer WHERE o.status = :status\")\nList<Order> findPendingWithCustomer(@Param(\"status\") OrderStatus status);"
+        },
+        {
+          "id": "db-q21",
+          "question": "What is Hibernate dirty checking?",
+          "answer": "Dirty checking is Hibernate's automatic detection of entity changes within a persistence context. When you load an entity and modify its fields, Hibernate compares the current state to a snapshot taken at load time during flush. Changed entities generate UPDATE SQL automatically—no explicit save() needed for managed entities. Occurs at transaction commit or before query flush. Requires entities to be managed (attached) within an active session. Detached entities (outside session) need merge() to reattach.",
+          "realWorld": "Service loads Product, sets price via setPrice(999)—no productRepo.save() call. At @Transactional commit, Hibernate detects price change and runs UPDATE products SET unit_price=999 WHERE id=?. Surprising to beginners but intentional ORM behavior.",
+          "code": "@Transactional\npublic void updatePrice(Long productId, BigDecimal newPrice) {\n    Product product = productRepo.findById(productId).orElseThrow();\n    product.setPrice(newPrice);\n    // No save() needed — dirty checking handles UPDATE on commit\n}\n\n// To disable for read-only optimization:\n@Transactional(readOnly = true)  // hints Hibernate: no dirty checking"
+        },
+        {
+          "id": "db-q22",
+          "question": "Explain the JPA entity lifecycle.",
+          "answer": "JPA entities transition through states: New/Transient—created with new but not yet persisted, no DB row, not managed. Managed/Persistent—attached to persistence context; changes tracked via dirty checking. Detached—was managed but context closed; changes not tracked until merge(). Removed—scheduled for deletion on flush/commit. Operations: persist() (new → managed), find/getReference (loads as managed), merge() (detached → managed copy), remove() (managed → removed). Understanding lifecycle prevents LazyInitializationException and unexpected missing updates.",
+          "realWorld": "Controller receives detached User from session, modifies it—changes lost unless service calls userRepo.save() (merge). Entity returned from @Transactional method becomes detached; lazy collections fail if accessed in view layer.",
+          "code": "@Transactional\npublic User createUser(User user) {          // transient\n    entityManager.persist(user);             // → managed\n    return user;                             // still managed inside tx\n}                                            // → detached after tx\n\n@Transactional\npublic void deleteUser(Long id) {\n    User user = entityManager.find(User.class, id); // managed\n    entityManager.remove(user);                      // → removed\n}                                                    // DELETE on commit"
+        }
+      ]
+    },
+    {
+      "id": "db-nosql-tools",
+      "category": "NoSQL, Migration & Connection Pooling",
+      "questions": [
+        {
+          "id": "db-q23",
+          "question": "What is MongoDB and when would you choose it over SQL?",
+          "answer": "MongoDB is a document-oriented NoSQL database storing data as BSON (JSON-like) documents in collections—schema-flexible, no fixed table structure. Choose MongoDB for rapidly evolving schemas, hierarchical/nested data, high write throughput, horizontal scaling via sharding, and content/catalog systems. Choose SQL for complex transactions (ACID), rich relational queries, strict schema enforcement, and reporting with JOINs. Spring Data MongoDB provides MongoRepository with similar patterns to JPA. Many systems use both: PostgreSQL for transactions, MongoDB for logs/analytics.",
+          "realWorld": "A CMS stores articles with varying fields (blog vs video vs podcast) in MongoDB—no ALTER TABLE for new content types. E-commerce order processing stays in PostgreSQL for ACID guarantees.",
+          "code": "@Document(collection = \"articles\")\npublic class Article {\n    @Id\n    private String id;\n    private String title;\n    private String author;\n    private Map<String, Object> metadata;  // flexible schema\n    private List<String> tags;\n}\n\npublic interface ArticleRepository extends MongoRepository<Article, String> {\n    List<Article> findByTagsContaining(String tag);\n}"
+        },
+        {
+          "id": "db-q24",
+          "question": "What is NoSQL and what are the main types?",
+          "answer": "NoSQL ('Not Only SQL') databases trade some relational guarantees for scalability, flexibility, or performance. Main types: Document (MongoDB, CouchDB)—JSON documents, flexible schema. Key-Value (Redis, DynamoDB)—simple key lookup, caching. Column-Family (Cassandra, HBase)—wide columns, write-heavy distributed. Graph (Neo4j)—nodes and edges for relationship-heavy data. NoSQL often offers eventual consistency and horizontal scaling. Choose based on data model and access patterns, not hype—relational databases still dominate transactional workloads.",
+          "realWorld": "Redis caches session tokens (key-value). MongoDB stores product catalogs (document). Neo4j powers 'people you may know' (graph). PostgreSQL remains source of truth for orders and payments.",
+          "code": "// Redis — Spring Cache\n@Cacheable(value = \"products\", key = \"#id\")\npublic ProductDto getProduct(Long id) {\n    return productService.find(id);\n}\n\n// Graph — Neo4j Cypher (conceptual)\n// MATCH (u:User)-[:FOLLOWS]->(friend)-[:FOLLOWS]->(suggestion)\n// WHERE NOT (u)-[:FOLLOWS]->(suggestion)\n// RETURN suggestion LIMIT 10"
+        },
+        {
+          "id": "db-q25",
+          "question": "What is MongoDB aggregation?",
+          "answer": "The aggregation pipeline processes documents through stages (like Unix pipes)—each stage transforms the stream: $match (filter), $group (aggregate), $sort, $project (reshape), $lookup (join), $unwind (flatten arrays). Equivalent to SQL GROUP BY, JOIN, and subqueries but for document data. Use for analytics, reporting, and data transformation inside MongoDB. Spring Data MongoDB supports aggregation via Aggregation API.",
+          "realWorld": "Compute total revenue by product category from order documents: $match completed orders → $unwind items array → $group by category summing price*qty → $sort descending.",
+          "code": "// Spring Data MongoDB Aggregation\nAggregation agg = newAggregation(\n    match(Criteria.where(\"status\").is(\"COMPLETED\")),\n    unwind(\"items\"),\n    group(\"items.category\").sum(\n        ArithmeticOperators.Multiply.valueOf(\"items.price\")\n            .multiplyBy(\"items.quantity\")).as(\"revenue\"),\n    sort(Sort.Direction.DESC, \"revenue\")\n);\n\nAggregationResults<CategoryRevenue> results =\n    mongoTemplate.aggregate(agg, \"orders\", CategoryRevenue.class);"
+        },
+        {
+          "id": "db-q26",
+          "question": "What is Flyway and how does it work?",
+          "answer": "Flyway is a database migration tool that manages schema changes as versioned SQL (or Java) scripts. Scripts follow naming convention V{version}__{description}.sql (e.g., V1__create_users.sql). On startup, Flyway checks flyway_schema_history table, applies pending migrations in order, and validates checksums. Integrates seamlessly with Spring Boot (spring.flyway.enabled=true). Ensures all environments (dev, staging, prod) have identical schema. Never modify applied migrations—create new ones for changes.",
+          "realWorld": "Developer adds V3__add_phone_to_users.sql; on deploy, Flyway runs it automatically before the app serves traffic. Teammate pulling code gets the same migration on local startup—no manual SQL sharing.",
+          "code": "-- db/migration/V1__create_users.sql\nCREATE TABLE users (\n    id BIGSERIAL PRIMARY KEY,\n    email VARCHAR(255) NOT NULL UNIQUE,\n    created_at TIMESTAMP DEFAULT NOW()\n);\n\n-- db/migration/V2__add_users_name.sql\nALTER TABLE users ADD COLUMN name VARCHAR(100);\n\n# application.properties\nspring.flyway.enabled=true\nspring.flyway.locations=classpath:db/migration"
+        },
+        {
+          "id": "db-q27",
+          "question": "What is Liquibase and how does it differ from Flyway?",
+          "answer": "Liquibase is another database migration tool using changelog files (XML, YAML, JSON, or SQL) with changesets identified by id+author. Supports rollback definitions, preconditions, contexts (run certain changes in prod only), and diff-based generation. Flyway uses simple versioned SQL files; Liquibase offers more flexible abstractions and database-agnostic changesets. Both integrate with Spring Boot. Choose Flyway for simplicity and SQL-first teams; Liquibase for complex multi-DB deployments needing rollbacks and conditional migrations.",
+          "realWorld": "Enterprise with Oracle dev and PostgreSQL prod uses Liquibase abstractions for portable changesets. Rollback tags let ops revert a deployment's schema changes if the app version fails.",
+          "code": "# db/changelog/db.changelog-master.yaml\n databaseChangeLog:\n  - changeSet:\n      id: 1\n      author: academy\n      changes:\n        - createTable:\n            tableName: products\n            columns:\n              - column:\n                  name: id\n                  type: BIGINT\n                  autoIncrement: true\n                  constraints:\n                    primaryKey: true\n\n# application.properties\nspring.liquibase.change-log=classpath:db/changelog/db.changelog-master.yaml"
+        },
+        {
+          "id": "db-q28",
+          "question": "What is HikariCP and why is it the default connection pool?",
+          "answer": "HikariCP is a high-performance JDBC connection pool—the default in Spring Boot 2+. It maintains a pool of reusable database connections, avoiding the overhead of opening/closing connections per request. Key settings: maximumPoolSize (default 10), minimumIdle, connectionTimeout, idleTimeout, maxLifetime. Proper pool sizing: too small causes thread waits; too large overwhelms the database. Formula starting point: connections = ((core_count * 2) + effective_spindle_count). Monitor active/idle connections and wait times in production.",
+          "realWorld": "Spring Boot app without a pool would open a new PostgreSQL connection (50-200ms) per request. HikariCP reuses connections from a pool of 10-20, serving thousands of requests per second.",
+          "code": "# application.properties\nspring.datasource.url=jdbc:postgresql://localhost:5432/academy\nspring.datasource.username=app_user\nspring.datasource.password=secret\nspring.datasource.hikari.maximum-pool-size=20\nspring.datasource.hikari.minimum-idle=5\nspring.datasource.hikari.connection-timeout=30000\nspring.datasource.hikari.max-lifetime=1800000\n\n// Monitor via Actuator:\n// GET /actuator/metrics/hikaricp.connections.active"
+        }
+      ]
+    },
+    {
+      "id": "db-security-perf",
+      "category": "Security & Performance",
+      "questions": [
+        {
+          "id": "db-q29",
+          "question": "What is SQL injection and how do you prevent it?",
+          "answer": "SQL injection occurs when attacker-controlled input is concatenated into SQL queries, allowing arbitrary SQL execution (DROP TABLE, data theft). Example attack: username admin' OR '1'='1 bypasses login. Prevention: always use parameterized queries/prepared statements (JPA, JDBC PreparedStatement, Spring Data @Query with @Param)—never concatenate user input into SQL strings. Validate/sanitize input, use least-privilege DB accounts, and apply ORM frameworks correctly. Also watch JPQL injection—use named parameters, not string concatenation.",
+          "realWorld": "Vulnerable code: \"SELECT * FROM users WHERE email = '\" + email + \"'\". Attacker sends email = x' OR '1'='1' --. Fix: repository method findByEmail(String email) generates parameterized SQL automatically.",
+          "code": "// VULNERABLE — never do this\nString sql = \"SELECT * FROM users WHERE email = '\" + email + \"'\";\n\n// SAFE — JPA parameterized query\n@Query(\"SELECT u FROM User u WHERE u.email = :email\")\nOptional<User> findByEmail(@Param(\"email\") String email);\n\n// SAFE — JDBC PreparedStatement\nPreparedStatement ps = conn.prepareStatement(\n    \"SELECT * FROM users WHERE email = ?\");\nps.setString(1, email);"
+        },
+        {
+          "id": "db-q30",
+          "question": "What are key strategies for SQL query optimization?",
+          "answer": "Optimization strategies: (1) Index appropriately—columns in WHERE, JOIN, ORDER BY; use composite indexes matching query patterns. (2) Avoid SELECT *—fetch only needed columns. (3) Fix N+1 queries—use JOIN FETCH, @EntityGraph, or batch fetching. (4) Use EXPLAIN ANALYZE to identify seq scans and slow joins. (5) Paginate large result sets. (6) Avoid functions on indexed columns in WHERE (breaks index use). (7) Use connection pooling (HikariCP). (8) Cache read-heavy data (Spring @Cacheable, Redis). (9) Denormalize or materialize views for hot read paths. (10) Tune database configuration (work_mem, shared_buffers).",
+          "realWorld": "Orders page loads in 3s: Hibernate N+1 loads 50 orders then 50 customer queries. Fix: @EntityGraph on findAll or JOIN FETCH reduces to 1 query, page load drops to 200ms. EXPLAIN reveals missing index on orders(status, created_at).",
+          "code": "// N+1 problem fix with EntityGraph\n@EntityGraph(attributePaths = {\"customer\", \"items\"})\nPage<Order> findByStatus(OrderStatus status, Pageable pageable);\n\n// Batch fetching — hibernate.default_batch_fetch_size=16\n@OneToMany(mappedBy = \"order\")\nprivate List<OrderItem> items;\n\n-- Covering index avoids table lookup\nCREATE INDEX idx_orders_list\nON orders(status, created_at DESC)\nINCLUDE (customer_id, total_amount);"
+        }
+      ]
+    }
+  ]
+}

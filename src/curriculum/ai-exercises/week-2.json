@@ -1,0 +1,45 @@
+{
+  "ai-w2-e1": {
+    "answer": "Ask AI to explain if-else with a real scenario (ticket pricing, grades). Then write your own version without looking.",
+    "realWorld": "Prompt: 'Explain if-else using movie ticket discount for seniors and students. Java only, with println.'",
+    "code": "int age = 65;\nif (age >= 60) System.out.println(\"Senior discount\");\nelse System.out.println(\"Full price\");"
+  },
+  "ai-w2-e2": {
+    "answer": "Ask AI to draw a loop as a table: iteration, i, output. Redraw the table by hand to verify.",
+    "realWorld": "Visual trace of a for-loop printing stars — catches off-by-one errors early.",
+    "code": "for (int i = 1; i <= 3; i++) System.out.println(\"*\".repeat(i));"
+  },
+  "ai-w2-e3": {
+    "answer": "Dry-run Fibonacci: track a, b each iteration on paper. Compare with AI's trace. Mismatch = learning moment.",
+    "realWorld": "Interviewers ask dry-runs — AI is practice partner, not answer sheet.",
+    "code": "int a=0,b=1;\nfor(int i=0;i<5;i++){ System.out.print(a+\" \"); int n=a+b; a=b; b=n; }"
+  },
+  "ai-w2-e4": {
+    "answer": "Ask AI to explain recursion as 'function calling itself until base case' — no code yet. Draw the call stack on paper.",
+    "realWorld": "Preview before Week 8+ recursion deep-dive: factorial as 5! = 5 × 4!."
+  },
+  "ai-w2-e5": {
+    "answer": "Paste nested loop finding duplicates. Ask for O(n) approach. Implement both; compare on array size 1000 vs 100000.",
+    "realWorld": "Measure, don't guess — AI's Big-O advice is theory until you time it."
+  },
+  "ai-w2-e6": {
+    "answer": "Find bugs yourself first (15 min). Then ask AI. Compare solutions — did you miss the same bug?",
+    "realWorld": "Logic bug: loop uses <= length causing ArrayIndexOutOfBounds — classic AI and human catch."
+  },
+  "ai-w2-e7": {
+    "answer": "Ask AI for 5 loop problems at your level. Solve without solution first. Use AI only for hints.",
+    "realWorld": "Generating practice beats passive reading — you need reps, not paragraphs."
+  },
+  "ai-w2-e8": {
+    "answer": "Calculator edge cases: divide by zero, overflow, empty input, invalid operator. List them, then write tests.",
+    "realWorld": "AI lists cases; you own the test code — that's job-ready behavior."
+  },
+  "ai-w2-e9": {
+    "answer": "Paste messy loop code. Ask: 'rename variables and add one comment per block.' Apply changes line by line.",
+    "realWorld": "Readability refactors are safe first AI-assisted edits — behavior stays same."
+  },
+  "ai-w2-e10": {
+    "answer": "Paste slow code. Ask why it's slow (complexity, repeated work). Fix one issue and re-time.",
+    "realWorld": "Nested loop + repeated array scan — AI points to HashMap; you implement and verify."
+  }
+}

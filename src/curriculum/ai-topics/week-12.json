@@ -1,0 +1,142 @@
+{
+  "ai-w12-t1": {
+    "answer": "**RAG** = retrieve relevant docs, then ask LLM to answer using that context. Cuts hallucinations on company-specific knowledge.",
+    "realWorld": "Employee handbook PDF → chunks → vector search → 'What is leave policy?' answered from real text."
+  },
+  "ai-w12-t2": {
+    "answer": "**Embeddings** turn text into number vectors capturing meaning. Similar sentences → vectors close together in space.",
+    "realWorld": "OpenAI text-embedding-3-small maps 'refund policy' near 'return rules' for search."
+  },
+  "ai-w12-t3": {
+    "answer": "**Vector DBs** store embeddings for fast similarity search: pgvector, Pinecone, Chroma. Pick based on ops comfort and scale.",
+    "realWorld": "pgvector in existing Postgres — no new infra for MVPs."
+  },
+  "ai-w12-t4": {
+    "answer": "**Cosine similarity** measures angle between vectors (0–1). Common for text retrieval; higher = more similar.",
+    "realWorld": "Query embedding compared to all doc chunks — top 5 returned for RAG context."
+  },
+  "ai-w12-t5": {
+    "answer": "**Chunking** splits docs into pieces (500–1000 tokens) with overlap. Too big = noise; too small = lost context.",
+    "realWorld": "Split README by ## headers; overlap 50 tokens so sentences aren't cut mid-thought."
+  },
+  "ai-w12-t6": {
+    "answer": "Improve retrieval: better chunks, metadata filters, hybrid keyword+vector, **re-rank** top results with a second model.",
+    "realWorld": "Filter chunks by product=mobile before vector search — precision up."
+  },
+  "ai-w12-t7": {
+    "answer": "**Spring AI** = Spring-native LLM integration: ChatClient, embeddings, vector stores, function calling.",
+    "realWorld": "spring-ai-openai-starter — beans for ChatModel like other Spring integrations."
+  },
+  "ai-w12-t8": {
+    "answer": "**ChatClient** fluent API + **PromptTemplate** with variables. Cleaner than raw HTTP strings.",
+    "realWorld": "chatClient.prompt().user(u -> u.text(\"Summarize {text}\", Map.of(\"text\", doc))).call().content()"
+  },
+  "ai-w12-t9": {
+    "answer": "**EmbeddingModel** + **VectorStore** (PgVectorStore). Ingest documents, query similar chunks.",
+    "realWorld": "vectorStore.add(docs); vectorStore.similaritySearch(\"deployment steps\") — RAG retrieval."
+  },
+  "ai-w12-t10": {
+    "answer": "**Function calling**: LLM requests your Java method (e.g. getOrderStatus). You execute and return result to model.",
+    "realWorld": "Model says call getWeather(city) — Spring AI invokes @Bean function, feeds JSON back."
+  },
+  "ai-w12-t11": {
+    "answer": "**LangChain4j** = Java LLM toolkit: chains, memory, RAG, agents. Alternative to Spring AI, works standalone.",
+    "realWorld": "AiServices.builder(ChatModel).tools(myTools).build(Assistant.class) — interface-based AI."
+  },
+  "ai-w12-t12": {
+    "answer": "LangChain4j: **EmbeddingStore** + **DocumentLoader** (PDF, URL, file). Ingest pipeline similar to Spring AI.",
+    "realWorld": "FileSystemDocumentLoader loads /docs → split → embed → store."
+  },
+  "ai-w12-t13": {
+    "answer": "RAG pipeline: load → split → embed → store → on query: retrieve → augment prompt → generate answer.",
+    "realWorld": "Eight steps, one Spring @Service class per stage — test each independently."
+  },
+  "ai-w12-t14": {
+    "answer": "**Spring AI** if you're all-in Spring Boot. **LangChain4j** for library flexibility or non-Spring apps. Both production-viable.",
+    "realWorld": "Greenfield Spring Boot → Spring AI first; experiment LangChain4j in spike branch."
+  },
+  "ai-w12-t15": {
+    "answer": "**AI agent** plans multi-step tasks: reason → act (tool) → observe → repeat. **ReAct** = Reasoning + Acting pattern.",
+    "realWorld": "Agent: search docs → call DB tool → draft email — not one-shot prompt."
+  },
+  "ai-w12-t16": {
+    "answer": "Production tools: idempotent, timeout, auth, validate args, log invocations. LLM must not bypass security.",
+    "realWorld": "getAccountBalance(userId) — verify caller owns userId before return."
+  },
+  "ai-w12-t17": {
+    "answer": "**MCP** (Model Context Protocol) standardizes how AI clients discover and call tools/resources from servers.",
+    "realWorld": "IDE agent uses MCP to read repo files and run approved commands — structured, not ad-hoc plugins."
+  },
+  "ai-w12-t18": {
+    "answer": "MCP server in Java exposes tools (REST, DB read) via protocol. Clients connect securely with scoped permissions.",
+    "realWorld": "Internal docs MCP server — dev assistant queries Confluence without copy-paste."
+  },
+  "ai-w12-t19": {
+    "answer": "**Streaming** tokens as generated — lower perceived latency. Java: Flux (WebFlux) or InputStream from provider.",
+    "realWorld": "User sees answer typing live instead of 10s blank wait."
+  },
+  "ai-w12-t20": {
+    "answer": "**SSE** (Server-Sent Events) pushes stream from Spring Boot to browser. One-way server→client, simple for chat UIs.",
+    "realWorld": "@GetMapping(produces TEXT_EVENT_STREAM) — emit token events from ChatClient stream."
+  },
+  "ai-w12-t21": {
+    "answer": "Tokens = billed units. Track prompt + completion tokens per request. Cache, shorten prompts, pick cheaper models for simple tasks.",
+    "realWorld": "gpt-4o for complex; gpt-4o-mini for classification — 10x cost difference."
+  },
+  "ai-w12-t22": {
+    "answer": "Model choice: GPT (ecosystem), Claude (long context), Gemini (Google stack), **local** (Ollama) for privacy/dev.",
+    "realWorld": "Prototype local Llama; prod OpenAI — switch via config profile."
+  },
+  "ai-w12-t23": {
+    "answer": "Prod pattern: API gateway → AI service → vector DB + provider. Async for long jobs, sync for chat, queue for batch.",
+    "realWorld": "Kafka consumer embeds docs overnight; API serves queries from fresh index."
+  },
+  "ai-w12-t24": {
+    "answer": "Observability: log latency, tokens, model version, retrieval count. OpenTelemetry traces across HTTP → LLM → DB.",
+    "realWorld": "Span attributes: ai.model, ai.tokens.input — dashboard cost per feature."
+  },
+  "ai-w12-t25": {
+    "answer": "Test AI features: mock ChatModel, assert prompt contains context, WireMock provider, snapshot stable outputs.",
+    "realWorld": "@MockBean ChatModel returns fixed string — controller test without API cost."
+  },
+  "ai-w12-t26": {
+    "answer": "**Evals**: golden Q&A pairs, regression when prompt/model changes. Measure accuracy, not exact string match.",
+    "realWorld": "50 FAQ pairs; score % answered correctly after prompt tweak."
+  },
+  "ai-w12-t27": {
+    "answer": "CI/CD: run unit tests, eval suite on PR, deploy with feature flag, smoke test /health and sample chat.",
+    "realWorld": "GitHub Actions: mvn test + eval job blocks merge if accuracy drops 5%."
+  },
+  "ai-w12-t28": {
+    "answer": "**Feature flags** roll out AI to 5% users first. Kill switch if cost or quality spikes.",
+    "realWorld": "LaunchDarkly flag ai_chat_enabled — ops can disable without redeploy."
+  },
+  "ai-w12-t29": {
+    "answer": "Microservices: separate **inference service** from core API. Shared embedding service, dedicated chat BFF.",
+    "realWorld": "Order service doesn't call OpenAI directly — calls internal ai-gateway."
+  },
+  "ai-w12-t30": {
+    "answer": "**Kafka** for async AI: document uploaded event → consumer chunks & embeds → index ready event.",
+    "realWorld": "Decouple upload API from 30s embedding job — better UX with job status."
+  },
+  "ai-w12-t31": {
+    "answer": "Gen AI security: prompt injection, output XSS, key leak, data residency. Layer defenses — no single fix.",
+    "realWorld": "Sanitize HTML in model output before rendering in admin panel."
+  },
+  "ai-w12-t32": {
+    "answer": "PII in RAG: redact before embed, filter at retrieval, audit access. GDPR may require deletion from vector store.",
+    "realWorld": "Don't index customer emails without legal approval — metadata tag internal_only."
+  },
+  "ai-w12-t33": {
+    "answer": "Portfolio: RAG chatbot over your docs, streaming API, eval README, cost chart, Docker deploy link.",
+    "realWorld": "Recruiter asks 'show Gen AI work' — one repo demonstrates full stack."
+  },
+  "ai-w12-t34": {
+    "answer": "Interview topics: RAG flow, embedding vs fine-tune, Spring AI beans, token cost, testing mocks, prompt injection defense.",
+    "realWorld": "Whiteboard: user query → retrieve → prompt → LLM → response in 60 seconds."
+  },
+  "ai-w12-t35": {
+    "answer": "Career path: solid Java/Spring → APIs + DB → integrate LLM → RAG prod project → platform/ML engineer teams.",
+    "realWorld": "Year 1 backend; Year 2 ship internal copilot — realistic progression."
+  }
+}

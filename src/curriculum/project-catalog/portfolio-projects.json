@@ -1,0 +1,146 @@
+[
+  {
+    "id": "task-tracker",
+    "title": "Task Tracker",
+    "description": "Build a CLI app to track your tasks and manage your to-do list.",
+    "features": [{ "id": "task-tracker-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "github-user-activity",
+    "title": "GitHub User Activity",
+    "description": "Use GitHub API to fetch user activity and display it in the terminal.",
+    "features": [{ "id": "github-user-activity-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "expense-tracker-cli",
+    "title": "Expense Tracker",
+    "description": "Build a simple expense tracker to manage your finances from the command line.",
+    "features": [{ "id": "expense-tracker-cli-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "unit-converter",
+    "title": "Unit Converter",
+    "description": "Unit converter to convert between different units of measurement.",
+    "features": [{ "id": "unit-converter-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "personal-blog",
+    "title": "Personal Blog",
+    "description": "Build a personal blog to write and publish articles.",
+    "features": [{ "id": "personal-blog-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "weather-api-project",
+    "title": "Weather API",
+    "description": "Build a weather API that fetches and returns weather data.",
+    "features": [{ "id": "weather-api-project-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "todo-list-api",
+    "title": "Todo List API",
+    "description": "Build a RESTful API to allow users to manage their to-do list.",
+    "features": [{ "id": "todo-list-api-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "blogging-platform-api",
+    "title": "Blogging Platform API",
+    "description": "Build a RESTful API for a personal blogging platform.",
+    "features": [{ "id": "blogging-platform-api-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "expense-tracker-api",
+    "title": "Expense Tracker API",
+    "description": "Build an API for an expense tracker application.",
+    "features": [{ "id": "expense-tracker-api-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "github-trending-cli",
+    "title": "GitHub Trending CLI",
+    "description": "CLI application that talks to GitHub API and shows trending repositories.",
+    "features": [{ "id": "github-trending-cli-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "tmdb-cli-tool",
+    "title": "TMDB CLI Tool",
+    "description": "Use TMDB API to fetch movie information and display it in the terminal.",
+    "features": [{ "id": "tmdb-cli-tool-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "caching-proxy",
+    "title": "Caching Proxy",
+    "description": "Build a caching server that caches responses from other servers.",
+    "features": [{ "id": "caching-proxy-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "markdown-note-app",
+    "title": "Markdown Note-taking App",
+    "description": "Build a note-taking app that uses markdown for formatting.",
+    "features": [{ "id": "markdown-note-app-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "url-shortening-service",
+    "title": "URL Shortening Service",
+    "description": "Build a URL Shortener API that helps shorten long URLs.",
+    "features": [{ "id": "url-shortening-service-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "broadcast-server",
+    "title": "Broadcast Server",
+    "description": "Build a server that can broadcast messages to connected clients.",
+    "features": [{ "id": "broadcast-server-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "multi-container-docker",
+    "title": "Multi-Container Application",
+    "description": "Use Docker Compose to run a multi-container application.",
+    "features": [{ "id": "multi-container-docker-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "ecommerce-api-project",
+    "title": "E-Commerce API",
+    "description": "E-Commerce platform with cart and payment gateway integration.",
+    "features": [{ "id": "ecommerce-api-project-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "linux-server-setup",
+    "title": "Linux Server Setup",
+    "description": "Learn to set up and secure a Linux server from scratch.",
+    "features": [{ "id": "linux-server-setup-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "workout-tracker",
+    "title": "Workout Tracker",
+    "description": "App to let users track their workouts and progress.",
+    "features": [{ "id": "workout-tracker-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "image-processing-service",
+    "title": "Image Processing Service",
+    "description": "Build a service that allows users to upload and process images.",
+    "features": [{ "id": "image-processing-service-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "movie-reservation-system",
+    "title": "Movie Reservation System",
+    "description": "Build a system that allows users to reserve movie tickets.",
+    "features": [{ "id": "movie-reservation-system-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "realtime-leaderboard",
+    "title": "Real-time Leaderboard",
+    "description": "Create a real-time leaderboard system for ranking and scoring.",
+    "features": [{ "id": "realtime-leaderboard-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "database-backup-utility",
+    "title": "Database Backup Utility",
+    "description": "Build a database backup utility that can backup and restore any DB.",
+    "features": [{ "id": "database-backup-utility-complete", "title": "Complete project" }]
+  },
+  {
+    "id": "scalable-ecommerce-platform",
+    "title": "Scalable E-Commerce Platform",
+    "description": "Build an e-commerce platform using microservices architecture.",
+    "features": [{ "id": "scalable-ecommerce-platform-complete", "title": "Complete project" }]
+  }
+]

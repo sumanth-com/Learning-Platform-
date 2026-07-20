@@ -1,0 +1,34 @@
+{
+  "ai-w5-t1": {
+    "answer": "Optimization = make code faster or leaner **after** it works. Measure first. Premature optimization wastes time.",
+    "realWorld": "Working O(n²) for 100 rows ships; optimize when data grows."
+  },
+  "ai-w5-t2": {
+    "answer": "Time complexity: how runtime grows with input size. O(1) constant, O(n) linear, O(n²) nested loops. Ask AI, then verify.",
+    "realWorld": "10k users × nested loop = noticeable lag — HashMap lookup fixes it."
+  },
+  "ai-w5-t3": {
+    "answer": "Space complexity: extra memory used. Trading space for time (cache, HashMap) is common and OK if memory fits.",
+    "realWorld": "Store seen IDs in HashSet — O(n) space for O(1) lookup."
+  },
+  "ai-w5-t4": {
+    "answer": "Paste slow method + input size. Ask for bottleneck and fix. Time both versions.",
+    "realWorld": "AI identifies repeated linear scan — you add index map and benchmark."
+  },
+  "ai-w5-t5": {
+    "answer": "AI suggests test cases; you write assertions. Focus on boundaries: 0, 1, max, duplicates.",
+    "realWorld": "Collection tests: empty, single element, duplicates, null element if allowed."
+  },
+  "ai-w5-t6": {
+    "answer": "Ask which collection fits: random access → ArrayList; frequent insert middle → LinkedList; fast lookup → HashMap.",
+    "realWorld": "Counting frequencies → HashMap<String,Integer>, not nested loops."
+  },
+  "ai-w5-t7": {
+    "answer": "Readable beats clever for team code. Ask AI to simplify over-nested loops if performance allows.",
+    "realWorld": "Extract filter logic to named method — next dev thanks you."
+  },
+  "ai-w5-t8": {
+    "answer": "AI review for performance smells: nested loops, boxing in tight loops, wrong collection choice.",
+    "realWorld": "Autoboxing in hot loop — AI flags; you use primitive int array."
+  }
+}

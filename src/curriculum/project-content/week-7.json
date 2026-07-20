@@ -1,0 +1,52 @@
+{
+  "student-management-jdbc": {
+    "mode": "external",
+    "overview": "Full CRUD student management system backed by MySQL.\n\nFeatures to build:\n• Add Student\n• Update Student\n• Delete Student\n• Search Student\n• View Students\n\nRequirements:\n• Use JDBC with PreparedStatement\n• MySQL database\n• DAO pattern\n\nBonus:\n• Export student list to CSV",
+    "explanation": "Student Management System is a advanced-level project (Week 7). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Add Student, Update Student, Delete Student, Search Student, View Students.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Java JDBC CRUD — Baeldung Tutorials",
+    "youtubeUrl": "https://www.youtube.com/watch?v=IvaOT020SSI",
+    "youtubeLabel": "Java JDBC Full Course — Connect Java to MySQL",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "employee-management-jdbc": {
+    "mode": "external",
+    "overview": "Employee CRUD with department filtering and salary search.\n\nFeatures to build:\n• Employee CRUD\n• Department Filter\n• Salary Search\n\nRequirements:\n• Use JDBC\n• MySQL database\n• PreparedStatement for all queries\n\nBonus:\n• Salary statistics dashboard",
+    "explanation": "Employee Management System is a advanced-level project (Week 7). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Employee CRUD, Department Filter, Salary Search.",
+    "githubUrl": "https://github.com/shawkyebrahim2514/Banking-System-Application",
+    "githubLabel": "Employee / User Management with JDBC + MySQL",
+    "youtubeUrl": "https://www.youtube.com/watch?v=YGZIdT8xiG8",
+    "youtubeLabel": "Employee Management with MySQL Database",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "library-management-jdbc": {
+    "mode": "external",
+    "overview": "Library system for managing books, issuing, and returns.\n\nFeatures to build:\n• Add Books\n• Issue Books\n• Return Books\n• Search Books\n\nRequirements:\n• Use JDBC\n• MySQL database\n• Track book availability\n\nBonus:\n• Overdue book alerts",
+    "explanation": "Library Management System is a advanced-level project (Week 7). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Add Books, Issue Books, Return Books, Search Books.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Library JDBC CRUD Reference",
+    "youtubeUrl": "https://www.youtube.com/watch?v=KtDcPQkHU7o",
+    "youtubeLabel": "Library Management with JDBC + MySQL",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "inventory-management-jdbc": {
+    "mode": "external",
+    "overview": "Product inventory with quantity tracking and low stock alerts.\n\nFeatures to build:\n• Product CRUD\n• Quantity Update\n• Low Stock Alert\n\nRequirements:\n• Use JDBC\n• MySQL database\n• Transaction support for quantity updates\n\nBonus:\n• Reorder threshold configuration",
+    "explanation": "Inventory Management System is a advanced-level project (Week 7). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Product CRUD, Quantity Update, Low Stock Alert.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Inventory CRUD with JDBC",
+    "youtubeUrl": "https://www.youtube.com/watch?v=IvaOT020SSI",
+    "youtubeLabel": "JDBC Insert, Update, Delete Tutorial",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  },
+  "hospital-management-jdbc": {
+    "mode": "external",
+    "overview": "Hospital system for patient registration, doctors, and appointments.\n\nFeatures to build:\n• Patient Registration\n• Doctor Information\n• Appointment Records\n\nRequirements:\n• Use JDBC\n• MySQL database\n• Relational schema with foreign keys\n\nBonus:\n• Appointment scheduling conflict check",
+    "explanation": "Hospital Management System is a advanced-level project (Week 7). Use the verified GitHub repository for real source code and the YouTube tutorial to learn step by step. Build: Patient Registration, Doctor Information, Appointment Records.",
+    "githubUrl": "https://github.com/eugenp/tutorials",
+    "githubLabel": "Hospital Patient Records — JDBC Pattern",
+    "youtubeUrl": "https://www.youtube.com/watch?v=IvaOT020SSI",
+    "youtubeLabel": "Database CRUD with Java JDBC",
+    "studyNote": "1. Watch the YouTube tutorial first.\n2. Open the GitHub repo — clone or browse the source.\n3. Build your version feature-by-feature in IntelliJ.\n4. Test each feature before moving on.\n5. Mark complete when your project works end-to-end."
+  }
+}

@@ -1,0 +1,1345 @@
+{
+  "id": 5,
+  "slug": "week-5",
+  "title": "Java Collections Framework",
+  "goal": "Store and manage large amounts of data efficiently, choose the right collection for different use cases, understand how Java internally stores data, solve problems using collections, and build the foundation required for Spring Boot and Hibernate.",
+  "description": "Week 5 covers the Java Collections Framework — List, Set, Map, Queue, Iterator, Comparable, and Comparator. Essential for enterprise Java, Spring Boot, and backend interviews.",
+  "estimatedHours": 20,
+  "difficulty": "medium",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Introduction to Collections",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-intro-collections",
+          "title": "Introduction to Collections",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-what-framework",
+              "title": "What is Collection Framework?"
+            },
+            {
+              "id": "d1-why-collections",
+              "title": "Why Collections?"
+            },
+            {
+              "id": "d1-hierarchy",
+              "title": "Collection Hierarchy"
+            },
+            {
+              "id": "d1-vs-collections",
+              "title": "Collection vs Collections"
+            },
+            {
+              "id": "d1-iterable",
+              "title": "Iterable Interface"
+            },
+            {
+              "id": "d1-list-interface",
+              "title": "List Interface"
+            },
+            {
+              "id": "d1-set-interface",
+              "title": "Set Interface"
+            },
+            {
+              "id": "d1-queue-interface",
+              "title": "Queue Interface"
+            },
+            {
+              "id": "d1-map-interface",
+              "title": "Map Interface (Not Part of Collection)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "List",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-list",
+          "title": "List",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d2-arraylist",
+              "title": "ArrayList"
+            },
+            {
+              "id": "d2-linkedlist",
+              "title": "LinkedList"
+            },
+            {
+              "id": "d2-vector",
+              "title": "Vector"
+            },
+            {
+              "id": "d2-stack",
+              "title": "Stack"
+            },
+            {
+              "id": "d2-arraylist-vs-linkedlist",
+              "title": "Difference between ArrayList & LinkedList"
+            },
+            {
+              "id": "d2-dynamic-arrays",
+              "title": "Dynamic Arrays"
+            },
+            {
+              "id": "d2-crud",
+              "title": "CRUD Operations"
+            },
+            {
+              "id": "d2-traversing",
+              "title": "Traversing Lists"
+            },
+            {
+              "id": "d2-sorting",
+              "title": "Sorting Lists"
+            },
+            {
+              "id": "d2-searching",
+              "title": "Searching Lists"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Set",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-set",
+          "title": "Set",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-hashset",
+              "title": "HashSet"
+            },
+            {
+              "id": "d3-linkedhashset",
+              "title": "LinkedHashSet"
+            },
+            {
+              "id": "d3-treeset",
+              "title": "TreeSet"
+            },
+            {
+              "id": "d3-duplicate-removal",
+              "title": "Duplicate Removal"
+            },
+            {
+              "id": "d3-ordering",
+              "title": "Ordering"
+            },
+            {
+              "id": "d3-sorting",
+              "title": "Sorting"
+            },
+            {
+              "id": "d3-internal",
+              "title": "Internal Working"
+            },
+            {
+              "id": "d3-set-operations",
+              "title": "Set Operations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "Map",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-map",
+          "title": "Map",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d4-hashmap",
+              "title": "HashMap"
+            },
+            {
+              "id": "d4-linkedhashmap",
+              "title": "LinkedHashMap"
+            },
+            {
+              "id": "d4-treemap",
+              "title": "TreeMap"
+            },
+            {
+              "id": "d4-hashtable",
+              "title": "Hashtable"
+            },
+            {
+              "id": "d4-key-value",
+              "title": "Key Value Pair"
+            },
+            {
+              "id": "d4-map-operations",
+              "title": "Map Operations"
+            },
+            {
+              "id": "d4-iterating",
+              "title": "Iterating Map"
+            },
+            {
+              "id": "d4-entryset",
+              "title": "EntrySet"
+            },
+            {
+              "id": "d4-keyset",
+              "title": "KeySet"
+            },
+            {
+              "id": "d4-values",
+              "title": "Values"
+            },
+            {
+              "id": "d4-frequency",
+              "title": "Frequency Counting"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Queue",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-queue",
+          "title": "Queue",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d5-queue-interface",
+              "title": "Queue Interface"
+            },
+            {
+              "id": "d5-priorityqueue",
+              "title": "PriorityQueue"
+            },
+            {
+              "id": "d5-deque",
+              "title": "Deque"
+            },
+            {
+              "id": "d5-arraydeque",
+              "title": "ArrayDeque"
+            },
+            {
+              "id": "d5-queue-ops",
+              "title": "Queue Operations"
+            },
+            {
+              "id": "d5-fifo",
+              "title": "FIFO"
+            },
+            {
+              "id": "d5-priority-queue",
+              "title": "Priority Queue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Iterator & Comparable",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-iterator-comparable",
+          "title": "Iterator & Comparable",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-iterator",
+              "title": "Iterator"
+            },
+            {
+              "id": "d6-listiterator",
+              "title": "ListIterator"
+            },
+            {
+              "id": "d6-foreach",
+              "title": "forEach Loop"
+            },
+            {
+              "id": "d6-comparable",
+              "title": "Comparable"
+            },
+            {
+              "id": "d6-comparator",
+              "title": "Comparator"
+            },
+            {
+              "id": "d6-sorting-objects",
+              "title": "Sorting Objects"
+            },
+            {
+              "id": "d6-custom-sorting",
+              "title": "Custom Sorting"
+            },
+            {
+              "id": "d6-collections-utility",
+              "title": "Collections Utility Class"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Revision",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d7-collection-revision",
+              "title": "Collection Revision"
+            },
+            {
+              "id": "d7-debugging",
+              "title": "Debugging"
+            },
+            {
+              "id": "d7-mock-test",
+              "title": "Mock Test"
+            },
+            {
+              "id": "d7-performance",
+              "title": "Performance Comparison"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-intro-collections",
+      "title": "Introduction to Collections",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w5-d1-1",
+          "title": "What is Collection Framework?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d1-2",
+          "title": "Why Collections?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d1-3",
+          "title": "Collection Hierarchy",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d1-4",
+          "title": "Collection vs Collections",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d1-5",
+          "title": "Iterable Interface",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d1-6",
+          "title": "List Interface",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d1-7",
+          "title": "Set Interface",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d1-8",
+          "title": "Queue Interface",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d1-9",
+          "title": "Map Interface (Not Part of Collection)",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-list",
+      "title": "List",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w5-d2-1",
+          "title": "ArrayList",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d2-2",
+          "title": "LinkedList",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d2-3",
+          "title": "Vector",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d2-4",
+          "title": "Stack",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d2-5",
+          "title": "Difference between ArrayList & LinkedList",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w5-d2-6",
+          "title": "Dynamic Arrays",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d2-7",
+          "title": "CRUD Operations",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d2-8",
+          "title": "Traversing Lists",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d2-9",
+          "title": "Sorting Lists",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d2-10",
+          "title": "Searching Lists",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-set",
+      "title": "Set",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w5-d3-1",
+          "title": "HashSet",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d3-2",
+          "title": "LinkedHashSet",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d3-3",
+          "title": "TreeSet",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d3-4",
+          "title": "Duplicate Removal",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d3-5",
+          "title": "Ordering",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d3-6",
+          "title": "Sorting",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d3-7",
+          "title": "Internal Working",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w5-d3-8",
+          "title": "Set Operations",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-map",
+      "title": "Map",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w5-d4-1",
+          "title": "HashMap",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d4-2",
+          "title": "LinkedHashMap",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d4-3",
+          "title": "TreeMap",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d4-4",
+          "title": "Hashtable",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d4-5",
+          "title": "Key Value Pair",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d4-6",
+          "title": "Map Operations",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d4-7",
+          "title": "Iterating Map",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d4-8",
+          "title": "EntrySet",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d4-9",
+          "title": "KeySet",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d4-10",
+          "title": "Values",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d4-11",
+          "title": "Frequency Counting",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-queue",
+      "title": "Queue",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w5-d5-1",
+          "title": "Queue Interface",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d5-2",
+          "title": "PriorityQueue",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d5-3",
+          "title": "Deque",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d5-4",
+          "title": "ArrayDeque",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d5-5",
+          "title": "Queue Operations",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d5-6",
+          "title": "FIFO",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d5-7",
+          "title": "Priority Queue",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-iterator-comparable",
+      "title": "Iterator & Comparable",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w5-d6-1",
+          "title": "Iterator",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d6-2",
+          "title": "ListIterator",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d6-3",
+          "title": "forEach Loop",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d6-4",
+          "title": "Comparable",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d6-5",
+          "title": "Comparator",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d6-6",
+          "title": "Sorting Objects",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d6-7",
+          "title": "Custom Sorting",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w5-d6-8",
+          "title": "Collections Utility Class",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision",
+      "title": "Revision",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w5-d7-1",
+          "title": "Collection Revision",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w5-d7-2",
+          "title": "Debugging",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w5-d7-3",
+          "title": "Mock Test",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w5-d7-4",
+          "title": "Performance Comparison",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-arraylist",
+      "category": "ArrayList",
+      "questions": [
+        {
+          "id": "pq-w5-1",
+          "title": "Store Student Names",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-2",
+          "title": "Store Employee Objects",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-3",
+          "title": "Remove Duplicates",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-4",
+          "title": "Search Element",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-5",
+          "title": "Reverse List",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-6",
+          "title": "Sort Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-7",
+          "title": "Sort Strings",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-8",
+          "title": "Find Maximum",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-9",
+          "title": "Find Minimum",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-10",
+          "title": "Merge Two Lists",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-linkedlist",
+      "category": "LinkedList",
+      "questions": [
+        {
+          "id": "pq-w5-11",
+          "title": "Insert at Beginning",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-12",
+          "title": "Insert at End",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-13",
+          "title": "Delete Node",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-14",
+          "title": "Reverse LinkedList",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-15",
+          "title": "Search Element",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-hashset",
+      "category": "HashSet",
+      "questions": [
+        {
+          "id": "pq-w5-16",
+          "title": "Remove Duplicates",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-17",
+          "title": "Store Unique Emails",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-18",
+          "title": "Store Unique Phone Numbers",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-19",
+          "title": "Check Duplicate Entry",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-20",
+          "title": "Union of Sets",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-hashmap",
+      "category": "HashMap",
+      "questions": [
+        {
+          "id": "pq-w5-21",
+          "title": "Student Marks System",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-22",
+          "title": "Employee Salary Mapping",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-23",
+          "title": "Word Frequency Counter",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-24",
+          "title": "Character Frequency Counter",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-25",
+          "title": "Phone Book",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-26",
+          "title": "Inventory System",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-27",
+          "title": "Product Price List",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-28",
+          "title": "Country Capitals",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-29",
+          "title": "Student Attendance",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-30",
+          "title": "Voting System",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-queue",
+      "category": "Queue",
+      "questions": [
+        {
+          "id": "pq-w5-31",
+          "title": "Ticket Booking Queue",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-32",
+          "title": "Printer Queue",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-33",
+          "title": "Customer Queue",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-34",
+          "title": "Hospital Queue",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-35",
+          "title": "Priority Queue Example",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-comparable-comparator",
+      "category": "Comparable & Comparator",
+      "questions": [
+        {
+          "id": "pq-w5-36",
+          "title": "Sort Students by Name",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w5-37",
+          "title": "Sort Students by Marks",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-38",
+          "title": "Sort Employees by Salary",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-39",
+          "title": "Sort Products by Price",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w5-40",
+          "title": "Custom Object Sorting",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "student-management-collections",
+      "title": "Student Management System",
+      "description": "Student CRUD with sorting and search using collections.",
+      "features": [
+        {
+          "id": "p1-add",
+          "title": "Add Student"
+        },
+        {
+          "id": "p1-remove",
+          "title": "Remove Student"
+        },
+        {
+          "id": "p1-search",
+          "title": "Search Student"
+        },
+        {
+          "id": "p1-sort",
+          "title": "Sort Student"
+        },
+        {
+          "id": "p1-display",
+          "title": "Display Student"
+        }
+      ],
+      "requirements": [
+        "Use ArrayList",
+        "Use Comparator for sorting"
+      ],
+      "bonusFeatures": [
+        "Filter by department"
+      ]
+    },
+    {
+      "id": "library-book-management",
+      "title": "Library Book Management",
+      "description": "Library system with book issue/return using ArrayList and HashMap.",
+      "features": [
+        {
+          "id": "p2-add",
+          "title": "Add Book"
+        },
+        {
+          "id": "p2-remove",
+          "title": "Remove Book"
+        },
+        {
+          "id": "p2-search",
+          "title": "Search Book"
+        },
+        {
+          "id": "p2-issue",
+          "title": "Issue Book"
+        },
+        {
+          "id": "p2-return",
+          "title": "Return Book"
+        }
+      ],
+      "requirements": [
+        "Use ArrayList for books",
+        "Use HashMap for issued books tracking"
+      ],
+      "bonusFeatures": [
+        "Due date tracking"
+      ]
+    },
+    {
+      "id": "employee-directory",
+      "title": "Employee Directory",
+      "description": "Employee lookup and filtering with HashMap and ArrayList.",
+      "features": [
+        {
+          "id": "p3-search",
+          "title": "Employee Search"
+        },
+        {
+          "id": "p3-department",
+          "title": "Department Filter"
+        },
+        {
+          "id": "p3-salary-sort",
+          "title": "Salary Sort"
+        },
+        {
+          "id": "p3-id-lookup",
+          "title": "Employee ID Lookup"
+        }
+      ],
+      "requirements": [
+        "Use HashMap for ID lookup",
+        "Use ArrayList for employee list"
+      ],
+      "bonusFeatures": [
+        "Export department report"
+      ]
+    },
+    {
+      "id": "online-shopping-cart",
+      "title": "Online Shopping Cart",
+      "description": "Shopping cart with product management using List and Map.",
+      "features": [
+        {
+          "id": "p4-add",
+          "title": "Add Product"
+        },
+        {
+          "id": "p4-remove",
+          "title": "Remove Product"
+        },
+        {
+          "id": "p4-quantity",
+          "title": "Quantity"
+        },
+        {
+          "id": "p4-total",
+          "title": "Total Price"
+        },
+        {
+          "id": "p4-summary",
+          "title": "Cart Summary"
+        }
+      ],
+      "requirements": [
+        "Use List for cart items",
+        "Use Map for product catalog"
+      ],
+      "bonusFeatures": [
+        "Apply discount codes"
+      ]
+    },
+    {
+      "id": "hospital-appointment",
+      "title": "Hospital Appointment System",
+      "description": "Patient queue and appointment management with Queue and HashMap.",
+      "features": [
+        {
+          "id": "p5-queue",
+          "title": "Queue Patients"
+        },
+        {
+          "id": "p5-doctor",
+          "title": "Doctor Allocation"
+        },
+        {
+          "id": "p5-priority",
+          "title": "Priority Cases"
+        },
+        {
+          "id": "p5-history",
+          "title": "Appointment History"
+        }
+      ],
+      "requirements": [
+        "Use Queue and PriorityQueue",
+        "Use HashMap for doctor-patient mapping"
+      ],
+      "bonusFeatures": [
+        "Emergency priority handling"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-5",
+    "title": "AI-Assisted Code Optimization",
+    "description": "Learn to use AI for performance analysis, choosing data structures, and optimizing collection-based code.",
+    "learningTopics": [
+      {
+        "id": "ai-w5-t1",
+        "title": "What is code optimization?"
+      },
+      {
+        "id": "ai-w5-t2",
+        "title": "Time Complexity (Introduction)"
+      },
+      {
+        "id": "ai-w5-t3",
+        "title": "Space Complexity (Introduction)"
+      },
+      {
+        "id": "ai-w5-t4",
+        "title": "AI-assisted performance analysis"
+      },
+      {
+        "id": "ai-w5-t5",
+        "title": "AI-generated test cases"
+      },
+      {
+        "id": "ai-w5-t6",
+        "title": "AI for choosing data structures"
+      },
+      {
+        "id": "ai-w5-t7",
+        "title": "AI for code readability"
+      },
+      {
+        "id": "ai-w5-t8",
+        "title": "AI code review"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w5-e1",
+        "title": "Ask AI which collection should be used for different scenarios."
+      },
+      {
+        "id": "ai-w5-e2",
+        "title": "Compare: ArrayList vs LinkedList using AI."
+      },
+      {
+        "id": "ai-w5-e3",
+        "title": "Compare: HashMap vs TreeMap."
+      },
+      {
+        "id": "ai-w5-e4",
+        "title": "Explain HashSet internally."
+      },
+      {
+        "id": "ai-w5-e5",
+        "title": "Review your Student Management System."
+      },
+      {
+        "id": "ai-w5-e6",
+        "title": "Optimize nested loops using collections."
+      },
+      {
+        "id": "ai-w5-e7",
+        "title": "Explain Big O notation with examples."
+      },
+      {
+        "id": "ai-w5-e8",
+        "title": "Generate edge test cases."
+      },
+      {
+        "id": "ai-w5-e9",
+        "title": "Suggest better collection choices."
+      },
+      {
+        "id": "ai-w5-e10",
+        "title": "Explain memory usage of different collections."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-5",
+    "repository": "java-week-5-collections",
+    "description": "Create repository java-week-5-collections and upload all Week 5 programs.",
+    "files": [
+      {
+        "id": "gh-w5-f1",
+        "path": "ArrayListExamples.java"
+      },
+      {
+        "id": "gh-w5-f2",
+        "path": "LinkedListExamples.java"
+      },
+      {
+        "id": "gh-w5-f3",
+        "path": "HashSetExamples.java"
+      },
+      {
+        "id": "gh-w5-f4",
+        "path": "HashMapExamples.java"
+      },
+      {
+        "id": "gh-w5-f5",
+        "path": "QueueExamples.java"
+      },
+      {
+        "id": "gh-w5-f6",
+        "path": "ComparatorExamples.java"
+      },
+      {
+        "id": "gh-w5-f7",
+        "path": "StudentManagementSystem.java"
+      },
+      {
+        "id": "gh-w5-f8",
+        "path": "ShoppingCart.java"
+      },
+      {
+        "id": "gh-w5-f9",
+        "path": "EmployeeDirectory.java"
+      },
+      {
+        "id": "gh-w5-f10",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w5-collections",
+      "category": "Collections",
+      "questions": [
+        {
+          "id": "iq-w5-1",
+          "question": "Difference between ArrayList and LinkedList?",
+          "answer": "ArrayList uses dynamic array — O(1) random access, O(n) insert/delete. LinkedList uses nodes — O(1) insert/delete at ends, O(n) access."
+        },
+        {
+          "id": "iq-w5-2",
+          "question": "Difference between HashMap and HashTable?",
+          "answer": "HashMap is not synchronized, allows one null key; HashTable is synchronized, no null keys/values."
+        },
+        {
+          "id": "iq-w5-3",
+          "question": "Difference between HashSet and TreeSet?",
+          "answer": "HashSet uses hash table, no ordering, O(1) average. TreeSet uses red-black tree, sorted order, O(log n)."
+        },
+        {
+          "id": "iq-w5-4",
+          "question": "What is the difference between Comparable and Comparator?",
+          "answer": "Comparable: natural ordering via compareTo() in the class. Comparator: external custom sorting via compare()."
+        }
+      ]
+    },
+    {
+      "id": "iq-w5-java",
+      "category": "Java",
+      "questions": [
+        {
+          "id": "iq-w5-5",
+          "question": "How does HashMap work internally?",
+          "answer": "Uses array of buckets with hash function; collisions handled by linked list or tree (Java 8+)."
+        },
+        {
+          "id": "iq-w5-6",
+          "question": "What is Iterator?",
+          "answer": "Interface to traverse collections without knowing internal structure; supports hasNext() and next()."
+        }
+      ]
+    },
+    {
+      "id": "iq-w5-ai",
+      "category": "AI",
+      "questions": [
+        {
+          "id": "iq-w5-7",
+          "question": "How can AI help choose the right collection?",
+          "answer": "Analyze access patterns, insertion/deletion frequency, ordering needs, and suggest ArrayList vs LinkedList vs HashMap etc."
+        },
+        {
+          "id": "iq-w5-8",
+          "question": "What is Big O notation?",
+          "answer": "Describes algorithm time/space complexity as input grows — e.g. O(1), O(n), O(log n), O(n²)."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w5-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 collection programming questions",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w5-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 collection-based mini projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w5-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to java-week-5-collections repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w5-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 18
+      }
+    },
+    {
+      "id": "del-w5-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 5 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 30
+      }
+    }
+  ]
+}

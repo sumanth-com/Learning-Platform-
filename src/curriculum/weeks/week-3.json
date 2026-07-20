@@ -1,0 +1,1299 @@
+{
+  "id": 3,
+  "slug": "week-3",
+  "title": "Object-Oriented Programming (OOP) Fundamentals",
+  "goal": "Understand OOP, create classes and objects confidently, design real-world models, use constructors and encapsulation properly, differentiate instance vs static members, and use AI to review class design and improve code quality.",
+  "description": "Week 3 is where most students start understanding OOP — the backbone of Java, Spring Boot, and backend interviews. Don't rush. Master classes, objects, constructors, this, static, encapsulation, and object design.",
+  "estimatedHours": 20,
+  "difficulty": "medium",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "Introduction to OOP",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-intro-oop",
+          "title": "Introduction to OOP",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-what-oop",
+              "title": "What is OOP?"
+            },
+            {
+              "id": "d1-why-oop",
+              "title": "Why OOP?"
+            },
+            {
+              "id": "d1-procedural-vs-oop",
+              "title": "Procedural vs Object-Oriented Programming"
+            },
+            {
+              "id": "d1-advantages",
+              "title": "Advantages of OOP"
+            },
+            {
+              "id": "d1-real-world",
+              "title": "Real-world Examples"
+            },
+            {
+              "id": "d1-objects-around",
+              "title": "Objects Around Us"
+            },
+            {
+              "id": "d1-features",
+              "title": "Features of OOP"
+            },
+            {
+              "id": "d1-terminologies",
+              "title": "OOP Terminologies"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "Classes & Objects",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-classes-objects",
+          "title": "Classes & Objects",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d2-what-class",
+              "title": "What is a Class?"
+            },
+            {
+              "id": "d2-what-object",
+              "title": "What is an Object?"
+            },
+            {
+              "id": "d2-creating-classes",
+              "title": "Creating Classes"
+            },
+            {
+              "id": "d2-creating-objects",
+              "title": "Creating Objects"
+            },
+            {
+              "id": "d2-object-memory",
+              "title": "Object Memory"
+            },
+            {
+              "id": "d2-multiple-objects",
+              "title": "Multiple Objects"
+            },
+            {
+              "id": "d2-object-references",
+              "title": "Object References"
+            },
+            {
+              "id": "d2-new-keyword",
+              "title": "new Keyword"
+            },
+            {
+              "id": "d2-gc-intro",
+              "title": "Garbage Collection (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Constructors",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-constructors",
+          "title": "Constructors",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-what-constructor",
+              "title": "What is Constructor?"
+            },
+            {
+              "id": "d3-syntax",
+              "title": "Constructor Syntax"
+            },
+            {
+              "id": "d3-default",
+              "title": "Default Constructor"
+            },
+            {
+              "id": "d3-parameterized",
+              "title": "Parameterized Constructor"
+            },
+            {
+              "id": "d3-overloading",
+              "title": "Constructor Overloading"
+            },
+            {
+              "id": "d3-chaining",
+              "title": "Constructor Chaining"
+            },
+            {
+              "id": "d3-this-constructor",
+              "title": "this() Constructor"
+            },
+            {
+              "id": "d3-vs-method",
+              "title": "Constructor vs Method"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "this & static Keyword",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-this-static",
+          "title": "this & static Keyword",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d4-this-keyword",
+              "title": "this Keyword"
+            },
+            {
+              "id": "d4-this-variable",
+              "title": "this Variable"
+            },
+            {
+              "id": "d4-this-method",
+              "title": "this Method"
+            },
+            {
+              "id": "d4-this-constructor",
+              "title": "this Constructor"
+            },
+            {
+              "id": "d4-static-vars",
+              "title": "static Variables"
+            },
+            {
+              "id": "d4-static-methods",
+              "title": "static Methods"
+            },
+            {
+              "id": "d4-static-blocks",
+              "title": "static Blocks"
+            },
+            {
+              "id": "d4-static-vs-instance",
+              "title": "static vs Instance Members"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "Encapsulation",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-encapsulation",
+          "title": "Encapsulation",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d5-what-encapsulation",
+              "title": "What is Encapsulation?"
+            },
+            {
+              "id": "d5-private-vars",
+              "title": "Private Variables"
+            },
+            {
+              "id": "d5-getters",
+              "title": "Getters"
+            },
+            {
+              "id": "d5-setters",
+              "title": "Setters"
+            },
+            {
+              "id": "d5-why-encapsulation",
+              "title": "Why Encapsulation?"
+            },
+            {
+              "id": "d5-data-hiding",
+              "title": "Data Hiding"
+            },
+            {
+              "id": "d5-immutable",
+              "title": "Immutable Objects (Introduction)"
+            },
+            {
+              "id": "d5-java-bean",
+              "title": "Java Bean Convention"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "Object Design",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-object-design",
+          "title": "Object Design",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-relationships",
+              "title": "Object Relationships"
+            },
+            {
+              "id": "d6-composition",
+              "title": "Composition (Introduction)"
+            },
+            {
+              "id": "d6-designing-classes",
+              "title": "Designing Classes"
+            },
+            {
+              "id": "d6-srp",
+              "title": "Single Responsibility Principle (Basic)"
+            },
+            {
+              "id": "d6-clean-design",
+              "title": "Clean Class Design"
+            },
+            {
+              "id": "d6-naming",
+              "title": "Naming Standards"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "Revision & Debugging",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-revision",
+          "title": "Revision & Debugging",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d7-review",
+              "title": "Review All Concepts"
+            },
+            {
+              "id": "d7-debug",
+              "title": "Debug OOP Programs"
+            },
+            {
+              "id": "d7-quiz",
+              "title": "Quiz"
+            },
+            {
+              "id": "d7-mock-test",
+              "title": "Mock Coding Test"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-intro-oop",
+      "title": "Introduction to OOP",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w3-d1-1",
+          "title": "What is OOP?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d1-2",
+          "title": "Why OOP?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d1-3",
+          "title": "Procedural vs Object-Oriented Programming",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d1-4",
+          "title": "Advantages of OOP",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d1-5",
+          "title": "Real-world Examples",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d1-6",
+          "title": "Objects Around Us",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d1-7",
+          "title": "Features of OOP",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d1-8",
+          "title": "OOP Terminologies",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-classes-objects",
+      "title": "Classes & Objects",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w3-d2-1",
+          "title": "What is a Class?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d2-2",
+          "title": "What is an Object?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d2-3",
+          "title": "Creating Classes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d2-4",
+          "title": "Creating Objects",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d2-5",
+          "title": "Object Memory",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d2-6",
+          "title": "Multiple Objects",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d2-7",
+          "title": "Object References",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w3-d2-8",
+          "title": "new Keyword",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d2-9",
+          "title": "Garbage Collection (Introduction)",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-constructors",
+      "title": "Constructors",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w3-d3-1",
+          "title": "What is Constructor?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d3-2",
+          "title": "Constructor Syntax",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d3-3",
+          "title": "Default Constructor",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d3-4",
+          "title": "Parameterized Constructor",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d3-5",
+          "title": "Constructor Overloading",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d3-6",
+          "title": "Constructor Chaining",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w3-d3-7",
+          "title": "this() Constructor",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w3-d3-8",
+          "title": "Constructor vs Method",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-this-static",
+      "title": "this & static Keyword",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w3-d4-1",
+          "title": "this Keyword",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d4-2",
+          "title": "this Variable",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d4-3",
+          "title": "this Method",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d4-4",
+          "title": "this Constructor",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w3-d4-5",
+          "title": "static Variables",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d4-6",
+          "title": "static Methods",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d4-7",
+          "title": "static Blocks",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w3-d4-8",
+          "title": "static vs Instance Members",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-encapsulation",
+      "title": "Encapsulation",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w3-d5-1",
+          "title": "What is Encapsulation?",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d5-2",
+          "title": "Private Variables",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d5-3",
+          "title": "Getters",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d5-4",
+          "title": "Setters",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d5-5",
+          "title": "Why Encapsulation?",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d5-6",
+          "title": "Data Hiding",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d5-7",
+          "title": "Immutable Objects (Introduction)",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w3-d5-8",
+          "title": "Java Bean Convention",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-object-design",
+      "title": "Object Design",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w3-d6-1",
+          "title": "Object Relationships",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d6-2",
+          "title": "Composition (Introduction)",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d6-3",
+          "title": "Designing Classes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d6-4",
+          "title": "Single Responsibility Principle (Basic)",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w3-d6-5",
+          "title": "Clean Class Design",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d6-6",
+          "title": "Naming Standards",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "topic-revision-debugging",
+      "title": "Revision & Debugging",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w3-d7-1",
+          "title": "Review All Concepts",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w3-d7-2",
+          "title": "Debug OOP Programs",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d7-3",
+          "title": "Quiz",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w3-d7-4",
+          "title": "Mock Coding Test",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-classes-objects",
+      "category": "Classes & Objects",
+      "questions": [
+        {
+          "id": "pq-w3-1",
+          "title": "Create Student class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-2",
+          "title": "Create Employee class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-3",
+          "title": "Create Car class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-4",
+          "title": "Create Mobile class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-5",
+          "title": "Create Laptop class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-6",
+          "title": "Create Book class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-7",
+          "title": "Create Movie class",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-8",
+          "title": "Create BankAccount class",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-9",
+          "title": "Create Hospital class",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-10",
+          "title": "Create College class",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-constructors",
+      "category": "Constructors",
+      "questions": [
+        {
+          "id": "pq-w3-11",
+          "title": "Student using Default Constructor",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-12",
+          "title": "Student using Parameterized Constructor",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-13",
+          "title": "Employee Constructor",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-14",
+          "title": "Car Constructor",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-15",
+          "title": "Product Constructor",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-16",
+          "title": "Constructor Overloading",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-17",
+          "title": "Bank Constructor",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-18",
+          "title": "Hospital Constructor",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-19",
+          "title": "College Constructor",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-20",
+          "title": "Mobile Constructor",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-this-keyword",
+      "category": "this Keyword",
+      "questions": [
+        {
+          "id": "pq-w3-21",
+          "title": "Use this to Differentiate Variables",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-22",
+          "title": "Call Constructor using this()",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-23",
+          "title": "Return Current Object",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-24",
+          "title": "Method Chaining Example",
+          "difficulty": "hard"
+        },
+        {
+          "id": "pq-w3-25",
+          "title": "Bank Account Example",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-static-keyword",
+      "category": "static Keyword",
+      "questions": [
+        {
+          "id": "pq-w3-26",
+          "title": "Count Total Students",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-27",
+          "title": "Company Name Static Variable",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-28",
+          "title": "College Name Static Variable",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-29",
+          "title": "Utility Class",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-30",
+          "title": "Static Method Example",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-encapsulation",
+      "category": "Encapsulation",
+      "questions": [
+        {
+          "id": "pq-w3-31",
+          "title": "Student Getters & Setters",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w3-32",
+          "title": "Employee Salary Encapsulation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-33",
+          "title": "Bank Account Encapsulation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-34",
+          "title": "Hospital Patient Class",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-35",
+          "title": "Product Class",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-mixed-practice",
+      "category": "Mixed Practice",
+      "questions": [
+        {
+          "id": "pq-w3-36",
+          "title": "Library Book Management",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-37",
+          "title": "School Student System",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-38",
+          "title": "Cinema Ticket System",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-39",
+          "title": "Hotel Room System",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w3-40",
+          "title": "Inventory Item Class",
+          "difficulty": "medium"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "student-management-oop",
+      "title": "Student Management System (OOP Version)",
+      "description": "Object-oriented student management with CRUD operations.",
+      "features": [
+        {
+          "id": "p1-add",
+          "title": "Add Student"
+        },
+        {
+          "id": "p1-display",
+          "title": "Display Student"
+        },
+        {
+          "id": "p1-update",
+          "title": "Update Student"
+        },
+        {
+          "id": "p1-delete",
+          "title": "Delete Student"
+        }
+      ],
+      "requirements": [
+        "Use classes and objects",
+        "Use constructors",
+        "Apply encapsulation with getters/setters"
+      ],
+      "bonusFeatures": [
+        "Search by roll number",
+        "Sort by name"
+      ]
+    },
+    {
+      "id": "bank-account-system",
+      "title": "Bank Account System",
+      "description": "OOP-based bank account with transactions and balance tracking.",
+      "features": [
+        {
+          "id": "p2-create",
+          "title": "Create Account"
+        },
+        {
+          "id": "p2-deposit",
+          "title": "Deposit"
+        },
+        {
+          "id": "p2-withdraw",
+          "title": "Withdraw"
+        },
+        {
+          "id": "p2-balance",
+          "title": "Balance"
+        },
+        {
+          "id": "p2-summary",
+          "title": "Transaction Summary"
+        }
+      ],
+      "requirements": [
+        "Use constructors",
+        "Use methods",
+        "Use getters and setters"
+      ],
+      "bonusFeatures": [
+        "Multiple account types",
+        "Interest calculation"
+      ]
+    },
+    {
+      "id": "library-management",
+      "title": "Library Management System",
+      "description": "Manage books with borrow and return functionality using OOP.",
+      "features": [
+        {
+          "id": "p3-add-books",
+          "title": "Add Books"
+        },
+        {
+          "id": "p3-borrow",
+          "title": "Borrow Book"
+        },
+        {
+          "id": "p3-return",
+          "title": "Return Book"
+        },
+        {
+          "id": "p3-display",
+          "title": "Display Books"
+        }
+      ],
+      "requirements": [
+        "Use objects and constructors",
+        "Apply encapsulation"
+      ],
+      "bonusFeatures": [
+        "Fine calculation for late returns"
+      ]
+    },
+    {
+      "id": "employee-management",
+      "title": "Employee Management System",
+      "description": "Employee records with department and salary management.",
+      "features": [
+        {
+          "id": "p4-details",
+          "title": "Employee Details"
+        },
+        {
+          "id": "p4-salary",
+          "title": "Salary"
+        },
+        {
+          "id": "p4-department",
+          "title": "Department"
+        },
+        {
+          "id": "p4-experience",
+          "title": "Experience"
+        },
+        {
+          "id": "p4-display",
+          "title": "Display Information"
+        }
+      ],
+      "requirements": [
+        "Encapsulate employee data",
+        "Use proper class design"
+      ],
+      "bonusFeatures": [
+        "Department-wise filtering"
+      ]
+    },
+    {
+      "id": "vehicle-registration",
+      "title": "Vehicle Registration System",
+      "description": "Register and manage vehicle records with owner details.",
+      "features": [
+        {
+          "id": "p5-register",
+          "title": "Register Vehicle"
+        },
+        {
+          "id": "p5-owner",
+          "title": "Owner Details"
+        },
+        {
+          "id": "p5-vehicle-info",
+          "title": "Vehicle Information"
+        },
+        {
+          "id": "p5-display",
+          "title": "Display Records"
+        }
+      ],
+      "requirements": [
+        "Separate classes for Vehicle and Owner",
+        "Use encapsulation"
+      ],
+      "bonusFeatures": [
+        "Search by registration number"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-3",
+    "title": "Using AI for Code Review and Code Quality",
+    "description": "Learn to use AI for reviewing class design, improving readability, and refactoring — not for generating entire solutions.",
+    "learningTopics": [
+      {
+        "id": "ai-w3-t1",
+        "title": "What is AI Code Review?"
+      },
+      {
+        "id": "ai-w3-t2",
+        "title": "Code Smells"
+      },
+      {
+        "id": "ai-w3-t3",
+        "title": "Naming Conventions"
+      },
+      {
+        "id": "ai-w3-t4",
+        "title": "Readability"
+      },
+      {
+        "id": "ai-w3-t5",
+        "title": "Maintainability"
+      },
+      {
+        "id": "ai-w3-t6",
+        "title": "AI vs Human Review"
+      },
+      {
+        "id": "ai-w3-t7",
+        "title": "Asking AI to Improve Class Design"
+      },
+      {
+        "id": "ai-w3-t8",
+        "title": "AI for Documentation"
+      },
+      {
+        "id": "ai-w3-t9",
+        "title": "AI for Refactoring"
+      },
+      {
+        "id": "ai-w3-t10",
+        "title": "AI for UML/Class Diagram Suggestions"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w3-e1",
+        "title": "Review your Student class."
+      },
+      {
+        "id": "ai-w3-e2",
+        "title": "Suggest better variable names."
+      },
+      {
+        "id": "ai-w3-e3",
+        "title": "Explain why encapsulation is useful."
+      },
+      {
+        "id": "ai-w3-e4",
+        "title": "Generate a UML diagram from your classes."
+      },
+      {
+        "id": "ai-w3-e5",
+        "title": "Identify duplicate code."
+      },
+      {
+        "id": "ai-w3-e6",
+        "title": "Suggest improvements for constructors."
+      },
+      {
+        "id": "ai-w3-e7",
+        "title": "Create JavaDoc comments."
+      },
+      {
+        "id": "ai-w3-e8",
+        "title": "Find design mistakes."
+      },
+      {
+        "id": "ai-w3-e9",
+        "title": "Compare: two class designs."
+      },
+      {
+        "id": "ai-w3-e10",
+        "title": "Explain SOLID principles at a beginner level."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-3",
+    "repository": "java-week-3-oop",
+    "description": "Create repository java-week-3-oop and upload all Week 3 OOP programs.",
+    "files": [
+      {
+        "id": "gh-w3-f1",
+        "path": "Student.java"
+      },
+      {
+        "id": "gh-w3-f2",
+        "path": "Employee.java"
+      },
+      {
+        "id": "gh-w3-f3",
+        "path": "Car.java"
+      },
+      {
+        "id": "gh-w3-f4",
+        "path": "BankAccount.java"
+      },
+      {
+        "id": "gh-w3-f5",
+        "path": "Product.java"
+      },
+      {
+        "id": "gh-w3-f6",
+        "path": "Library.java"
+      },
+      {
+        "id": "gh-w3-f7",
+        "path": "Vehicle.java"
+      },
+      {
+        "id": "gh-w3-f8",
+        "path": "StudentManagementSystem.java"
+      },
+      {
+        "id": "gh-w3-f9",
+        "path": "EmployeeManagementSystem.java"
+      },
+      {
+        "id": "gh-w3-f10",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w3-oop",
+      "category": "OOP",
+      "questions": [
+        {
+          "id": "iq-w3-1",
+          "question": "What is Object-Oriented Programming?",
+          "answer": "A programming paradigm based on objects containing data (fields) and behavior (methods)."
+        },
+        {
+          "id": "iq-w3-2",
+          "question": "What is the difference between a class and an object?",
+          "answer": "A class is a blueprint/template; an object is an instance of that class."
+        },
+        {
+          "id": "iq-w3-3",
+          "question": "What is encapsulation?",
+          "answer": "Bundling data and methods together and restricting direct access using access modifiers (private fields + public getters/setters)."
+        },
+        {
+          "id": "iq-w3-4",
+          "question": "What is a constructor?",
+          "answer": "A special method called when an object is created, used to initialize object state. Same name as class, no return type."
+        },
+        {
+          "id": "iq-w3-5",
+          "question": "Difference between static and instance variables?",
+          "answer": "Static belongs to the class (shared); instance belongs to each object (unique per object)."
+        }
+      ]
+    },
+    {
+      "id": "iq-w3-java",
+      "category": "Java",
+      "questions": [
+        {
+          "id": "iq-w3-6",
+          "question": "What does the this keyword do?",
+          "answer": "Refers to the current object instance — used to differentiate instance variables from parameters, call constructors, or return current object."
+        },
+        {
+          "id": "iq-w3-7",
+          "question": "Can we override a constructor?",
+          "answer": "No. Constructors cannot be overridden, but can be overloaded."
+        }
+      ]
+    },
+    {
+      "id": "iq-w3-ai",
+      "category": "AI",
+      "questions": [
+        {
+          "id": "iq-w3-8",
+          "question": "How can AI help with OOP learning?",
+          "answer": "Review class design, suggest naming, explain concepts, generate UML diagrams, and identify code smells — but you should design classes yourself first."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w3-programs",
+      "title": "40 OOP Programs Completed",
+      "description": "Complete all 40 programming questions across classes, constructors, this, static, and encapsulation",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w3-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 OOP mini projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w3-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to java-week-3-oop repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w3-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 20
+      }
+    },
+    {
+      "id": "del-w3-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 3 OOP interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 30
+      }
+    }
+  ]
+}

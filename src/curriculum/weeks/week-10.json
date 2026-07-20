@@ -1,0 +1,1348 @@
+{
+  "id": 10,
+  "slug": "week-10",
+  "title": "REST API Mastery (Backend API Engineering)",
+  "goal": "Design, build, document, test, secure, and optimize production-quality REST APIs — covering HTTP, status codes, DTOs, pagination, validation, Swagger, and API best practices.",
+  "description": "Week 10 goes deep on backend API engineering. MySQL, JDBC, and basic SQL were covered in Week 7 — this week focuses on production-quality REST API design, not repeating CRUD or database fundamentals.",
+  "estimatedHours": 28,
+  "difficulty": "hard",
+  "days": [
+    {
+      "id": "day-1",
+      "dayNumber": 1,
+      "title": "Day 1",
+      "theme": "REST Fundamentals",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day1-rest-fundamentals",
+          "title": "REST Fundamentals",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d1-what-rest",
+              "title": "What is REST?"
+            },
+            {
+              "id": "d1-rest-principles",
+              "title": "REST Principles"
+            },
+            {
+              "id": "d1-rest-constraints",
+              "title": "REST Constraints"
+            },
+            {
+              "id": "d1-client-server",
+              "title": "Client Server Architecture"
+            },
+            {
+              "id": "d1-stateless",
+              "title": "Stateless APIs"
+            },
+            {
+              "id": "d1-uniform-interface",
+              "title": "Uniform Interface"
+            },
+            {
+              "id": "d1-resources",
+              "title": "Resources"
+            },
+            {
+              "id": "d1-resource-naming",
+              "title": "Resource Naming"
+            },
+            {
+              "id": "d1-rest-vs-soap",
+              "title": "REST vs SOAP"
+            },
+            {
+              "id": "d1-rest-vs-graphql",
+              "title": "REST vs GraphQL (Introduction)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-2",
+      "dayNumber": 2,
+      "title": "Day 2",
+      "theme": "HTTP Protocol",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day2-http",
+          "title": "HTTP Protocol",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d2-request",
+              "title": "HTTP Request"
+            },
+            {
+              "id": "d2-response",
+              "title": "HTTP Response"
+            },
+            {
+              "id": "d2-request-headers",
+              "title": "Request Headers"
+            },
+            {
+              "id": "d2-response-headers",
+              "title": "Response Headers"
+            },
+            {
+              "id": "d2-http-methods",
+              "title": "HTTP Methods"
+            },
+            {
+              "id": "d2-get",
+              "title": "GET"
+            },
+            {
+              "id": "d2-post",
+              "title": "POST"
+            },
+            {
+              "id": "d2-put",
+              "title": "PUT"
+            },
+            {
+              "id": "d2-patch",
+              "title": "PATCH"
+            },
+            {
+              "id": "d2-delete",
+              "title": "DELETE"
+            },
+            {
+              "id": "d2-options",
+              "title": "OPTIONS"
+            },
+            {
+              "id": "d2-head",
+              "title": "HEAD"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-3",
+      "dayNumber": 3,
+      "title": "Day 3",
+      "theme": "Status Codes",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day3-status-codes",
+          "title": "Status Codes",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d3-200",
+              "title": "200 OK"
+            },
+            {
+              "id": "d3-201",
+              "title": "201 Created"
+            },
+            {
+              "id": "d3-202",
+              "title": "202 Accepted"
+            },
+            {
+              "id": "d3-204",
+              "title": "204 No Content"
+            },
+            {
+              "id": "d3-301",
+              "title": "301"
+            },
+            {
+              "id": "d3-302",
+              "title": "302"
+            },
+            {
+              "id": "d3-304",
+              "title": "304"
+            },
+            {
+              "id": "d3-400",
+              "title": "400 Bad Request"
+            },
+            {
+              "id": "d3-401",
+              "title": "401 Unauthorized"
+            },
+            {
+              "id": "d3-403",
+              "title": "403 Forbidden"
+            },
+            {
+              "id": "d3-404",
+              "title": "404 Not Found"
+            },
+            {
+              "id": "d3-405",
+              "title": "405 Method Not Allowed"
+            },
+            {
+              "id": "d3-409",
+              "title": "409 Conflict"
+            },
+            {
+              "id": "d3-415",
+              "title": "415 Unsupported Media Type"
+            },
+            {
+              "id": "d3-422",
+              "title": "422 Validation Error"
+            },
+            {
+              "id": "d3-429",
+              "title": "429 Too Many Requests"
+            },
+            {
+              "id": "d3-500",
+              "title": "500 Internal Server Error"
+            },
+            {
+              "id": "d3-503",
+              "title": "503 Service Unavailable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-4",
+      "dayNumber": 4,
+      "title": "Day 4",
+      "theme": "API Design",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day4-api-design",
+          "title": "API Design",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d4-uri-design",
+              "title": "URI Design"
+            },
+            {
+              "id": "d4-endpoint-naming",
+              "title": "Endpoint Naming"
+            },
+            {
+              "id": "d4-resource-design",
+              "title": "Resource Design"
+            },
+            {
+              "id": "d4-nested-resources",
+              "title": "Nested Resources"
+            },
+            {
+              "id": "d4-dto-pattern",
+              "title": "DTO Pattern"
+            },
+            {
+              "id": "d4-request-dto",
+              "title": "Request DTO"
+            },
+            {
+              "id": "d4-response-dto",
+              "title": "Response DTO"
+            },
+            {
+              "id": "d4-mapper",
+              "title": "Mapper Pattern"
+            },
+            {
+              "id": "d4-generic-response",
+              "title": "Generic Response"
+            },
+            {
+              "id": "d4-error-response",
+              "title": "Error Response"
+            },
+            {
+              "id": "d4-versioning",
+              "title": "API Versioning"
+            },
+            {
+              "id": "d4-pagination",
+              "title": "Pagination"
+            },
+            {
+              "id": "d4-sorting",
+              "title": "Sorting"
+            },
+            {
+              "id": "d4-filtering",
+              "title": "Filtering"
+            },
+            {
+              "id": "d4-search",
+              "title": "Search APIs"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-5",
+      "dayNumber": 5,
+      "title": "Day 5",
+      "theme": "API Security",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day5-api-security",
+          "title": "API Security",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d5-jwt-review",
+              "title": "JWT Review"
+            },
+            {
+              "id": "d5-oauth2",
+              "title": "OAuth2 Introduction"
+            },
+            {
+              "id": "d5-api-keys",
+              "title": "API Keys"
+            },
+            {
+              "id": "d5-cors",
+              "title": "CORS"
+            },
+            {
+              "id": "d5-csrf",
+              "title": "CSRF"
+            },
+            {
+              "id": "d5-rate-limiting",
+              "title": "Rate Limiting"
+            },
+            {
+              "id": "d5-input-validation",
+              "title": "Input Validation"
+            },
+            {
+              "id": "d5-output-validation",
+              "title": "Output Validation"
+            },
+            {
+              "id": "d5-secure-headers",
+              "title": "Secure Headers"
+            },
+            {
+              "id": "d5-best-practices",
+              "title": "API Best Practices"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-6",
+      "dayNumber": 6,
+      "title": "Day 6",
+      "theme": "API Documentation & Testing",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day6-docs-testing",
+          "title": "API Documentation & Testing",
+          "estimatedMinutes": 180,
+          "difficulty": "medium",
+          "items": [
+            {
+              "id": "d6-swagger",
+              "title": "Swagger"
+            },
+            {
+              "id": "d6-openapi",
+              "title": "OpenAPI"
+            },
+            {
+              "id": "d6-postman",
+              "title": "Postman Collections"
+            },
+            {
+              "id": "d6-env-vars",
+              "title": "Environment Variables"
+            },
+            {
+              "id": "d6-api-testing",
+              "title": "API Testing"
+            },
+            {
+              "id": "d6-mock-apis",
+              "title": "Mock APIs"
+            },
+            {
+              "id": "d6-automation",
+              "title": "API Automation"
+            },
+            {
+              "id": "d6-documentation",
+              "title": "API Documentation"
+            },
+            {
+              "id": "d6-health-check",
+              "title": "Health Check API"
+            },
+            {
+              "id": "d6-versioned-apis",
+              "title": "Versioned APIs"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "day-7",
+      "dayNumber": 7,
+      "title": "Day 7",
+      "theme": "API Best Practices",
+      "estimatedMinutes": 180,
+      "topics": [
+        {
+          "id": "day7-best-practices",
+          "title": "API Best Practices",
+          "estimatedMinutes": 180,
+          "difficulty": "hard",
+          "items": [
+            {
+              "id": "d7-idempotency",
+              "title": "Idempotency"
+            },
+            {
+              "id": "d7-logging",
+              "title": "Logging"
+            },
+            {
+              "id": "d7-correlation-id",
+              "title": "Correlation ID"
+            },
+            {
+              "id": "d7-response-time",
+              "title": "Response Time"
+            },
+            {
+              "id": "d7-compression",
+              "title": "Compression"
+            },
+            {
+              "id": "d7-monitoring",
+              "title": "API Monitoring"
+            },
+            {
+              "id": "d7-exception-standards",
+              "title": "Exception Standards"
+            },
+            {
+              "id": "d7-production-structure",
+              "title": "Production API Structure"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "topic-rest-fundamentals",
+      "title": "REST Fundamentals",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w10-d1-1",
+          "title": "REST Principles & Constraints",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d1-2",
+          "title": "Stateless APIs & Uniform Interface",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d1-3",
+          "title": "Resources & Resource Naming",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w10-d1-4",
+          "title": "REST vs SOAP vs GraphQL",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-http",
+      "title": "HTTP Protocol",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w10-d2-1",
+          "title": "HTTP Request & Response",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w10-d2-2",
+          "title": "Request & Response Headers",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d2-3",
+          "title": "GET / POST / PUT / PATCH / DELETE",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w10-d2-4",
+          "title": "OPTIONS & HEAD",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-status-codes",
+      "title": "Status Codes",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w10-d3-1",
+          "title": "2xx Success Codes (200, 201, 204)",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w10-d3-2",
+          "title": "3xx Redirection Codes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d3-3",
+          "title": "4xx Client Error Codes",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d3-4",
+          "title": "5xx Server Error Codes",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-api-design",
+      "title": "API Design",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w10-d4-1",
+          "title": "URI Design & Endpoint Naming",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d4-2",
+          "title": "DTO Pattern & Mapper",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d4-3",
+          "title": "Generic & Error Responses",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d4-4",
+          "title": "Pagination, Sorting & Filtering",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w10-d4-5",
+          "title": "API Versioning & Search APIs",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "id": "topic-api-security",
+      "title": "API Security",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w10-d5-1",
+          "title": "JWT Review & OAuth2 Introduction",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d5-2",
+          "title": "CORS, CSRF & Rate Limiting",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w10-d5-3",
+          "title": "Input & Output Validation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d5-4",
+          "title": "Secure Headers & API Best Practices",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-docs-testing",
+      "title": "API Documentation & Testing",
+      "estimatedMinutes": 180,
+      "difficulty": "medium",
+      "items": [
+        {
+          "id": "t-w10-d6-1",
+          "title": "Swagger & OpenAPI",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d6-2",
+          "title": "Postman Collections & Environment Variables",
+          "difficulty": "easy"
+        },
+        {
+          "id": "t-w10-d6-3",
+          "title": "API Testing & Automation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d6-4",
+          "title": "Health Check & Versioned APIs",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "topic-best-practices",
+      "title": "API Best Practices",
+      "estimatedMinutes": 180,
+      "difficulty": "hard",
+      "items": [
+        {
+          "id": "t-w10-d7-1",
+          "title": "Idempotency & Logging",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d7-2",
+          "title": "Correlation ID & Response Time",
+          "difficulty": "medium"
+        },
+        {
+          "id": "t-w10-d7-3",
+          "title": "Compression & API Monitoring",
+          "difficulty": "hard"
+        },
+        {
+          "id": "t-w10-d7-4",
+          "title": "Exception Standards & Production Structure",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "programmingQuestions": [
+    {
+      "id": "cat-http",
+      "category": "HTTP",
+      "questions": [
+        {
+          "id": "pq-w10-1",
+          "title": "Build GET API",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-2",
+          "title": "Build POST API",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-3",
+          "title": "Build PUT API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-4",
+          "title": "Build PATCH API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-5",
+          "title": "Build DELETE API",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-status-codes",
+      "category": "Status Codes",
+      "questions": [
+        {
+          "id": "pq-w10-6",
+          "title": "Return 200",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-7",
+          "title": "Return 201",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-8",
+          "title": "Return 204",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-9",
+          "title": "Return 400",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-10",
+          "title": "Return 404",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "id": "cat-dto",
+      "category": "DTO",
+      "questions": [
+        {
+          "id": "pq-w10-11",
+          "title": "Create StudentDTO",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-12",
+          "title": "Create EmployeeDTO",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-13",
+          "title": "Entity to DTO",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-14",
+          "title": "DTO to Entity",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-15",
+          "title": "Generic Response",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-api-design",
+      "category": "API Design",
+      "questions": [
+        {
+          "id": "pq-w10-16",
+          "title": "Student CRUD API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-17",
+          "title": "Employee CRUD API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-18",
+          "title": "Product CRUD API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-19",
+          "title": "Search API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-20",
+          "title": "Filter API",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-pagination",
+      "category": "Pagination",
+      "questions": [
+        {
+          "id": "pq-w10-21",
+          "title": "Student Pagination",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-22",
+          "title": "Employee Pagination",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-23",
+          "title": "Product Pagination",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-24",
+          "title": "Customer Pagination",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-25",
+          "title": "Sorting",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-validation",
+      "category": "Validation",
+      "questions": [
+        {
+          "id": "pq-w10-26",
+          "title": "Email Validation",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-27",
+          "title": "Mobile Validation",
+          "difficulty": "easy"
+        },
+        {
+          "id": "pq-w10-28",
+          "title": "Password Validation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-29",
+          "title": "Request Validation",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-30",
+          "title": "Response Validation",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-swagger",
+      "category": "Swagger",
+      "questions": [
+        {
+          "id": "pq-w10-31",
+          "title": "Configure Swagger",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-32",
+          "title": "Document Student API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-33",
+          "title": "Document Employee API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-34",
+          "title": "Document Product API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-35",
+          "title": "API Examples",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "id": "cat-testing",
+      "category": "Testing",
+      "questions": [
+        {
+          "id": "pq-w10-36",
+          "title": "Test Login API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-37",
+          "title": "Test Register API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-38",
+          "title": "Test Search API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-39",
+          "title": "Test CRUD API",
+          "difficulty": "medium"
+        },
+        {
+          "id": "pq-w10-40",
+          "title": "Test Pagination API",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "employee-rest-api-mastery",
+      "title": "Employee Management REST API",
+      "description": "Production-quality employee API with DTOs, pagination, validation, Swagger docs, and proper status codes.",
+      "features": [
+        {
+          "id": "p1-crud",
+          "title": "Full CRUD with DTOs"
+        },
+        {
+          "id": "p1-pagination",
+          "title": "Pagination & Sorting"
+        },
+        {
+          "id": "p1-swagger",
+          "title": "Swagger Documentation"
+        },
+        {
+          "id": "p1-validation",
+          "title": "Request Validation"
+        },
+        {
+          "id": "p1-error-handling",
+          "title": "Standardized Error Responses"
+        }
+      ],
+      "requirements": [
+        "RESTful endpoint design",
+        "DTO pattern with mappers",
+        "Swagger/OpenAPI",
+        "Postman collection"
+      ],
+      "bonusFeatures": [
+        "Department filter and search endpoints"
+      ]
+    },
+    {
+      "id": "hospital-rest-api-mastery",
+      "title": "Hospital Management REST API",
+      "description": "Hospital API with nested resources, versioning, and comprehensive documentation.",
+      "features": [
+        {
+          "id": "p2-patient-api",
+          "title": "Patient APIs"
+        },
+        {
+          "id": "p2-doctor-api",
+          "title": "Doctor APIs"
+        },
+        {
+          "id": "p2-appointment-api",
+          "title": "Appointment APIs"
+        },
+        {
+          "id": "p2-nested",
+          "title": "Nested Resources"
+        },
+        {
+          "id": "p2-versioning",
+          "title": "API Versioning"
+        }
+      ],
+      "requirements": [
+        "Nested resource URIs",
+        "Generic response wrapper",
+        "Swagger docs",
+        "Health check endpoint"
+      ],
+      "bonusFeatures": [
+        "v1 and v2 appointment endpoints"
+      ]
+    },
+    {
+      "id": "ecommerce-product-api",
+      "title": "E-Commerce Product API",
+      "description": "Product catalog API with search, filter, pagination, and rate limiting.",
+      "features": [
+        {
+          "id": "p3-product-crud",
+          "title": "Product CRUD"
+        },
+        {
+          "id": "p3-search",
+          "title": "Search & Filter"
+        },
+        {
+          "id": "p3-pagination",
+          "title": "Pagination"
+        },
+        {
+          "id": "p3-categories",
+          "title": "Category Endpoints"
+        },
+        {
+          "id": "p3-rate-limit",
+          "title": "Rate Limiting"
+        }
+      ],
+      "requirements": [
+        "Search and filter APIs",
+        "Pagination with sorting",
+        "Swagger documentation",
+        "Proper HTTP status codes"
+      ],
+      "bonusFeatures": [
+        "Product image metadata endpoints"
+      ]
+    },
+    {
+      "id": "crm-rest-api",
+      "title": "CRM REST API",
+      "description": "Customer relationship management API with contacts, leads, and activity tracking.",
+      "features": [
+        {
+          "id": "p4-contacts",
+          "title": "Contact Management"
+        },
+        {
+          "id": "p4-leads",
+          "title": "Lead Tracking"
+        },
+        {
+          "id": "p4-activities",
+          "title": "Activity Logs"
+        },
+        {
+          "id": "p4-search",
+          "title": "Search & Filter"
+        },
+        {
+          "id": "p4-docs",
+          "title": "Full API Documentation"
+        }
+      ],
+      "requirements": [
+        "DTO pattern",
+        "Pagination and sorting",
+        "OpenAPI spec",
+        "Postman test suite"
+      ],
+      "bonusFeatures": [
+        "Lead conversion endpoint"
+      ]
+    },
+    {
+      "id": "student-rest-api-mastery",
+      "title": "Student Management REST API",
+      "description": "Student API with validation, idempotency, correlation IDs, and production structure.",
+      "features": [
+        {
+          "id": "p5-crud",
+          "title": "Student CRUD"
+        },
+        {
+          "id": "p5-validation",
+          "title": "Input Validation"
+        },
+        {
+          "id": "p5-idempotency",
+          "title": "Idempotent POST"
+        },
+        {
+          "id": "p5-correlation",
+          "title": "Correlation ID Logging"
+        },
+        {
+          "id": "p5-swagger",
+          "title": "Swagger & Postman"
+        }
+      ],
+      "requirements": [
+        "Bean validation on DTOs",
+        "Standardized error responses",
+        "Swagger docs",
+        "Correlation ID in logs"
+      ],
+      "bonusFeatures": [
+        "Course enrollment nested endpoints"
+      ]
+    }
+  ],
+  "aiSkill": {
+    "id": "ai-week-10",
+    "title": "AI API Engineering",
+    "description": "Use AI to generate Swagger docs, Postman collections, review API design, validate responses, and optimize REST APIs.",
+    "learningTopics": [
+      {
+        "id": "ai-w10-t1",
+        "title": "AI API Integration"
+      },
+      {
+        "id": "ai-w10-t2",
+        "title": "AI-generated Swagger"
+      },
+      {
+        "id": "ai-w10-t3",
+        "title": "AI-generated Postman Collections"
+      },
+      {
+        "id": "ai-w10-t4",
+        "title": "AI API Documentation"
+      },
+      {
+        "id": "ai-w10-t5",
+        "title": "AI API Testing"
+      },
+      {
+        "id": "ai-w10-t6",
+        "title": "AI API Review"
+      },
+      {
+        "id": "ai-w10-t7",
+        "title": "AI Prompt APIs"
+      },
+      {
+        "id": "ai-w10-t8",
+        "title": "AI Response Validation"
+      },
+      {
+        "id": "ai-w10-t9",
+        "title": "AI Error Analysis"
+      },
+      {
+        "id": "ai-w10-t10",
+        "title": "AI API Optimization"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "Google Gemini",
+      "Claude",
+      "GitHub Copilot",
+      "Postman AI"
+    ],
+    "exercises": [
+      {
+        "id": "ai-w10-e1",
+        "title": "Generate OpenAPI/Swagger documentation for your API."
+      },
+      {
+        "id": "ai-w10-e2",
+        "title": "Create a Postman collection with test scripts."
+      },
+      {
+        "id": "ai-w10-e3",
+        "title": "Review your REST API endpoint naming and URI design."
+      },
+      {
+        "id": "ai-w10-e4",
+        "title": "Explain when to use 400 vs 422 vs 409 status codes."
+      },
+      {
+        "id": "ai-w10-e5",
+        "title": "Suggest pagination and filtering query parameters."
+      },
+      {
+        "id": "ai-w10-e6",
+        "title": "Review your DTO and mapper pattern implementation."
+      },
+      {
+        "id": "ai-w10-e7",
+        "title": "Identify missing validation rules in your API."
+      },
+      {
+        "id": "ai-w10-e8",
+        "title": "Generate API test cases for edge cases."
+      },
+      {
+        "id": "ai-w10-e9",
+        "title": "Suggest rate limiting and CORS configuration."
+      },
+      {
+        "id": "ai-w10-e10",
+        "title": "Optimize your API response structure for production."
+      }
+    ],
+    "promptExercises": []
+  },
+  "githubTasks": {
+    "id": "gh-week-10",
+    "repository": "springboot-week-3-rest-api",
+    "description": "Create repository springboot-week-3-rest-api and upload all Week 10 production REST API projects.",
+    "files": [
+      {
+        "id": "gh-w10-f1",
+        "path": "EmployeeAPI/"
+      },
+      {
+        "id": "gh-w10-f2",
+        "path": "HospitalAPI/"
+      },
+      {
+        "id": "gh-w10-f3",
+        "path": "ECommerceProductAPI/"
+      },
+      {
+        "id": "gh-w10-f4",
+        "path": "CRMAPI/"
+      },
+      {
+        "id": "gh-w10-f5",
+        "path": "StudentAPI/"
+      },
+      {
+        "id": "gh-w10-f6",
+        "path": "SwaggerConfig.java"
+      },
+      {
+        "id": "gh-w10-f7",
+        "path": "GenericResponse.java"
+      },
+      {
+        "id": "gh-w10-f8",
+        "path": "Postman Collection.json"
+      },
+      {
+        "id": "gh-w10-f9",
+        "path": "openapi.yaml"
+      },
+      {
+        "id": "gh-w10-f10",
+        "path": "README.md"
+      }
+    ]
+  },
+  "interviewQuestions": [
+    {
+      "id": "iq-w10-rest",
+      "category": "REST & HTTP",
+      "questions": [
+        {
+          "id": "iq-w10-1",
+          "question": "What are the core REST constraints?",
+          "answer": "Client-Server, Stateless, Cacheable, Uniform Interface, Layered System, Code on Demand (optional). These ensure scalability and separation of concerns."
+        },
+        {
+          "id": "iq-w10-2",
+          "question": "Difference between PUT and PATCH?",
+          "answer": "PUT replaces the entire resource — send all fields. PATCH applies partial updates — send only changed fields."
+        },
+        {
+          "id": "iq-w10-3",
+          "question": "When to use 201 vs 200 vs 204?",
+          "answer": "201 Created — resource created (POST). 200 OK — successful GET/PUT with body. 204 No Content — successful DELETE or update with no response body."
+        }
+      ]
+    },
+    {
+      "id": "iq-w10-design",
+      "category": "API Design",
+      "questions": [
+        {
+          "id": "iq-w10-4",
+          "question": "Why use DTOs instead of exposing entities?",
+          "answer": "Decouples API contract from database schema, hides internal fields, prevents over-posting, and allows different request/response shapes."
+        },
+        {
+          "id": "iq-w10-5",
+          "question": "How do you implement pagination in REST APIs?",
+          "answer": "Use query params like page, size, sort — return paginated response with totalElements, totalPages, and content array. Prefer page-based over offset for large datasets."
+        },
+        {
+          "id": "iq-w10-6",
+          "question": "What is API versioning and common strategies?",
+          "answer": "URI versioning (/api/v1/), header versioning (Accept: application/vnd.api.v1+json), or query param. URI is most common and explicit."
+        }
+      ]
+    },
+    {
+      "id": "iq-w10-security",
+      "category": "API Security & Best Practices",
+      "questions": [
+        {
+          "id": "iq-w10-7",
+          "question": "What is CORS and why does it matter?",
+          "answer": "Cross-Origin Resource Sharing — browser security that blocks requests from different origins unless server sends Access-Control-Allow-Origin headers."
+        },
+        {
+          "id": "iq-w10-8",
+          "question": "What is idempotency in REST APIs?",
+          "answer": "Repeated identical requests produce the same result. GET, PUT, DELETE are idempotent. POST is not — use idempotency keys for safe retries."
+        }
+      ]
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "del-w10-programs",
+      "title": "40 Programs Completed",
+      "description": "Complete all 40 programming questions across HTTP, Status Codes, DTO, API Design, Pagination, Validation, Swagger, and Testing",
+      "autoComplete": {
+        "type": "programming",
+        "targetCount": 40
+      }
+    },
+    {
+      "id": "del-w10-projects",
+      "title": "5 Mini Projects Completed",
+      "description": "Complete all 5 production-quality REST API projects",
+      "autoComplete": {
+        "type": "projects",
+        "targetCount": 5
+      }
+    },
+    {
+      "id": "del-w10-github",
+      "title": "GitHub Repository Uploaded",
+      "description": "Push all files to springboot-week-3-rest-api repository",
+      "autoComplete": {
+        "type": "github",
+        "targetCount": 10
+      }
+    },
+    {
+      "id": "del-w10-ai",
+      "title": "AI Practice Completed",
+      "description": "Complete all AI learning topics and practice exercises",
+      "autoComplete": {
+        "type": "ai",
+        "targetCount": 20
+      }
+    },
+    {
+      "id": "del-w10-interview",
+      "title": "Interview Questions Completed",
+      "description": "Master all Week 10 interview questions",
+      "autoComplete": {
+        "type": "interview",
+        "targetCount": 8
+      }
+    }
+  ]
+}

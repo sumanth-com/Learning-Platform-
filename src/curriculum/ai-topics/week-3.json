@@ -1,0 +1,42 @@
+{
+  "ai-w3-t1": {
+    "answer": "AI code review scans for smells, naming, structure — fast first pass. You decide what to accept. It's a linter with opinions, not a senior engineer.",
+    "realWorld": "Paste Student.java; AI flags public fields — you refactor to private + getters."
+  },
+  "ai-w3-t2": {
+    "answer": "Code smells: long methods, duplicate code, magic numbers, god classes, poor names. AI spots many; you prioritize fixes.",
+    "realWorld": "Three classes named Manager1, Manager2 — rename before feature work piles on."
+  },
+  "ai-w3-t3": {
+    "answer": "Java naming: classes PascalCase, methods/variables camelCase, constants UPPER_SNAKE. Names reveal intent: calculateTotal not calc.",
+    "realWorld": "isActive beats flag1 — boolean names answer a yes/no question."
+  },
+  "ai-w3-t4": {
+    "answer": "Readable code: short methods, clear names, consistent formatting. If you need a comment to explain what, rename instead.",
+    "realWorld": "AI suggests extracting a 40-line main() into processInput() and displayMenu()."
+  },
+  "ai-w3-t5": {
+    "answer": "Maintainable code: easy to change without breaking. Small classes, single responsibility, tests. Today's shortcut is tomorrow's bug.",
+    "realWorld": "Hardcoded tax rate in 5 places — one constant or config file saves future edits."
+  },
+  "ai-w3-t6": {
+    "answer": "AI review is fast but misses business context and team conventions. Human review catches 'technically fine but wrong approach.'",
+    "realWorld": "AI approves clever one-liner; teammate says 'we don't use Streams in legacy module.'"
+  },
+  "ai-w3-t7": {
+    "answer": "Ask AI to improve class design: 'Review BankAccount for encapsulation and single responsibility.' Implement one suggestion at a time.",
+    "realWorld": "Split Account and Transaction classes — AI draws the line; you verify domain logic."
+  },
+  "ai-w3-t8": {
+    "answer": "AI drafts JavaDoc and README from code. You fix inaccuracies. Good for boilerplate, not for architecture decisions.",
+    "realWorld": "Generate JavaDoc for public API methods; delete wrong @param names AI invented."
+  },
+  "ai-w3-t9": {
+    "answer": "Refactor with AI: ask for extract method, rename, remove duplication. Run program after each small change.",
+    "realWorld": "Extract validateInput() from main — one refactor, one test run."
+  },
+  "ai-w3-t10": {
+    "answer": "AI can suggest UML from class lists. Validate relationships match your code — arrows and cardinalities often wrong.",
+    "realWorld": "Student 1—* Course diagram — check if your code actually supports many courses."
+  }
+}

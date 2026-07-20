@@ -1,0 +1,220 @@
+[
+  {
+    "id": "w7-jdbc",
+    "category": "JDBC Fundamentals",
+    "questions": [
+      {
+        "id": "w7-q01",
+        "question": "What is JDBC?",
+        "answer": "JDBC (Java Database Connectivity) is a standard Java API that lets applications connect to relational databases, execute SQL, and process results. It sits between your Java code and the database vendor's JDBC driver, which translates JDBC calls into the database's native protocol. JDBC is part of Java SE and supports any database that provides a compliant driver (MySQL, PostgreSQL, Oracle, etc.).",
+        "realWorld": "Every enterprise Java backend that talks directly to a database—banking systems, e-commerce order services, HR portals—uses JDBC or a framework built on top of it (Spring JDBC, Hibernate).",
+        "code": "Class.forName(\"com.mysql.cj.jdbc.Driver\");\nString url = \"jdbc:mysql://localhost:3306/academy\";\ntry (Connection conn = DriverManager.getConnection(url, \"user\", \"pass\")) {\n    System.out.println(\"Connected: \" + !conn.isClosed());\n}",
+        "output": "Connected: true"
+      },
+      {
+        "id": "w7-q02",
+        "question": "Explain JDBC Architecture.",
+        "answer": "JDBC follows a layered architecture: (1) Java Application — your business code; (2) JDBC API — interfaces like Connection, Statement, ResultSet defined in java.sql; (3) JDBC Driver Manager — loads the appropriate driver and hands out connections; (4) JDBC Driver — vendor-specific implementation (e.g., MySQL Connector/J) that converts JDBC calls to database protocol; (5) Database — the actual RDBMS. The application never talks to the database directly—it always goes through the driver, which keeps code database-agnostic at the API level.",
+        "realWorld": "Switching from MySQL to PostgreSQL in production often requires only changing the driver JAR and connection URL—the application code using standard JDBC interfaces remains largely unchanged."
+      },
+      {
+        "id": "w7-q03",
+        "question": "What are the JDBC components?",
+        "answer": "The core JDBC components are: DriverManager — entry point that registers drivers and creates connections; Connection — represents a session with the database; Statement / PreparedStatement / CallableStatement — objects used to execute SQL; ResultSet — holds rows returned by SELECT queries; SQLException — checked exception for database errors. Supporting types include DatabaseMetaData, ResultSetMetaData, and DataSource (preferred in production over DriverManager for connection pooling)."
+      },
+      {
+        "id": "w7-q04",
+        "question": "Difference between Statement and PreparedStatement.",
+        "answer": "Statement executes a complete SQL string each time—it is compiled by the database on every execution and concatenates user input directly into the query. PreparedStatement uses a SQL template with placeholders (?), binds values separately via setString/setInt, and can be pre-compiled and reused. PreparedStatement is safer (prevents SQL injection), more efficient for repeated queries, and handles special characters in data correctly without manual escaping.",
+        "code": "// Statement — static SQL\nStatement stmt = conn.createStatement();\nstmt.executeUpdate(\"UPDATE users SET name='Alice' WHERE id=1\");\n\n// PreparedStatement — parameterized\nPreparedStatement ps = conn.prepareStatement(\n    \"UPDATE users SET name=? WHERE id=?\");\nps.setString(1, \"Alice\");\nps.setInt(2, 1);\nps.executeUpdate();"
+      },
+      {
+        "id": "w7-q05",
+        "question": "Why is PreparedStatement preferred?",
+        "answer": "PreparedStatement is preferred for three reasons: Security — parameters are sent separately from SQL structure, eliminating SQL injection; Performance — the database can cache and reuse the execution plan when the same query runs with different values; Correctness — special characters (quotes, semicolons) in user input are treated as data, not SQL syntax. Always use PreparedStatement for any query that includes user-supplied or dynamic values."
+      },
+      {
+        "id": "w7-q06",
+        "question": "What is SQL Injection?",
+        "answer": "SQL Injection is an attack where malicious input is inserted into a SQL query, changing its intended logic. For example, entering `' OR '1'='1` as a username can bypass authentication if the query is built by string concatenation. Attackers can read, modify, or delete data, and in worst cases execute administrative commands. It remains one of the OWASP Top 10 vulnerabilities and is preventable by using parameterized queries and input validation.",
+        "realWorld": "The 2008 Heartland Payment Systems breach and numerous CMS exploits exploited SQL injection to steal millions of credit card records.",
+        "code": "// VULNERABLE\nString sql = \"SELECT * FROM users WHERE username='\" + input + \"'\";\n// If input = admin' OR '1'='1' — returns all users"
+      },
+      {
+        "id": "w7-q07",
+        "question": "How does PreparedStatement prevent SQL Injection?",
+        "answer": "PreparedStatement separates SQL structure from data. The SQL template is sent to the database first with ? placeholders—no user data is embedded. Values are then bound via typed setter methods (setString, setInt). The database treats bound values strictly as data, never as executable SQL. Even if a user submits `' OR 1=1 --`, it is stored or compared as a literal string, not parsed as SQL operators.",
+        "code": "PreparedStatement ps = conn.prepareStatement(\n    \"SELECT * FROM users WHERE username=? AND password=?\");\nps.setString(1, userInput);   // malicious input stays as data\nps.setString(2, passwordInput);\nResultSet rs = ps.executeQuery();"
+      },
+      {
+        "id": "w7-q08",
+        "question": "What is ResultSet?",
+        "answer": "ResultSet is a JDBC object representing the rows returned by a SELECT query. It acts as a cursor—you iterate with next() to move row-by-row and retrieve column values using getInt(), getString(), etc., by column name or index. ResultSet is AutoCloseable and should be closed (or managed via try-with-resources) to free database resources. Types include TYPE_FORWARD_ONLY (default), TYPE_SCROLL_INSENSITIVE, and CONCUR_UPDATABLE for updatable result sets.",
+        "code": "PreparedStatement ps = conn.prepareStatement(\"SELECT id, name FROM users\");\nResultSet rs = ps.executeQuery();\nwhile (rs.next()) {\n    System.out.println(rs.getInt(\"id\") + \": \" + rs.getString(\"name\"));\n}"
+      }
+    ]
+  },
+  {
+    "id": "w7-operations",
+    "category": "CRUD, Transactions & Patterns",
+    "questions": [
+      {
+        "id": "w7-q09",
+        "question": "Explain CRUD operations.",
+        "answer": "CRUD stands for Create, Read, Update, Delete—the four basic database operations. Create maps to INSERT (add new rows), Read to SELECT (retrieve data), Update to UPDATE (modify existing rows), and Delete to DELETE (remove rows). In JDBC, each operation is executed via PreparedStatement.executeUpdate() for INSERT/UPDATE/DELETE (returns affected row count) or executeQuery() for SELECT (returns ResultSet).",
+        "code": "// Create\nps = conn.prepareStatement(\"INSERT INTO users (name, email) VALUES (?,?)\");\nps.setString(1, \"Bob\"); ps.setString(2, \"bob@mail.com\"); ps.executeUpdate();\n\n// Read\nps = conn.prepareStatement(\"SELECT * FROM users WHERE id=?\");\nps.setInt(1, 1); ResultSet rs = ps.executeQuery();\n\n// Update\nps = conn.prepareStatement(\"UPDATE users SET name=? WHERE id=?\");\nps.setString(1, \"Robert\"); ps.setInt(2, 1); ps.executeUpdate();\n\n// Delete\nps = conn.prepareStatement(\"DELETE FROM users WHERE id=?\");\nps.setInt(1, 1); ps.executeUpdate();"
+      },
+      {
+        "id": "w7-q10",
+        "question": "What is a transaction?",
+        "answer": "A transaction is a logical unit of work consisting of one or more SQL operations that must all succeed or all fail together. Transactions follow ACID properties: Atomicity (all or nothing), Consistency (database moves from one valid state to another), Isolation (concurrent transactions don't interfere), Durability (committed changes survive crashes). In JDBC, setAutoCommit(false) begins manual transaction control.",
+        "realWorld": "Transferring money between bank accounts requires debiting one account and crediting another in a single transaction—if either step fails, both must roll back."
+      },
+      {
+        "id": "w7-q11",
+        "question": "What is commit?",
+        "answer": "Commit permanently saves all changes made during the current transaction to the database. After commit(), the changes are durable and visible to other connections. In JDBC, call connection.commit() when auto-commit is disabled. If you never commit, changes are lost when the connection closes (unless rolled back explicitly). Auto-commit mode (default true) commits after each individual statement automatically.",
+        "code": "conn.setAutoCommit(false);\ntry {\n    // multiple SQL operations...\n    conn.commit();  // persist all changes\n} catch (SQLException e) {\n    conn.rollback();\n}"
+      },
+      {
+        "id": "w7-q12",
+        "question": "What is rollback?",
+        "answer": "Rollback undoes all changes made since the last commit in the current transaction, restoring the database to its previous consistent state. Use connection.rollback() when any operation in a multi-step transaction fails. This is essential for maintaining data integrity—partial updates (e.g., order created but payment not recorded) are prevented.",
+        "code": "conn.setAutoCommit(false);\ntry {\n    debitAccount(fromId, amount);\n    creditAccount(toId, amount);\n    conn.commit();\n} catch (SQLException e) {\n    conn.rollback();  // undo both operations\n    throw e;\n}"
+      },
+      {
+        "id": "w7-q13",
+        "question": "What is batch processing?",
+        "answer": "Batch processing groups multiple SQL statements and sends them to the database in a single round trip, reducing network overhead and improving performance for bulk operations. In JDBC, use addBatch() on a PreparedStatement for each set of parameters, then executeBatch() to run all at once. Useful for importing thousands of records or bulk updates.",
+        "code": "PreparedStatement ps = conn.prepareStatement(\n    \"INSERT INTO logs (message) VALUES (?)\");\nfor (String msg : messages) {\n    ps.setString(1, msg);\n    ps.addBatch();\n}\nint[] results = ps.executeBatch();  // executes all inserts"
+      },
+      {
+        "id": "w7-q14",
+        "question": "What is a connection pool?",
+        "answer": "A connection pool maintains a cache of pre-opened database connections that applications borrow and return instead of creating a new connection for every request. Creating connections is expensive (TCP handshake, authentication). Pools like HikariCP (default in Spring Boot) manage min/max pool size, idle timeouts, and health checks. Use DataSource.getConnection() rather than DriverManager in production.",
+        "realWorld": "A web app handling 1,000 concurrent requests without pooling would attempt 1,000 simultaneous TCP connections to the database—pools typically cap this at 10–50 reusable connections."
+      },
+      {
+        "id": "w7-q15",
+        "question": "What is the DAO pattern?",
+        "answer": "DAO (Data Access Object) is a design pattern that separates persistence logic from business logic. Each entity (User, Product) has a DAO class with methods like findById(), save(), delete() that encapsulate all JDBC code. The service layer calls DAO methods without knowing SQL details. Benefits: single responsibility, easier testing (mock DAOs), and swappable data sources.",
+        "code": "public interface UserDao {\n    Optional<User> findById(int id);\n    void save(User user);\n    void delete(int id);\n}\n\npublic class UserDaoImpl implements UserDao {\n    // JDBC logic encapsulated here\n}"
+      }
+    ]
+  },
+  {
+    "id": "w7-maven",
+    "category": "Maven & Build Tools",
+    "questions": [
+      {
+        "id": "w7-q16",
+        "question": "What is Maven?",
+        "answer": "Maven is a build automation and project management tool for Java. It standardizes project structure (src/main/java, src/test/java), manages dependencies automatically from repositories (Maven Central), and defines a build lifecycle (compile, test, package, install, deploy). Maven uses convention over configuration—developers declare what they need in pom.xml rather than maintaining complex build scripts.",
+        "realWorld": "Nearly every Java enterprise project and Spring Boot application uses Maven or Gradle for dependency management and CI/CD pipelines."
+      },
+      {
+        "id": "w7-q17",
+        "question": "What is pom.xml?",
+        "answer": "pom.xml (Project Object Model) is Maven's core configuration file. It defines project coordinates (groupId, artifactId, version), dependencies, plugins, build settings, and properties. Maven reads pom.xml to download libraries, compile source code, run tests, and package artifacts (JAR/WAR). It can inherit from a parent POM (e.g., spring-boot-starter-parent) to share common configuration.",
+        "code": "<project>\n  <groupId>com.academy</groupId>\n  <artifactId>student-app</artifactId>\n  <version>1.0.0</version>\n  <dependencies>\n    <dependency>\n      <groupId>mysql</groupId>\n      <artifactId>mysql-connector-j</artifactId>\n      <version>8.3.0</version>\n    </dependency>\n  </dependencies>\n</project>"
+      },
+      {
+        "id": "w7-q18",
+        "question": "What are Maven dependencies?",
+        "answer": "Maven dependencies are external libraries your project needs, declared in pom.xml under <dependencies>. Each dependency specifies groupId, artifactId, and version. Maven resolves them from repositories (local ~/.m2 and remote Maven Central), downloads JARs, and includes them on the compile/test classpath. Transitive dependencies are pulled automatically—declaring spring-boot-starter-web brings in Spring MVC, Jackson, Tomcat, etc.",
+        "code": "<dependency>\n  <groupId>org.junit.jupiter</groupId>\n  <artifactId>junit-jupiter</artifactId>\n  <version>5.10.2</version>\n  <scope>test</scope>\n</dependency>"
+      },
+      {
+        "id": "w7-q19",
+        "question": "What are Maven plugins?",
+        "answer": "Maven plugins bind goals to lifecycle phases to perform build tasks. The compiler plugin compiles Java source, surefire runs unit tests, jar/war plugins package artifacts, and spring-boot-maven-plugin creates executable JARs. Plugins are configured in pom.xml under <build><plugins>. Without plugins, Maven's default bindings handle basic compile/test/package, but custom plugins extend functionality.",
+        "code": "<plugin>\n  <groupId>org.apache.maven.plugins</groupId>\n  <artifactId>maven-compiler-plugin</artifactId>\n  <version>3.12.1</version>\n  <configuration>\n    <source>17</source>\n    <target>17</target>\n  </configuration>\n</plugin>"
+      }
+    ]
+  },
+  {
+    "id": "w7-testing-logging",
+    "category": "Testing & Logging",
+    "questions": [
+      {
+        "id": "w7-q20",
+        "question": "What is JUnit?",
+        "answer": "JUnit is the de facto unit testing framework for Java. JUnit 5 (Jupiter) provides annotations like @Test, @BeforeEach, @AfterEach, and assertion methods via Assertions.assertEquals(), assertThrows(), etc. Tests are run by Maven (surefire plugin) or the IDE. JUnit enables automated verification that individual units of code behave correctly, forming the foundation of test-driven development (TDD).",
+        "code": "import org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\n\nclass CalculatorTest {\n    @Test\n    void addsTwoNumbers() {\n        assertEquals(5, new Calculator().add(2, 3));\n    }\n}"
+      },
+      {
+        "id": "w7-q21",
+        "question": "What is unit testing?",
+        "answer": "Unit testing verifies that a single unit of code—a method or class—in isolation works as expected. Dependencies are mocked or stubbed so the test focuses on one component's logic. Unit tests are fast, automated, run on every build, and catch regressions early. Good unit tests follow AAA pattern: Arrange (setup), Act (execute), Assert (verify outcome).",
+        "realWorld": "A service method that calculates order totals should have unit tests covering normal orders, empty carts, discount codes, and edge cases—without hitting a real database."
+      },
+      {
+        "id": "w7-q22",
+        "question": "Difference between unit testing and integration testing.",
+        "answer": "Unit tests isolate a single component with mocked dependencies—they are fast and test logic in isolation. Integration tests verify that multiple components work together correctly—e.g., service + DAO + real database, or REST controller + service layer. Integration tests are slower, may require test databases or containers, and catch wiring/configuration issues that unit tests miss. Both are essential: unit tests for logic, integration tests for system behavior.",
+        "realWorld": "Unit test: mock UserDao, test UserService.register() validation logic. Integration test: spin up H2 database, test full register flow through DAO and service."
+      },
+      {
+        "id": "w7-q23",
+        "question": "What is logging?",
+        "answer": "Logging is the practice of recording application events, errors, and diagnostic information to persistent or console outputs at runtime. Unlike printing to stdout, logging frameworks support log levels (TRACE, DEBUG, INFO, WARN, ERROR), structured output, file rotation, and configurable appenders. Logs are essential for debugging production issues, auditing, and monitoring application health.",
+        "realWorld": "When a payment fails at 2 AM, operations teams rely on ERROR-level logs with stack traces and request IDs—not System.out.println—to diagnose the issue."
+      },
+      {
+        "id": "w7-q24",
+        "question": "Why shouldn't we use System.out.println() in production?",
+        "answer": "System.out.println() lacks log levels—you cannot filter debug vs error output; has no timestamps, thread info, or context; cannot be redirected to files or centralized log systems (ELK, Splunk); impacts performance synchronously on stdout; and mixes application output with framework noise. Logging frameworks solve all of these and allow changing verbosity without recompiling via configuration files.",
+        "realWorld": "Production apps use SLF4J + Logback with JSON structured logging shipped to Datadog or CloudWatch—impossible with println()."
+      },
+      {
+        "id": "w7-q25",
+        "question": "What is SLF4J?",
+        "answer": "SLF4J (Simple Logging Facade for Java) is a logging abstraction layer. Application code depends on the SLF4J API (org.slf4j.Logger) while the actual logging implementation (Logback, Log4j2) is chosen at runtime. This decouples code from a specific logging library—you can swap implementations without changing source code. Use LoggerFactory.getLogger(MyClass.class) to obtain a logger.",
+        "code": "import org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\n\npublic class UserService {\n    private static final Logger log =\n        LoggerFactory.getLogger(UserService.class);\n\n    public void register(User user) {\n        log.info(\"Registering user: {}\", user.getEmail());\n    }\n}"
+      },
+      {
+        "id": "w7-q26",
+        "question": "What is Logback?",
+        "answer": "Logback is the default logging implementation used by Spring Boot, created by the same author as SLF4J. It is fast, native SLF4J support, and configured via logback.xml or logback-spring.xml. Features include rolling file appenders, async logging, MDC (Mapped Diagnostic Context) for request tracing, and profile-specific configuration. Add spring-boot-starter-logging (included by default) to use Logback.",
+        "code": "<!-- logback-spring.xml -->\n<configuration>\n  <appender name=\"CONSOLE\" class=\"ch.qos.logback.core.ConsoleAppender\">\n    <encoder>\n      <pattern>%d{HH:mm:ss} [%thread] %-5level %logger - %msg%n</pattern>\n    </encoder>\n  </appender>\n  <root level=\"INFO\">\n    <appender-ref ref=\"CONSOLE\"/>\n  </root>\n</configuration>"
+      }
+    ]
+  },
+  {
+    "id": "w7-sql-design",
+    "category": "SQL & Database Design",
+    "questions": [
+      {
+        "id": "w7-q27",
+        "question": "What is normalization?",
+        "answer": "Normalization is the process of organizing database tables to reduce redundancy and improve data integrity. Key normal forms: 1NF — each column holds atomic (indivisible) values, no repeating groups; 2NF — meets 1NF and every non-key column depends on the entire primary key; 3NF — meets 2NF and no transitive dependencies (non-key columns depend only on the primary key). Normalized schemas avoid update anomalies but may require JOINs for queries.",
+        "realWorld": "Instead of storing customer name in every order row, normalize by keeping customer data in a customers table and referencing it via foreign key in orders."
+      },
+      {
+        "id": "w7-q28",
+        "question": "Difference between Primary Key and Foreign Key.",
+        "answer": "Primary Key uniquely identifies each row in a table—must be NOT NULL and unique; a table has one primary key (simple or composite). Foreign Key is a column that references the primary key of another table, establishing a relationship and enforcing referential integrity (preventing orphaned records). Example: orders.customer_id is a foreign key referencing customers.id (primary key).",
+        "code": "CREATE TABLE customers (\n  id INT PRIMARY KEY,\n  name VARCHAR(100)\n);\n\nCREATE TABLE orders (\n  id INT PRIMARY KEY,\n  customer_id INT,\n  FOREIGN KEY (customer_id) REFERENCES customers(id)\n);"
+      },
+      {
+        "id": "w7-q29",
+        "question": "Explain different types of SQL JOINs.",
+        "answer": "INNER JOIN — returns only rows with matching values in both tables. LEFT (OUTER) JOIN — all rows from left table plus matching rows from right (NULL if no match). RIGHT (OUTER) JOIN — all rows from right table plus matches from left. FULL OUTER JOIN — all rows from both, NULL where no match (MySQL doesn't support natively). CROSS JOIN — Cartesian product of both tables. SELF JOIN — table joined to itself, useful for hierarchical data (employees/managers).",
+        "code": "-- INNER: only customers with orders\nSELECT c.name, o.total\nFROM customers c\nINNER JOIN orders o ON c.id = o.customer_id;\n\n-- LEFT: all customers, even without orders\nSELECT c.name, o.total\nFROM customers c\nLEFT JOIN orders o ON c.id = o.customer_id;"
+      }
+    ]
+  },
+  {
+    "id": "w7-architecture",
+    "category": "Application Architecture",
+    "questions": [
+      {
+        "id": "w7-q30",
+        "question": "How would you build a Java application that interacts with a database?",
+        "answer": "Follow a layered architecture: (1) Define the database schema with normalized tables and keys; (2) Add Maven dependencies (mysql-connector-j, HikariCP, SLF4J/Logback, JUnit); (3) Configure a DataSource/connection pool with credentials in environment variables, not hardcoded; (4) Implement DAO classes encapsulating JDBC with PreparedStatement and try-with-resources; (5) Build a service layer with business logic and transaction management; (6) Write unit tests (mock DAOs) and integration tests (test DB); (7) Add structured logging and handle SQLException gracefully. For larger apps, migrate to Spring Boot + JPA as covered in later weeks.",
+        "realWorld": "A student management CRUD app: StudentDao handles JDBC, StudentService validates and orchestrates, Main/Controller exposes CLI or REST endpoints, Maven packages everything, JUnit verifies logic, Logback logs operations.",
+        "code": "// Layered flow\npublic class StudentService {\n    private final StudentDao dao;\n    public Student create(Student s) {\n        validate(s);\n        return dao.save(s);\n    }\n}\n\npublic class StudentDaoImpl implements StudentDao {\n    public Student save(Student s) {\n        String sql = \"INSERT INTO students (name, grade) VALUES (?,?)\";\n        try (Connection c = dataSource.getConnection();\n             PreparedStatement ps = c.prepareStatement(sql)) {\n            ps.setString(1, s.getName());\n            ps.setInt(2, s.getGrade());\n            ps.executeUpdate();\n            return s;\n        }\n    }\n}"
+      }
+    ]
+  }
+]

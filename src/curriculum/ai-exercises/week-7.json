@@ -1,0 +1,43 @@
+{
+  "ai-w7-e1": {
+    "answer": "Design Student DB: tables, PKs, FKs. Ask AI, then draw your own ER diagram and compare.",
+    "realWorld": "student, course, enrollment — standard academic schema pattern."
+  },
+  "ai-w7-e2": {
+    "answer": "Generate Library CREATE TABLE scripts. Run in Docker Postgres. Fix type errors.",
+    "realWorld": "book_copy_status ENUM or VARCHAR — pick one, document in README."
+  },
+  "ai-w7-e3": {
+    "answer": "Ask INNER JOIN explanation with 3-row example. Write join query yourself, verify row count.",
+    "realWorld": "Only matching rows appear — unmatched books without loans excluded."
+  },
+  "ai-w7-e4": {
+    "answer": "Paste slow query. Run EXPLAIN. Ask AI for rewrite. Compare execution time.",
+    "realWorld": "Subquery in SELECT → JOIN often faster — measure both."
+  },
+  "ai-w7-e5": {
+    "answer": "Paste JDBC connection + query code. Ask for try-with-resources and PreparedStatement fixes.",
+    "realWorld": "Leak from unclosed Connection — try-with-resources standard fix."
+  },
+  "ai-w7-e6": {
+    "answer": "Ask JUnit ideas for a DAO. Implement 2 tests with H2 in-memory DB.",
+    "realWorld": "@DataJpaTest or plain JDBC test — isolate DB layer."
+  },
+  "ai-w7-e7": {
+    "answer": "Ask 1NF, 2NF, 3NF with one example each. Find one violation in a denormalized table you design.",
+    "realWorld": "Repeating course name on every enrollment row → normalize to course table."
+  },
+  "ai-w7-e8": {
+    "answer": "Describe project entities; get ER from AI. Redraw correctly for portfolio README.",
+    "realWorld": "Visual ER in README helps recruiters understand your capstone in 10 seconds."
+  },
+  "ai-w7-e9": {
+    "answer": "List your frequent WHERE/JOIN columns. Ask which indexes help. Create one, re-EXPLAIN.",
+    "realWorld": "Index on foreign keys used in JOINs — common win."
+  },
+  "ai-w7-e10": {
+    "answer": "Show vulnerable string concat SQL. Ask AI to fix with PreparedStatement. Explain injection in one sentence.",
+    "realWorld": "'; DROP TABLE users; -- classic — parameters prevent it.",
+    "code": "PreparedStatement ps = conn.prepareStatement(\"SELECT * FROM users WHERE id = ?\");\nps.setLong(1, userId);"
+  }
+}

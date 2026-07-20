@@ -1,0 +1,42 @@
+{
+  "ai-w11-e1": {
+    "answer": "Generate banking ER: Customer, Account, Transaction. Draw and implement 3 Flyway scripts.",
+    "realWorld": "Portfolio piece: schema + ER image in README."
+  },
+  "ai-w11-e2": {
+    "answer": "E-commerce schema to 3NF. Identify duplicate product name on order lines — normalize.",
+    "realWorld": "product table + order_line references product_id."
+  },
+  "ai-w11-e3": {
+    "answer": "Write CTE query: top 3 products by revenue per category. Run and verify counts.",
+    "realWorld": "Window functions — common data interview question."
+  },
+  "ai-w11-e4": {
+    "answer": "Slow query + EXPLAIN. Apply index or rewrite. Document before/after ms.",
+    "realWorld": "Proof in README: 'Query 2s → 40ms with index on status, created_at.'"
+  },
+  "ai-w11-e5": {
+    "answer": "List top 5 queries from your app. Ask index recommendations. Add one, measure.",
+    "realWorld": "Partial index WHERE status = 'ACTIVE' — smaller, faster for hot path."
+  },
+  "ai-w11-e6": {
+    "answer": "Reproduce N+1: log SQL count in test. Fix with @EntityGraph or JOIN FETCH.",
+    "realWorld": "1 + N queries → 1 query — dramatic improvement on list endpoints."
+  },
+  "ai-w11-e7": {
+    "answer": "MongoDB aggregation for monthly sales. Import sample docs, run pipeline.",
+    "realWorld": "$match date range → $group by month → $sort."
+  },
+  "ai-w11-e8": {
+    "answer": "Flyway V1 baseline + V2 add column migration. Run on clean DB.",
+    "realWorld": "mvn flyway:migrate — same flow as team CI."
+  },
+  "ai-w11-e9": {
+    "answer": "Lazy vs eager on @ManyToOne: default lazy, eager only when always needed. Explain trade-off for your entity.",
+    "realWorld": "Eager Order→Customer loads customers always — often N+1 or over-fetch."
+  },
+  "ai-w11-e10": {
+    "answer": "Review schema for denormalization without reason, missing FKs, nullable everything.",
+    "realWorld": "NOT NULL on required fields — data quality at DB layer."
+  }
+}

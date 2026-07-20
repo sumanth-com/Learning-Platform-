@@ -1,0 +1,255 @@
+[
+  {
+    "slug": "java-fundamentals",
+    "title": "Java Fundamentals",
+    "badge": "Beginner",
+    "description": "Start your Java journey with core language concepts — from installation and your first program to variables, operators, and user input.",
+    "subtopics": [
+      { "slug": "what-is-java", "title": "What is Java?" },
+      { "slug": "jdk-jre-jvm", "title": "JDK JRE JVM" },
+      { "slug": "installing-java-ide-setup", "title": "Installing Java & IDE setup" },
+      { "slug": "first-java-program", "title": "First Java Program" },
+      { "slug": "variables-data-types", "title": "Variables & Data Types" },
+      { "slug": "operators", "title": "Operators" },
+      { "slug": "type-casting", "title": "Type Casting" },
+      { "slug": "user-input-scanner", "title": "User Input Scanner" },
+      { "slug": "comments", "title": "Comments" }
+    ]
+  },
+  {
+    "slug": "control-flow",
+    "title": "Control Flow",
+    "description": "Control how your program executes with conditionals, loops, and flow-control keywords.",
+    "subtopics": [
+      { "slug": "if-else-if-else", "title": "If Else If Else" },
+      { "slug": "switch-statement", "title": "Switch Statement" },
+      { "slug": "for-loop", "title": "For Loop" },
+      { "slug": "while-loop", "title": "While Loop" },
+      { "slug": "do-while-loop", "title": "Do While Loop" },
+      { "slug": "break-continue", "title": "Break & Continue" },
+      { "slug": "nested-loops", "title": "Nested Loops" }
+    ]
+  },
+  {
+    "slug": "methods",
+    "title": "Methods",
+    "description": "Organize code into reusable blocks — define methods, pass arguments, return values, and solve problems recursively.",
+    "subtopics": [
+      { "slug": "creating-methods", "title": "Creating Methods" },
+      { "slug": "parameters-arguments", "title": "Parameters & Arguments" },
+      { "slug": "return-types", "title": "Return Types" },
+      { "slug": "method-overloading", "title": "Method Overloading" },
+      { "slug": "recursion", "title": "Recursion" }
+    ]
+  },
+  {
+    "slug": "arrays",
+    "title": "Arrays",
+    "description": "Store and manipulate collections of elements with one-dimensional and two-dimensional arrays.",
+    "subtopics": [
+      { "slug": "1d-arrays", "title": "1D Arrays" },
+      { "slug": "2d-arrays", "title": "2D Arrays" },
+      { "slug": "array-operations", "title": "Array Operations" },
+      { "slug": "enhanced-for-loop", "title": "Enhanced For Loop" }
+    ]
+  },
+  {
+    "slug": "oop",
+    "title": "Object-Oriented Programming (OOP)",
+    "description": "Model real-world problems with classes, objects, and the four pillars of OOP — encapsulation, inheritance, polymorphism, and abstraction.",
+    "subtopics": [
+      { "slug": "classes-objects", "title": "Classes & Objects" },
+      { "slug": "constructors", "title": "Constructors" },
+      { "slug": "encapsulation", "title": "Encapsulation" },
+      { "slug": "inheritance", "title": "Inheritance" },
+      { "slug": "polymorphism", "title": "Polymorphism" },
+      { "slug": "abstraction", "title": "Abstraction" },
+      { "slug": "interfaces", "title": "Interfaces" },
+      { "slug": "access-modifiers", "title": "Access Modifiers" },
+      { "slug": "static-keyword", "title": "Static Keyword" },
+      { "slug": "final-keyword", "title": "Final Keyword" }
+    ]
+  },
+  {
+    "slug": "strings",
+    "title": "Strings",
+    "description": "Work with text in Java using String, StringBuilder, StringBuffer, and common manipulation techniques.",
+    "subtopics": [
+      { "slug": "string-class", "title": "String Class" },
+      { "slug": "string-methods", "title": "String Methods" },
+      { "slug": "string-builder", "title": "StringBuilder" },
+      { "slug": "string-buffer", "title": "StringBuffer" },
+      { "slug": "string-manipulation-problems", "title": "String Manipulation Problems" }
+    ]
+  },
+  {
+    "slug": "exception-handling",
+    "title": "Exception Handling",
+    "description": "Write robust programs that gracefully handle runtime errors with try-catch blocks, custom exceptions, and proper error propagation.",
+    "subtopics": [
+      { "slug": "try-catch", "title": "Try-Catch" },
+      { "slug": "finally", "title": "Finally" },
+      { "slug": "throw-throws", "title": "Throw & Throws" },
+      { "slug": "custom-exceptions", "title": "Custom Exceptions" }
+    ]
+  },
+  {
+    "slug": "collections-framework",
+    "title": "Collections Framework",
+    "description": "Manage groups of objects efficiently with Java's built-in List, Set, Queue, Map, and Iterator interfaces.",
+    "subtopics": [
+      { "slug": "array-list", "title": "ArrayList" },
+      { "slug": "linked-list", "title": "LinkedList" },
+      { "slug": "vector", "title": "Vector" },
+      { "slug": "stack", "title": "Stack" },
+      { "slug": "queue", "title": "Queue" },
+      { "slug": "priority-queue", "title": "PriorityQueue" },
+      { "slug": "hash-set", "title": "HashSet" },
+      { "slug": "tree-set", "title": "TreeSet" },
+      { "slug": "hash-map", "title": "HashMap" },
+      { "slug": "tree-map", "title": "TreeMap" },
+      { "slug": "iterator", "title": "Iterator" }
+    ]
+  },
+  {
+    "slug": "generics",
+    "title": "Generics",
+    "description": "Write type-safe, reusable code with generic classes, methods, and wildcard bounds.",
+    "subtopics": [
+      { "slug": "generic-classes", "title": "Generic Classes" },
+      { "slug": "generic-methods", "title": "Generic Methods" },
+      { "slug": "wildcards", "title": "Wildcards" }
+    ]
+  },
+  {
+    "slug": "java-8-features",
+    "title": "Java 8 Features",
+    "description": "Leverage modern Java with lambdas, functional interfaces, the Streams API, Optional, and the new Date & Time API.",
+    "subtopics": [
+      { "slug": "lambda-expressions", "title": "Lambda Expressions" },
+      { "slug": "functional-interfaces", "title": "Functional Interfaces" },
+      { "slug": "streams-api", "title": "Streams API" },
+      { "slug": "method-references", "title": "Method References" },
+      { "slug": "optional-class", "title": "Optional Class" },
+      { "slug": "date-time-api", "title": "Date & Time API" }
+    ]
+  },
+  {
+    "slug": "file-handling",
+    "title": "File Handling",
+    "description": "Read from and write to files using classic I/O classes and the modern NIO package.",
+    "subtopics": [
+      { "slug": "reading-files", "title": "Reading Files" },
+      { "slug": "writing-files", "title": "Writing Files" },
+      { "slug": "buffered-reader", "title": "BufferedReader" },
+      { "slug": "buffered-writer", "title": "BufferedWriter" },
+      { "slug": "file-class", "title": "File Class" },
+      { "slug": "nio-package", "title": "NIO Package" }
+    ]
+  },
+  {
+    "slug": "multithreading",
+    "title": "Multithreading",
+    "description": "Run concurrent tasks with threads, synchronization, and high-level executor utilities.",
+    "subtopics": [
+      { "slug": "threads", "title": "Threads" },
+      { "slug": "runnable-interface", "title": "Runnable Interface" },
+      { "slug": "thread-lifecycle", "title": "Thread Lifecycle" },
+      { "slug": "synchronization", "title": "Synchronization" },
+      { "slug": "executor-framework", "title": "Executor Framework" },
+      { "slug": "completable-future", "title": "CompletableFuture" }
+    ]
+  },
+  {
+    "slug": "jdbc",
+    "title": "JDBC",
+    "description": "Connect Java applications to relational databases with JDBC — run CRUD operations, prepared statements, and transactions.",
+    "subtopics": [
+      { "slug": "mysql-connection", "title": "MySQL Connection" },
+      { "slug": "crud-operations", "title": "CRUD Operations" },
+      { "slug": "prepared-statement", "title": "PreparedStatement" },
+      { "slug": "transactions", "title": "Transactions" }
+    ]
+  },
+  {
+    "slug": "dsa",
+    "title": "Data Structures & Algorithms",
+    "description": "Build a strong problem-solving foundation with essential data structures, algorithms, and complexity analysis.",
+    "subtopics": [
+      { "slug": "time-complexity", "title": "Time Complexity" },
+      { "slug": "dsa-arrays", "title": "Arrays" },
+      { "slug": "linked-lists", "title": "Linked Lists" },
+      { "slug": "dsa-stack", "title": "Stack" },
+      { "slug": "dsa-queue", "title": "Queue" },
+      { "slug": "trees", "title": "Trees" },
+      { "slug": "binary-search-tree", "title": "Binary Search Tree" },
+      { "slug": "heap", "title": "Heap" },
+      { "slug": "hashing", "title": "Hashing" },
+      { "slug": "graphs", "title": "Graphs" },
+      { "slug": "sorting-algorithms", "title": "Sorting Algorithms" },
+      { "slug": "searching-algorithms", "title": "Searching Algorithms" },
+      { "slug": "dsa-recursion", "title": "Recursion" },
+      { "slug": "dynamic-programming", "title": "Dynamic Programming" }
+    ]
+  },
+  {
+    "slug": "design-patterns",
+    "title": "Design Patterns",
+    "description": "Apply proven software design solutions — creational, behavioral, and structural patterns used in production codebases.",
+    "subtopics": [
+      { "slug": "singleton", "title": "Singleton" },
+      { "slug": "factory", "title": "Factory" },
+      { "slug": "builder", "title": "Builder" },
+      { "slug": "observer", "title": "Observer" },
+      { "slug": "strategy", "title": "Strategy" },
+      { "slug": "mvc-pattern", "title": "MVC Pattern" }
+    ]
+  },
+  {
+    "slug": "advanced-java",
+    "title": "Advanced Java",
+    "description": "Dive into serialization, reflection, annotations, networking, and how the JVM manages memory and garbage collection.",
+    "subtopics": [
+      { "slug": "serialization", "title": "Serialization" },
+      { "slug": "reflection-api", "title": "Reflection API" },
+      { "slug": "annotations", "title": "Annotations" },
+      { "slug": "networking-sockets", "title": "Networking Sockets" },
+      { "slug": "java-memory-management", "title": "Java Memory Management" },
+      { "slug": "garbage-collection", "title": "Garbage Collection" }
+    ]
+  },
+  {
+    "slug": "build-tools",
+    "title": "Build Tools",
+    "description": "Automate project builds, dependency management, and packaging with Maven and Gradle.",
+    "subtopics": [
+      { "slug": "maven", "title": "Maven" },
+      { "slug": "gradle", "title": "Gradle" }
+    ]
+  },
+  {
+    "slug": "testing",
+    "title": "Testing",
+    "description": "Write reliable unit tests and mock dependencies with JUnit and Mockito.",
+    "subtopics": [
+      { "slug": "junit", "title": "JUnit" },
+      { "slug": "mockito", "title": "Mockito" }
+    ]
+  },
+  {
+    "slug": "spring-ecosystem",
+    "title": "Spring Ecosystem",
+    "badge": "Most Important for Jobs",
+    "description": "Master the Spring stack for enterprise Java development — REST APIs, data access, security, and microservices.",
+    "subtopics": [
+      { "slug": "spring-framework", "title": "Spring Framework" },
+      { "slug": "spring-boot", "title": "Spring Boot" },
+      { "slug": "rest-apis", "title": "REST APIs" },
+      { "slug": "spring-data-jpa", "title": "Spring Data JPA" },
+      { "slug": "hibernate", "title": "Hibernate" },
+      { "slug": "spring-security", "title": "Spring Security" },
+      { "slug": "jwt-authentication", "title": "JWT Authentication" },
+      { "slug": "microservices", "title": "Microservices" }
+    ]
+  }
+]
