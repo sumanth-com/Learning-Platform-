@@ -26,7 +26,7 @@ export function getRoadmapItemDetail(
   if (!ctx) {
     return {
       answer: `Study "${title}" for Week ${week.id}. Take notes and practice before marking learned.`,
-      realWorld: week.goal,
+      realWorld: week.goal ?? week.description ?? `Week ${week.id}`,
     };
   }
 
@@ -36,7 +36,7 @@ export function getRoadmapItemDetail(
 
   return {
     answer: `This lesson covers "${title}" under ${topic.title} (${day.title}${theme}). Read your course material or notes on this topic, then write a short summary in your own words. If it involves setup or code (JDK, IDE, Hello World), do it hands-on on your machine. Difficulty: ${difficulty}. Mark learned only when you can explain it clearly without looking.`,
-    realWorld: `Week ${week.id} goal: ${week.goal}. After lessons, reinforce with Projects (mini builds), AI Skills, and Interview prep — all available for this week from the sidebar.`,
+    realWorld: `Week ${week.id} goal: ${week.goal ?? week.description ?? "complete this week's work"}. After lessons, reinforce with Projects (mini builds), AI Skills, and Interview prep — all available for this week from the sidebar.`,
   };
 }
 

@@ -33,7 +33,7 @@ const WEEK_MODULES: Record<string, CurriculumWeekDefinition> = {
   "week-9": week9 as CurriculumWeekDefinition,
   "week-10": week10 as CurriculumWeekDefinition,
   "week-11": week11 as CurriculumWeekDefinition,
-  "week-12": week12 as CurriculumWeekDefinition,
+  "week-12": week12 as unknown as CurriculumWeekDefinition,
 };
 
 let cachedWeeks: CurriculumWeekDefinition[] | null = null;
