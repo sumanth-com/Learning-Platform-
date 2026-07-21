@@ -11,19 +11,18 @@ import {
   CheckCircle2,
   Circle,
   Clock,
-  Code2,
   ExternalLink,
   Lightbulb,
   Loader2,
-  MessageSquare,
-  Sparkles,
   Target,
 } from "lucide-react";
 import { toast } from "sonner";
 import { LearnMarkdown } from "@/components/learn/learn-markdown";
 import { LessonAssignmentSection } from "@/components/assignments/lesson-assignment-section";
 import { DifficultyBadge } from "@/components/curriculum/difficulty-badge";
+import { ModuleChallengeCards } from "@/components/module-hub/module-challenge-cards";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { toggleLessonCompleteAction } from "@/features/curriculum/actions/progress-actions";
 import {
   prefetchModuleTopic,
@@ -32,6 +31,7 @@ import {
 } from "@/features/curriculum/hooks/use-module-hub";
 import type { ModuleTopicPayload } from "@/features/curriculum/actions/module-hub-actions";
 import { parseTopicDocSections } from "@/features/curriculum/lib/parse-topic-sections";
+import { resolveTopicChallenges, getTopicChallengeLimit } from "@/features/curriculum/lib/topic-challenges";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 import { cn } from "@/lib/utils";
 
@@ -39,14 +39,23 @@ type ModuleTopicViewProps = {
   moduleSlug: string;
   topicSlug: string;
   initialData: ModuleTopicPayload;
-  related: Array<{ slug: string; title: string }>;
+};
+
+const SECTION_ICONS: Record<string, typeof BookOpen> = {
+  overview: BookOpen,
+  explanation: BookOpen,
+  diagrams: Target,
+  examples: Lightbulb,
+  code: BookOpen,
+  mistakes: Lightbulb,
+  practices: CheckCircle2,
+  other: BookOpen,
 };
 
 export function ModuleTopicView({
   moduleSlug,
   topicSlug,
   initialData,
-  related,
 }: ModuleTopicViewProps) {
   const queryClient = useQueryClient();
   const [pending, startTransition] = useTransition();
@@ -60,19 +69,21 @@ export function ModuleTopicView({
     [lesson.content]
   );
 
+  const challenges = useMemo(
+    () =>
+      resolveTopicChallenges(
+        moduleSlug,
+        topicSlug,
+        lesson.title,
+        getTopicChallengeLimit(moduleSlug, topicSlug)
+      ),
+    [moduleSlug, topicSlug, lesson.title]
+  );
+
   useEffect(() => {
     prefetchModuleTopic(queryClient, moduleSlug, detail.previousLessonSlug);
     prefetchModuleTopic(queryClient, moduleSlug, detail.nextLessonSlug);
-    for (const item of related.slice(0, 3)) {
-      prefetchModuleTopic(queryClient, moduleSlug, item.slug);
-    }
-  }, [
-    queryClient,
-    moduleSlug,
-    detail.previousLessonSlug,
-    detail.nextLessonSlug,
-    related,
-  ]);
+  }, [queryClient, moduleSlug, detail.previousLessonSlug, detail.nextLessonSlug]);
 
   return (
     <AnimatePresence mode="wait">
@@ -82,102 +93,133 @@ export function ModuleTopicView({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.12 }}
-        className="mx-auto max-w-3xl pb-8"
+        className="mx-auto max-w-4xl space-y-10 pb-12"
       >
-        <Link
-          href={CURRICULUM_ROUTES.module(moduleSlug)}
-          className="inline-flex items-center gap-1.5 text-xs text-zinc-500 transition hover:text-zinc-300"
-        >
-          <ArrowLeft className="h-3 w-3" />
-          Back to module hub
-        </Link>
+        <nav className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+          <Link
+            href={CURRICULUM_ROUTES.moduleHub(moduleSlug)}
+            className="inline-flex items-center gap-1 transition hover:text-zinc-300"
+          >
+            <ArrowLeft className="h-3 w-3" />
+            Back to challenges
+          </Link>
+          <span className="text-zinc-700">·</span>
+          <Link
+            href={CURRICULUM_ROUTES.moduleHub(moduleSlug, topicSlug)}
+            className="transition hover:text-zinc-300"
+          >
+            {module.title}
+          </Link>
+          <span className="text-zinc-700">/</span>
+          <span className="text-zinc-300">{lesson.title}</span>
+        </nav>
 
-        <header className="mt-4 space-y-3 border-b border-zinc-800/80 pb-6">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-indigo-300/80">
-            {module.title} · Topic
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-50">
-            {lesson.title}
-          </h1>
-          {lesson.description ? (
-            <p className="text-sm leading-relaxed text-zinc-400">
-              {lesson.description}
+        <header className="space-y-4 border-b border-zinc-800/80 pb-6">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-indigo-300/80">
+              Topic
             </p>
-          ) : null}
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-50">
+              {lesson.title}
+            </h1>
+            {lesson.description ? (
+              <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+                {lesson.description}
+              </p>
+            ) : null}
+          </div>
+
           <div className="flex flex-wrap items-center gap-2">
             <DifficultyBadge difficulty={lesson.difficulty} />
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 px-2.5 py-1 text-xs text-zinc-500">
+            <span className="inline-flex items-center gap-1.5 text-xs text-zinc-500">
               <Clock className="h-3.5 w-3.5" />
               {lesson.duration_minutes} min
             </span>
-            {isCompleted ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs text-emerald-300">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                Completed
+            <span
+              className={cn(
+                "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                isCompleted
+                  ? "bg-emerald-500/15 text-emerald-300"
+                  : "bg-indigo-500/15 text-indigo-300"
+              )}
+            >
+              {isCompleted ? "Completed" : "In progress"}
+            </span>
+          </div>
+
+          <div className="max-w-xs space-y-1.5">
+            <div className="flex justify-between text-[11px] text-zinc-500">
+              <span>Topic progress</span>
+              <span className="tabular-nums text-zinc-300">
+                {isCompleted ? "100%" : "0%"}
               </span>
-            ) : null}
+            </div>
+            <Progress value={isCompleted ? 100 : 0} className="h-1.5" />
           </div>
         </header>
 
         {objectives.length > 0 ? (
-          <TopicBlock icon={Target} title="Learning objectives">
+          <section>
+            <div className="mb-3 flex items-center gap-2">
+              <Target className="h-4 w-4 text-indigo-400" />
+              <h2 className="text-sm font-semibold text-zinc-100">
+                Learning objectives
+              </h2>
+            </div>
             <ul className="space-y-2 text-sm text-zinc-400">
               {objectives.map((item) => (
                 <li key={item} className="flex gap-2">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400" />
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400" />
                   {item}
                 </li>
               ))}
             </ul>
-          </TopicBlock>
+          </section>
         ) : null}
 
-        <div className="mt-8 space-y-10">
+        <section className="space-y-8">
+          <div>
+            <h2 className="text-lg font-semibold text-zinc-50">
+              Learning content
+            </h2>
+            <p className="mt-1 text-sm text-zinc-500">
+              Read the concept first. Practice challenges come after.
+            </p>
+          </div>
+
           {sections.length > 0 ? (
-            sections.map((section) => (
-              <TopicBlock
-                key={`${section.id}-${section.title}`}
-                icon={iconFor(section.id)}
-                title={section.title}
-              >
-                <LearnMarkdown content={section.content} />
-              </TopicBlock>
-            ))
+            sections
+              .filter((s) => s.id !== "practice" && s.id !== "assignment")
+              .map((section) => {
+                const Icon = SECTION_ICONS[section.id] ?? BookOpen;
+                return (
+                  <div key={`${section.id}-${section.title}`}>
+                    <div className="mb-3 flex items-center gap-2">
+                      <Icon className="h-4 w-4 text-indigo-400" />
+                      <h3 className="text-sm font-semibold text-zinc-100">
+                        {section.title}
+                      </h3>
+                    </div>
+                    <LearnMarkdown content={section.content} />
+                  </div>
+                );
+              })
           ) : (
-            <TopicBlock icon={BookOpen} title="Overview">
-              <LearnMarkdown
-                content={
-                  lesson.content ||
-                  "Topic content will appear here when published."
-                }
-              />
-            </TopicBlock>
+            <LearnMarkdown content={lesson.content || "No content yet."} />
           )}
-        </div>
-
-        <TopicBlock icon={Code2} title="Interactive playground">
-          <div className="rounded-xl border border-dashed border-zinc-800 bg-zinc-950/40 p-6 text-center text-xs text-zinc-500">
-            Playground placeholder — ready for a future interactive runner
-            without schema changes.
-          </div>
-        </TopicBlock>
-
-        {assignments.length > 0 ? (
-          <div className="mt-8">
-            <LessonAssignmentSection assignments={assignments} />
-          </div>
-        ) : null}
+        </section>
 
         {resources.length > 0 ? (
-          <TopicBlock icon={ExternalLink} title="References">
-            <ul className="space-y-2">
+          <section>
+            <h2 className="text-sm font-semibold text-zinc-100">Resources</h2>
+            <ul className="mt-3 space-y-2">
               {resources.map((resource) => (
                 <li key={resource.id}>
                   <a
                     href={resource.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm text-indigo-300 hover:text-indigo-200"
+                    className="inline-flex items-center gap-2 text-sm text-indigo-300 transition hover:text-indigo-200"
                   >
                     {resource.title}
                     <ExternalLink className="h-3.5 w-3.5" />
@@ -185,33 +227,44 @@ export function ModuleTopicView({
                 </li>
               ))}
             </ul>
-          </TopicBlock>
+          </section>
         ) : null}
 
-        <TopicBlock icon={MessageSquare} title="Discussion">
-          <p className="text-sm text-zinc-500">
-            Module discussion threads will appear here — future integration.
-          </p>
-        </TopicBlock>
+        <section className="space-y-4 border-t border-zinc-800/80 pt-8">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold text-zinc-50">
+                Practice challenges
+              </h2>
+              <p className="mt-1 text-sm text-zinc-500">
+                Solve these after reading. Mark the topic complete when you are
+                done studying.
+              </p>
+            </div>
+            <Button asChild size="sm" variant="outline" className="shrink-0">
+              <Link href={CURRICULUM_ROUTES.moduleHub(moduleSlug, topicSlug)}>
+                View on module hub
+              </Link>
+            </Button>
+          </div>
+          <ModuleChallengeCards
+            moduleSlug={moduleSlug}
+            topicSlug={topicSlug}
+            challenges={challenges}
+          />
+        </section>
 
-        {related.length > 0 ? (
-          <TopicBlock icon={Sparkles} title="Related topics">
-            <ul className="flex flex-wrap gap-2">
-              {related.map((item) => (
-                <li key={item.slug}>
-                  <Link
-                    href={CURRICULUM_ROUTES.moduleTopic(moduleSlug, item.slug)}
-                    className="rounded-full border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs text-zinc-300 transition hover:border-zinc-600"
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </TopicBlock>
-        ) : null}
+        <section className="space-y-4 border-t border-zinc-800/80 pt-8">
+          <div>
+            <h2 className="text-lg font-semibold text-zinc-50">Assignments</h2>
+            <p className="mt-1 text-sm text-zinc-500">
+              Submit after finishing the topic challenges.
+            </p>
+          </div>
+          <LessonAssignmentSection assignments={assignments} />
+        </section>
 
-        <div className="sticky bottom-0 mt-10 border-t border-zinc-800/90 bg-zinc-950/95 py-4 backdrop-blur">
+        <div className="sticky bottom-0 border-t border-zinc-800/90 bg-zinc-950/95 py-4 backdrop-blur">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             {detail.previousLessonSlug ? (
               <Button asChild variant="outline">
@@ -308,35 +361,4 @@ export function ModuleTopicView({
       </motion.article>
     </AnimatePresence>
   );
-}
-
-function TopicBlock({
-  icon: Icon,
-  title,
-  children,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="mt-8">
-      <div className="mb-3 flex items-center gap-2">
-        <Icon className={cn("h-4 w-4 text-indigo-400")} />
-        <h2 className="text-sm font-semibold tracking-tight text-zinc-100">
-          {title}
-        </h2>
-      </div>
-      {children}
-    </section>
-  );
-}
-
-function iconFor(id: string) {
-  if (id === "code" || id === "playground") return Code2;
-  if (id === "objectives" || id === "practice" || id === "quiz") return Target;
-  if (id === "why" || id === "practices" || id === "mistakes") return Lightbulb;
-  if (id === "examples") return Sparkles;
-  if (id === "discussion") return MessageSquare;
-  return BookOpen;
 }

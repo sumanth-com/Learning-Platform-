@@ -49,8 +49,8 @@ export default async function AssignmentsPage() {
             Assignments appear here as mentors publish them to lessons.
           </p>
           <Button asChild className="mt-6 gap-2">
-            <Link href={CURRICULUM_ROUTES.journey}>
-              Browse journey
+            <Link href={CURRICULUM_ROUTES.roadmap}>
+              Browse roadmap
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>

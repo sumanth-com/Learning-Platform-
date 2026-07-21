@@ -101,39 +101,62 @@ export function HackerrankEditor({ lesson }: HackerrankEditorProps) {
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-auto bg-[#0a0a0b] p-3">
-        <pre className="font-mono text-[12px] leading-relaxed sm:text-[13px]">
-          {lines.map((line, i) => (
-            <div key={i} className="flex hover:bg-zinc-900/40">
-              <span className="mr-4 w-8 shrink-0 select-none border-r border-zinc-800 pr-3 text-right text-[11px] text-zinc-600">
-                {i + 1}
-              </span>
-              <code className={cn("block flex-1 whitespace-pre pl-3", langClass)}>{line || " "}</code>
+      <div className="relative min-h-0 flex-1 overflow-hidden bg-[#0a0a0b]">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-11 border-r border-zinc-800 bg-[#0a0a0b] pt-3 text-right">
+          {lines.map((_, i) => (
+            <div
+              key={i}
+              className="pr-2 font-mono text-[11px] leading-[1.625] text-zinc-600 sm:text-[12px] sm:leading-[1.625]"
+            >
+              {i + 1}
             </div>
           ))}
-        </pre>
+        </div>
+        <textarea
+          value={safeCode}
+          onChange={(e) => setEditorCode(e.target.value)}
+          spellCheck={false}
+          className={cn(
+            "h-full w-full resize-none bg-transparent py-3 pl-12 pr-3 font-mono text-[12px] leading-relaxed outline-none sm:text-[13px]",
+            langClass
+          )}
+          aria-label="Code editor"
+        />
       </div>
 
       <div className="shrink-0 border-t border-zinc-800 bg-zinc-950/80 px-3 py-0.5 text-[10px] text-zinc-600">
         Line: {lineCount} Col: {colCount}
       </div>
 
-      <div className="flex shrink-0 border-t border-zinc-800 bg-zinc-950/80 px-3 py-2.5">
+      <div className="flex shrink-0 items-center gap-2 border-t border-zinc-800 bg-zinc-950/80 px-3 py-2.5">
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 gap-1.5 px-4 text-xs"
+          onClick={runCode}
+          disabled={running}
+        >
+          {running ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <Play className="h-3.5 w-3.5 fill-current" />
+          )}
+          {config.runLabel ?? "Run"}
+        </Button>
         <Button
           size="sm"
           className="ml-auto h-8 gap-1.5 bg-emerald-600 px-6 text-xs font-semibold hover:bg-emerald-500"
           onClick={runCode}
           disabled={running}
         >
-          {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5 fill-current" />}
-          {config.runLabel ?? "Run Code"}
+          Submit
         </Button>
       </div>
 
       <div className="flex h-[200px] shrink-0 flex-col border-t border-zinc-800 bg-zinc-950/90">
         <div className="flex shrink-0 items-center gap-2 border-b border-zinc-800 px-3 py-2">
           <Terminal className="h-3.5 w-3.5 text-zinc-500" />
-          <span className="text-[11px] font-medium text-zinc-400">Output</span>
+          <span className="text-[11px] font-medium text-zinc-400">Console Output</span>
           {!running && output && (
             <span className="ml-auto rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
               Accepted

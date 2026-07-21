@@ -30,7 +30,7 @@ export function PhaseJourneyMap({
       description: phase.description,
       href: firstModule
         ? CURRICULUM_ROUTES.module(firstModule.slug)
-        : `${CURRICULUM_ROUTES.journey}#${phase.slug}`,
+        : `${CURRICULUM_ROUTES.roadmap}#${phase.slug}`,
     };
   });
 
@@ -73,7 +73,7 @@ export function PhaseJourneyMap({
       })}
       completedCount={completedCount}
       overallPct={overallPct}
-      mapLabel="Learning Journey"
+      mapLabel="Learning Roadmap"
       nodeLabel="Phase"
       finaleTitle="SupraLearn Graduate"
       finaleSubtitle={`Complete all ${phases.length} phases in ${courseTitle}`}

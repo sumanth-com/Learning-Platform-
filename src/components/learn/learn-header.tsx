@@ -22,7 +22,7 @@ export function LearnHeader({
 }: LearnHeaderProps) {
   const backHref = moduleSlug
     ? CURRICULUM_ROUTES.module(moduleSlug)
-    : CURRICULUM_ROUTES.journey;
+    : CURRICULUM_ROUTES.roadmap;
 
   return (
     <header className="sticky top-0 z-20 border-b border-zinc-800/90 bg-zinc-950/90 backdrop-blur-xl">
@@ -30,10 +30,10 @@ export function LearnHeader({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
             <Link
-              href={CURRICULUM_ROUTES.journey}
+              href={CURRICULUM_ROUTES.roadmap}
               className="transition hover:text-zinc-300"
             >
-              Journey
+              Roadmap
             </Link>
             {moduleSlug && moduleTitle ? (
               <>

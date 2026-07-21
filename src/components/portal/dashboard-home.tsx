@@ -50,7 +50,7 @@ export function DashboardHome({
         )
       : continueState?.moduleSlug
         ? CURRICULUM_ROUTES.module(continueState.moduleSlug)
-        : CURRICULUM_ROUTES.journey;
+        : CURRICULUM_ROUTES.roadmap;
 
   const upcomingLessons = getUpcomingLessons(journey, 4);
   const recentCompleted = getRecentCompleted(journey, 3);
@@ -100,7 +100,7 @@ export function DashboardHome({
             <p className="mt-1 line-clamp-1 text-xs text-zinc-400">
               {continueState?.phaseTitle && continueState?.moduleTitle
                 ? `${continueState.phaseTitle} · ${continueState.moduleTitle}`
-                : "Open your Journey to begin."}
+                : "Open your roadmap to begin."}
             </p>
             <div className="mt-2 flex items-center gap-3 text-[11px] text-zinc-500">
               {continueState?.lesson ? (
@@ -124,8 +124,8 @@ export function DashboardHome({
               </Link>
             </Button>
             <Button asChild size="sm" variant="outline">
-              <Link href={CURRICULUM_ROUTES.journey}>
-                Journey
+              <Link href={CURRICULUM_ROUTES.roadmap}>
+                Roadmap
               </Link>
             </Button>
           </div>
@@ -216,7 +216,7 @@ export function DashboardHome({
                     href={
                       moduleSlug
                         ? CURRICULUM_ROUTES.moduleTopic(moduleSlug, lesson.slug)
-                        : CURRICULUM_ROUTES.journey
+                        : CURRICULUM_ROUTES.roadmap
                     }
                     className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 transition hover:bg-zinc-950/60"
                   >
@@ -267,7 +267,7 @@ export function DashboardHome({
             body="Build portfolio pieces as you advance."
           />
           <QuickCard
-            href={CURRICULUM_ROUTES.journey}
+            href={CURRICULUM_ROUTES.roadmap}
             icon={Award}
             title="Achievements"
             body={`${continueState?.completedCount ?? 0} lessons completed.`}

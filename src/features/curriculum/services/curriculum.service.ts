@@ -7,6 +7,12 @@ import { LessonsRepository } from "@/features/curriculum/repositories/lessons.re
 import { LessonResourcesRepository } from "@/features/curriculum/repositories/resources.repository";
 import { ProgressRepository } from "@/features/curriculum/repositories/progress.repository";
 import { percent, toLessonSummary } from "@/features/curriculum/lib/mappers";
+import {
+  isProgrammingFundamentalsModule,
+  mergeProgrammingFundamentalsLessons,
+  programmingFundamentalsLessonContent,
+  PROGRAMMING_FUNDAMENTALS_TOPICS,
+} from "@/features/curriculum/lib/programming-fundamentals";
 import { DEFAULT_COURSE_SLUG } from "@/features/curriculum/types";
 import type {
   ContinueLearningState,
@@ -58,13 +64,16 @@ export class CurriculumService {
         const moduleLessons = (lessonsByModule.get(module.id) ?? []).map((l) =>
           toLessonSummary(l, completedIds)
         );
-        const completedCount = moduleLessons.filter((l) => l.isCompleted).length;
+        const mergedLessons = isProgrammingFundamentalsModule(module.slug)
+          ? mergeProgrammingFundamentalsLessons(moduleLessons, completedIds)
+          : moduleLessons;
+        const completedCount = mergedLessons.filter((l) => l.isCompleted).length;
         return {
           ...module,
-          lessons: moduleLessons,
+          lessons: mergedLessons,
           completedCount,
-          totalCount: moduleLessons.length,
-          progressPercent: percent(completedCount, moduleLessons.length),
+          totalCount: mergedLessons.length,
+          progressPercent: percent(completedCount, mergedLessons.length),
         };
       });
 
@@ -112,21 +121,22 @@ export class CurriculumService {
 
     const lessons = await this.lessons.listByModuleIds([module.id]);
     const completedIds = await this.progress.listCompletedLessonIds(profileId);
+    const completedSet = new Set(completedIds);
     const summaries = lessons.map((l) => toLessonSummary(l, completedIds));
-    const completedCount = summaries.filter((l) => l.isCompleted).length;
+    const merged = isProgrammingFundamentalsModule(slug)
+      ? mergeProgrammingFundamentalsLessons(summaries, completedSet)
+      : summaries;
+    const completedCount = merged.filter((l) => l.isCompleted).length;
 
     return {
       module,
       phase,
       course,
-      lessons: summaries,
+      lessons: merged,
       completedCount,
-      totalCount: summaries.length,
-      progressPercent: percent(completedCount, summaries.length),
-      totalDurationMinutes: summaries.reduce(
-        (s, l) => s + l.durationMinutes,
-        0
-      ),
+      totalCount: merged.length,
+      progressPercent: percent(completedCount, merged.length),
+      totalDurationMinutes: merged.reduce((s, l) => s + l.durationMinutes, 0),
     };
   }
 
@@ -135,7 +145,57 @@ export class CurriculumService {
     slug: string
   ): Promise<LessonDetail | null> {
     const lesson = await this.lessons.findBySlug(slug);
-    if (!lesson) return null;
+
+    if (!lesson) {
+      const pfTopic = PROGRAMMING_FUNDAMENTALS_TOPICS.find((t) => t.slug === slug);
+      if (!pfTopic) return null;
+
+      const module = await this.modules.findBySlug("programming-fundamentals");
+      if (!module) return null;
+
+      const phase = await this.phases.findById(module.phase_id);
+      if (!phase) return null;
+      const course = await this.courses.findById(phase.course_id);
+      if (!course) return null;
+
+      const siblings = await this.lessons.listByModuleIds([module.id]);
+      const completedIds = await this.progress.listCompletedLessonIds(profileId);
+      const merged = mergeProgrammingFundamentalsLessons(
+        siblings.map((l) => toLessonSummary(l, completedIds)),
+        new Set(completedIds)
+      );
+      const index = merged.findIndex((l) => l.slug === slug);
+      const virtual = merged[index];
+      if (!virtual) return null;
+
+      return {
+        lesson: {
+          id: virtual.id,
+          module_id: module.id,
+          title: virtual.title,
+          slug: virtual.slug,
+          description: virtual.description,
+          content: programmingFundamentalsLessonContent(slug),
+          duration_minutes: virtual.durationMinutes,
+          difficulty: virtual.difficulty,
+          video_url: null,
+          is_preview: virtual.isPreview,
+          sort_order: virtual.sortOrder,
+          learning_objectives: [],
+          created_at: module.created_at,
+        },
+        resources: [],
+        module,
+        phase,
+        course,
+        isCompleted: virtual.isCompleted,
+        previousLessonSlug: index > 0 ? merged[index - 1]!.slug : null,
+        nextLessonSlug:
+          index >= 0 && index < merged.length - 1
+            ? merged[index + 1]!.slug
+            : null,
+      };
+    }
 
     const module = await this.modules.findById(lesson.module_id);
     if (!module) return null;
@@ -148,9 +208,15 @@ export class CurriculumService {
 
     const resources = await this.resources.listByLessonId(lesson.id);
     const siblings = await this.lessons.listByModuleIds([module.id]);
-    const ordered = [...siblings].sort((a, b) => a.sort_order - b.sort_order);
-    const index = ordered.findIndex((l) => l.id === lesson.id);
+    const orderedRows = [...siblings].sort((a, b) => a.sort_order - b.sort_order);
     const completedIds = await this.progress.listCompletedLessonIds(profileId);
+    const merged = isProgrammingFundamentalsModule(module.slug)
+      ? mergeProgrammingFundamentalsLessons(
+          orderedRows.map((l) => toLessonSummary(l, completedIds)),
+          new Set(completedIds)
+        )
+      : orderedRows.map((l) => toLessonSummary(l, completedIds));
+    const index = merged.findIndex((l) => l.slug === lesson.slug);
 
     return {
       lesson,
@@ -159,10 +225,10 @@ export class CurriculumService {
       phase,
       course,
       isCompleted: completedIds.has(lesson.id),
-      previousLessonSlug: index > 0 ? ordered[index - 1]!.slug : null,
+      previousLessonSlug: index > 0 ? merged[index - 1]!.slug : null,
       nextLessonSlug:
-        index >= 0 && index < ordered.length - 1
-          ? ordered[index + 1]!.slug
+        index >= 0 && index < merged.length - 1
+          ? merged[index + 1]!.slug
           : null,
     };
   }

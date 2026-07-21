@@ -4,8 +4,8 @@ import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { CurriculumService } from "@/features/curriculum/services/curriculum.service";
 import { AssignmentService } from "@/features/assignments/services/assignment.service";
-import { LessonResourcesRepository } from "@/features/curriculum/repositories/resources.repository";
 import { resolveLessonObjectives } from "@/features/learn/lib/objectives";
+import { buildTopicCards } from "@/features/curriculum/lib/topic-cards";
 import type { ModuleDetail, LessonDetail } from "@/features/curriculum/types";
 import type { AssignmentSummary } from "@/features/assignments/types";
 import type { LessonResourceRow } from "@/types/database";
@@ -24,6 +24,7 @@ export type ModuleTopicPayload = {
   detail: LessonDetail;
   objectives: string[];
   assignments: AssignmentSummary[];
+  isLocked: boolean;
 };
 
 export type ModuleActionResult<T> =
@@ -45,40 +46,11 @@ const loadModuleHubCached = cache(
     const detail = await curriculum.getModuleBySlug(userId, moduleSlug);
     if (!detail) return null;
 
-    const assignmentService = new AssignmentService(supabase);
-    const resourceRepo = new LessonResourcesRepository(supabase);
-
-    const perLesson = await Promise.all(
-      detail.lessons.map(async (lesson) => {
-        const [lessonAssignments, lessonResources] = await Promise.all([
-          assignmentService.listForLesson(lesson.id, userId),
-          resourceRepo.listByLessonId(lesson.id),
-        ]);
-        return { lesson, lessonAssignments, lessonResources };
-      })
-    );
-
-    const assignments: ModuleHubPayload["assignments"] = [];
-    const resources: ModuleHubPayload["resources"] = [];
-
-    for (const row of perLesson) {
-      for (const item of row.lessonAssignments) {
-        assignments.push({
-          ...item,
-          lessonId: row.lesson.id,
-          lessonTitle: row.lesson.title,
-        });
-      }
-      for (const resource of row.lessonResources) {
-        resources.push({
-          ...resource,
-          lessonTitle: row.lesson.title,
-          lessonSlug: row.lesson.slug,
-        });
-      }
-    }
-
-    return { detail, assignments, resources } satisfies ModuleHubPayload;
+    return {
+      detail,
+      assignments: [],
+      resources: [],
+    } satisfies ModuleHubPayload;
   }
 );
 
@@ -103,6 +75,41 @@ export async function loadModuleHubAction(
   }
 }
 
+const loadModuleTopicCached = cache(
+  async (moduleSlug: string, topicSlug: string, userId: string) => {
+    const supabase = await createClient();
+    const curriculum = new CurriculumService(supabase);
+    const moduleDetail = await curriculum.getModuleBySlug(userId, moduleSlug);
+    if (!moduleDetail) return null;
+
+    const belongs = moduleDetail.lessons.some((l) => l.slug === topicSlug);
+    if (!belongs) return { error: "not_in_module" as const };
+
+    const cards = buildTopicCards(moduleDetail.lessons, moduleSlug);
+    const card = cards.find((c) => c.slug === topicSlug);
+    const isLocked = card?.status === "locked";
+
+    const detail = await curriculum.getLessonBySlug(userId, topicSlug);
+    if (!detail) return null;
+
+    const lessonId = detail.lesson.id;
+    const isVirtualId = !/^[0-9a-f-]{36}$/i.test(lessonId);
+    const assignments = isVirtualId
+      ? []
+      : await new AssignmentService(supabase).listForLesson(lessonId, userId);
+
+    return {
+      detail,
+      objectives: resolveLessonObjectives(
+        detail.lesson.learning_objectives,
+        detail.lesson.content
+      ),
+      assignments,
+      isLocked,
+    } satisfies ModuleTopicPayload;
+  }
+);
+
 export async function loadModuleTopicAction(
   moduleSlug: string,
   topicSlug: string
@@ -111,38 +118,16 @@ export async function loadModuleTopicAction(
     return { success: false, error: "Module and topic are required." };
   }
 
-  const { supabase, user } = await requireUser();
+  const { user } = await requireUser();
   if (!user) return { success: false, error: "Sign in required." };
 
   try {
-    const curriculum = new CurriculumService(supabase);
-    const moduleDetail = await curriculum.getModuleBySlug(user.id, moduleSlug);
-    if (!moduleDetail) return { success: false, error: "Module not found." };
-
-    const belongs = moduleDetail.lessons.some((l) => l.slug === topicSlug);
-    if (!belongs) {
+    const data = await loadModuleTopicCached(moduleSlug, topicSlug, user.id);
+    if (!data) return { success: false, error: "Topic not found." };
+    if ("error" in data && data.error === "not_in_module") {
       return { success: false, error: "Topic is not part of this module." };
     }
-
-    const detail = await curriculum.getLessonBySlug(user.id, topicSlug);
-    if (!detail) return { success: false, error: "Topic not found." };
-
-    const assignments = await new AssignmentService(supabase).listForLesson(
-      detail.lesson.id,
-      user.id
-    );
-
-    return {
-      success: true,
-      data: {
-        detail,
-        objectives: resolveLessonObjectives(
-          detail.lesson.learning_objectives,
-          detail.lesson.content
-        ),
-        assignments,
-      },
-    };
+    return { success: true, data };
   } catch (error) {
     return {
       success: false,

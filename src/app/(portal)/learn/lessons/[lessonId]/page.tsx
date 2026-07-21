@@ -18,5 +18,5 @@ export default async function LegacyLessonRedirect({
     redirect(CURRICULUM_ROUTES.lesson(lesson.slug));
   }
 
-  redirect(CURRICULUM_ROUTES.journey);
+  redirect(CURRICULUM_ROUTES.roadmap);
 }

@@ -10,8 +10,8 @@ export default function LessonNotFound() {
         This lesson may not exist yet, or the curriculum seed has not been
         applied.
       </p>
-      <Link href={CURRICULUM_ROUTES.journey} className="mt-6">
-        <Button variant="secondary">Back to journey</Button>
+      <Link href={CURRICULUM_ROUTES.roadmap} className="mt-6">
+        <Button variant="secondary">Back to roadmap</Button>
       </Link>
     </div>
   );

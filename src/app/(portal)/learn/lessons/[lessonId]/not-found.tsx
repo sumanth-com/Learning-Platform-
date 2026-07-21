@@ -11,10 +11,10 @@ export default function LessonNotFound() {
         This lesson may have been moved or the curriculum seed has not been
         applied yet.
       </p>
-      <Link href={CURRICULUM_ROUTES.journey} className="mt-6">
+      <Link href={CURRICULUM_ROUTES.roadmap} className="mt-6">
         <Button variant="secondary" className="gap-2">
           <ArrowLeft className="h-4 w-4" />
-          Back to journey
+          Back to roadmap
         </Button>
       </Link>
     </div>

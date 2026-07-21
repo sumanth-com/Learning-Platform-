@@ -15,7 +15,7 @@ export default function ResourcesPage() {
         "Cheatsheets for HTML, CSS, JS, and React",
         "Downloadable assets from lesson resources",
       ]}
-      primaryHref={PORTAL_ROUTES.journey}
+      primaryHref={PORTAL_ROUTES.roadmap}
       primaryLabel="Explore journey"
     />
   );

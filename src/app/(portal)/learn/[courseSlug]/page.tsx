@@ -49,5 +49,5 @@ export default async function LearnCoursePage({
     redirect(CURRICULUM_ROUTES.module(firstModule.slug));
   }
 
-  redirect(CURRICULUM_ROUTES.journey);
+  redirect(CURRICULUM_ROUTES.roadmap);
 }

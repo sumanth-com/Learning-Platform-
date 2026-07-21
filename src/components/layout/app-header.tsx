@@ -7,11 +7,11 @@ import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 import { cn } from "@/lib/utils";
 
 interface AppHeaderProps {
-  active?: "dashboard" | "journey" | "learn" | "profile";
+  active?: "dashboard" | "roadmap" | "learn" | "profile";
 }
 
 export function AppHeader({ active }: AppHeaderProps) {
-  const journeyActive = active === "journey" || active === "learn";
+  const roadmapActive = active === "roadmap" || active === "learn";
 
   return (
     <header className="relative z-10 border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-xl">
@@ -40,17 +40,17 @@ export function AppHeader({ active }: AppHeaderProps) {
               <span className="hidden sm:inline">Dashboard</span>
             </Button>
           </Link>
-          <Link href={CURRICULUM_ROUTES.journey}>
+          <Link href={CURRICULUM_ROUTES.roadmap}>
             <Button
               variant="ghost"
               size="sm"
               className={cn(
                 "gap-2",
-                journeyActive && "bg-zinc-800 text-zinc-50"
+                roadmapActive && "bg-zinc-800 text-zinc-50"
               )}
             >
               <BookOpen className="h-4 w-4" />
-              <span className="hidden sm:inline">Journey</span>
+              <span className="hidden sm:inline">Roadmap</span>
             </Button>
           </Link>
           <Link href={AUTH_ROUTES.profile}>

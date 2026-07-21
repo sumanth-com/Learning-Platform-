@@ -15,7 +15,7 @@ export default function AiMentorPage() {
         "Get code review hints without spoiling solutions",
         "Plan your next study block with the mentor",
       ]}
-      primaryHref={PORTAL_ROUTES.journey}
+      primaryHref={PORTAL_ROUTES.roadmap}
       primaryLabel="Open courses"
     />
   );

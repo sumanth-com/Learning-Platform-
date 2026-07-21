@@ -15,7 +15,7 @@ export default function PracticePage() {
         "Timed practice sets for interview readiness",
         "Track accuracy and streak across sessions",
       ]}
-      primaryHref={PORTAL_ROUTES.journey}
+      primaryHref={PORTAL_ROUTES.roadmap}
       primaryLabel="Continue learning"
     />
   );

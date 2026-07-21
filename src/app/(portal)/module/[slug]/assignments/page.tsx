@@ -1,14 +1,11 @@
-import { ModuleAssignmentsPanel } from "@/components/module-hub/module-assignments-panel";
-import { loadModuleHubAction } from "@/features/curriculum/actions/module-hub-actions";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
+import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 
-export default async function ModuleAssignmentsPage({
+export default async function LegacyModuleTabRedirect({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const result = await loadModuleHubAction(slug);
-  if (!result.success) notFound();
-  return <ModuleAssignmentsPanel payload={result.data} />;
+  redirect(CURRICULUM_ROUTES.module(slug));
 }

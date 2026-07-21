@@ -28,11 +28,11 @@ export function ModuleView({ detail }: ModuleViewProps) {
   return (
     <div className="mx-auto max-w-3xl space-y-6 px-1 py-2">
       <Link
-        href={CURRICULUM_ROUTES.journey}
+        href={CURRICULUM_ROUTES.roadmap}
         className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition hover:text-zinc-300"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        Back to journey
+        Back to roadmap
       </Link>
 
       <header className="overflow-hidden rounded-2xl border border-zinc-800/80 bg-gradient-to-br from-indigo-950/40 via-zinc-900/70 to-zinc-950 p-5 sm:p-6">

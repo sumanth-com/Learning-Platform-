@@ -24,6 +24,11 @@ import {
 import { getWeekRoadmapArt } from "@/lib/week-roadmap-art";
 import { cn } from "@/lib/utils";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
+import {
+  isProgrammingFundamentalsModule,
+  programmingFundamentalsChallengeCounts,
+  PROGRAMMING_FUNDAMENTALS_TOPICS,
+} from "@/features/curriculum/lib/programming-fundamentals";
 import type {
   CourseJourney,
   LessonDifficulty,
@@ -51,6 +56,8 @@ type ModuleCardModel = {
   easy: number;
   medium: number;
   hard: number;
+  challengeTotal: number | null;
+  topicCount: number;
   durationLabel: string;
 };
 
@@ -418,9 +425,18 @@ function ModuleJourneyCard({
           {!card.locked ? (
             <div className="mt-3 flex flex-wrap gap-1.5">
               <StatPill icon={Layers}>
-                {card.module.totalCount} lessons
+                {card.challengeTotal != null
+                  ? `${card.topicCount} topics`
+                  : `${card.module.totalCount} lessons`}
               </StatPill>
-              <StatPill icon={Clock}>{card.durationLabel}</StatPill>
+              {card.challengeTotal == null ? (
+                <StatPill icon={Clock}>{card.durationLabel}</StatPill>
+              ) : null}
+              {card.challengeTotal != null ? (
+                <StatPill icon={Target}>
+                  {card.challengeTotal} challenges
+                </StatPill>
+              ) : null}
               {card.assignmentCount > 0 ? (
                 <StatPill icon={ClipboardList}>
                   {card.assignmentCount} assignment
@@ -627,13 +643,25 @@ function buildModuleCards(
     const active = !done && !activeAssigned;
     if (active) activeAssigned = true;
 
-    const href = CURRICULUM_ROUTES.module(module.slug);
+    const href = isProgrammingFundamentalsModule(module.slug)
+      ? CURRICULUM_ROUTES.moduleHub(
+          module.slug,
+          PROGRAMMING_FUNDAMENTALS_TOPICS[0]!.slug
+        )
+      : CURRICULUM_ROUTES.module(module.slug);
 
-    const counts = countDifficulties(module.lessons.map((l) => l.difficulty));
+    const pf = isProgrammingFundamentalsModule(module.slug);
+    const pfCounts = pf ? programmingFundamentalsChallengeCounts() : null;
+    const lessonCounts = countDifficulties(
+      module.lessons.map((l) => l.difficulty)
+    );
     const minutes = module.lessons.reduce(
       (sum, l) => sum + l.durationMinutes,
       0
     );
+    const topicCount = pf
+      ? PROGRAMMING_FUNDAMENTALS_TOPICS.length
+      : module.totalCount;
 
     return {
       module,
@@ -647,9 +675,11 @@ function buildModuleCards(
       assignmentCount: module.lessons.filter((l) => assignmentSet.has(l.id))
         .length,
       hasProject: projectSet.has(module.id) || /project/i.test(module.title),
-      easy: counts.beginner,
-      medium: counts.intermediate,
-      hard: counts.advanced,
+      easy: pfCounts?.easy ?? lessonCounts.beginner,
+      medium: pfCounts?.medium ?? lessonCounts.intermediate,
+      hard: pfCounts?.hard ?? lessonCounts.advanced,
+      challengeTotal: pfCounts?.total ?? null,
+      topicCount,
       durationLabel:
         module.estimated_duration ||
         (minutes > 0 ? formatMinutes(minutes) : "—"),

@@ -17,7 +17,7 @@ export function ContinueLearningCard({ state }: ContinueLearningCardProps) {
         ? CURRICULUM_ROUTES.module(state.moduleSlug)
         : state.lesson
           ? CURRICULUM_ROUTES.lesson(state.lesson.slug)
-          : CURRICULUM_ROUTES.journey;
+          : CURRICULUM_ROUTES.roadmap;
 
   return (
     <div className="space-y-4">
@@ -43,7 +43,7 @@ export function ContinueLearningCard({ state }: ContinueLearningCardProps) {
           </p>
         ) : (
           <p className="mt-4 text-sm text-zinc-400">
-            Open the learning journey to begin.
+            Open the learning roadmap to begin.
           </p>
         )}
 
@@ -54,9 +54,9 @@ export function ContinueLearningCard({ state }: ContinueLearningCardProps) {
               <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
-          <Link href={CURRICULUM_ROUTES.journey}>
+          <Link href={CURRICULUM_ROUTES.roadmap}>
             <Button variant="outline" size="lg">
-              View journey
+              View roadmap
             </Button>
           </Link>
         </div>

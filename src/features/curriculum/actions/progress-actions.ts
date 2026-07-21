@@ -41,7 +41,7 @@ export async function toggleLessonCompleteAction(
     const modulesRepo = new ModulesRepository(supabase);
     const lesson = await lessonsRepo.findById(lessonId);
 
-    revalidatePath(CURRICULUM_ROUTES.journey);
+    revalidatePath(CURRICULUM_ROUTES.roadmap);
     revalidatePath("/dashboard");
     revalidatePath("/learn", "layout");
     if (lesson) {

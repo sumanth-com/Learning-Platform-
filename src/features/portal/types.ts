@@ -6,7 +6,7 @@ export const PORTAL_SIDEBAR_WIDTH = 280;
 
 export const PORTAL_ROUTES = {
   dashboard: AUTH_ROUTES.dashboard,
-  journey: CURRICULUM_ROUTES.journey,
+  roadmap: CURRICULUM_ROUTES.roadmap,
   learningPath: CURRICULUM_ROUTES.learn(DEFAULT_COURSE_SLUG),
   /** @deprecated Use learningPath */
   courses: CURRICULUM_ROUTES.learn(DEFAULT_COURSE_SLUG),
@@ -24,7 +24,7 @@ export const PORTAL_ROUTES = {
 
 export type PortalNavId =
   | "dashboard"
-  | "journey"
+  | "roadmap"
   | "projects"
   | "assignments"
   | "practice"
@@ -51,11 +51,11 @@ export const PORTAL_NAV: PortalNavItem[] = [
     match: (p) => p === "/dashboard",
   },
   {
-    id: "journey",
-    label: "Journey",
-    href: PORTAL_ROUTES.journey,
+    id: "roadmap",
+    label: "Roadmap",
+    href: PORTAL_ROUTES.roadmap,
     match: (p) =>
-      p === "/journey" || p.startsWith("/module/") || p.startsWith("/learn"),
+      p === "/roadmap" || p.startsWith("/module/") || p.startsWith("/learn"),
   },
   {
     id: "projects",

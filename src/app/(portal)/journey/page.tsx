@@ -1,56 +1,6 @@
-import { JourneyRoadmap } from "@/components/portal/journey-roadmap";
-import { getPortalData } from "@/features/portal/lib/get-portal-data";
-import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Journey",
-};
-
-export default async function JourneyPage() {
-  const data = await getPortalData();
-
-  const supabase = await createClient();
-  const { data: assignmentRows } = await supabase
-    .from("assignments")
-    .select("lesson_id")
-    .eq("is_published", true);
-
-  const assignmentLessonIds = [
-    ...new Set(
-      (assignmentRows ?? [])
-        .map((row) => (row as { lesson_id: string | null }).lesson_id)
-        .filter(Boolean) as string[]
-    ),
-  ];
-
-  // Heuristic without schema change: modules with "project" in the title.
-  const projectModuleIds =
-    data.journey?.phases.flatMap((phase) =>
-      phase.modules
-        .filter((m) => /project/i.test(m.title))
-        .map((m) => m.id)
-    ) ?? [];
-
-  if (!data.journey) {
-    return (
-      <div className="flex h-full items-center justify-center p-8 text-center">
-        <div>
-          <h1 className="text-lg font-semibold text-zinc-100">
-            Curriculum unavailable
-          </h1>
-          <p className="mt-2 text-sm text-zinc-500">
-            Curriculum data could not be loaded.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <JourneyRoadmap
-      journey={data.journey}
-      assignmentLessonIds={assignmentLessonIds}
-      projectModuleIds={projectModuleIds}
-    />
-  );
+/** @deprecated Use /roadmap */
+export default function JourneyRedirectPage() {
+  redirect("/roadmap");
 }

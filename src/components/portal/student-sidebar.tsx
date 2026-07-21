@@ -31,7 +31,7 @@ import {
 
 const ICONS: Record<PortalNavId, typeof LayoutDashboard> = {
   dashboard: LayoutDashboard,
-  journey: Map,
+  roadmap: Map,
   projects: FolderKanban,
   assignments: ClipboardList,
   practice: Code2,

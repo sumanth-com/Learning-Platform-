@@ -11,8 +11,8 @@ export default function AssignmentNotFound() {
       <p className="mt-2 text-sm text-zinc-500">
         It may be unpublished, or the seed migration has not been applied.
       </p>
-      <Link href={CURRICULUM_ROUTES.journey} className="mt-6">
-        <Button variant="secondary">Back to journey</Button>
+      <Link href={CURRICULUM_ROUTES.roadmap} className="mt-6">
+        <Button variant="secondary">Back to roadmap</Button>
       </Link>
     </div>
   );

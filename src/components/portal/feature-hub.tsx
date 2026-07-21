@@ -22,8 +22,8 @@ export function FeatureHub({
   title,
   description,
   bullets = [],
-  primaryHref = PORTAL_ROUTES.journey,
-  primaryLabel = "Open Journey",
+  primaryHref = PORTAL_ROUTES.roadmap,
+  primaryLabel = "Open Roadmap",
 }: FeatureHubProps) {
   return (
     <>
