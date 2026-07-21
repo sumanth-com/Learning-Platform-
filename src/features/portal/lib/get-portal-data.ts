@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/features/auth/actions/auth-actions";
 import { createCurriculumService } from "@/features/curriculum/lib/create-services";
@@ -6,9 +7,9 @@ import { DEFAULT_COURSE_SLUG } from "@/features/curriculum/types";
 import type { PortalData } from "@/features/portal/types";
 
 /**
- * Shared student portal data — reuses existing curriculum services only.
+ * Shared student portal data — cached per request so layout + pages share one fetch.
  */
-export async function getPortalData(): Promise<PortalData> {
+export const getPortalData = cache(async (): Promise<PortalData> => {
   const session = await getCurrentUser();
   if (!session) redirect(AUTH_ROUTES.login);
 
@@ -51,4 +52,4 @@ export async function getPortalData(): Promise<PortalData> {
     journey,
     continueState,
   };
-}
+});

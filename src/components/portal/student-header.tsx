@@ -47,7 +47,7 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
         <div className="min-w-0 flex-1">
           {title ? (
             <>
-              <h1 className="truncate font-display text-lg text-zinc-50 sm:text-xl">
+              <h1 className="truncate text-lg font-semibold tracking-tight text-zinc-50 sm:text-xl">
                 {title}
               </h1>
               {subtitle ? (

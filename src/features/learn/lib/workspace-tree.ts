@@ -67,21 +67,11 @@ export function buildWorkspaceTree(
   }
 
   const nodes: WorkspaceLessonNode[] = flat.map((item, index) => {
-    const priorComplete =
-      index === 0 ||
-      flat.slice(0, index).every((p) => p.lesson.isCompleted);
-    const unlocked =
-      item.lesson.isPreview || priorComplete || item.lesson.isCompleted;
-
-    let status: WorkspaceLessonStatus = "locked";
+    let status: WorkspaceLessonStatus = "available";
     if (item.lesson.isCompleted) status = "completed";
-    else if (
-      currentLessonSlug &&
-      item.lesson.slug === currentLessonSlug &&
-      unlocked
-    ) {
+    else if (currentLessonSlug && item.lesson.slug === currentLessonSlug) {
       status = "current";
-    } else if (unlocked) status = "available";
+    }
 
     return {
       ...item.lesson,

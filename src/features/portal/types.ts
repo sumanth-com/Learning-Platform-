@@ -7,6 +7,8 @@ export const PORTAL_SIDEBAR_WIDTH = 280;
 export const PORTAL_ROUTES = {
   dashboard: AUTH_ROUTES.dashboard,
   journey: CURRICULUM_ROUTES.journey,
+  learningPath: CURRICULUM_ROUTES.learn(DEFAULT_COURSE_SLUG),
+  /** @deprecated Use learningPath */
   courses: CURRICULUM_ROUTES.learn(DEFAULT_COURSE_SLUG),
   projects: "/projects",
   assignments: "/assignments",
@@ -23,7 +25,6 @@ export const PORTAL_ROUTES = {
 export type PortalNavId =
   | "dashboard"
   | "journey"
-  | "courses"
   | "projects"
   | "assignments"
   | "practice"
@@ -54,13 +55,7 @@ export const PORTAL_NAV: PortalNavItem[] = [
     label: "Journey",
     href: PORTAL_ROUTES.journey,
     match: (p) =>
-      p === "/journey" || p.startsWith("/module/") || p.startsWith("/lesson/"),
-  },
-  {
-    id: "courses",
-    label: "Courses",
-    href: PORTAL_ROUTES.courses,
-    match: (p) => p.startsWith("/learn"),
+      p === "/journey" || p.startsWith("/module/") || p.startsWith("/learn"),
   },
   {
     id: "projects",

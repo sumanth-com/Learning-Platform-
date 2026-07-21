@@ -30,6 +30,8 @@ export function CurriculumExplorer({
   const isPage = variant === "page";
 
   const activeLessonSlug = useMemo(() => {
+    const topicMatch = pathname.match(/^\/module\/[^/]+\/topic\/([^/]+)/);
+    if (topicMatch?.[1]) return topicMatch[1];
     if (pathname.startsWith("/lesson/")) {
       return pathname.replace("/lesson/", "").split("/")[0] ?? null;
     }
@@ -206,8 +208,8 @@ export function CurriculumExplorer({
                                   const isActive =
                                     lesson.slug === activeLessonSlug ||
                                     lesson.id === currentLesson?.lesson.id;
-                                  const href = CURRICULUM_ROUTES.learnLesson(
-                                    journey.course.slug,
+                                  const href = CURRICULUM_ROUTES.moduleTopic(
+                                    module.slug,
                                     lesson.slug
                                   );
 
@@ -271,7 +273,7 @@ export function CurriculumExplorer({
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-indigo-300/80">
             Curriculum
           </p>
-          <h2 className="mt-1 font-display text-2xl font-semibold text-zinc-50">
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-50">
             {journey.course.title}
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-zinc-500">

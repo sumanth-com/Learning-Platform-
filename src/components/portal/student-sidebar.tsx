@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
-  BookOpen,
   Bot,
   Briefcase,
   ClipboardList,
@@ -20,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { SupraLearnMark } from "@/components/brand/supra-learn-logo";
 import { usePortalShell } from "@/components/portal/portal-shell-context";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,6 @@ import {
 const ICONS: Record<PortalNavId, typeof LayoutDashboard> = {
   dashboard: LayoutDashboard,
   journey: Map,
-  courses: BookOpen,
   projects: FolderKanban,
   assignments: ClipboardList,
   practice: Code2,
@@ -53,6 +52,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
   const pathname = usePathname();
   const { collapsed, closeMobile } = usePortalShell();
   const isCollapsed = mode === "desktop" && collapsed;
+  const markId = mode === "drawer" ? "portal-drawer" : "portal-desktop";
 
   useEffect(() => {
     closeMobile();
@@ -75,25 +75,29 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
     >
       <div
         className={cn(
-          "flex h-14 shrink-0 items-center border-b border-zinc-800/90",
-          isCollapsed ? "justify-center px-2" : "justify-between px-4"
+          "flex h-16 shrink-0 items-center border-b border-zinc-800/90",
+          isCollapsed ? "justify-center px-3" : "gap-2 px-4"
         )}
       >
-        <Link href="/dashboard" onClick={closeMobile} className="min-w-0">
-          {isCollapsed ? (
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
-              S
-            </span>
-          ) : (
-            <div>
-              <p className="font-display text-base leading-none text-zinc-50">
+        <Link
+          href="/dashboard"
+          onClick={closeMobile}
+          className={cn(
+            "flex min-w-0 items-center rounded-xl transition-opacity hover:opacity-90",
+            isCollapsed ? "justify-center p-1" : "gap-3 py-1"
+          )}
+        >
+          <SupraLearnMark className="h-9 w-9 shrink-0" id={markId} />
+          {!isCollapsed ? (
+            <div className="min-w-0">
+              <p className="truncate text-[15px] font-semibold leading-none tracking-tight text-zinc-50">
                 SupraLearn
               </p>
-              <p className="mt-1 text-[9px] font-semibold tracking-[0.18em] text-indigo-300/80">
-                LEARN · BUILD · SHIP
+              <p className="mt-1.5 truncate text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-zinc-500">
+                Learn · Build · Ship
               </p>
             </div>
-          )}
+          ) : null}
         </Link>
 
         {mode === "drawer" ? (
@@ -101,7 +105,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
             type="button"
             size="icon"
             variant="ghost"
-            className="h-8 w-8"
+            className="ml-auto h-8 w-8 shrink-0"
             onClick={closeMobile}
             aria-label="Close menu"
           >
@@ -110,7 +114,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
         ) : null}
       </div>
 
-      <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
+      <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {PORTAL_NAV.map((item) => {
           const Icon = ICONS[item.id];
           const active = item.match
@@ -124,7 +128,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
               onClick={closeMobile}
               title={isCollapsed ? item.label : undefined}
               className={cn(
-                "relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] transition-colors",
+                "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isCollapsed && "justify-center px-2",
                 active
                   ? "bg-zinc-800/90 text-white"
@@ -139,7 +143,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
               ) : null}
               <Icon
                 className={cn(
-                  "h-3.5 w-3.5 shrink-0",
+                  "h-4 w-4 shrink-0",
                   active ? "text-indigo-300" : "text-zinc-500"
                 )}
               />

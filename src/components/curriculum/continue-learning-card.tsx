@@ -10,11 +10,14 @@ interface ContinueLearningCardProps {
 }
 
 export function ContinueLearningCard({ state }: ContinueLearningCardProps) {
-  const resumeHref = state.lesson
-    ? CURRICULUM_ROUTES.lesson(state.lesson.slug)
-    : state.moduleSlug
-      ? CURRICULUM_ROUTES.module(state.moduleSlug)
-      : CURRICULUM_ROUTES.journey;
+  const resumeHref =
+    state.lesson && state.moduleSlug
+      ? CURRICULUM_ROUTES.moduleTopic(state.moduleSlug, state.lesson.slug)
+      : state.moduleSlug
+        ? CURRICULUM_ROUTES.module(state.moduleSlug)
+        : state.lesson
+          ? CURRICULUM_ROUTES.lesson(state.lesson.slug)
+          : CURRICULUM_ROUTES.journey;
 
   return (
     <div className="space-y-4">

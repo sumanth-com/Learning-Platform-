@@ -39,7 +39,7 @@ export function LearnMarkdown({ content, className }: LearnMarkdownProps) {
           return (
             <h3
               key={index}
-              className="pt-2 font-display text-xl font-semibold tracking-tight text-zinc-50"
+              className="pt-2 text-xl font-semibold tracking-tight text-zinc-50"
             >
               {trimmed.replace(/^##\s+/, "")}
             </h3>

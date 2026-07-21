@@ -53,23 +53,26 @@ export function LearnSidebar({
         className
       )}
     >
-      <div className="border-b border-zinc-800/90 px-4 py-4">
-        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-indigo-300/80">
-          Course
+      <div className="border-b border-zinc-800/90 px-3 py-4">
+        <p className="px-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+          Learning path
         </p>
-        <h2 className="mt-1 font-display text-lg leading-snug text-zinc-50">
+        <h2 className="mt-1.5 truncate px-1 text-[15px] font-semibold leading-snug tracking-tight text-zinc-50">
           {tree.course.title}
         </h2>
-        <div className="mt-3">
+        <div className="mt-3 px-1">
           <ProgressRow
             label="Course progress"
             value={tree.progressPercent}
-            meta={`${tree.completedCount}/${tree.totalCount} · ${tree.progressPercent}%`}
+            meta={`${tree.completedCount}/${tree.totalCount}`}
           />
         </div>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-2 py-3">
+        <p className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-600">
+          Course · Phase · Module · Lessons
+        </p>
         <ul className="space-y-1">
           {tree.phases.map((phase) => {
             const phaseOpen = expandedPhases.has(phase.id);

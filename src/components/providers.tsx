@@ -1,14 +1,13 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { ProgressBootstrap, ModuleCompletionWatcher } from "@/components/shared/progress-bootstrap";
 import { WeekCompletionCelebration } from "@/components/shared/week-completion-celebration";
+import { getQueryClient } from "@/lib/get-query-client";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: { queries: { staleTime: 60 * 1000, refetchOnWindowFocus: false } },
-  }));
+  const [queryClient] = useState(() => getQueryClient());
 
   useEffect(() => {
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;

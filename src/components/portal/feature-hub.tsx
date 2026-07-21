@@ -1,7 +1,13 @@
+"use client";
+
+/**
+ * Feature hub pages are client wrappers so PortalChrome can set header titles
+ * inside the persistent portal layout.
+ */
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PortalPage } from "@/components/portal/portal-page";
+import { PortalChrome } from "@/components/portal/portal-chrome";
 import { PORTAL_ROUTES } from "@/features/portal/types";
 
 type FeatureHubProps = {
@@ -16,11 +22,12 @@ export function FeatureHub({
   title,
   description,
   bullets = [],
-  primaryHref = PORTAL_ROUTES.courses,
-  primaryLabel = "Open learning workspace",
+  primaryHref = PORTAL_ROUTES.journey,
+  primaryLabel = "Open Journey",
 }: FeatureHubProps) {
   return (
-    <PortalPage title={title} subtitle={description}>
+    <>
+      <PortalChrome title={title} subtitle={description} />
       <div className="mx-auto max-w-3xl space-y-6">
         <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-8">
           {bullets.length > 0 ? (
@@ -48,6 +55,6 @@ export function FeatureHub({
           </div>
         </div>
       </div>
-    </PortalPage>
+    </>
   );
 }

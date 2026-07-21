@@ -12,6 +12,15 @@ export type { LessonDifficulty };
 export const CURRICULUM_ROUTES = {
   journey: "/journey",
   module: (slug: string) => `/module/${slug}`,
+  moduleRoadmap: (slug: string) => `/module/${slug}/roadmap`,
+  modulePractice: (slug: string) => `/module/${slug}/practice`,
+  moduleResources: (slug: string) => `/module/${slug}/resources`,
+  moduleAssignments: (slug: string) => `/module/${slug}/assignments`,
+  moduleProjects: (slug: string) => `/module/${slug}/projects`,
+  moduleAssessment: (slug: string) => `/module/${slug}/assessment`,
+  moduleAiMentor: (slug: string) => `/module/${slug}/ai-mentor`,
+  moduleTopic: (moduleSlug: string, topicSlug: string) =>
+    `/module/${moduleSlug}/topic/${topicSlug}`,
   lesson: (slug: string) => `/lesson/${slug}`,
   learn: (courseSlug: string) => `/learn/${courseSlug}`,
   learnLesson: (courseSlug: string, lessonSlug: string) =>

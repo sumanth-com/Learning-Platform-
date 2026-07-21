@@ -1,53 +1,60 @@
 "use client";
 
+import { QueryClientProvider } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import {
   PortalShellProvider,
   usePortalShell,
 } from "@/components/portal/portal-shell-context";
+import { PortalChromeProvider, usePortalChrome } from "@/components/portal/portal-chrome";
 import { StudentSidebar } from "@/components/portal/student-sidebar";
 import { StudentHeader } from "@/components/portal/student-header";
 import type { PortalData } from "@/features/portal/types";
+import { getQueryClient } from "@/lib/get-query-client";
+import { cn } from "@/lib/utils";
 
 type StudentShellProps = {
   data: PortalData;
-  title?: string;
-  subtitle?: string;
   children: React.ReactNode;
 };
 
 export function StudentShell(props: StudentShellProps) {
+  const [queryClient] = useState(() => getQueryClient());
+
   return (
-    <PortalShellProvider>
-      <StudentShellInner {...props} />
-    </PortalShellProvider>
+    <QueryClientProvider client={queryClient}>
+      <PortalShellProvider>
+        <PortalChromeProvider>
+          <StudentShellInner {...props} />
+        </PortalChromeProvider>
+      </PortalShellProvider>
+    </QueryClientProvider>
   );
 }
 
-function StudentShellInner({
-  data,
-  title,
-  subtitle,
-  children,
-}: StudentShellProps) {
+function StudentShellInner({ data, children }: StudentShellProps) {
+  const pathname = usePathname();
   const { mobileOpen, closeMobile, setCollapsed } = usePortalShell();
+  const { title, subtitle, fillViewport } = usePortalChrome();
 
-  // Tablet: prefer collapsed rail without overwriting desktop preference in storage.
+  const flush =
+    fillViewport ||
+    pathname.startsWith("/learn") ||
+    pathname.startsWith("/module/") ||
+    pathname === "/journey" ||
+    pathname === "/dashboard";
+
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
     const apply = () => {
       if (!mq.matches) {
-        // Collapse in-memory only (PortalShellContext setCollapsed persists).
-        // Use a one-shot visual preference via the public setter only on tablet mount.
         try {
           const stored = window.localStorage.getItem(
             "supralearn.portal.sidebarCollapsed"
           );
-          if (stored === null) {
-            // Default tablet to collapsed once; user can expand.
-            setCollapsed(true);
-          }
+          if (stored === null) setCollapsed(true);
         } catch {
           setCollapsed(true);
         }
@@ -57,7 +64,7 @@ function StudentShellInner({
   }, [setCollapsed]);
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden bg-zinc-950 text-zinc-100">
+    <div className="flex h-[100dvh] overflow-hidden bg-zinc-950 font-sans text-zinc-100 antialiased [&_.font-display]:font-sans">
       <div className="hidden h-full md:block">
         <StudentSidebar mode="desktop" />
       </div>
@@ -89,19 +96,26 @@ function StudentShellInner({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <StudentHeader title={title} subtitle={subtitle} user={data.user} />
-        <main className="relative min-h-0 flex-1 overflow-y-auto">
+        <main
+          className={cn(
+            "relative min-h-0 flex-1",
+            flush ? "overflow-hidden" : "overflow-y-auto"
+          )}
+        >
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.07),_transparent_55%)]"
           />
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="relative mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8"
+          <div
+            className={cn(
+              "relative h-full",
+              flush
+                ? "min-h-0"
+                : "mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8"
+            )}
           >
             {children}
-          </motion.div>
+          </div>
         </main>
       </div>
     </div>

@@ -1,26 +1,18 @@
 import { getPortalData } from "@/features/portal/lib/get-portal-data";
-import { StudentShell } from "@/components/portal/student-shell";
 import type { PortalData } from "@/features/portal/types";
 
 type PortalPageProps = {
   title?: string;
   subtitle?: string;
+  fillViewport?: boolean;
   children: React.ReactNode | ((data: PortalData) => React.ReactNode);
 };
 
 /**
- * Server wrapper — loads portal data and renders the student application chrome.
+ * @deprecated Prefer the persistent `(portal)/layout` + `PortalChrome`.
+ * Kept as a thin data helper for pages that still need portal data in RSC.
  */
-export async function PortalPage({
-  title,
-  subtitle,
-  children,
-}: PortalPageProps) {
+export async function PortalPage({ children }: PortalPageProps) {
   const data = await getPortalData();
-
-  return (
-    <StudentShell data={data} title={title} subtitle={subtitle}>
-      {typeof children === "function" ? children(data) : children}
-    </StudentShell>
-  );
+  return typeof children === "function" ? children(data) : children;
 }

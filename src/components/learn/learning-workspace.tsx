@@ -1,14 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { LearnHeader } from "@/components/learn/learn-header";
-import { LearnSidebar } from "@/components/learn/learn-sidebar";
-import { LearnMobileDrawer } from "@/components/learn/learn-mobile-drawer";
 import { LessonPanel } from "@/components/learn/lesson-panel";
-import { loadWorkspaceLessonAction } from "@/features/learn/actions/workspace-actions";
+import {
+  prefetchWorkspaceLesson,
+  setLessonQueryData,
+  useWorkspaceLesson,
+} from "@/features/learn/hooks/use-workspace-lesson";
+import { learnQueryKeys } from "@/features/learn/lib/query-keys";
 import {
   applyLessonCompletion,
   buildWorkspaceTree,
@@ -34,6 +37,8 @@ export function LearningWorkspace({
   initialPayload = null,
 }: LearningWorkspaceProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [tree, setTree] = useState<WorkspaceTree>(() =>
     buildWorkspaceTree(journey, initialLessonSlug)
   );
@@ -43,53 +48,66 @@ export function LearningWorkspace({
       initialLessonSlug
     )
   );
-  const [payload, setPayload] = useState<WorkspaceLessonPayload | null>(
-    initialPayload
+
+  const lessonQuery = useWorkspaceLesson(
+    courseSlug,
+    activeLessonSlug,
+    activeLessonSlug &&
+      initialPayload?.detail.lesson.slug === activeLessonSlug
+      ? initialPayload
+      : null
   );
-  const [expandedPhases, setExpandedPhases] = useState<Set<string>>(() =>
-    initialExpandedPhases(tree, activeLessonSlug)
-  );
-  const [expandedModules, setExpandedModules] = useState<Set<string>>(() =>
-    initialExpandedModules(tree, activeLessonSlug)
-  );
-  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [loadingLesson, startLessonTransition] = useTransition();
 
   const activeNode = useMemo(
-    () =>
-      tree.flatLessons.find((l) => l.slug === activeLessonSlug) ?? null,
+    () => tree.flatLessons.find((l) => l.slug === activeLessonSlug) ?? null,
     [tree, activeLessonSlug]
   );
 
-  const activePhase = useMemo(() => {
+  const activeModule = useMemo(() => {
     if (!activeNode) return null;
-    return tree.phases.find((p) => p.id === activeNode.phaseId) ?? null;
+    const phase = tree.phases.find((p) => p.id === activeNode.phaseId);
+    return phase?.modules.find((m) => m.id === activeNode.moduleId) ?? null;
   }, [tree, activeNode]);
 
-  const activeModule = useMemo(() => {
-    if (!activeNode || !activePhase) return null;
-    return (
-      activePhase.modules.find((m) => m.id === activeNode.moduleId) ?? null
-    );
-  }, [activePhase, activeNode]);
-
+  /** Prev/next stay inside the current module only. */
   const neighbors = useMemo(() => {
-    if (!activeLessonSlug) return { previous: null, next: null };
-    const idx = tree.flatLessons.findIndex((l) => l.slug === activeLessonSlug);
-    if (idx < 0) return { previous: null, next: null };
-    const previous = tree.flatLessons
-      .slice(0, idx)
-      .reverse()
-      .find((l) => l.status !== "locked");
-    const next = tree.flatLessons
-      .slice(idx + 1)
-      .find((l) => l.status !== "locked");
+    if (!activeNode || !activeModule) {
+      return { previous: null, next: null, siblings: [] as string[] };
+    }
+    const moduleLessons = activeModule.lessons.filter(
+      (l) => l.status !== "locked"
+    );
+    const idx = moduleLessons.findIndex((l) => l.slug === activeLessonSlug);
+    if (idx < 0) {
+      return { previous: null, next: null, siblings: [] as string[] };
+    }
     return {
-      previous: previous?.slug ?? null,
-      next: next?.slug ?? null,
+      previous: moduleLessons[idx - 1]?.slug ?? null,
+      next: moduleLessons[idx + 1]?.slug ?? null,
+      siblings: moduleLessons
+        .filter((l) => l.slug !== activeLessonSlug)
+        .map((l) => l.slug),
     };
-  }, [tree, activeLessonSlug]);
+  }, [activeLessonSlug, activeModule, activeNode]);
+
+  useEffect(() => {
+    const targets = [
+      neighbors.previous,
+      neighbors.next,
+      ...neighbors.siblings.slice(0, 4),
+    ];
+    for (const slug of targets) {
+      prefetchWorkspaceLesson(queryClient, courseSlug, slug);
+    }
+  }, [courseSlug, neighbors, queryClient]);
+
+  useEffect(() => {
+    if (!initialPayload || !initialLessonSlug) return;
+    queryClient.setQueryData(
+      learnQueryKeys.lesson(courseSlug, initialLessonSlug),
+      initialPayload
+    );
+  }, [courseSlug, initialLessonSlug, initialPayload, queryClient]);
 
   const selectLesson = useCallback(
     (lesson: WorkspaceLessonNode | string) => {
@@ -100,174 +118,93 @@ export function LearningWorkspace({
           : lesson;
 
       if (!node) return;
-      if (node.status === "locked") {
-        toast.error("Complete previous lessons to unlock this one.");
-        return;
-      }
+      if (slug === activeLessonSlug) return;
 
       setActiveLessonSlug(slug);
       setTree((prev) => buildWorkspaceTree(toJourney(prev), slug));
-      setExpandedPhases((prev) => new Set(prev).add(node.phaseId));
-      setExpandedModules((prev) => new Set(prev).add(node.moduleId));
-
-      router.replace(CURRICULUM_ROUTES.learnLesson(courseSlug, slug), {
-        scroll: false,
-      });
-
-      startLessonTransition(async () => {
-        const result = await loadWorkspaceLessonAction(courseSlug, slug);
-        if (!result.success) {
-          toast.error(result.error);
-          return;
-        }
-        setPayload(result.data);
-      });
+      router.replace(
+        CURRICULUM_ROUTES.moduleTopic(node.moduleSlug, slug),
+        { scroll: false }
+      );
     },
-    [courseSlug, router, tree.flatLessons]
+    [activeLessonSlug, router, tree.flatLessons]
   );
 
-  // Keep payload in sync when server sends a fresh initial payload
   useEffect(() => {
-    if (initialPayload) setPayload(initialPayload);
-  }, [initialPayload]);
+    if (lessonQuery.isError) {
+      toast.error(
+        lessonQuery.error instanceof Error
+          ? lessonQuery.error.message
+          : "Failed to load lesson."
+      );
+    }
+  }, [lessonQuery.isError, lessonQuery.error]);
+
+  const payload = useMemo(() => {
+    if (!lessonQuery.data) return null;
+    return {
+      ...lessonQuery.data,
+      detail: {
+        ...lessonQuery.data.detail,
+        isCompleted:
+          tree.flatLessons.find(
+            (l) => l.id === lessonQuery.data.detail.lesson.id
+          )?.isCompleted ?? lessonQuery.data.detail.isCompleted,
+      },
+    };
+  }, [lessonQuery.data, tree.flatLessons]);
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden bg-zinc-950 text-zinc-100">
-      <AnimatePresence initial={false}>
-        {desktopSidebarOpen ? (
-          <motion.div
-            key="desktop-sidebar"
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 300, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            className="hidden h-full shrink-0 overflow-hidden lg:block"
-          >
-            <LearnSidebar
-              tree={tree}
-              activeLessonSlug={activeLessonSlug}
-              expandedPhases={expandedPhases}
-              expandedModules={expandedModules}
-              onTogglePhase={(id) =>
-                setExpandedPhases((prev) => toggleSet(prev, id))
-              }
-              onToggleModule={(id) =>
-                setExpandedModules((prev) => toggleSet(prev, id))
-              }
-              onSelectLesson={selectLesson}
-            />
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-
-      <LearnMobileDrawer
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        tree={tree}
-        activeLessonSlug={activeLessonSlug}
-        expandedPhases={expandedPhases}
-        expandedModules={expandedModules}
-        onTogglePhase={(id) =>
-          setExpandedPhases((prev) => toggleSet(prev, id))
-        }
-        onToggleModule={(id) =>
-          setExpandedModules((prev) => toggleSet(prev, id))
-        }
-        onSelectLesson={selectLesson}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-zinc-950 font-sans text-zinc-100 antialiased">
+      <LearnHeader
+        courseTitle={tree.course.title}
+        phaseTitle={activeNode?.phaseTitle}
+        moduleTitle={activeNode?.moduleTitle}
+        moduleSlug={activeNode?.moduleSlug}
+        moduleProgress={activeModule?.progressPercent ?? null}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <LearnHeader
-          tree={tree}
-          phaseTitle={activeNode?.phaseTitle}
-          moduleTitle={activeNode?.moduleTitle}
-          lessonProgress={activeModule?.progressPercent ?? null}
-          desktopSidebarOpen={desktopSidebarOpen}
-          onToggleDesktopSidebar={() => setDesktopSidebarOpen((v) => !v)}
-          onOpenMobileDrawer={() => setMobileOpen(true)}
+      <main className="relative min-h-0 flex-1 overflow-y-auto">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.06),_transparent_50%)]"
         />
-
-        <main className="relative min-h-0 flex-1 overflow-y-auto">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.08),_transparent_50%)]"
-          />
-          <div className="relative">
-            <LessonPanel
-              payload={
-                payload
-                  ? {
-                      ...payload,
-                      detail: {
-                        ...payload.detail,
-                        isCompleted:
-                          tree.flatLessons.find(
-                            (l) => l.id === payload.detail.lesson.id
-                          )?.isCompleted ?? payload.detail.isCompleted,
-                      },
-                    }
-                  : null
+        <div className="relative">
+          <LessonPanel
+            payload={payload}
+            loading={lessonQuery.isFetching && !payload}
+            previousSlug={neighbors.previous}
+            nextSlug={neighbors.next}
+            onNavigate={selectLesson}
+            onCompletedChange={(lessonId, completed) => {
+              setTree((prev) =>
+                applyLessonCompletion(
+                  prev,
+                  lessonId,
+                  completed,
+                  activeLessonSlug
+                )
+              );
+              if (activeLessonSlug && lessonQuery.data) {
+                setLessonQueryData(
+                  queryClient,
+                  courseSlug,
+                  activeLessonSlug,
+                  (prev) => {
+                    const base = prev ?? lessonQuery.data!;
+                    return {
+                      ...base,
+                      detail: { ...base.detail, isCompleted: completed },
+                    };
+                  }
+                );
               }
-              loading={loadingLesson}
-              phaseProgress={activePhase?.progressPercent ?? 0}
-              moduleProgress={activeModule?.progressPercent ?? 0}
-              previousSlug={neighbors.previous}
-              nextSlug={neighbors.next}
-              onNavigate={selectLesson}
-              onCompletedChange={(lessonId, completed) => {
-                setTree((prev) =>
-                  applyLessonCompletion(
-                    prev,
-                    lessonId,
-                    completed,
-                    activeLessonSlug
-                  )
-                );
-                setPayload((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        detail: { ...prev.detail, isCompleted: completed },
-                      }
-                    : prev
-                );
-              }}
-            />
-          </div>
-        </main>
-      </div>
+            }}
+          />
+        </div>
+      </main>
     </div>
   );
-}
-
-function toggleSet(set: Set<string>, id: string) {
-  const next = new Set(set);
-  if (next.has(id)) next.delete(id);
-  else next.add(id);
-  return next;
-}
-
-function initialExpandedPhases(
-  tree: WorkspaceTree,
-  activeSlug: string | null
-): Set<string> {
-  const ids = new Set<string>();
-  if (tree.phases[0]) ids.add(tree.phases[0].id);
-  const active = tree.flatLessons.find((l) => l.slug === activeSlug);
-  if (active) ids.add(active.phaseId);
-  return ids;
-}
-
-function initialExpandedModules(
-  tree: WorkspaceTree,
-  activeSlug: string | null
-): Set<string> {
-  const ids = new Set<string>();
-  const firstModule = tree.phases[0]?.modules[0];
-  if (firstModule) ids.add(firstModule.id);
-  const active = tree.flatLessons.find((l) => l.slug === activeSlug);
-  if (active) ids.add(active.moduleId);
-  return ids;
 }
 
 function toJourney(tree: WorkspaceTree): CourseJourney {

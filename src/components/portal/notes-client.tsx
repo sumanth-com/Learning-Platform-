@@ -20,10 +20,12 @@ export function NotesClient() {
   };
 
   return (
-    <div className="-mx-4 -my-2 flex h-[calc(100dvh-8rem)] flex-col overflow-hidden sm:-mx-6 lg:-mx-8">
-      <div className="flex shrink-0 items-center justify-between gap-4 px-4 pb-4 sm:px-6 lg:px-8">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="flex shrink-0 items-center justify-between gap-4 px-4 pb-3 sm:px-6 lg:px-8">
         <div>
-          <h1 className="font-display text-2xl text-zinc-50">Notes</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
+            Notes
+          </h1>
           <p className="text-sm text-zinc-500">Saved automatically</p>
         </div>
         <Button

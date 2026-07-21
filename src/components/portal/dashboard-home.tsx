@@ -3,7 +3,8 @@ import {
   ArrowRight,
   Award,
   BookOpen,
-  CalendarDays,
+  CheckCircle2,
+  ClipboardList,
   Clock,
   Flame,
   FolderKanban,
@@ -12,55 +13,47 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 import type {
   ContinueLearningState,
   CourseJourney,
+  LessonSummary,
 } from "@/features/curriculum/types";
+
+type DashboardAssignment = {
+  id: string;
+  title: string;
+  difficulty: string;
+  dueDays: number | null;
+  lessonTitle: string | null;
+};
 
 type DashboardHomeProps = {
   displayName: string;
   continueState: ContinueLearningState | null;
   journey: CourseJourney | null;
+  assignments?: DashboardAssignment[];
 };
 
 export function DashboardHome({
   displayName,
   continueState,
   journey,
+  assignments = [],
 }: DashboardHomeProps) {
   const firstName = displayName.split(" ")[0] || displayName;
-  const resumeHref = continueState?.lesson
-    ? CURRICULUM_ROUTES.learnLesson(
-        continueState.courseSlug,
-        continueState.lesson.slug
-      )
-    : CURRICULUM_ROUTES.learn(
-        continueState?.courseSlug ?? journey?.course.slug ?? "full-stack-ai-engineering"
-      );
-
-  const nextLesson = continueState?.lesson;
-  const recentCompleted =
-    journey?.phases
-      .flatMap((p) =>
-        p.modules.flatMap((m) =>
-          m.lessons
-            .filter((l) => l.isCompleted)
-            .map((l) => ({ ...l, moduleTitle: m.title, phaseTitle: p.title }))
+  const resumeHref =
+    continueState?.lesson && continueState.moduleSlug
+      ? CURRICULUM_ROUTES.moduleTopic(
+          continueState.moduleSlug,
+          continueState.lesson.slug
         )
-      )
-      .slice(-4)
-      .reverse() ?? [];
+      : continueState?.moduleSlug
+        ? CURRICULUM_ROUTES.module(continueState.moduleSlug)
+        : CURRICULUM_ROUTES.journey;
 
-  const upcomingModules =
-    journey?.phases
-      .flatMap((p) =>
-        p.modules
-          .filter((m) => m.completedCount < m.totalCount)
-          .map((m) => ({ ...m, phaseTitle: p.title }))
-      )
-      .slice(0, 4) ?? [];
+  const upcomingLessons = getUpcomingLessons(journey, 4);
+  const recentCompleted = getRecentCompleted(journey, 3);
 
   const streak = Math.max(
     1,
@@ -69,253 +62,268 @@ export function DashboardHome({
   const studyMinutes =
     (continueState?.completedCount ?? 0) *
     (continueState?.lesson?.durationMinutes ?? 25);
+  const progress = continueState?.progressPercent ?? 0;
+  const courseTitle =
+    continueState?.courseTitle ??
+    journey?.course.title ??
+    "Full Stack + AI Engineering";
 
-  const weekBars = Array.from({ length: 7 }, (_, i) => {
-    const base = continueState?.progressPercent ?? 0;
-    return Math.min(100, Math.max(8, ((base / 7) * (i + 1) + i * 4) % 100));
-  });
+  const dueAssignments = assignments.slice(0, 3);
 
   return (
-    <div className="space-y-6">
-      <section className="space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-300/80">
-          Dashboard
-        </p>
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl">
-          Welcome back, {firstName}
-        </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-zinc-400 sm:text-base">
-          Continue your{" "}
-          <span className="text-zinc-200">
-            {continueState?.courseTitle ??
-              journey?.course.title ??
-              "Full Stack + AI Engineering"}
-          </span>{" "}
-          journey.
-        </p>
-      </section>
+    <div className="flex h-full min-h-0 flex-col gap-3 overflow-hidden">
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-2">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-tight text-zinc-50 sm:text-2xl">
+            Welcome back, {firstName}
+          </h1>
+          <p className="mt-0.5 truncate text-xs text-zinc-500">{courseTitle}</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <StatChip icon={TrendingUp} label="Progress" value={`${progress}%`} />
+          <StatChip icon={Flame} label="Streak" value={`${streak}d`} />
+          <StatChip icon={Clock} label="Study" value={`${studyMinutes}m`} />
+        </div>
+      </header>
 
-      <section className="grid gap-4 xl:grid-cols-3">
-        <div className="overflow-hidden rounded-2xl border border-zinc-800/80 bg-gradient-to-br from-indigo-950/50 via-zinc-900/70 to-zinc-950 p-6 xl:col-span-2">
-          <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-indigo-300/80">
-            <BookOpen className="h-3.5 w-3.5" />
-            Continue learning
-          </div>
-          <h2 className="font-display text-2xl text-zinc-50">
-            {continueState?.lesson?.title ?? "Start your next lesson"}
-          </h2>
-          <p className="mt-2 text-sm text-zinc-400">
-            {continueState?.phaseTitle && continueState?.moduleTitle
-              ? `${continueState.phaseTitle} · ${continueState.moduleTitle}`
-              : "Open the learning workspace to begin."}
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-zinc-500">
-            {continueState?.lesson ? (
-              <span className="inline-flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5" />
-                {continueState.lesson.durationMinutes} min
-              </span>
-            ) : null}
-            <span>
-              Progress {continueState?.progressPercent ?? 0}% ·{" "}
-              {continueState?.completedCount ?? 0}/
-              {continueState?.totalCount ?? 0}
-            </span>
-          </div>
-          <Progress
-            value={continueState?.progressPercent ?? 0}
-            className="mt-4 h-2"
-          />
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="gap-2">
-              <Link href={resumeHref}>
-                Resume
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href={CURRICULUM_ROUTES.journey}>View journey</Link>
-            </Button>
-            {nextLesson ? (
-              <p className="flex items-center text-xs text-zinc-500">
-                Next up:{" "}
-                <span className="ml-1 font-medium text-zinc-300">
-                  {nextLesson.title}
+      <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-12 lg:grid-rows-[auto_1fr]">
+        {/* Continue Learning — primary */}
+        <section className="flex min-h-0 flex-col justify-between rounded-xl border border-zinc-800/80 bg-gradient-to-br from-indigo-950/40 via-zinc-900/60 to-zinc-950 p-4 lg:col-span-7 lg:row-span-1">
+          <div>
+            <div className="mb-1.5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-300/80">
+              <BookOpen className="h-3 w-3" />
+              Continue learning
+            </div>
+            <h2 className="text-lg font-semibold tracking-tight text-zinc-50">
+              {continueState?.lesson?.title ?? "Start your next lesson"}
+            </h2>
+            <p className="mt-1 line-clamp-1 text-xs text-zinc-400">
+              {continueState?.phaseTitle && continueState?.moduleTitle
+                ? `${continueState.phaseTitle} · ${continueState.moduleTitle}`
+                : "Open your Journey to begin."}
+            </p>
+            <div className="mt-2 flex items-center gap-3 text-[11px] text-zinc-500">
+              {continueState?.lesson ? (
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  {continueState.lesson.durationMinutes} min
                 </span>
-              </p>
-            ) : null}
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-6">
-          <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">
-            <Target className="h-3.5 w-3.5 text-indigo-400" />
-            Today&apos;s goal
-          </div>
-          <p className="font-display text-xl text-zinc-50">
-            Complete 1 lesson
-          </p>
-          <p className="mt-2 text-sm text-zinc-500">
-            Stay consistent — one focused lesson keeps your streak alive.
-          </p>
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <Metric
-              icon={Flame}
-              label="Streak"
-              value={`${streak}d`}
-            />
-            <Metric
-              icon={Clock}
-              label="Study time"
-              value={`${studyMinutes}m`}
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat
-          icon={TrendingUp}
-          label="Progress"
-          value={`${continueState?.progressPercent ?? 0}%`}
-          hint={`${continueState?.completedCount ?? 0} lessons done`}
-        />
-        <Stat
-          icon={Flame}
-          label="Study streak"
-          value={`${streak} days`}
-          hint="Keep learning daily"
-        />
-        <Stat
-          icon={Clock}
-          label="Study time"
-          value={`${studyMinutes} min`}
-          hint="Based on completed lessons"
-        />
-        <Stat
-          icon={CalendarDays}
-          label="Weekly activity"
-          value="On track"
-          hint="Last 7 days"
-        />
-      </section>
-
-      <section className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-zinc-100">
-            Weekly activity
-          </h2>
-          <span className="text-xs text-zinc-500">Mon – Sun</span>
-        </div>
-        <div className="flex h-28 items-end gap-2">
-          {weekBars.map((h, i) => (
-            <div key={i} className="flex flex-1 flex-col items-center gap-2">
-              <div
-                className="w-full rounded-t-md bg-gradient-to-t from-indigo-600/80 to-indigo-400/60"
-                style={{ height: `${h}%` }}
-              />
-              <span className="text-[10px] text-zinc-600">
-                {"MTWTFSS"[i]}
+              ) : null}
+              <span>
+                {continueState?.completedCount ?? 0}/
+                {continueState?.totalCount ?? 0} lessons
               </span>
             </div>
-          ))}
-        </div>
-      </section>
+            <Progress value={progress} className="mt-3 h-1.5" />
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button asChild size="sm" className="gap-1.5">
+              <Link href={resumeHref}>
+                Resume
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+            <Button asChild size="sm" variant="outline">
+              <Link href={CURRICULUM_ROUTES.journey}>
+                Journey
+              </Link>
+            </Button>
+          </div>
+        </section>
 
-      <section className="grid gap-4 lg:grid-cols-2">
-        <Panel title="Recent lessons" icon={BookOpen}>
-          {recentCompleted.length === 0 ? (
-            <Empty text="Complete a lesson to see it here." />
+        {/* Today's Goal + Assignments */}
+        <div className="grid gap-3 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
+          <section className="rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5">
+            <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+              <Target className="h-3 w-3 text-indigo-400" />
+              Today&apos;s goal
+            </div>
+            <p className="text-sm font-semibold text-zinc-50">
+              Complete 1 lesson
+            </p>
+            <p className="mt-1 text-[11px] text-zinc-500">
+              Stay consistent — one focused lesson keeps your streak alive.
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <MiniMetric label="Streak" value={`${streak}d`} />
+              <MiniMetric label="Study" value={`${studyMinutes}m`} />
+            </div>
+          </section>
+
+          <section className="rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5">
+            <div className="mb-2 flex items-center justify-between">
+              <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                <ClipboardList className="h-3 w-3 text-indigo-400" />
+                Assignments due
+              </div>
+              <Link
+                href="/assignments"
+                className="text-[11px] font-medium text-indigo-300 hover:text-indigo-200"
+              >
+                View all
+              </Link>
+            </div>
+            {dueAssignments.length === 0 ? (
+              <p className="text-xs text-zinc-500">No open assignments.</p>
+            ) : (
+              <ul className="space-y-1.5">
+                {dueAssignments.map((a) => (
+                  <li key={a.id}>
+                    <Link
+                      href={`/assignment/${a.id}`}
+                      className="flex items-center justify-between gap-2 rounded-lg border border-zinc-800/60 bg-zinc-950/40 px-2.5 py-2 transition hover:border-zinc-700"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-xs text-zinc-200">
+                          {a.title}
+                        </span>
+                        <span className="text-[10px] text-zinc-600">
+                          {a.lessonTitle ?? a.difficulty}
+                          {a.dueDays != null ? ` · ${a.dueDays}d` : ""}
+                        </span>
+                      </span>
+                      <ArrowRight className="h-3 w-3 shrink-0 text-zinc-600" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+
+        {/* Upcoming + Activity + Projects/Achievements */}
+        <section className="min-h-0 overflow-hidden rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5 lg:col-span-4">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-xs font-semibold text-zinc-100">
+              Upcoming lessons
+            </h2>
+            <Link
+              href={resumeHref}
+              className="text-[11px] font-medium text-indigo-300 hover:text-indigo-200"
+            >
+              Path
+            </Link>
+          </div>
+          {upcomingLessons.length === 0 ? (
+            <p className="text-xs text-zinc-500">All caught up.</p>
           ) : (
-            <ul className="space-y-2">
-              {recentCompleted.map((lesson) => (
+            <ul className="space-y-1.5">
+              {upcomingLessons.map((lesson) => {
+                const moduleSlug = findLessonModuleSlug(journey, lesson.id);
+                return (
                 <li key={lesson.id}>
                   <Link
-                    href={CURRICULUM_ROUTES.learnLesson(
-                      journey!.course.slug,
-                      lesson.slug
-                    )}
-                    className="flex items-center justify-between rounded-xl border border-zinc-800/70 bg-zinc-950/40 px-3 py-2.5 transition hover:border-zinc-700"
+                    href={
+                      moduleSlug
+                        ? CURRICULUM_ROUTES.moduleTopic(moduleSlug, lesson.slug)
+                        : CURRICULUM_ROUTES.journey
+                    }
+                    className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 transition hover:bg-zinc-950/60"
                   >
-                    <div className="min-w-0">
-                      <p className="truncate text-sm text-zinc-200">
-                        {lesson.title}
-                      </p>
-                      <p className="truncate text-xs text-zinc-500">
-                        {lesson.moduleTitle}
-                      </p>
-                    </div>
-                    <Badge variant="success">Done</Badge>
+                    <span className="truncate text-xs text-zinc-300">
+                      {lesson.title}
+                    </span>
+                    <span className="shrink-0 text-[10px] tabular-nums text-zinc-600">
+                      {lesson.durationMinutes}m
+                    </span>
                   </Link>
                 </li>
-              ))}
+              );
+              })}
             </ul>
           )}
-        </Panel>
+        </section>
 
-        <Panel title="Available modules" icon={FolderKanban}>
-          {upcomingModules.length === 0 ? (
-            <Empty text="All modules complete — incredible work." />
+        <section className="min-h-0 overflow-hidden rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5 lg:col-span-4">
+          <h2 className="mb-2 text-xs font-semibold text-zinc-100">
+            Recent activity
+          </h2>
+          {recentCompleted.length === 0 ? (
+            <p className="text-xs text-zinc-500">
+              Complete a lesson to see activity here.
+            </p>
           ) : (
-            <ul className="space-y-2">
-              {upcomingModules.map((module) => (
-                <li key={module.id}>
-                  <Link
-                    href={CURRICULUM_ROUTES.module(module.slug)}
-                    className="block rounded-xl border border-zinc-800/70 bg-zinc-950/40 px-3 py-2.5 transition hover:border-zinc-700"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="truncate text-sm text-zinc-200">
-                        {module.title}
-                      </p>
-                      <span className="text-[11px] tabular-nums text-zinc-500">
-                        {module.completedCount}/{module.totalCount}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-xs text-zinc-500">
-                      {module.phaseTitle}
-                      {module.estimated_duration
-                        ? ` · ${module.estimated_duration}`
-                        : ""}
-                    </p>
-                    <Progress
-                      value={module.progressPercent}
-                      className="mt-2 h-1"
-                    />
-                  </Link>
+            <ul className="space-y-1.5">
+              {recentCompleted.map((lesson) => (
+                <li
+                  key={lesson.id}
+                  className="flex items-center gap-2 rounded-lg px-2 py-1.5"
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                  <span className="truncate text-xs text-zinc-300">
+                    {lesson.title}
+                  </span>
                 </li>
               ))}
             </ul>
           )}
-        </Panel>
-      </section>
+        </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        <FeatureCard
-          title="Assignments due"
-          body="Practice by shipping real work tied to each lesson."
-          href="/assignments"
-          cta="View assignments"
-        />
-        <FeatureCard
-          title="Achievements"
-          body={`${continueState?.completedCount ?? 0} lessons completed on your path.`}
-          href={CURRICULUM_ROUTES.journey}
-          cta="See journey"
-          icon={Award}
-        />
-        <FeatureCard
-          title="Recent projects"
-          body="Build portfolio pieces as you progress through modules."
-          href="/projects"
-          cta="Open projects"
-        />
-      </section>
+        <section className="grid min-h-0 grid-cols-2 gap-3 lg:col-span-4">
+          <QuickCard
+            href="/projects"
+            icon={FolderKanban}
+            title="Projects"
+            body="Build portfolio pieces as you advance."
+          />
+          <QuickCard
+            href={CURRICULUM_ROUTES.journey}
+            icon={Award}
+            title="Achievements"
+            body={`${continueState?.completedCount ?? 0} lessons completed.`}
+          />
+        </section>
+      </div>
     </div>
   );
 }
 
-function Metric({
+function getUpcomingLessons(
+  journey: CourseJourney | null,
+  limit: number
+): LessonSummary[] {
+  if (!journey) return [];
+  const flat: LessonSummary[] = [];
+  for (const phase of journey.phases) {
+    for (const module of phase.modules) {
+      for (const lesson of module.lessons) {
+        if (!lesson.isCompleted) flat.push(lesson);
+      }
+    }
+  }
+  return flat.slice(0, limit);
+}
+
+function findLessonModuleSlug(
+  journey: CourseJourney | null,
+  lessonId: string
+): string | null {
+  if (!journey) return null;
+  for (const phase of journey.phases) {
+    for (const module of phase.modules) {
+      if (module.lessons.some((l) => l.id === lessonId)) return module.slug;
+    }
+  }
+  return null;
+}
+
+function getRecentCompleted(
+  journey: CourseJourney | null,
+  limit: number
+): LessonSummary[] {
+  if (!journey) return [];
+  const flat: LessonSummary[] = [];
+  for (const phase of journey.phases) {
+    for (const module of phase.modules) {
+      for (const lesson of module.lessons) {
+        if (lesson.isCompleted) flat.push(lesson);
+      }
+    }
+  }
+  return flat.slice(-limit).reverse();
+}
+
+function StatChip({
   icon: Icon,
   label,
   value,
@@ -325,90 +333,46 @@ function Metric({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-3">
-      <div className="mb-2 flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-zinc-500">
-        <Icon className="h-3 w-3 text-indigo-400" />
-        {label}
-      </div>
-      <p className="text-lg font-semibold text-zinc-100">{value}</p>
+    <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-800 bg-zinc-900/60 px-2.5 py-1">
+      <Icon className="h-3 w-3 text-indigo-400" />
+      <span className="text-[10px] text-zinc-500">{label}</span>
+      <span className="text-xs font-semibold tabular-nums text-zinc-100">
+        {value}
+      </span>
     </div>
   );
 }
 
-function Stat({
-  icon: Icon,
-  label,
-  value,
-  hint,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string;
-  hint: string;
-}) {
+function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-950 text-indigo-400">
-        <Icon className="h-4 w-4" />
-      </div>
-      <p className="text-xs uppercase tracking-wider text-zinc-500">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-zinc-100">{value}</p>
-      <p className="mt-1 text-xs text-zinc-600">{hint}</p>
+    <div className="rounded-lg border border-zinc-800 bg-zinc-950/50 px-2.5 py-2">
+      <p className="text-[10px] uppercase tracking-wide text-zinc-600">{label}</p>
+      <p className="mt-0.5 text-sm font-semibold text-zinc-100">{value}</p>
     </div>
   );
 }
 
-function Panel({
-  title,
+function QuickCard({
+  href,
   icon: Icon,
-  children,
-}: {
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-      <div className="mb-4 flex items-center gap-2">
-        <Icon className="h-4 w-4 text-indigo-400" />
-        <h2 className="text-sm font-semibold text-zinc-100">{title}</h2>
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function Empty({ text }: { text: string }) {
-  return <p className="text-sm text-zinc-500">{text}</p>;
-}
-
-function FeatureCard({
   title,
   body,
-  href,
-  cta,
-  icon: Icon = FolderKanban,
 }: {
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   body: string;
-  href: string;
-  cta: string;
-  icon?: React.ComponentType<{ className?: string }>;
 }) {
   return (
-    <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-5">
-      <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-950 text-indigo-400">
-        <Icon className="h-4 w-4" />
-      </div>
-      <h3 className="text-sm font-semibold text-zinc-100">{title}</h3>
-      <p className="mt-2 text-sm text-zinc-500">{body}</p>
-      <Link
-        href={href}
-        className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-indigo-300 hover:text-indigo-200"
-      >
-        {cta}
-        <ArrowRight className="h-3 w-3" />
-      </Link>
-    </div>
+    <Link
+      href={href}
+      className="flex flex-col rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5 transition hover:border-zinc-700 hover:bg-zinc-900/70"
+    >
+      <Icon className="h-4 w-4 text-indigo-400" />
+      <p className="mt-2 text-xs font-semibold text-zinc-100">{title}</p>
+      <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-zinc-500">
+        {body}
+      </p>
+    </Link>
   );
 }
