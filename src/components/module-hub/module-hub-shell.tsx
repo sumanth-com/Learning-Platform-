@@ -24,14 +24,17 @@ export function ModuleHubShell({
   const pathname = usePathname();
   useModuleHub(moduleSlug, initialData);
   const onChallenge = pathname.includes("/challenge/");
+  const phaseTitle = initialData.detail.phase.title;
 
   return (
     <>
-      <PortalChrome fillViewport />
+      <PortalChrome title="Roadmap" subtitle={phaseTitle} fillViewport />
       <div
         className={cn(
           "h-full min-h-0",
-          onChallenge ? "overflow-hidden" : "overflow-y-auto px-4 py-4 sm:px-6"
+          onChallenge
+            ? "overflow-hidden"
+            : "overflow-hidden px-4 py-4 sm:px-6"
         )}
       >
         {children}

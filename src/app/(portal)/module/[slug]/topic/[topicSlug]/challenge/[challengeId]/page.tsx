@@ -6,6 +6,8 @@ import {
   isProgrammingFundamentalsModule,
   PROGRAMMING_FUNDAMENTALS_TOPICS,
 } from "@/features/curriculum/lib/programming-fundamentals";
+import { getDeveloperToolingTopic } from "@/features/curriculum/lib/developer-tooling";
+import { getHtmlAcademyTopic } from "@/features/curriculum/lib/html-academy";
 import { buildTopicCards } from "@/features/curriculum/lib/topic-cards";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 
@@ -51,6 +53,8 @@ export default async function ModuleChallengePage({
     (isProgrammingFundamentalsModule(slug)
       ? PROGRAMMING_FUNDAMENTALS_TOPICS.find((t) => t.slug === topicSlug)?.title
       : undefined) ||
+    getDeveloperToolingTopic(topicSlug)?.title ||
+    getHtmlAcademyTopic(topicSlug)?.title ||
     topicSlug;
 
   const challenge = findTopicChallenge(

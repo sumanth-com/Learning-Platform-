@@ -13,6 +13,14 @@ import {
   programmingFundamentalsLessonContent,
   PROGRAMMING_FUNDAMENTALS_TOPICS,
 } from "@/features/curriculum/lib/programming-fundamentals";
+import {
+  isDeveloperToolingModule,
+  mergeDeveloperToolingLessons,
+} from "@/features/curriculum/lib/developer-tooling";
+import {
+  isHtmlAcademyModule,
+  mergeHtmlAcademyLessons,
+} from "@/features/curriculum/lib/html-academy";
 import { DEFAULT_COURSE_SLUG } from "@/features/curriculum/types";
 import type {
   ContinueLearningState,
@@ -66,7 +74,11 @@ export class CurriculumService {
         );
         const mergedLessons = isProgrammingFundamentalsModule(module.slug)
           ? mergeProgrammingFundamentalsLessons(moduleLessons, completedIds)
-          : moduleLessons;
+          : isDeveloperToolingModule(module.slug)
+            ? mergeDeveloperToolingLessons(moduleLessons, completedIds)
+            : isHtmlAcademyModule(module.slug)
+              ? mergeHtmlAcademyLessons(moduleLessons, completedIds)
+              : moduleLessons;
         const completedCount = mergedLessons.filter((l) => l.isCompleted).length;
         return {
           ...module,
@@ -125,7 +137,11 @@ export class CurriculumService {
     const summaries = lessons.map((l) => toLessonSummary(l, completedIds));
     const merged = isProgrammingFundamentalsModule(slug)
       ? mergeProgrammingFundamentalsLessons(summaries, completedSet)
-      : summaries;
+      : isDeveloperToolingModule(slug)
+        ? mergeDeveloperToolingLessons(summaries, completedSet)
+        : isHtmlAcademyModule(slug)
+          ? mergeHtmlAcademyLessons(summaries, completedSet)
+          : summaries;
     const completedCount = merged.filter((l) => l.isCompleted).length;
 
     return {
@@ -215,7 +231,17 @@ export class CurriculumService {
           orderedRows.map((l) => toLessonSummary(l, completedIds)),
           new Set(completedIds)
         )
-      : orderedRows.map((l) => toLessonSummary(l, completedIds));
+      : isDeveloperToolingModule(module.slug)
+        ? mergeDeveloperToolingLessons(
+            orderedRows.map((l) => toLessonSummary(l, completedIds)),
+            new Set(completedIds)
+          )
+        : isHtmlAcademyModule(module.slug)
+          ? mergeHtmlAcademyLessons(
+              orderedRows.map((l) => toLessonSummary(l, completedIds)),
+              new Set(completedIds)
+            )
+          : orderedRows.map((l) => toLessonSummary(l, completedIds));
     const index = merged.findIndex((l) => l.slug === lesson.slug);
 
     return {

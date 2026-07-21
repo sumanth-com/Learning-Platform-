@@ -1,8 +1,7 @@
 "use client";
 
-import { Menu, PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { usePortalShell } from "@/components/portal/portal-shell-context";
 import type { PortalUser } from "@/features/portal/types";
 
@@ -54,16 +53,7 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
                 <p className="truncate text-xs text-zinc-500">{subtitle}</p>
               ) : null}
             </>
-          ) : (
-            <div className="relative hidden max-w-md md:block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
-              <Input
-                placeholder="Search curriculum, projects, notes…"
-                className="h-9 border-zinc-800 bg-zinc-900/50 pl-9 text-sm"
-                readOnly
-              />
-            </div>
-          )}
+          ) : null}
         </div>
 
         <div className="flex items-center gap-2">

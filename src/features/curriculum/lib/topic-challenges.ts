@@ -14,6 +14,27 @@ import {
   findProgrammingFundamentalsChallenge,
   listProgrammingFundamentalsChallenges,
 } from "@/features/curriculum/lib/programming-fundamentals-challenges";
+import {
+  developerToolingChallengeCounts,
+  getDeveloperToolingTopicLimit,
+  isDeveloperToolingModule,
+} from "@/features/curriculum/lib/developer-tooling";
+import {
+  findDeveloperToolingChallenge,
+  listDeveloperToolingChallenges,
+} from "@/features/curriculum/lib/developer-tooling-challenges";
+import {
+  getHtmlAcademyTopicLimit,
+  htmlAcademyChallengeCounts,
+  isHtmlAcademyModule,
+} from "@/features/curriculum/lib/html-academy";
+import {
+  findHtmlAcademyChallenge,
+  listHtmlAcademyChallenges,
+} from "@/features/curriculum/lib/html-academy-challenges";
+import { getModuleChallengeExperience } from "@/features/curriculum/lib/challenge-experience";
+import type { ChallengeExperienceKind } from "@/features/curriculum/lib/challenge-experience";
+import type { ThinkingChallengeData } from "@/features/curriculum/lib/thinking-challenge";
 
 export type TopicChallenge = {
   id: string;
@@ -21,6 +42,8 @@ export type TopicChallenge = {
   topicSlug: string;
   lesson: LearnLesson;
   source: "engine" | "synthetic";
+  experience?: ChallengeExperienceKind;
+  thinking?: ThinkingChallengeData;
 };
 
 const MODULE_CATEGORIES: Record<string, LearnCategory[]> = {
@@ -177,6 +200,12 @@ export function getModuleChallengeStats(moduleSlug: string): {
   if (isProgrammingFundamentalsModule(moduleSlug)) {
     return programmingFundamentalsChallengeCounts();
   }
+  if (isDeveloperToolingModule(moduleSlug)) {
+    return developerToolingChallengeCounts();
+  }
+  if (isHtmlAcademyModule(moduleSlug)) {
+    return htmlAcademyChallengeCounts();
+  }
   return null;
 }
 
@@ -186,6 +215,12 @@ export function getTopicChallengeLimit(
 ): number {
   if (isProgrammingFundamentalsModule(moduleSlug)) {
     return getProgrammingFundamentalsTopicLimit(topicSlug);
+  }
+  if (isDeveloperToolingModule(moduleSlug)) {
+    return getDeveloperToolingTopicLimit(topicSlug);
+  }
+  if (isHtmlAcademyModule(moduleSlug)) {
+    return getHtmlAcademyTopicLimit(topicSlug);
   }
   return 4;
 }
@@ -227,6 +262,42 @@ export function resolveTopicChallenges(
             topicSlug: c.topicSlug,
             lesson: c.lesson,
             source: "synthetic" as const,
+            experience: "thinking" as const,
+            thinking: c.thinking,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isDeveloperToolingModule(moduleSlug)) {
+    const max = limit ?? getDeveloperToolingTopicLimit(topicSlug);
+    return listDeveloperToolingChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "tooling" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isHtmlAcademyModule(moduleSlug)) {
+    const max = limit ?? getHtmlAcademyTopicLimit(topicSlug);
+    return listHtmlAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "html-live" as const,
           }) satisfies TopicChallenge
       );
   }
@@ -269,7 +340,10 @@ export function resolveTopicChallenges(
     i += 1;
   }
 
-  return picked.slice(0, resolvedLimit);
+  return picked.slice(0, resolvedLimit).map((c) => ({
+    ...c,
+    experience: c.experience ?? getModuleChallengeExperience(moduleSlug),
+  }));
 }
 
 export function findTopicChallenge(
@@ -288,12 +362,46 @@ export function findTopicChallenge(
       topicSlug: found.topicSlug,
       lesson: found.lesson,
       source: "synthetic" as const,
+      experience: "thinking" as const,
+      thinking: found.thinking,
     } satisfies TopicChallenge;
   }
+
+  if (isDeveloperToolingModule(moduleSlug)) {
+    const decoded = decodeURIComponent(challengeId);
+    const found = findDeveloperToolingChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "tooling" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isHtmlAcademyModule(moduleSlug)) {
+    const decoded = decodeURIComponent(challengeId);
+    const found = findHtmlAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "html-live" as const,
+    } satisfies TopicChallenge;
+  }
+
   const searchLimit = 12;
+  const experience = getModuleChallengeExperience(moduleSlug);
   return (
-    resolveTopicChallenges(moduleSlug, topicSlug, topicTitle, searchLimit).find(
-      (c) => c.id === challengeId || c.lesson.id === challengeId
-    ) ?? null
+    resolveTopicChallenges(moduleSlug, topicSlug, topicTitle, searchLimit)
+      .map((c) => ({ ...c, experience: c.experience ?? experience }))
+      .find(
+        (c) => c.id === challengeId || c.lesson.id === challengeId
+      ) ?? null
   );
 }

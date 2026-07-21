@@ -6,11 +6,20 @@ import { ArrowLeft, CheckCircle2, Circle } from "lucide-react";
 import { ProblemDocument } from "@/components/learning-engine/problem-document";
 import { HackerrankEditor } from "@/components/learning-engine/hackerrank-editor";
 import { lessonHasWorkspace } from "@/components/learning-engine/editor-workspace";
+import { ThinkingChallengeSolve } from "@/components/module-hub/thinking-challenge-solve";
+import { ToolingChallengeSolve } from "@/components/tooling/tooling-challenge-solve";
+import { HtmlPlaygroundSolve } from "@/components/html-academy/html-playground-solve";
+import { ModuleExperiencePlaceholder } from "@/components/module-hub/module-experience-placeholder";
 import { Button } from "@/components/ui/button";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
+import {
+  getModuleChallengeExperience,
+  type ChallengeExperienceKind,
+} from "@/features/curriculum/lib/challenge-experience";
+import { findDeveloperToolingChallenge } from "@/features/curriculum/lib/developer-tooling-challenges";
+import { findHtmlAcademyChallenge } from "@/features/curriculum/lib/html-academy-challenges";
 import type { TopicChallenge } from "@/features/curriculum/lib/topic-challenges";
 import { curriculumChallengeEntityId } from "@/features/curriculum/lib/topic-challenges";
-import { isProgrammingFundamentalsModule } from "@/features/curriculum/lib/programming-fundamentals";
 import { useEntityProgress } from "@/hooks/use-curriculum";
 import { cn } from "@/lib/utils";
 import { usePersistScroll } from "@/hooks/use-persist-scroll";
@@ -30,7 +39,18 @@ type ModuleChallengeSolveProps = {
   challenge: TopicChallenge;
 };
 
-export function ModuleChallengeSolve({
+function resolveExperience(
+  moduleSlug: string,
+  challenge: TopicChallenge
+): ChallengeExperienceKind {
+  if (challenge.thinking || challenge.experience === "thinking") {
+    return "thinking";
+  }
+  return challenge.experience ?? getModuleChallengeExperience(moduleSlug);
+}
+
+/** Coding / SQL / API modules that already have a workspace config. */
+function CodeWorkspaceSolve({
   moduleSlug,
   topicSlug,
   topicTitle,
@@ -84,26 +104,20 @@ export function ModuleChallengeSolve({
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0d0d]">
-      <header className="flex shrink-0 items-center gap-3 border-b border-zinc-800 px-3 py-2 sm:px-4">
+      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-zinc-800 px-3 sm:px-4">
         <Link
           href={backHref}
-          className="inline-flex items-center gap-1.5 text-xs text-zinc-500 transition hover:text-zinc-300"
+          className="inline-flex shrink-0 items-center gap-1.5 text-xs text-zinc-500 transition hover:text-zinc-300"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
-          Back to Challenges
+          <span className="hidden sm:inline">Challenges</span>
         </Link>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-[10px] uppercase tracking-wider text-zinc-600">
-            {moduleTitle} / {topicTitle}
-          </p>
-          <p className="truncate text-sm font-medium text-zinc-200">
-            {lesson.title}
-          </p>
-          {isProgrammingFundamentalsModule(moduleSlug) ? (
-            <p className="mt-0.5 truncate text-[10px] text-zinc-500">
-              Developer mindset · {lesson.difficulty} · fresher practice
-            </p>
-          ) : null}
+        <div className="min-w-0 flex-1 truncate text-sm">
+          <span className="font-medium text-zinc-100">{lesson.title}</span>
+          <span className="text-zinc-600"> · </span>
+          <span className="capitalize text-zinc-500">{lesson.difficulty}</span>
+          <span className="text-zinc-600"> · </span>
+          <span className="text-zinc-500">{topicTitle}</span>
         </div>
         <Button
           variant={isDone ? "secondary" : "default"}
@@ -190,4 +204,64 @@ export function ModuleChallengeSolve({
       </div>
     </div>
   );
+}
+
+/**
+ * Routes each challenge to the learning experience for its module.
+ * Programming Fundamentals → Thinking Challenge (never a code editor).
+ */
+export function ModuleChallengeSolve(props: ModuleChallengeSolveProps) {
+  const experience = resolveExperience(props.moduleSlug, props.challenge);
+
+  if (experience === "thinking" && props.challenge.thinking) {
+    return (
+      <ThinkingChallengeSolve
+        {...props}
+        thinking={props.challenge.thinking}
+      />
+    );
+  }
+
+  if (experience === "tooling") {
+    const tooling = findDeveloperToolingChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (tooling) {
+      return <ToolingChallengeSolve {...props} challenge={tooling} />;
+    }
+  }
+
+  if (experience === "html-live") {
+    const html = findHtmlAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (html) {
+      return <HtmlPlaygroundSolve {...props} challenge={html} />;
+    }
+  }
+
+  if (
+    experience === "css-live" ||
+    experience === "javascript-console" ||
+    experience === "react-preview" ||
+    experience === "api-playground" ||
+    experience === "sql-editor"
+  ) {
+    if (lessonHasWorkspace(props.challenge.lesson)) {
+      return <CodeWorkspaceSolve {...props} />;
+    }
+    return (
+      <ModuleExperiencePlaceholder
+        moduleSlug={props.moduleSlug}
+        topicSlug={props.topicSlug}
+        moduleTitle={props.moduleTitle}
+        challengeTitle={props.challenge.lesson.title}
+        experience={experience}
+      />
+    );
+  }
+
+  return <CodeWorkspaceSolve {...props} />;
 }

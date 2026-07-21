@@ -1,5 +1,7 @@
 import type { LessonSummary } from "@/features/curriculum/types";
 import { isProgrammingFundamentalsModule } from "@/features/curriculum/lib/programming-fundamentals";
+import { isDeveloperToolingModule } from "@/features/curriculum/lib/developer-tooling";
+import { isHtmlAcademyModule } from "@/features/curriculum/lib/html-academy";
 
 export type TopicCardStatus = "completed" | "current" | "locked";
 
@@ -12,13 +14,18 @@ export type TopicCardModel = LessonSummary & {
  * Sequential unlock within a module:
  * completed → first incomplete is current → everything after is locked
  * (preview lessons stay reachable even when after the frontier).
- * Module 1 (programming-fundamentals) unlocks all topics at once.
+ * Challenge-hub academies unlock all topics at once.
  */
 export function buildTopicCards(
   lessons: LessonSummary[],
   moduleSlug?: string
 ): TopicCardModel[] {
-  if (moduleSlug && isProgrammingFundamentalsModule(moduleSlug)) {
+  if (
+    moduleSlug &&
+    (isProgrammingFundamentalsModule(moduleSlug) ||
+      isDeveloperToolingModule(moduleSlug) ||
+      isHtmlAcademyModule(moduleSlug))
+  ) {
     return lessons.map((lesson, index) => ({
       ...lesson,
       index,

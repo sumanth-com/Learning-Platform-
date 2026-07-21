@@ -29,6 +29,18 @@ import {
   programmingFundamentalsChallengeCounts,
   PROGRAMMING_FUNDAMENTALS_TOPICS,
 } from "@/features/curriculum/lib/programming-fundamentals";
+import {
+  developerToolingChallengeCounts,
+  isDeveloperToolingModule,
+} from "@/features/curriculum/lib/developer-tooling";
+import {
+  flattenToolingTopics,
+} from "@/features/curriculum/lib/developer-tooling-curriculum";
+import {
+  htmlAcademyChallengeCounts,
+  isHtmlAcademyModule,
+} from "@/features/curriculum/lib/html-academy";
+import { flattenHtmlTopics } from "@/features/curriculum/lib/html-academy-curriculum";
 import type {
   CourseJourney,
   LessonDifficulty,
@@ -225,7 +237,7 @@ export function JourneyRoadmap({
 
   return (
     <>
-      <PortalChrome fillViewport />
+      <PortalChrome title="Roadmap" fillViewport />
       <div className="h-full min-h-0 overflow-y-auto bg-zinc-950">
         <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:py-8">
           <header className="mb-8">
@@ -648,10 +660,25 @@ function buildModuleCards(
           module.slug,
           PROGRAMMING_FUNDAMENTALS_TOPICS[0]!.slug
         )
-      : CURRICULUM_ROUTES.module(module.slug);
+      : isDeveloperToolingModule(module.slug)
+        ? CURRICULUM_ROUTES.moduleHub(
+            module.slug,
+            flattenToolingTopics()[0]!.slug
+          )
+        : isHtmlAcademyModule(module.slug)
+          ? CURRICULUM_ROUTES.moduleHub(
+              module.slug,
+              flattenHtmlTopics()[0]!.slug
+            )
+          : CURRICULUM_ROUTES.module(module.slug);
 
     const pf = isProgrammingFundamentalsModule(module.slug);
+    const dt = isDeveloperToolingModule(module.slug);
+    const html = isHtmlAcademyModule(module.slug);
     const pfCounts = pf ? programmingFundamentalsChallengeCounts() : null;
+    const dtCounts = dt ? developerToolingChallengeCounts() : null;
+    const htmlCounts = html ? htmlAcademyChallengeCounts() : null;
+    const specialCounts = pfCounts ?? dtCounts ?? htmlCounts;
     const lessonCounts = countDifficulties(
       module.lessons.map((l) => l.difficulty)
     );
@@ -661,7 +688,11 @@ function buildModuleCards(
     );
     const topicCount = pf
       ? PROGRAMMING_FUNDAMENTALS_TOPICS.length
-      : module.totalCount;
+      : dt
+        ? flattenToolingTopics().length
+        : html
+          ? flattenHtmlTopics().length
+          : module.totalCount;
 
     return {
       module,
@@ -675,10 +706,10 @@ function buildModuleCards(
       assignmentCount: module.lessons.filter((l) => assignmentSet.has(l.id))
         .length,
       hasProject: projectSet.has(module.id) || /project/i.test(module.title),
-      easy: pfCounts?.easy ?? lessonCounts.beginner,
-      medium: pfCounts?.medium ?? lessonCounts.intermediate,
-      hard: pfCounts?.hard ?? lessonCounts.advanced,
-      challengeTotal: pfCounts?.total ?? null,
+      easy: specialCounts?.easy ?? lessonCounts.beginner,
+      medium: specialCounts?.medium ?? lessonCounts.intermediate,
+      hard: specialCounts?.hard ?? lessonCounts.advanced,
+      challengeTotal: specialCounts?.total ?? null,
       topicCount,
       durationLabel:
         module.estimated_duration ||
