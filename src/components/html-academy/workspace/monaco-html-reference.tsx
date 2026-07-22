@@ -121,7 +121,7 @@ function MonacoHtmlReferenceInner({
       /** Render hover outside overflow:hidden parents so MDN tips aren’t clipped. */
       fixedOverflowWidgets: true,
       hover: {
-        enabled: true,
+        enabled: "on",
         delay: 280,
         sticky: true,
         above: true,
