@@ -7,12 +7,12 @@ export const CURRICULUM_ROUTES = {
     return `${base}?topic=${encodeURIComponent(topicSlug)}`;
   },
   moduleTopic: (moduleSlug: string, topicSlug: string) =>
-    `/module/${moduleSlug}/topic/${topicSlug}`,
+    `/module/${moduleSlug}?topic=${encodeURIComponent(topicSlug)}`,
   moduleChallenge: (
     moduleSlug: string,
-    topicSlug: string,
+    _topicSlug: string,
     challengeId: string
-  ) => `/module/${moduleSlug}/topic/${topicSlug}/challenge/${encodeURIComponent(challengeId)}`,
+  ) => `/challenge/${moduleSlug}/${encodeURIComponent(challengeId)}`,
   /** @deprecated Legacy hub tabs redirect to module explorer */
   moduleRoadmap: (slug: string) => `/module/${slug}`,
   modulePractice: (slug: string) => `/module/${slug}`,

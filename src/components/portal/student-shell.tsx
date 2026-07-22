@@ -43,6 +43,7 @@ function StudentShellInner({ data, children }: StudentShellProps) {
     fillViewport ||
     pathname.startsWith("/learn") ||
     pathname.startsWith("/module/") ||
+    pathname.startsWith("/challenge/") ||
     pathname === "/roadmap" ||
     pathname === "/dashboard";
 

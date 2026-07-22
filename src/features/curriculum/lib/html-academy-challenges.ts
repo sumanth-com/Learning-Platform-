@@ -1,5 +1,8 @@
 import type { LearnDifficulty, LearnLesson } from "@/learning-engine/types";
-import { flattenHtmlTopics } from "@/features/curriculum/lib/html-academy-curriculum";
+import {
+  flattenHtmlTopics,
+  type HtmlTopicDef,
+} from "@/features/curriculum/lib/html-academy-curriculum";
 
 export type HtmlChallengeKind =
   | "build"
@@ -95,295 +98,314 @@ type Spec = {
   acceptanceCriteria: string[];
 };
 
-function specsForTopic(
-  topicSlug: string,
-  topicTitle: string,
-  weight: number
-): Spec[] {
-  const specs: Spec[] = [];
-
-  const push = (spec: Spec) => specs.push(spec);
-
-  // Core trio
-  push({
-    key: "e1",
-    title: `${topicTitle} — Easy build`,
-    difficulty: "easy",
-    minutes: 10,
-    kind: "build",
-    scenario: [
-      `HTML (HyperText Markup Language) is the structure of every webpage.`,
-      `It is not a programming language — it marks up content so browsers know what is a heading, paragraph, link, form, or image.`,
-      `Browsers read your HTML, build a DOM tree, then show the page. CSS styles it. JavaScript adds behavior.`,
-      ``,
-      `In this challenge you practice ${topicTitle} with clean, valid HTML5 a teammate could read without guessing.`,
-    ].join("\n"),
-    task: `Create a minimal page related to ${topicTitle}. Include DOCTYPE, html with lang, head with charset and title, and body content that demonstrates the topic.`,
-    hints: [
-      "Start from the HTML5 document shell.",
-      "Set lang on the html element.",
-      "Use a meaningful title.",
-    ],
-    referenceSolution: STARTER_SHELL.replace(
-      "<!-- Build your solution here -->",
-      `<main>\n    <h1>${topicTitle}</h1>\n    <p>Practice content for this topic.</p>\n  </main>`
-    ).replace("<title>Document</title>", `<title>${topicTitle}</title>`),
-    takeaways: [
-      "Every page needs a valid document shell.",
-      "lang and title are not optional polish.",
-    ],
-    validateIncludes: ["<!doctype html>", "lang=", "<title>", "<body"],
-    acceptanceCriteria: [
-      "HTML5 DOCTYPE present",
-      "html lang attribute set",
-      "title element present",
-      "body content present",
-    ],
-  });
-
-  push({
-    key: "m1",
-    title: `${topicTitle} — Medium practice`,
-    difficulty: "medium",
-    minutes: 16,
-    kind: "semantic",
-    scenario: `A designer handed you wireframes for ${topicTitle}. Structure the content with semantic HTML — not a pile of divs.`,
-    task: `Build a section that correctly uses semantic elements for ${topicTitle}. Include headings in a logical order and at least one paragraph of real content.`,
-    hints: [
-      "Prefer semantic tags over anonymous wrappers.",
-      "Do not skip heading levels.",
-      "One clear h1 for the page topic.",
-    ],
-    referenceSolution: STARTER_SHELL.replace(
-      "<!-- Build your solution here -->",
-      `<main>\n    <h1>${topicTitle}</h1>\n    <section>\n      <h2>Overview</h2>\n      <p>Semantic structure for ${topicTitle}.</p>\n    </section>\n  </main>`
-    ),
-    takeaways: [
-      "Semantics communicate meaning to browsers and assistive tech.",
-      "Headings form the document outline.",
-    ],
-    validateIncludes: ["<h1", "<p", "<main"],
-    acceptanceCriteria: [
-      "Uses main landmark",
-      "Includes h1 and paragraph",
-      "Semantic structure for the topic",
-    ],
-  });
-
-  push({
-    key: "h1",
-    title: `${topicTitle} — Hard company task`,
-    difficulty: "hard",
-    minutes: 22,
-    kind: "fix",
-    scenario: `A production page about ${topicTitle} failed accessibility and SEO review. Fix the markup to professional standards.`,
-    task: `Rebuild a polished snippet for ${topicTitle} with: unique title, meta description, visible labels if forms appear, meaningful alt text for any images, and a correct landmark structure.`,
-    hints: [
-      "Add meta name=description in head.",
-      "Images need useful alt (or empty alt if decorative).",
-      "Forms need label for/id pairing.",
-    ],
-    referenceSolution: STARTER_SHELL.replace(
-      "<title>Document</title>",
-      `<title>${topicTitle} | SupraLearn</title>\n  <meta name="description" content="Learn ${topicTitle} with accessible semantic HTML." />`
-    ).replace(
-      "<!-- Build your solution here -->",
-      `<header>\n    <nav aria-label="Primary">\n      <a href="/">Home</a>\n    </nav>\n  </header>\n  <main>\n    <h1>${topicTitle}</h1>\n    <p>Production-ready markup checklist complete.</p>\n  </main>\n  <footer>\n    <p>SupraLearn HTML Academy</p>\n  </footer>`
-    ),
-    takeaways: [
-      "A11y and SEO reviews catch missing metadata and landmarks.",
-      "Ship markup you would defend in a PR.",
-    ],
-    validateIncludes: [
-      "meta name=\"description\"",
-      "<main",
-      "<h1",
-      "lang=",
-    ],
-    acceptanceCriteria: [
-      "Meta description present",
-      "Landmark structure with main",
-      "Page language set",
-    ],
-  });
-
-  // Weight-based extras
-  const extraCount = Math.max(0, weight - 1);
-  for (let i = 0; i < extraCount; i += 1) {
-    const n = i + 2;
-    const difficulty: LearnDifficulty =
-      i % 3 === 0 ? "easy" : i % 3 === 1 ? "medium" : "hard";
-    const kind: HtmlChallengeKind =
-      i % 5 === 0
-        ? "a11y"
-        : i % 5 === 1
-          ? "seo"
-          : i % 5 === 2
-            ? "interview"
-            : i % 5 === 3
-              ? "fix"
-              : "build";
-
-    push({
-      key: `${difficulty[0]}${n}`,
-      title: `${topicTitle} — Drill ${n}`,
-      difficulty,
-      minutes: difficulty === "easy" ? 8 : difficulty === "medium" ? 14 : 20,
-      kind,
-      scenario: scenarioForKind(kind, topicTitle),
-      task: taskForKind(kind, topicTitle, topicSlug),
-      hints: hintsForKind(kind),
-      referenceSolution: referenceForKind(kind, topicTitle),
-      takeaways: takeawaysForKind(kind),
-      validateIncludes: validateForKind(kind, topicSlug),
-      acceptanceCriteria: criteriaForKind(kind),
-    });
-  }
-
-  // Topic-specific packs
-  if (topicSlug.includes("form") || topicSlug.includes("input") || topicSlug.includes("validation") || topicSlug.includes("select")) {
-    specs.push(...formPack(topicTitle));
-  }
-  if (topicSlug.includes("a11y") || topicSlug.includes("aria") || topicSlug.includes("access")) {
-    specs.push(...a11yPack(topicTitle));
-  }
-  if (topicSlug.includes("seo")) {
-    specs.push(...seoPack(topicTitle));
-  }
-  if (topicSlug.includes("table")) {
-    specs.push(...tablePack(topicTitle));
-  }
-  if (topicSlug.includes("img") || topicSlug.includes("picture") || topicSlug.includes("media") || topicSlug.includes("video")) {
-    specs.push(...mediaPack(topicTitle));
-  }
-  if (topicSlug.includes("project") || topicSlug.includes("final")) {
-    specs.push(...projectPack(topicSlug, topicTitle));
-  }
-  if (topicSlug.includes("interview")) {
-    specs.push(...interviewPack(topicTitle));
-  }
-
-  return specs;
-}
-
-function scenarioForKind(kind: HtmlChallengeKind, topicTitle: string): string {
-  switch (kind) {
-    case "a11y":
-      return `Accessibility review failed on a page covering ${topicTitle}. Screen reader users cannot complete key tasks.`;
-    case "seo":
-      return `Search preview for ${topicTitle} looks broken — missing or duplicate metadata.`;
-    case "interview":
-      return `Interview warm-up: explain and demonstrate ${topicTitle} with a tiny HTML example.`;
-    case "fix":
-      return `QA filed bugs against markup related to ${topicTitle}. Reproduce a correct version.`;
-    case "project":
-      return `Ship a mini deliverable for ${topicTitle} that could go in your portfolio.`;
-    case "semantic":
-      return `Replace div soup with semantic HTML for ${topicTitle}.`;
-    default:
-      return `Build a clear HTML example for ${topicTitle}.`;
-  }
-}
-
-function taskForKind(
-  kind: HtmlChallengeKind,
-  topicTitle: string,
-  topicSlug: string
+function shellWith(
+  title: string,
+  body: string,
+  extraHead = ""
 ): string {
-  switch (kind) {
-    case "a11y":
-      return "Fix or build markup with: lang on html, visible labels for inputs (if any), meaningful alt or empty alt for decorative images, and a single main landmark.";
-    case "seo":
-      return "Add a unique title and meta description. Use one h1 that matches the page topic. Ensure at least one descriptive internal link.";
-    case "interview":
-      return `Write a short HTML snippet you would sketch on a whiteboard to explain ${topicTitle}. Include comments that state why each key tag exists.`;
-    case "fix":
-      return `Repair broken patterns for ${topicTitle}: wrong heading order, missing DOCTYPE, or non-semantic wrappers. Deliver valid HTML5.`;
-    case "project":
-      return `Create a polished page section for ${topicTitle} with header/nav/main/footer where appropriate.`;
-    default:
-      return `Demonstrate ${topicTitle} (${topicSlug}) with valid HTML5 and readable structure.`;
-  }
-}
-
-function hintsForKind(kind: HtmlChallengeKind): string[] {
-  switch (kind) {
-    case "a11y":
-      return [
-        "lang=en on html",
-        "label for= must match input id",
-        "One main per page",
-      ];
-    case "seo":
-      return [
-        "title in head",
-        "meta name=description",
-        "Single clear h1",
-      ];
-    case "interview":
-      return ["Keep the example tiny", "Comment the why", "Prefer semantic tags"];
-    default:
-      return ["Validate nesting", "Prefer semantic elements", "Keep content readable"];
-  }
-}
-
-function referenceForKind(kind: HtmlChallengeKind, topicTitle: string): string {
-  if (kind === "seo") {
-    return STARTER_SHELL.replace(
-      "<title>Document</title>",
-      `<title>${topicTitle}</title>\n  <meta name="description" content="${topicTitle} guide for frontend developers." />`
-    ).replace(
-      "<!-- Build your solution here -->",
-      `<main>\n    <h1>${topicTitle}</h1>\n    <p>Learn more on the <a href="/docs">docs</a>.</p>\n  </main>`
-    );
-  }
-  if (kind === "a11y") {
-    return STARTER_SHELL.replace(
-      "<!-- Build your solution here -->",
-      `<main>\n    <h1>${topicTitle}</h1>\n    <form>\n      <label for="name">Name</label>\n      <input id="name" name="name" type="text" required />\n      <button type="submit">Save</button>\n    </form>\n  </main>`
-    );
-  }
-  return STARTER_SHELL.replace(
+  return STARTER_SHELL.replace("<title>Document</title>", `<title>${title}</title>${extraHead}`).replace(
     "<!-- Build your solution here -->",
-    `<main>\n    <h1>${topicTitle}</h1>\n    <p>Example for ${topicTitle}.</p>\n  </main>`
+    body
   );
 }
 
-function takeawaysForKind(kind: HtmlChallengeKind): string[] {
-  switch (kind) {
-    case "a11y":
-      return ["Accessibility starts with correct HTML", "Labels beat placeholders"];
-    case "seo":
-      return ["Unique titles win", "Metadata + headings work together"];
-    case "interview":
-      return ["Explain why, not only what", "Tiny examples beat essays"];
-    default:
-      return ["Semantic HTML scales", "Readable markup is professional"];
-  }
+function clip(text: string, max = 56): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  return `${t.slice(0, max - 1).trim()}…`;
 }
 
-function validateForKind(kind: HtmlChallengeKind, _topicSlug: string): string[] {
-  switch (kind) {
-    case "a11y":
-      return ["lang=", "<main", "<h1"];
-    case "seo":
-      return ["<title", "description", "<h1"];
-    case "interview":
-      return ["<!--", "<h1"];
-    default:
-      return ["<!doctype html>", "<body"];
-  }
+function challengeLimit(weight: number): number {
+  return Math.min(6, Math.max(3, weight + 1));
 }
 
-function criteriaForKind(kind: HtmlChallengeKind): string[] {
-  switch (kind) {
-    case "a11y":
-      return ["Language set", "Main landmark", "Primary heading"];
-    case "seo":
-      return ["Title present", "Meta description", "Single clear h1"];
-    default:
-      return ["Valid HTML5 shell", "Visible body content"];
+/**
+ * Build unique challenges from each topic's own curriculum data —
+ * no repeated "Topic — Easy build / Drill N" templates.
+ */
+function specsForTopic(topic: HtmlTopicDef): Spec[] {
+  const specs: Spec[] = [];
+  const push = (spec: Spec) => specs.push(spec);
+  const title = topic.title;
+  const slug = topic.slug;
+  const summary = topic.summary ?? title;
+  const explanation = topic.explanation ?? summary;
+  const commonMistakes = topic.commonMistakes ?? [];
+  const bestPractices = topic.bestPractices ?? [];
+  const interviewQuestions = topic.interviewQuestions ?? [];
+  const cheatSheet = topic.cheatSheet ?? [];
+  const a11yNotes = topic.a11yNotes ?? [];
+  const seoNotes = topic.seoNotes ?? [];
+
+  const primaryTags = cheatSheet.map((c) => c.tag).filter(Boolean);
+  const tagList =
+    primaryTags.length > 0
+      ? primaryTags.slice(0, 4).join(", ")
+      : "<!DOCTYPE html>, <html>, <head>, <body>";
+
+  // 1) Concept — unique to this topic's summary
+  push({
+    key: "concept",
+    title: clip(String(summary).replace(/\.$/, ""), 64),
+    difficulty: "easy",
+    minutes: 8,
+    kind: "build",
+    scenario: String(explanation).split(/(?<=\.)\s+/).slice(0, 2).join(" "),
+    task: `Create a tiny HTML page that demonstrates the idea behind "${title}". Use a clear <h1> and one short paragraph that restates the concept in your own words.`,
+    hints: [
+      "Use a valid HTML5 document shell.",
+      "One h1 that names the idea.",
+      "Keep the paragraph concrete — not vague filler.",
+    ],
+    referenceSolution: shellWith(
+      title,
+      `<main>\n    <h1>${title}</h1>\n    <p>${clip(summary, 120)}</p>\n  </main>`
+    ),
+    takeaways: [summary, "HTML communicates meaning, not just layout."],
+    validateIncludes: ["<!doctype html>", "<h1", "<p", "lang="],
+    acceptanceCriteria: [
+      "Valid HTML5 shell",
+      "Clear h1 for the topic",
+      "Short explanatory paragraph",
+    ],
+  });
+
+  // 2) Hands-on build with this topic's cheat-sheet tags
+  push({
+    key: "build",
+    title: primaryTags[0]
+      ? `Use ${primaryTags[0]} correctly`
+      : `Build a page for ${clip(title, 40)}`,
+    difficulty: "easy",
+    minutes: 10,
+    kind: "build",
+    scenario: `You are drafting a starter page for "${title}". Focus on the tags that matter for this topic: ${tagList}.`,
+    task: `Write valid HTML that includes these building blocks where they make sense: ${tagList}. Add real content related to ${title} — not placeholder lorem ipsum.`,
+    hints: [
+      ...cheatSheet.slice(0, 3).map((c) => `${c.tag}: ${c.desc}`),
+      "Prefer semantic structure over empty wrappers.",
+    ].slice(0, 4),
+    referenceSolution: shellWith(
+      title,
+      `<main>\n    <h1>${title}</h1>\n    <p>${clip(summary, 100)}</p>\n    ${cheatSheet
+        .slice(0, 2)
+        .map((c) => `<!-- ${c.tag}: ${c.desc} -->`)
+        .join("\n    ")}\n  </main>`
+    ),
+    takeaways:
+      cheatSheet.length > 0
+        ? cheatSheet.slice(0, 2).map((c) => `${c.tag} — ${c.desc}`)
+        : ["Valid HTML5 shell", "Clear structure for the topic"],
+    validateIncludes: ["<!doctype html>", "<body", "<h1"],
+    acceptanceCriteria: [
+      "Document shell present",
+      "Topic-related heading",
+      "Uses the topic's key tags thoughtfully",
+    ],
+  });
+
+  // 3) Fix a topic-specific mistake
+  const mistake = commonMistakes[0];
+  if (mistake) {
+    push({
+      key: "fix",
+      title: `Fix: ${clip(mistake, 52)}`,
+      difficulty: "medium",
+      minutes: 14,
+      kind: "fix",
+      scenario: `A teammate shipped broken markup for "${title}". Reviewer note: "${mistake}".`,
+      task: `Rewrite a correct HTML snippet for ${title} that avoids this mistake: ${mistake}. Deliver clean HTML5 a reviewer would approve.`,
+      hints: [
+        commonMistakes[1] ? `Also watch for: ${commonMistakes[1]}` : "Validate nesting and DOCTYPE.",
+        bestPractices[0] ?? "Prefer semantic tags.",
+        "Keep the example small and correct.",
+      ],
+      referenceSolution: shellWith(
+        `${title} — fixed`,
+        `<main>\n    <h1>${title}</h1>\n    <p>Correct approach: avoid “${clip(mistake, 80)}”.</p>\n  </main>`
+      ),
+      takeaways: [
+        `Avoid: ${mistake}`,
+        bestPractices[0] ?? "Readable markup is professional.",
+      ],
+      validateIncludes: ["<!doctype html>", "<main", "<h1"],
+      acceptanceCriteria: [
+        "Mistake addressed in the markup",
+        "Valid HTML5 structure",
+        "Clear topic heading",
+      ],
+    });
   }
+
+  // 4) Apply a best practice
+  const practice = bestPractices[0];
+  if (practice) {
+    push({
+      key: "practice",
+      title: clip(practice, 60),
+      difficulty: "medium",
+      minutes: 16,
+      kind: "semantic",
+      scenario: `Your team adopted this guideline for "${title}": ${practice}`,
+      task: `Build an HTML example that clearly follows: "${practice}". Use landmarks and headings that match the topic.`,
+      hints: [
+        bestPractices[1] ?? "One clear h1.",
+        "Use <main> for primary content.",
+        a11yNotes[0] ?? "Semantics help assistive tech.",
+      ],
+      referenceSolution: shellWith(
+        title,
+        `<main>\n    <h1>${title}</h1>\n    <section>\n      <h2>Guideline</h2>\n      <p>${practice}</p>\n    </section>\n  </main>`
+      ),
+      takeaways: [practice, bestPractices[1] ?? "Semantics beat div soup."].filter(
+        Boolean
+      ) as string[],
+      validateIncludes: ["<main", "<h1", "<p"],
+      acceptanceCriteria: [
+        "Guideline reflected in content",
+        "Semantic landmarks used",
+        "Logical heading structure",
+      ],
+    });
+  }
+
+  // 5) Accessibility note when available
+  if (a11yNotes[0] && topic.challengeWeight >= 3) {
+    push({
+      key: "a11y",
+      title: clip(a11yNotes[0], 60),
+      difficulty: "medium",
+      minutes: 14,
+      kind: "a11y",
+      scenario: `Accessibility review for "${title}" called out: ${a11yNotes[0]}`,
+      task: `Produce HTML for ${title} that satisfies this accessibility note. Set lang on <html>, include a single <main>, and a clear <h1>.`,
+      hints: [
+        "lang attribute on html",
+        "One main landmark",
+        a11yNotes[1] ?? "Visible text beats icon-only UI",
+      ],
+      referenceSolution: shellWith(
+        title,
+        `<main>\n    <h1>${title}</h1>\n    <p>${a11yNotes[0]}</p>\n  </main>`
+      ),
+      takeaways: [a11yNotes[0], "Accessibility starts with correct HTML"],
+      validateIncludes: ["lang=", "<main", "<h1"],
+      acceptanceCriteria: ["Language set", "Main landmark", "Primary heading"],
+    });
+  }
+
+  // 6) SEO note when available
+  if (seoNotes[0] && topic.challengeWeight >= 4) {
+    push({
+      key: "seo",
+      title: clip(seoNotes[0], 60),
+      difficulty: "hard",
+      minutes: 18,
+      kind: "seo",
+      scenario: `SEO preview for "${title}" looks weak. Guidance: ${seoNotes[0]}`,
+      task: `Add a unique <title>, a meta description about ${title}, one h1, and at least one descriptive link.`,
+      hints: [
+        "meta name=\"description\"",
+        "Title should be specific",
+        seoNotes[1] ?? "One clear h1",
+      ],
+      referenceSolution: shellWith(
+        `${title} | SupraLearn`,
+        `<main>\n    <h1>${title}</h1>\n    <p>${seoNotes[0]}</p>\n    <p>Read the <a href="/docs/${slug}">${title} guide</a>.</p>\n  </main>`,
+        `\n  <meta name="description" content="${clip(summary, 140)}" />`
+      ),
+      takeaways: [seoNotes[0], "Unique titles + descriptions help discovery"],
+      validateIncludes: ["<title", "description", "<h1", "<a "],
+      acceptanceCriteria: [
+        "Unique title",
+        "Meta description",
+        "Heading + descriptive link",
+      ],
+    });
+  }
+
+  // 7) Interview-style unique prompt
+  const interviewQ = interviewQuestions[0];
+  if (interviewQ) {
+    push({
+      key: "interview",
+      title: clip(
+        interviewQ.endsWith("?")
+          ? interviewQ
+          : `Interview: ${interviewQ}`,
+        64
+      ),
+      difficulty: "hard",
+      minutes: 12,
+      kind: "interview",
+      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
+      task: `Answer with a tiny HTML sketch plus HTML comments that explain your reasoning. Keep it under ~20 lines.`,
+      hints: [
+        "Comment the why, not only the what",
+        interviewQuestions[1] ?? "Prefer semantic tags",
+        "Stay concrete — one working example",
+      ],
+      referenceSolution: shellWith(
+        `Interview — ${title}`,
+        `<main>\n    <!-- Answering: ${interviewQ} -->\n    <h1>${title}</h1>\n    <p>${clip(summary, 110)}</p>\n  </main>`
+      ),
+      takeaways: [
+        "Explain why, not only what",
+        clip(interviewQ, 80),
+      ],
+      validateIncludes: ["<!--", "<h1", "<p"],
+      acceptanceCriteria: [
+        "Comments explain the answer",
+        "Working HTML example",
+        "Tied to the interview question",
+      ],
+    });
+  }
+
+  // Specialty packs (already unique within their domain)
+  if (
+    slug.includes("form") ||
+    slug.includes("input") ||
+    slug.includes("validation") ||
+    slug.includes("select")
+  ) {
+    specs.push(...formPack(title));
+  }
+  if (slug.includes("a11y") || slug.includes("aria") || slug.includes("access")) {
+    specs.push(...a11yPack(title));
+  }
+  if (slug.includes("seo")) {
+    specs.push(...seoPack(title));
+  }
+  if (slug.includes("table")) {
+    specs.push(...tablePack(title));
+  }
+  if (
+    slug.includes("img") ||
+    slug.includes("picture") ||
+    slug.includes("media") ||
+    slug.includes("video")
+  ) {
+    specs.push(...mediaPack(title));
+  }
+  if (slug.includes("project") || slug.includes("final")) {
+    specs.push(...projectPack(slug, title));
+  }
+  if (slug.includes("interview")) {
+    specs.push(...interviewPack(title));
+  }
+
+  // Deduplicate by title, keep insertion order, cap by weight
+  const seen = new Set<string>();
+  const unique: Spec[] = [];
+  for (const spec of specs) {
+    const key = spec.title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(spec);
+  }
+
+  return unique.slice(0, challengeLimit(topic.challengeWeight));
 }
 
 function formPack(topicTitle: string): Spec[] {
@@ -742,9 +764,7 @@ function buildChallenge(
 }
 
 const BANK: HtmlChallenge[] = flattenHtmlTopics().flatMap((topic) =>
-  specsForTopic(topic.slug, topic.title, topic.challengeWeight).map((spec) =>
-    buildChallenge(topic.slug, spec)
-  )
+  specsForTopic(topic).map((spec) => buildChallenge(topic.slug, spec))
 );
 
 const BY_TOPIC = new Map<string, HtmlChallenge[]>();
@@ -775,4 +795,12 @@ export function findHtmlAcademyChallenge(
 
 export function htmlAcademyTopicChallengeCount(topicSlug: string): number {
   return listHtmlAcademyChallenges(topicSlug).length;
+}
+
+/**
+ * Beginner theory lessons use a read-only code reference.
+ * Medium / hard / project challenges keep the interactive playground.
+ */
+export function isHtmlTheoryChallenge(challenge: HtmlChallenge): boolean {
+  return challenge.difficulty === "easy" && challenge.kind !== "project";
 }

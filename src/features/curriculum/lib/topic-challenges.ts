@@ -11,6 +11,7 @@ import {
   programmingFundamentalsChallengeCounts,
 } from "@/features/curriculum/lib/programming-fundamentals";
 import {
+  allProgrammingFundamentalsChallenges,
   findProgrammingFundamentalsChallenge,
   listProgrammingFundamentalsChallenges,
 } from "@/features/curriculum/lib/programming-fundamentals-challenges";
@@ -20,6 +21,7 @@ import {
   isDeveloperToolingModule,
 } from "@/features/curriculum/lib/developer-tooling";
 import {
+  allDeveloperToolingChallenges,
   findDeveloperToolingChallenge,
   listDeveloperToolingChallenges,
 } from "@/features/curriculum/lib/developer-tooling-challenges";
@@ -29,6 +31,7 @@ import {
   isHtmlAcademyModule,
 } from "@/features/curriculum/lib/html-academy";
 import {
+  allHtmlAcademyChallenges,
   findHtmlAcademyChallenge,
   listHtmlAcademyChallenges,
 } from "@/features/curriculum/lib/html-academy-challenges";
@@ -352,8 +355,9 @@ export function findTopicChallenge(
   topicTitle: string,
   challengeId: string
 ): TopicChallenge | null {
+  const decoded = decodeURIComponent(challengeId);
+
   if (isProgrammingFundamentalsModule(moduleSlug)) {
-    const decoded = decodeURIComponent(challengeId);
     const found = findProgrammingFundamentalsChallenge(topicSlug, decoded);
     if (!found) return null;
     return {
@@ -368,7 +372,6 @@ export function findTopicChallenge(
   }
 
   if (isDeveloperToolingModule(moduleSlug)) {
-    const decoded = decodeURIComponent(challengeId);
     const found = findDeveloperToolingChallenge(topicSlug, decoded);
     if (!found) return null;
     return {
@@ -382,7 +385,6 @@ export function findTopicChallenge(
   }
 
   if (isHtmlAcademyModule(moduleSlug)) {
-    const decoded = decodeURIComponent(challengeId);
     const found = findHtmlAcademyChallenge(topicSlug, decoded);
     if (!found) return null;
     return {
@@ -400,8 +402,76 @@ export function findTopicChallenge(
   return (
     resolveTopicChallenges(moduleSlug, topicSlug, topicTitle, searchLimit)
       .map((c) => ({ ...c, experience: c.experience ?? experience }))
-      .find(
-        (c) => c.id === challengeId || c.lesson.id === challengeId
-      ) ?? null
+      .find((c) => c.id === decoded || c.lesson.id === decoded) ?? null
   );
+}
+
+/**
+ * Resolve a challenge by id alone (flat /module/:slug/challenge/:id routes).
+ * Falls back to scanning module topic lessons for engine-backed modules.
+ */
+export function findModuleChallenge(
+  moduleSlug: string,
+  challengeId: string,
+  lessons: Array<{ slug: string; title: string }> = []
+): TopicChallenge | null {
+  const decoded = decodeURIComponent(challengeId);
+
+  if (isProgrammingFundamentalsModule(moduleSlug)) {
+    const found = allProgrammingFundamentalsChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "thinking" as const,
+      thinking: found.thinking,
+    } satisfies TopicChallenge;
+  }
+
+  if (isDeveloperToolingModule(moduleSlug)) {
+    const found = allDeveloperToolingChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "tooling" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isHtmlAcademyModule(moduleSlug)) {
+    const found = allHtmlAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "html-live" as const,
+    } satisfies TopicChallenge;
+  }
+
+  for (const lesson of lessons) {
+    const found = findTopicChallenge(
+      moduleSlug,
+      lesson.slug,
+      lesson.title,
+      decoded
+    );
+    if (found) return found;
+  }
+
+  return null;
 }
