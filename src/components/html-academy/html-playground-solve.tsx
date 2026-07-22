@@ -564,9 +564,11 @@ export function HtmlPlaygroundSolve({
   const { isDone } = useEntityProgress(entityId);
 
   const topic = useMemo(() => getHtmlAcademyTopic(topicSlug), [topicSlug]);
-  const learnAbout = topic
-    ? cleanText(topic.explanation)
-    : "HTML is the structure language of the web. You mark up content so browsers, search engines, and assistive technology understand what each part means.";
+  const learnAbout = cleanText(
+    challenge.scenario ||
+      topic?.summary ||
+      "HTML is the structure language of the web. You mark up content so browsers, search engines, and assistive technology understand what each part means."
+  );
 
   const referenceCode = challenge.referenceSolution || challenge.starterHtml;
 
@@ -659,7 +661,7 @@ export function HtmlPlaygroundSolve({
           <ArrowLeft className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Challenges</span>
         </Link>
-        <div className="min-w-0 flex-1 truncate text-sm">
+        <div className="min-w-0 flex-1 text-sm leading-snug">
           <span className="font-medium text-zinc-100">
             {cleanText(challenge.title)}
           </span>

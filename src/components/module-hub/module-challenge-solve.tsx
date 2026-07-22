@@ -9,6 +9,23 @@ import { lessonHasWorkspace } from "@/components/learning-engine/editor-workspac
 import { ThinkingChallengeSolve } from "@/components/module-hub/thinking-challenge-solve";
 import { ToolingChallengeSolve } from "@/components/tooling/tooling-challenge-solve";
 import { HtmlPlaygroundSolve } from "@/components/html-academy/html-playground-solve";
+import { CssPlaygroundSolve } from "@/components/css-academy/css-playground-solve";
+import { JsPlaygroundSolve } from "@/components/js-academy/js-playground-solve";
+import { ReactPlaygroundSolve } from "@/components/react-academy/react-playground-solve";
+import { NextjsPlaygroundSolve } from "@/components/nextjs-academy/nextjs-playground-solve";
+import { TypescriptPlaygroundSolve } from "@/components/typescript-academy/typescript-playground-solve";
+import { ApiPlaygroundSolve } from "@/components/apis-academy/api-playground-solve";
+import { AuthPlaygroundSolve } from "@/components/auth-academy/auth-playground-solve";
+import { SqlPlaygroundSolve } from "@/components/sql-academy/sql-playground-solve";
+import { ModelingPlaygroundSolve } from "@/components/modeling-academy/modeling-playground-solve";
+import { DeploymentPlaygroundSolve } from "@/components/deployment-academy/deployment-playground-solve";
+import { CicdPlaygroundSolve } from "@/components/cicd-academy/cicd-playground-solve";
+import { LlmPlaygroundSolve } from "@/components/llm-academy/llm-playground-solve";
+import { AiFeaturesPlaygroundSolve } from "@/components/ai-features-academy/ai-features-playground-solve";
+import { CapstonePlaygroundSolve } from "@/components/capstone-academy/capstone-playground-solve";
+import { ShipPlaygroundSolve } from "@/components/ship-academy/ship-playground-solve";
+import { InterviewPlaygroundSolve } from "@/components/interview-academy/interview-playground-solve";
+import { SystemsPlaygroundSolve } from "@/components/systems-academy/systems-playground-solve";
 import { ModuleExperiencePlaceholder } from "@/components/module-hub/module-experience-placeholder";
 import { Button } from "@/components/ui/button";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
@@ -18,6 +35,23 @@ import {
 } from "@/features/curriculum/lib/challenge-experience";
 import { findDeveloperToolingChallenge } from "@/features/curriculum/lib/developer-tooling-challenges";
 import { findHtmlAcademyChallenge } from "@/features/curriculum/lib/html-academy-challenges";
+import { findCssAcademyChallenge } from "@/features/curriculum/lib/css-academy-challenges";
+import { findJsAcademyChallenge } from "@/features/curriculum/lib/js-academy-challenges";
+import { findReactAcademyChallenge } from "@/features/curriculum/lib/react-academy-challenges";
+import { findNextjsAcademyChallenge } from "@/features/curriculum/lib/nextjs-academy-challenges";
+import { findTypescriptAcademyChallenge } from "@/features/curriculum/lib/typescript-academy-challenges";
+import { findApisAcademyChallenge } from "@/features/curriculum/lib/apis-academy-challenges";
+import { findAuthAcademyChallenge } from "@/features/curriculum/lib/auth-academy-challenges";
+import { findSqlAcademyChallenge } from "@/features/curriculum/lib/sql-academy-challenges";
+import { findModelingAcademyChallenge } from "@/features/curriculum/lib/modeling-academy-challenges";
+import { findDeploymentAcademyChallenge } from "@/features/curriculum/lib/deployment-academy-challenges";
+import { findCicdAcademyChallenge } from "@/features/curriculum/lib/cicd-academy-challenges";
+import { findLlmAcademyChallenge } from "@/features/curriculum/lib/llm-academy-challenges";
+import { findAiFeaturesAcademyChallenge } from "@/features/curriculum/lib/ai-features-academy-challenges";
+import { findCapstoneAcademyChallenge } from "@/features/curriculum/lib/capstone-academy-challenges";
+import { findShipAcademyChallenge } from "@/features/curriculum/lib/ship-academy-challenges";
+import { findInterviewAcademyChallenge } from "@/features/curriculum/lib/interview-academy-challenges";
+import { findSystemsAcademyChallenge } from "@/features/curriculum/lib/systems-academy-challenges";
 import type { TopicChallenge } from "@/features/curriculum/lib/topic-challenges";
 import { curriculumChallengeEntityId } from "@/features/curriculum/lib/topic-challenges";
 import { useEntityProgress } from "@/hooks/use-curriculum";
@@ -242,16 +276,184 @@ export function ModuleChallengeSolve(props: ModuleChallengeSolveProps) {
     }
   }
 
-  if (
-    experience === "css-live" ||
-    experience === "javascript-console" ||
-    experience === "react-preview" ||
-    experience === "api-playground" ||
-    experience === "sql-editor"
-  ) {
-    if (lessonHasWorkspace(props.challenge.lesson)) {
-      return <CodeWorkspaceSolve {...props} />;
+  if (experience === "css-live") {
+    const css = findCssAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (css) {
+      return <CssPlaygroundSolve {...props} challenge={css} />;
     }
+  }
+
+  if (experience === "javascript-console") {
+    const js = findJsAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (js) {
+      return <JsPlaygroundSolve {...props} challenge={js} />;
+    }
+  }
+
+  if (experience === "react-preview") {
+    const react = findReactAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (react) {
+      return <ReactPlaygroundSolve {...props} challenge={react} />;
+    }
+  }
+
+  if (experience === "nextjs-preview") {
+    const nextjs = findNextjsAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (nextjs) {
+      return <NextjsPlaygroundSolve {...props} challenge={nextjs} />;
+    }
+  }
+
+  if (experience === "typescript-console") {
+    const ts = findTypescriptAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (ts) {
+      return <TypescriptPlaygroundSolve {...props} challenge={ts} />;
+    }
+  }
+
+  if (experience === "api-playground") {
+    const apis = findApisAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (apis) {
+      return <ApiPlaygroundSolve {...props} challenge={apis} />;
+    }
+  }
+
+  if (experience === "auth-lab") {
+    const auth = findAuthAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (auth) {
+      return <AuthPlaygroundSolve {...props} challenge={auth} />;
+    }
+  }
+
+  if (experience === "sql-editor") {
+    const sql = findSqlAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (sql) {
+      return <SqlPlaygroundSolve {...props} challenge={sql} />;
+    }
+  }
+
+  if (experience === "modeling-lab") {
+    const modeling = findModelingAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (modeling) {
+      return <ModelingPlaygroundSolve {...props} challenge={modeling} />;
+    }
+  }
+
+  if (experience === "deploy-lab") {
+    const deploy = findDeploymentAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (deploy) {
+      return <DeploymentPlaygroundSolve {...props} challenge={deploy} />;
+    }
+  }
+
+  if (experience === "cicd-lab") {
+    const cicd = findCicdAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (cicd) {
+      return <CicdPlaygroundSolve {...props} challenge={cicd} />;
+    }
+  }
+
+  if (experience === "llm-lab") {
+    const llm = findLlmAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (llm) {
+      return <LlmPlaygroundSolve {...props} challenge={llm} />;
+    }
+  }
+
+  if (experience === "ai-lab") {
+    const ai = findAiFeaturesAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (ai) {
+      return <AiFeaturesPlaygroundSolve {...props} challenge={ai} />;
+    }
+  }
+
+  if (experience === "capstone-lab") {
+    const capstone = findCapstoneAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (capstone) {
+      return <CapstonePlaygroundSolve {...props} challenge={capstone} />;
+    }
+  }
+
+  if (experience === "ship-lab") {
+    const ship = findShipAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (ship) {
+      return <ShipPlaygroundSolve {...props} challenge={ship} />;
+    }
+  }
+
+  if (experience === "interview-lab") {
+    const interview = findInterviewAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (interview) {
+      return <InterviewPlaygroundSolve {...props} challenge={interview} />;
+    }
+  }
+
+  if (experience === "systems-lab") {
+    const systems = findSystemsAcademyChallenge(
+      props.topicSlug,
+      props.challenge.id
+    );
+    if (systems) {
+      return <SystemsPlaygroundSolve {...props} challenge={systems} />;
+    }
+  }
+
+  if (lessonHasWorkspace(props.challenge.lesson)) {
+    return <CodeWorkspaceSolve {...props} />;
+  }
+
+  if (
+    experience !== "thinking" &&
+    experience !== "code-workspace"
+  ) {
     return (
       <ModuleExperiencePlaceholder
         moduleSlug={props.moduleSlug}

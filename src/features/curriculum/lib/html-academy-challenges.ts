@@ -109,10 +109,8 @@ function shellWith(
   );
 }
 
-function clip(text: string, max = 56): string {
-  const t = text.replace(/\s+/g, " ").trim();
-  if (t.length <= max) return t;
-  return `${t.slice(0, max - 1).trim()}…`;
+function clip(text: string, _max = 56): string {
+  return text.replace(/\s+/g, " ").trim();
 }
 
 function challengeLimit(weight: number): number {

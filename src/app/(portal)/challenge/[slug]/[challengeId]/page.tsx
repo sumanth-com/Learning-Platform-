@@ -9,6 +9,23 @@ import {
 } from "@/features/curriculum/lib/programming-fundamentals";
 import { getDeveloperToolingTopic } from "@/features/curriculum/lib/developer-tooling";
 import { getHtmlAcademyTopic } from "@/features/curriculum/lib/html-academy";
+import { getCssAcademyTopic } from "@/features/curriculum/lib/css-academy";
+import { getJsAcademyTopic } from "@/features/curriculum/lib/js-academy";
+import { getReactAcademyTopic } from "@/features/curriculum/lib/react-academy";
+import { getNextjsAcademyTopic } from "@/features/curriculum/lib/nextjs-academy";
+import { getTypescriptAcademyTopic } from "@/features/curriculum/lib/typescript-academy";
+import { getApisAcademyTopic } from "@/features/curriculum/lib/apis-academy";
+import { getAuthAcademyTopic } from "@/features/curriculum/lib/auth-academy";
+import { getSqlAcademyTopic } from "@/features/curriculum/lib/sql-academy";
+import { getModelingAcademyTopic } from "@/features/curriculum/lib/modeling-academy";
+import { getDeploymentAcademyTopic } from "@/features/curriculum/lib/deployment-academy";
+import { getCicdAcademyTopic } from "@/features/curriculum/lib/cicd-academy";
+import { getLlmAcademyTopic } from "@/features/curriculum/lib/llm-academy";
+import { getAiFeaturesAcademyTopic } from "@/features/curriculum/lib/ai-features-academy";
+import { getCapstoneAcademyTopic } from "@/features/curriculum/lib/capstone-academy";
+import { getShipAcademyTopic } from "@/features/curriculum/lib/ship-academy";
+import { getInterviewAcademyTopic } from "@/features/curriculum/lib/interview-academy";
+import { getSystemsAcademyTopic } from "@/features/curriculum/lib/systems-academy";
 import { buildTopicCards } from "@/features/curriculum/lib/topic-cards";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 
@@ -21,7 +38,10 @@ export async function generateMetadata({
   const decoded = decodeURIComponent(challengeId);
   return {
     title: decoded
-      .replace(/^(pf|html|tooling)-/, "")
+      .replace(
+        /^(pf|html|css|js|react|nextjs|ts|apis|auth|sql|modeling|deploy|cicd|llm|aifeat|capstone|ship|interview|systems|tooling)-/,
+        ""
+      )
       .split("-")
       .slice(-2)
       .join(" ")
@@ -63,6 +83,23 @@ export default async function ChallengeSolvePage({
       : undefined) ||
     getDeveloperToolingTopic(challenge.topicSlug)?.title ||
     getHtmlAcademyTopic(challenge.topicSlug)?.title ||
+    getCssAcademyTopic(challenge.topicSlug)?.title ||
+    getJsAcademyTopic(challenge.topicSlug)?.title ||
+    getReactAcademyTopic(challenge.topicSlug)?.title ||
+    getNextjsAcademyTopic(challenge.topicSlug)?.title ||
+    getTypescriptAcademyTopic(challenge.topicSlug)?.title ||
+    getApisAcademyTopic(challenge.topicSlug)?.title ||
+    getAuthAcademyTopic(challenge.topicSlug)?.title ||
+    getSqlAcademyTopic(challenge.topicSlug)?.title ||
+    getModelingAcademyTopic(challenge.topicSlug)?.title ||
+    getDeploymentAcademyTopic(challenge.topicSlug)?.title ||
+    getCicdAcademyTopic(challenge.topicSlug)?.title ||
+    getLlmAcademyTopic(challenge.topicSlug)?.title ||
+    getAiFeaturesAcademyTopic(challenge.topicSlug)?.title ||
+    getCapstoneAcademyTopic(challenge.topicSlug)?.title ||
+    getShipAcademyTopic(challenge.topicSlug)?.title ||
+    getInterviewAcademyTopic(challenge.topicSlug)?.title ||
+    getSystemsAcademyTopic(challenge.topicSlug)?.title ||
     challenge.topicSlug;
 
   return (

@@ -42,15 +42,75 @@ const EXPERIENCE_COPY: Record<
     body: "Build components and preview the UI.",
     features: ["Code editor", "Component preview"],
   },
+  "nextjs-preview": {
+    title: "Next.js Preview",
+    body: "Learn App Router pages, layouts, and Next.js conventions.",
+    features: ["Code editor", "App Router reference"],
+  },
+  "typescript-console": {
+    title: "TypeScript Console",
+    body: "Practice typed JavaScript with clear TypeScript references.",
+    features: ["Code editor", "Type annotations", "TS reference"],
+  },
   "api-playground": {
     title: "API Playground",
     body: "Explore requests and responses for backend learning.",
     features: ["Request builder", "Response inspector"],
   },
+  "auth-lab": {
+    title: "Auth Lab",
+    body: "Learn sessions, tokens, and secure defaults with HTTP and JS references.",
+    features: ["HTTP reference", "Auth patterns", "Secure defaults"],
+  },
   "sql-editor": {
     title: "SQL Editor",
     body: "Write queries against sample schemas.",
     features: ["SQL editor", "Result tables"],
+  },
+  "modeling-lab": {
+    title: "Data Modeling Lab",
+    body: "Design schemas and relationships with schema notes and SQL DDL.",
+    features: ["Schema reference", "SQL DDL", "ER patterns"],
+  },
+  "deploy-lab": {
+    title: "Deploy Lab",
+    body: "Practice Dockerfiles, shell release steps, and safer deploy habits.",
+    features: ["Dockerfile reference", "Shell commands", "Release checklists"],
+  },
+  "cicd-lab": {
+    title: "CI/CD Lab",
+    body: "Build pipeline YAML and shell checks for automated delivery.",
+    features: ["Workflow YAML", "Shell checks", "Pipeline gates"],
+  },
+  "llm-lab": {
+    title: "LLM Lab",
+    body: "Practice prompts and server-side model calls for LLM fundamentals.",
+    features: ["Prompt reference", "JS API calls", "Sampling and grounding"],
+  },
+  "ai-lab": {
+    title: "AI Features Lab",
+    body: "Design product AI flows with prompts, tools, and validation.",
+    features: ["Prompt templates", "Tool-ready JS", "Human-in-the-loop patterns"],
+  },
+  "capstone-lab": {
+    title: "Capstone Lab",
+    body: "Plan scope, architecture, and delivery with markdown briefs and decision JSON.",
+    features: ["Project briefs", "ADR JSON", "Delivery checklists"],
+  },
+  "ship-lab": {
+    title: "Ship Lab",
+    body: "Polish, launch, and present with checklists and release shell commands.",
+    features: ["Launch checklists", "Ship scripts", "Demo readiness"],
+  },
+  "interview-lab": {
+    title: "Interview Lab",
+    body: "Practice coding patterns with a talk track for communication under pressure.",
+    features: ["JS pattern sketches", "Talk tracks", "Edge-case checklists"],
+  },
+  "systems-lab": {
+    title: "Systems & Behavioral Lab",
+    body: "Design writeups, capacity sketches, and STAR-ready behavioral stories.",
+    features: ["Design notes", "Architecture JSON", "Behavioral structure"],
   },
 };
 

@@ -21,6 +21,74 @@ import {
   isHtmlAcademyModule,
   mergeHtmlAcademyLessons,
 } from "@/features/curriculum/lib/html-academy";
+import {
+  isCssAcademyModule,
+  mergeCssAcademyLessons,
+} from "@/features/curriculum/lib/css-academy";
+import {
+  isJsAcademyModule,
+  mergeJsAcademyLessons,
+} from "@/features/curriculum/lib/js-academy";
+import {
+  isReactAcademyModule,
+  mergeReactAcademyLessons,
+} from "@/features/curriculum/lib/react-academy";
+import {
+  isNextjsAcademyModule,
+  mergeNextjsAcademyLessons,
+} from "@/features/curriculum/lib/nextjs-academy";
+import {
+  isTypescriptAcademyModule,
+  mergeTypescriptAcademyLessons,
+} from "@/features/curriculum/lib/typescript-academy";
+import {
+  isApisAcademyModule,
+  mergeApisAcademyLessons,
+} from "@/features/curriculum/lib/apis-academy";
+import {
+  isAuthAcademyModule,
+  mergeAuthAcademyLessons,
+} from "@/features/curriculum/lib/auth-academy";
+import {
+  isSqlAcademyModule,
+  mergeSqlAcademyLessons,
+} from "@/features/curriculum/lib/sql-academy";
+import {
+  isModelingAcademyModule,
+  mergeModelingAcademyLessons,
+} from "@/features/curriculum/lib/modeling-academy";
+import {
+  isDeploymentAcademyModule,
+  mergeDeploymentAcademyLessons,
+} from "@/features/curriculum/lib/deployment-academy";
+import {
+  isCicdAcademyModule,
+  mergeCicdAcademyLessons,
+} from "@/features/curriculum/lib/cicd-academy";
+import {
+  isLlmAcademyModule,
+  mergeLlmAcademyLessons,
+} from "@/features/curriculum/lib/llm-academy";
+import {
+  isAiFeaturesAcademyModule,
+  mergeAiFeaturesAcademyLessons,
+} from "@/features/curriculum/lib/ai-features-academy";
+import {
+  isCapstoneAcademyModule,
+  mergeCapstoneAcademyLessons,
+} from "@/features/curriculum/lib/capstone-academy";
+import {
+  isShipAcademyModule,
+  mergeShipAcademyLessons,
+} from "@/features/curriculum/lib/ship-academy";
+import {
+  isInterviewAcademyModule,
+  mergeInterviewAcademyLessons,
+} from "@/features/curriculum/lib/interview-academy";
+import {
+  isSystemsAcademyModule,
+  mergeSystemsAcademyLessons,
+} from "@/features/curriculum/lib/systems-academy";
 import { DEFAULT_COURSE_SLUG } from "@/features/curriculum/types";
 import type {
   ContinueLearningState,
@@ -78,7 +146,84 @@ export class CurriculumService {
             ? mergeDeveloperToolingLessons(moduleLessons, completedIds)
             : isHtmlAcademyModule(module.slug)
               ? mergeHtmlAcademyLessons(moduleLessons, completedIds)
-              : moduleLessons;
+              : isCssAcademyModule(module.slug)
+                ? mergeCssAcademyLessons(moduleLessons, completedIds)
+                : isJsAcademyModule(module.slug)
+                  ? mergeJsAcademyLessons(moduleLessons, completedIds)
+                  : isReactAcademyModule(module.slug)
+                    ? mergeReactAcademyLessons(moduleLessons, completedIds)
+                    : isNextjsAcademyModule(module.slug)
+                      ? mergeNextjsAcademyLessons(moduleLessons, completedIds)
+                      : isTypescriptAcademyModule(module.slug)
+                        ? mergeTypescriptAcademyLessons(
+                            moduleLessons,
+                            completedIds
+                          )
+                        : isApisAcademyModule(module.slug)
+                          ? mergeApisAcademyLessons(
+                              moduleLessons,
+                              completedIds
+                            )
+                          : isAuthAcademyModule(module.slug)
+                            ? mergeAuthAcademyLessons(
+                                moduleLessons,
+                                completedIds
+                              )
+                            : isSqlAcademyModule(module.slug)
+                              ? mergeSqlAcademyLessons(
+                                  moduleLessons,
+                                  completedIds
+                                )
+                              : isModelingAcademyModule(module.slug)
+                                ? mergeModelingAcademyLessons(
+                                    moduleLessons,
+                                    completedIds
+                                  )
+                                : isDeploymentAcademyModule(module.slug)
+                                  ? mergeDeploymentAcademyLessons(
+                                      moduleLessons,
+                                      completedIds
+                                    )
+                                  : isCicdAcademyModule(module.slug)
+                                    ? mergeCicdAcademyLessons(
+                                        moduleLessons,
+                                        completedIds
+                                      )
+                                    : isLlmAcademyModule(module.slug)
+                                      ? mergeLlmAcademyLessons(
+                                          moduleLessons,
+                                          completedIds
+                                        )
+                                      : isAiFeaturesAcademyModule(module.slug)
+                                        ? mergeAiFeaturesAcademyLessons(
+                                            moduleLessons,
+                                            completedIds
+                                          )
+                                        : isCapstoneAcademyModule(module.slug)
+                                          ? mergeCapstoneAcademyLessons(
+                                              moduleLessons,
+                                              completedIds
+                                            )
+                                          : isShipAcademyModule(module.slug)
+                                            ? mergeShipAcademyLessons(
+                                                moduleLessons,
+                                                completedIds
+                                              )
+                                            : isInterviewAcademyModule(
+                                                  module.slug
+                                                )
+                                              ? mergeInterviewAcademyLessons(
+                                                  moduleLessons,
+                                                  completedIds
+                                                )
+                                              : isSystemsAcademyModule(
+                                                    module.slug
+                                                  )
+                                                ? mergeSystemsAcademyLessons(
+                                                    moduleLessons,
+                                                    completedIds
+                                                  )
+                                                : moduleLessons;
         const completedCount = mergedLessons.filter((l) => l.isCompleted).length;
         return {
           ...module,
@@ -141,7 +286,68 @@ export class CurriculumService {
         ? mergeDeveloperToolingLessons(summaries, completedSet)
         : isHtmlAcademyModule(slug)
           ? mergeHtmlAcademyLessons(summaries, completedSet)
-          : summaries;
+          : isCssAcademyModule(slug)
+            ? mergeCssAcademyLessons(summaries, completedSet)
+            : isJsAcademyModule(slug)
+              ? mergeJsAcademyLessons(summaries, completedSet)
+              : isReactAcademyModule(slug)
+                ? mergeReactAcademyLessons(summaries, completedSet)
+                : isNextjsAcademyModule(slug)
+                  ? mergeNextjsAcademyLessons(summaries, completedSet)
+                  : isTypescriptAcademyModule(slug)
+                    ? mergeTypescriptAcademyLessons(summaries, completedSet)
+                    : isApisAcademyModule(slug)
+                      ? mergeApisAcademyLessons(summaries, completedSet)
+                      : isAuthAcademyModule(slug)
+                        ? mergeAuthAcademyLessons(summaries, completedSet)
+                        : isSqlAcademyModule(slug)
+                          ? mergeSqlAcademyLessons(summaries, completedSet)
+                          : isModelingAcademyModule(slug)
+                            ? mergeModelingAcademyLessons(
+                                summaries,
+                                completedSet
+                              )
+                            : isDeploymentAcademyModule(slug)
+                              ? mergeDeploymentAcademyLessons(
+                                  summaries,
+                                  completedSet
+                                )
+                              : isCicdAcademyModule(slug)
+                                ? mergeCicdAcademyLessons(
+                                    summaries,
+                                    completedSet
+                                  )
+                                : isLlmAcademyModule(slug)
+                                  ? mergeLlmAcademyLessons(
+                                      summaries,
+                                      completedSet
+                                    )
+                                  : isAiFeaturesAcademyModule(slug)
+                                    ? mergeAiFeaturesAcademyLessons(
+                                        summaries,
+                                        completedSet
+                                      )
+                                    : isCapstoneAcademyModule(slug)
+                                      ? mergeCapstoneAcademyLessons(
+                                          summaries,
+                                          completedSet
+                                        )
+                                      : isShipAcademyModule(slug)
+                                        ? mergeShipAcademyLessons(
+                                            summaries,
+                                            completedSet
+                                          )
+                                        : isInterviewAcademyModule(slug)
+                                          ? mergeInterviewAcademyLessons(
+                                              summaries,
+                                              completedSet
+                                            )
+                                          : isSystemsAcademyModule(slug)
+                                            ? mergeSystemsAcademyLessons(
+                                                summaries,
+                                                completedSet
+                                              )
+                                            : summaries;
     const completedCount = merged.filter((l) => l.isCompleted).length;
 
     return {
@@ -241,7 +447,123 @@ export class CurriculumService {
               orderedRows.map((l) => toLessonSummary(l, completedIds)),
               new Set(completedIds)
             )
-          : orderedRows.map((l) => toLessonSummary(l, completedIds));
+          : isCssAcademyModule(module.slug)
+            ? mergeCssAcademyLessons(
+                orderedRows.map((l) => toLessonSummary(l, completedIds)),
+                new Set(completedIds)
+              )
+            : isJsAcademyModule(module.slug)
+              ? mergeJsAcademyLessons(
+                  orderedRows.map((l) => toLessonSummary(l, completedIds)),
+                  new Set(completedIds)
+                )
+              : isReactAcademyModule(module.slug)
+                ? mergeReactAcademyLessons(
+                    orderedRows.map((l) => toLessonSummary(l, completedIds)),
+                    new Set(completedIds)
+                  )
+                : isNextjsAcademyModule(module.slug)
+                  ? mergeNextjsAcademyLessons(
+                      orderedRows.map((l) => toLessonSummary(l, completedIds)),
+                      new Set(completedIds)
+                    )
+                  : isTypescriptAcademyModule(module.slug)
+                    ? mergeTypescriptAcademyLessons(
+                        orderedRows.map((l) =>
+                          toLessonSummary(l, completedIds)
+                        ),
+                        new Set(completedIds)
+                      )
+                    : isApisAcademyModule(module.slug)
+                      ? mergeApisAcademyLessons(
+                          orderedRows.map((l) =>
+                            toLessonSummary(l, completedIds)
+                          ),
+                          new Set(completedIds)
+                        )
+                      : isAuthAcademyModule(module.slug)
+                        ? mergeAuthAcademyLessons(
+                            orderedRows.map((l) =>
+                              toLessonSummary(l, completedIds)
+                            ),
+                            new Set(completedIds)
+                          )
+                        : isSqlAcademyModule(module.slug)
+                          ? mergeSqlAcademyLessons(
+                              orderedRows.map((l) =>
+                                toLessonSummary(l, completedIds)
+                              ),
+                              new Set(completedIds)
+                            )
+                          : isModelingAcademyModule(module.slug)
+                            ? mergeModelingAcademyLessons(
+                                orderedRows.map((l) =>
+                                  toLessonSummary(l, completedIds)
+                                ),
+                                new Set(completedIds)
+                              )
+                            : isDeploymentAcademyModule(module.slug)
+                              ? mergeDeploymentAcademyLessons(
+                                  orderedRows.map((l) =>
+                                    toLessonSummary(l, completedIds)
+                                  ),
+                                  new Set(completedIds)
+                                )
+                              : isCicdAcademyModule(module.slug)
+                                ? mergeCicdAcademyLessons(
+                                    orderedRows.map((l) =>
+                                      toLessonSummary(l, completedIds)
+                                    ),
+                                    new Set(completedIds)
+                                  )
+                                : isLlmAcademyModule(module.slug)
+                                  ? mergeLlmAcademyLessons(
+                                      orderedRows.map((l) =>
+                                        toLessonSummary(l, completedIds)
+                                      ),
+                                      new Set(completedIds)
+                                    )
+                                  : isAiFeaturesAcademyModule(module.slug)
+                                    ? mergeAiFeaturesAcademyLessons(
+                                        orderedRows.map((l) =>
+                                          toLessonSummary(l, completedIds)
+                                        ),
+                                        new Set(completedIds)
+                                      )
+                                    : isCapstoneAcademyModule(module.slug)
+                                      ? mergeCapstoneAcademyLessons(
+                                          orderedRows.map((l) =>
+                                            toLessonSummary(l, completedIds)
+                                          ),
+                                          new Set(completedIds)
+                                        )
+                                      : isShipAcademyModule(module.slug)
+                                        ? mergeShipAcademyLessons(
+                                            orderedRows.map((l) =>
+                                              toLessonSummary(l, completedIds)
+                                            ),
+                                            new Set(completedIds)
+                                          )
+                                        : isInterviewAcademyModule(module.slug)
+                                          ? mergeInterviewAcademyLessons(
+                                              orderedRows.map((l) =>
+                                                toLessonSummary(l, completedIds)
+                                              ),
+                                              new Set(completedIds)
+                                            )
+                                          : isSystemsAcademyModule(module.slug)
+                                            ? mergeSystemsAcademyLessons(
+                                                orderedRows.map((l) =>
+                                                  toLessonSummary(
+                                                    l,
+                                                    completedIds
+                                                  )
+                                                ),
+                                                new Set(completedIds)
+                                              )
+                                            : orderedRows.map((l) =>
+                                                toLessonSummary(l, completedIds)
+                                              );
     const index = merged.findIndex((l) => l.slug === lesson.slug);
 
     return {

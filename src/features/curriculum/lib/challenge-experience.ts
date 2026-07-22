@@ -10,8 +10,20 @@ export type ChallengeExperienceKind =
   | "css-live"
   | "javascript-console"
   | "react-preview"
+  | "nextjs-preview"
+  | "typescript-console"
   | "api-playground"
+  | "auth-lab"
   | "sql-editor"
+  | "modeling-lab"
+  | "deploy-lab"
+  | "cicd-lab"
+  | "llm-lab"
+  | "ai-lab"
+  | "capstone-lab"
+  | "ship-lab"
+  | "interview-lab"
+  | "systems-lab"
   | "code-workspace";
 
 const MODULE_EXPERIENCE: Record<string, ChallengeExperienceKind> = {
@@ -21,20 +33,20 @@ const MODULE_EXPERIENCE: Record<string, ChallengeExperienceKind> = {
   css: "css-live",
   javascript: "javascript-console",
   react: "react-preview",
-  nextjs: "react-preview",
-  typescript: "javascript-console",
+  nextjs: "nextjs-preview",
+  typescript: "typescript-console",
   "apis-and-services": "api-playground",
-  "auth-and-security": "api-playground",
+  "auth-and-security": "auth-lab",
   "relational-databases": "sql-editor",
-  "data-modeling": "sql-editor",
-  "deployment-essentials": "tooling",
-  "ci-cd-fundamentals": "tooling",
-  "llm-fundamentals": "code-workspace",
-  "building-ai-features": "code-workspace",
-  "capstone-planning": "code-workspace",
-  "ship-the-product": "code-workspace",
-  "technical-interviews": "code-workspace",
-  "system-design-behavioral": "thinking",
+  "data-modeling": "modeling-lab",
+  "deployment-essentials": "deploy-lab",
+  "ci-cd-fundamentals": "cicd-lab",
+  "llm-fundamentals": "llm-lab",
+  "building-ai-features": "ai-lab",
+  "capstone-planning": "capstone-lab",
+  "ship-the-product": "ship-lab",
+  "technical-interviews": "interview-lab",
+  "system-design-behavioral": "systems-lab",
 };
 
 export function getModuleChallengeExperience(
@@ -57,10 +69,34 @@ export function experienceLabel(kind: ChallengeExperienceKind): string {
       return "JavaScript Console";
     case "react-preview":
       return "React Preview";
+    case "nextjs-preview":
+      return "Next.js Preview";
+    case "typescript-console":
+      return "TypeScript Console";
     case "api-playground":
       return "API Playground";
+    case "auth-lab":
+      return "Auth Lab";
     case "sql-editor":
       return "SQL Editor";
+    case "modeling-lab":
+      return "Data Modeling Lab";
+    case "deploy-lab":
+      return "Deploy Lab";
+    case "cicd-lab":
+      return "CI/CD Lab";
+    case "llm-lab":
+      return "LLM Lab";
+    case "ai-lab":
+      return "AI Features Lab";
+    case "capstone-lab":
+      return "Capstone Lab";
+    case "ship-lab":
+      return "Ship Lab";
+    case "interview-lab":
+      return "Interview Lab";
+    case "systems-lab":
+      return "Systems & Behavioral Lab";
     case "code-workspace":
       return "Code Workspace";
   }

@@ -31,6 +31,40 @@ import { isDeveloperToolingModule } from "@/features/curriculum/lib/developer-to
 import { findDeveloperToolingChallenge } from "@/features/curriculum/lib/developer-tooling-challenges";
 import { isHtmlAcademyModule } from "@/features/curriculum/lib/html-academy";
 import { findHtmlAcademyChallenge } from "@/features/curriculum/lib/html-academy-challenges";
+import { isCssAcademyModule } from "@/features/curriculum/lib/css-academy";
+import { findCssAcademyChallenge } from "@/features/curriculum/lib/css-academy-challenges";
+import { isJsAcademyModule } from "@/features/curriculum/lib/js-academy";
+import { findJsAcademyChallenge } from "@/features/curriculum/lib/js-academy-challenges";
+import { isReactAcademyModule } from "@/features/curriculum/lib/react-academy";
+import { findReactAcademyChallenge } from "@/features/curriculum/lib/react-academy-challenges";
+import { isNextjsAcademyModule } from "@/features/curriculum/lib/nextjs-academy";
+import { findNextjsAcademyChallenge } from "@/features/curriculum/lib/nextjs-academy-challenges";
+import { isTypescriptAcademyModule } from "@/features/curriculum/lib/typescript-academy";
+import { findTypescriptAcademyChallenge } from "@/features/curriculum/lib/typescript-academy-challenges";
+import { isApisAcademyModule } from "@/features/curriculum/lib/apis-academy";
+import { findApisAcademyChallenge } from "@/features/curriculum/lib/apis-academy-challenges";
+import { isAuthAcademyModule } from "@/features/curriculum/lib/auth-academy";
+import { findAuthAcademyChallenge } from "@/features/curriculum/lib/auth-academy-challenges";
+import { isSqlAcademyModule } from "@/features/curriculum/lib/sql-academy";
+import { findSqlAcademyChallenge } from "@/features/curriculum/lib/sql-academy-challenges";
+import { isModelingAcademyModule } from "@/features/curriculum/lib/modeling-academy";
+import { findModelingAcademyChallenge } from "@/features/curriculum/lib/modeling-academy-challenges";
+import { isDeploymentAcademyModule } from "@/features/curriculum/lib/deployment-academy";
+import { findDeploymentAcademyChallenge } from "@/features/curriculum/lib/deployment-academy-challenges";
+import { isCicdAcademyModule } from "@/features/curriculum/lib/cicd-academy";
+import { findCicdAcademyChallenge } from "@/features/curriculum/lib/cicd-academy-challenges";
+import { isLlmAcademyModule } from "@/features/curriculum/lib/llm-academy";
+import { findLlmAcademyChallenge } from "@/features/curriculum/lib/llm-academy-challenges";
+import { isAiFeaturesAcademyModule } from "@/features/curriculum/lib/ai-features-academy";
+import { findAiFeaturesAcademyChallenge } from "@/features/curriculum/lib/ai-features-academy-challenges";
+import { isCapstoneAcademyModule } from "@/features/curriculum/lib/capstone-academy";
+import { findCapstoneAcademyChallenge } from "@/features/curriculum/lib/capstone-academy-challenges";
+import { isShipAcademyModule } from "@/features/curriculum/lib/ship-academy";
+import { findShipAcademyChallenge } from "@/features/curriculum/lib/ship-academy-challenges";
+import { isInterviewAcademyModule } from "@/features/curriculum/lib/interview-academy";
+import { findInterviewAcademyChallenge } from "@/features/curriculum/lib/interview-academy-challenges";
+import { isSystemsAcademyModule } from "@/features/curriculum/lib/systems-academy";
+import { findSystemsAcademyChallenge } from "@/features/curriculum/lib/systems-academy-challenges";
 import { prefetchModuleTopic, useModuleHub } from "@/features/curriculum/hooks/use-module-hub";
 import { DIFFICULTY_LABELS, problemTypeLabel } from "@/learning-engine/labels";
 import type { LearnDifficulty } from "@/learning-engine/types";
@@ -56,11 +90,181 @@ const HTML_KIND_LABELS: Record<string, string> = {
   project: "Mini Project",
 };
 
+const CSS_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Layout",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const JS_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const REACT_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const NEXTJS_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const TS_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const APIS_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const AUTH_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const SQL_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const MODELING_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const DEPLOY_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const CICD_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const LLM_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const AI_FEATURES_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const CAPSTONE_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const SHIP_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const INTERVIEW_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
+const SYSTEMS_KIND_LABELS: Record<string, string> = {
+  build: "Build",
+  fix: "Bug Fix",
+  layout: "Practice",
+  responsive: "Responsive",
+  interview: "Interview",
+  project: "Mini Project",
+};
+
 function isChallengeHubModule(moduleSlug: string) {
   return (
     isProgrammingFundamentalsModule(moduleSlug) ||
     isDeveloperToolingModule(moduleSlug) ||
-    isHtmlAcademyModule(moduleSlug)
+    isHtmlAcademyModule(moduleSlug) ||
+    isCssAcademyModule(moduleSlug) ||
+    isJsAcademyModule(moduleSlug) ||
+    isReactAcademyModule(moduleSlug) ||
+    isNextjsAcademyModule(moduleSlug) ||
+    isTypescriptAcademyModule(moduleSlug) ||
+    isApisAcademyModule(moduleSlug) ||
+    isAuthAcademyModule(moduleSlug) ||
+    isSqlAcademyModule(moduleSlug) ||
+    isModelingAcademyModule(moduleSlug) ||
+    isDeploymentAcademyModule(moduleSlug) ||
+    isCicdAcademyModule(moduleSlug) ||
+    isLlmAcademyModule(moduleSlug) ||
+    isAiFeaturesAcademyModule(moduleSlug) ||
+    isCapstoneAcademyModule(moduleSlug) ||
+    isShipAcademyModule(moduleSlug) ||
+    isInterviewAcademyModule(moduleSlug) ||
+    isSystemsAcademyModule(moduleSlug)
   );
 }
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
@@ -85,6 +289,40 @@ type ModuleChallengeItem = {
   toolingScenario?: string;
   htmlKind?: string;
   htmlScenario?: string;
+  cssKind?: string;
+  cssScenario?: string;
+  jsKind?: string;
+  jsScenario?: string;
+  reactKind?: string;
+  reactScenario?: string;
+  nextjsKind?: string;
+  nextjsScenario?: string;
+  tsKind?: string;
+  tsScenario?: string;
+  apisKind?: string;
+  apisScenario?: string;
+  authKind?: string;
+  authScenario?: string;
+  sqlKind?: string;
+  sqlScenario?: string;
+  modelingKind?: string;
+  modelingScenario?: string;
+  deployKind?: string;
+  deployScenario?: string;
+  cicdKind?: string;
+  cicdScenario?: string;
+  llmKind?: string;
+  llmScenario?: string;
+  aiFeaturesKind?: string;
+  aiFeaturesScenario?: string;
+  capstoneKind?: string;
+  capstoneScenario?: string;
+  shipKind?: string;
+  shipScenario?: string;
+  interviewKind?: string;
+  interviewScenario?: string;
+  systemsKind?: string;
+  systemsScenario?: string;
 };
 
 function FilterSection({
@@ -243,6 +481,57 @@ function ModuleTopicExplorerInner({
         const html = isHtmlAcademyModule(moduleSlug)
           ? findHtmlAcademyChallenge(card.slug, challenge.id)
           : null;
+        const css = isCssAcademyModule(moduleSlug)
+          ? findCssAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const js = isJsAcademyModule(moduleSlug)
+          ? findJsAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const react = isReactAcademyModule(moduleSlug)
+          ? findReactAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const nextjs = isNextjsAcademyModule(moduleSlug)
+          ? findNextjsAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const ts = isTypescriptAcademyModule(moduleSlug)
+          ? findTypescriptAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const apis = isApisAcademyModule(moduleSlug)
+          ? findApisAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const auth = isAuthAcademyModule(moduleSlug)
+          ? findAuthAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const sql = isSqlAcademyModule(moduleSlug)
+          ? findSqlAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const modeling = isModelingAcademyModule(moduleSlug)
+          ? findModelingAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const deploy = isDeploymentAcademyModule(moduleSlug)
+          ? findDeploymentAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const cicd = isCicdAcademyModule(moduleSlug)
+          ? findCicdAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const llm = isLlmAcademyModule(moduleSlug)
+          ? findLlmAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const aiFeatures = isAiFeaturesAcademyModule(moduleSlug)
+          ? findAiFeaturesAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const capstone = isCapstoneAcademyModule(moduleSlug)
+          ? findCapstoneAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const ship = isShipAcademyModule(moduleSlug)
+          ? findShipAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const interview = isInterviewAcademyModule(moduleSlug)
+          ? findInterviewAcademyChallenge(card.slug, challenge.id)
+          : null;
+        const systems = isSystemsAcademyModule(moduleSlug)
+          ? findSystemsAcademyChallenge(card.slug, challenge.id)
+          : null;
         items.push({
           id: challenge.id,
           weekId: challenge.weekId,
@@ -257,6 +546,40 @@ function ModuleTopicExplorerInner({
           toolingScenario: tooling?.scenario,
           htmlKind: html?.kind,
           htmlScenario: html?.scenario,
+          cssKind: css?.kind,
+          cssScenario: css?.scenario,
+          jsKind: js?.kind,
+          jsScenario: js?.scenario,
+          reactKind: react?.kind,
+          reactScenario: react?.scenario,
+          nextjsKind: nextjs?.kind,
+          nextjsScenario: nextjs?.scenario,
+          tsKind: ts?.kind,
+          tsScenario: ts?.scenario,
+          apisKind: apis?.kind,
+          apisScenario: apis?.scenario,
+          authKind: auth?.kind,
+          authScenario: auth?.scenario,
+          sqlKind: sql?.kind,
+          sqlScenario: sql?.scenario,
+          modelingKind: modeling?.kind,
+          modelingScenario: modeling?.scenario,
+          deployKind: deploy?.kind,
+          deployScenario: deploy?.scenario,
+          cicdKind: cicd?.kind,
+          cicdScenario: cicd?.scenario,
+          llmKind: llm?.kind,
+          llmScenario: llm?.scenario,
+          aiFeaturesKind: aiFeatures?.kind,
+          aiFeaturesScenario: aiFeatures?.scenario,
+          capstoneKind: capstone?.kind,
+          capstoneScenario: capstone?.scenario,
+          shipKind: ship?.kind,
+          shipScenario: ship?.scenario,
+          interviewKind: interview?.kind,
+          interviewScenario: interview?.scenario,
+          systemsKind: systems?.kind,
+          systemsScenario: systems?.scenario,
           entityId: curriculumChallengeEntityId(moduleSlug, {
             weekId: challenge.weekId || 0,
             topicSlug: challenge.topicSlug,
@@ -552,7 +875,78 @@ function ModuleTopicExplorerInner({
                                   : item.htmlKind
                                     ? (HTML_KIND_LABELS[item.htmlKind] ??
                                       item.htmlKind)
-                                    : problemTypeLabel(lesson.problemType)}
+                                    : item.cssKind
+                                      ? (CSS_KIND_LABELS[item.cssKind] ??
+                                        item.cssKind)
+                                      : item.jsKind
+                                        ? (JS_KIND_LABELS[item.jsKind] ??
+                                          item.jsKind)
+                                        : item.reactKind
+                                          ? (REACT_KIND_LABELS[item.reactKind] ??
+                                            item.reactKind)
+                                          : item.nextjsKind
+                                            ? (NEXTJS_KIND_LABELS[
+                                                item.nextjsKind
+                                              ] ?? item.nextjsKind)
+                                            : item.tsKind
+                                              ? (TS_KIND_LABELS[item.tsKind] ??
+                                                item.tsKind)
+                                              : item.apisKind
+                                                ? (APIS_KIND_LABELS[
+                                                    item.apisKind
+                                                  ] ?? item.apisKind)
+                                                : item.authKind
+                                                  ? (AUTH_KIND_LABELS[
+                                                      item.authKind
+                                                    ] ?? item.authKind)
+                                                  : item.sqlKind
+                                                    ? (SQL_KIND_LABELS[
+                                                        item.sqlKind
+                                                      ] ?? item.sqlKind)
+                                                    : item.modelingKind
+                                                      ? (MODELING_KIND_LABELS[
+                                                          item.modelingKind
+                                                        ] ?? item.modelingKind)
+                                                      : item.deployKind
+                                                        ? (DEPLOY_KIND_LABELS[
+                                                            item.deployKind
+                                                          ] ?? item.deployKind)
+                                                        : item.cicdKind
+                                                          ? (CICD_KIND_LABELS[
+                                                              item.cicdKind
+                                                            ] ?? item.cicdKind)
+                                                          : item.llmKind
+                                                            ? (LLM_KIND_LABELS[
+                                                                item.llmKind
+                                                              ] ?? item.llmKind)
+                                                            : item.aiFeaturesKind
+                                                              ? (AI_FEATURES_KIND_LABELS[
+                                                                  item.aiFeaturesKind
+                                                                ] ??
+                                                                item.aiFeaturesKind)
+                                                              : item.capstoneKind
+                                                                ? (CAPSTONE_KIND_LABELS[
+                                                                    item.capstoneKind
+                                                                  ] ??
+                                                                  item.capstoneKind)
+                                                                : item.shipKind
+                                                                  ? (SHIP_KIND_LABELS[
+                                                                      item.shipKind
+                                                                    ] ??
+                                                                    item.shipKind)
+                                                                  : item.interviewKind
+                                                                    ? (INTERVIEW_KIND_LABELS[
+                                                                        item.interviewKind
+                                                                      ] ??
+                                                                      item.interviewKind)
+                                                                    : item.systemsKind
+                                                                      ? (SYSTEMS_KIND_LABELS[
+                                                                          item.systemsKind
+                                                                        ] ??
+                                                                        item.systemsKind)
+                                                                      : problemTypeLabel(
+                                                                          lesson.problemType
+                                                                        )}
                             </span>
                             <span>|</span>
                             <span>Est. {estimatedMinutes} min</span>
@@ -569,10 +963,27 @@ function ModuleTopicExplorerInner({
                               </>
                             ) : null}
                           </p>
-                          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-zinc-400">
+                          <p className="mt-2 text-sm leading-relaxed text-zinc-400">
                             {item.thinking?.scenario ??
                               item.toolingScenario ??
                               item.htmlScenario ??
+                              item.cssScenario ??
+                              item.jsScenario ??
+                              item.reactScenario ??
+                              item.nextjsScenario ??
+                              item.tsScenario ??
+                              item.apisScenario ??
+                              item.authScenario ??
+                              item.sqlScenario ??
+                              item.modelingScenario ??
+                              item.deployScenario ??
+                              item.cicdScenario ??
+                              item.llmScenario ??
+                              item.aiFeaturesScenario ??
+                              item.capstoneScenario ??
+                              item.shipScenario ??
+                              item.interviewScenario ??
+                              item.systemsScenario ??
                               lesson.description ??
                               `Practice ${categoryLabel(lesson.category)} concepts.`}
                           </p>

@@ -35,6 +35,176 @@ import {
   findHtmlAcademyChallenge,
   listHtmlAcademyChallenges,
 } from "@/features/curriculum/lib/html-academy-challenges";
+import {
+  cssAcademyChallengeCounts,
+  getCssAcademyTopicLimit,
+  isCssAcademyModule,
+} from "@/features/curriculum/lib/css-academy";
+import {
+  allCssAcademyChallenges,
+  findCssAcademyChallenge,
+  listCssAcademyChallenges,
+} from "@/features/curriculum/lib/css-academy-challenges";
+import {
+  jsAcademyChallengeCounts,
+  getJsAcademyTopicLimit,
+  isJsAcademyModule,
+} from "@/features/curriculum/lib/js-academy";
+import {
+  allJsAcademyChallenges,
+  findJsAcademyChallenge,
+  listJsAcademyChallenges,
+} from "@/features/curriculum/lib/js-academy-challenges";
+import {
+  reactAcademyChallengeCounts,
+  getReactAcademyTopicLimit,
+  isReactAcademyModule,
+} from "@/features/curriculum/lib/react-academy";
+import {
+  allReactAcademyChallenges,
+  findReactAcademyChallenge,
+  listReactAcademyChallenges,
+} from "@/features/curriculum/lib/react-academy-challenges";
+import {
+  nextjsAcademyChallengeCounts,
+  getNextjsAcademyTopicLimit,
+  isNextjsAcademyModule,
+} from "@/features/curriculum/lib/nextjs-academy";
+import {
+  allNextjsAcademyChallenges,
+  findNextjsAcademyChallenge,
+  listNextjsAcademyChallenges,
+} from "@/features/curriculum/lib/nextjs-academy-challenges";
+import {
+  typescriptAcademyChallengeCounts,
+  getTypescriptAcademyTopicLimit,
+  isTypescriptAcademyModule,
+} from "@/features/curriculum/lib/typescript-academy";
+import {
+  allTypescriptAcademyChallenges,
+  findTypescriptAcademyChallenge,
+  listTypescriptAcademyChallenges,
+} from "@/features/curriculum/lib/typescript-academy-challenges";
+import {
+  apisAcademyChallengeCounts,
+  getApisAcademyTopicLimit,
+  isApisAcademyModule,
+} from "@/features/curriculum/lib/apis-academy";
+import {
+  allApisAcademyChallenges,
+  findApisAcademyChallenge,
+  listApisAcademyChallenges,
+} from "@/features/curriculum/lib/apis-academy-challenges";
+import {
+  authAcademyChallengeCounts,
+  getAuthAcademyTopicLimit,
+  isAuthAcademyModule,
+} from "@/features/curriculum/lib/auth-academy";
+import {
+  allAuthAcademyChallenges,
+  findAuthAcademyChallenge,
+  listAuthAcademyChallenges,
+} from "@/features/curriculum/lib/auth-academy-challenges";
+import {
+  sqlAcademyChallengeCounts,
+  getSqlAcademyTopicLimit,
+  isSqlAcademyModule,
+} from "@/features/curriculum/lib/sql-academy";
+import {
+  allSqlAcademyChallenges,
+  findSqlAcademyChallenge,
+  listSqlAcademyChallenges,
+} from "@/features/curriculum/lib/sql-academy-challenges";
+import {
+  modelingAcademyChallengeCounts,
+  getModelingAcademyTopicLimit,
+  isModelingAcademyModule,
+} from "@/features/curriculum/lib/modeling-academy";
+import {
+  allModelingAcademyChallenges,
+  findModelingAcademyChallenge,
+  listModelingAcademyChallenges,
+} from "@/features/curriculum/lib/modeling-academy-challenges";
+import {
+  deploymentAcademyChallengeCounts,
+  getDeploymentAcademyTopicLimit,
+  isDeploymentAcademyModule,
+} from "@/features/curriculum/lib/deployment-academy";
+import {
+  allDeploymentAcademyChallenges,
+  findDeploymentAcademyChallenge,
+  listDeploymentAcademyChallenges,
+} from "@/features/curriculum/lib/deployment-academy-challenges";
+import {
+  cicdAcademyChallengeCounts,
+  getCicdAcademyTopicLimit,
+  isCicdAcademyModule,
+} from "@/features/curriculum/lib/cicd-academy";
+import {
+  allCicdAcademyChallenges,
+  findCicdAcademyChallenge,
+  listCicdAcademyChallenges,
+} from "@/features/curriculum/lib/cicd-academy-challenges";
+import {
+  llmAcademyChallengeCounts,
+  getLlmAcademyTopicLimit,
+  isLlmAcademyModule,
+} from "@/features/curriculum/lib/llm-academy";
+import {
+  allLlmAcademyChallenges,
+  findLlmAcademyChallenge,
+  listLlmAcademyChallenges,
+} from "@/features/curriculum/lib/llm-academy-challenges";
+import {
+  aiFeaturesAcademyChallengeCounts,
+  getAiFeaturesAcademyTopicLimit,
+  isAiFeaturesAcademyModule,
+} from "@/features/curriculum/lib/ai-features-academy";
+import {
+  allAiFeaturesAcademyChallenges,
+  findAiFeaturesAcademyChallenge,
+  listAiFeaturesAcademyChallenges,
+} from "@/features/curriculum/lib/ai-features-academy-challenges";
+import {
+  capstoneAcademyChallengeCounts,
+  getCapstoneAcademyTopicLimit,
+  isCapstoneAcademyModule,
+} from "@/features/curriculum/lib/capstone-academy";
+import {
+  allCapstoneAcademyChallenges,
+  findCapstoneAcademyChallenge,
+  listCapstoneAcademyChallenges,
+} from "@/features/curriculum/lib/capstone-academy-challenges";
+import {
+  shipAcademyChallengeCounts,
+  getShipAcademyTopicLimit,
+  isShipAcademyModule,
+} from "@/features/curriculum/lib/ship-academy";
+import {
+  allShipAcademyChallenges,
+  findShipAcademyChallenge,
+  listShipAcademyChallenges,
+} from "@/features/curriculum/lib/ship-academy-challenges";
+import {
+  interviewAcademyChallengeCounts,
+  getInterviewAcademyTopicLimit,
+  isInterviewAcademyModule,
+} from "@/features/curriculum/lib/interview-academy";
+import {
+  allInterviewAcademyChallenges,
+  findInterviewAcademyChallenge,
+  listInterviewAcademyChallenges,
+} from "@/features/curriculum/lib/interview-academy-challenges";
+import {
+  systemsAcademyChallengeCounts,
+  getSystemsAcademyTopicLimit,
+  isSystemsAcademyModule,
+} from "@/features/curriculum/lib/systems-academy";
+import {
+  allSystemsAcademyChallenges,
+  findSystemsAcademyChallenge,
+  listSystemsAcademyChallenges,
+} from "@/features/curriculum/lib/systems-academy-challenges";
 import { getModuleChallengeExperience } from "@/features/curriculum/lib/challenge-experience";
 import type { ChallengeExperienceKind } from "@/features/curriculum/lib/challenge-experience";
 import type { ThinkingChallengeData } from "@/features/curriculum/lib/thinking-challenge";
@@ -209,6 +379,57 @@ export function getModuleChallengeStats(moduleSlug: string): {
   if (isHtmlAcademyModule(moduleSlug)) {
     return htmlAcademyChallengeCounts();
   }
+  if (isCssAcademyModule(moduleSlug)) {
+    return cssAcademyChallengeCounts();
+  }
+  if (isJsAcademyModule(moduleSlug)) {
+    return jsAcademyChallengeCounts();
+  }
+  if (isReactAcademyModule(moduleSlug)) {
+    return reactAcademyChallengeCounts();
+  }
+  if (isNextjsAcademyModule(moduleSlug)) {
+    return nextjsAcademyChallengeCounts();
+  }
+  if (isTypescriptAcademyModule(moduleSlug)) {
+    return typescriptAcademyChallengeCounts();
+  }
+  if (isApisAcademyModule(moduleSlug)) {
+    return apisAcademyChallengeCounts();
+  }
+  if (isAuthAcademyModule(moduleSlug)) {
+    return authAcademyChallengeCounts();
+  }
+  if (isSqlAcademyModule(moduleSlug)) {
+    return sqlAcademyChallengeCounts();
+  }
+  if (isModelingAcademyModule(moduleSlug)) {
+    return modelingAcademyChallengeCounts();
+  }
+  if (isDeploymentAcademyModule(moduleSlug)) {
+    return deploymentAcademyChallengeCounts();
+  }
+  if (isCicdAcademyModule(moduleSlug)) {
+    return cicdAcademyChallengeCounts();
+  }
+  if (isLlmAcademyModule(moduleSlug)) {
+    return llmAcademyChallengeCounts();
+  }
+  if (isAiFeaturesAcademyModule(moduleSlug)) {
+    return aiFeaturesAcademyChallengeCounts();
+  }
+  if (isCapstoneAcademyModule(moduleSlug)) {
+    return capstoneAcademyChallengeCounts();
+  }
+  if (isShipAcademyModule(moduleSlug)) {
+    return shipAcademyChallengeCounts();
+  }
+  if (isInterviewAcademyModule(moduleSlug)) {
+    return interviewAcademyChallengeCounts();
+  }
+  if (isSystemsAcademyModule(moduleSlug)) {
+    return systemsAcademyChallengeCounts();
+  }
   return null;
 }
 
@@ -224,6 +445,57 @@ export function getTopicChallengeLimit(
   }
   if (isHtmlAcademyModule(moduleSlug)) {
     return getHtmlAcademyTopicLimit(topicSlug);
+  }
+  if (isCssAcademyModule(moduleSlug)) {
+    return getCssAcademyTopicLimit(topicSlug);
+  }
+  if (isJsAcademyModule(moduleSlug)) {
+    return getJsAcademyTopicLimit(topicSlug);
+  }
+  if (isReactAcademyModule(moduleSlug)) {
+    return getReactAcademyTopicLimit(topicSlug);
+  }
+  if (isNextjsAcademyModule(moduleSlug)) {
+    return getNextjsAcademyTopicLimit(topicSlug);
+  }
+  if (isTypescriptAcademyModule(moduleSlug)) {
+    return getTypescriptAcademyTopicLimit(topicSlug);
+  }
+  if (isApisAcademyModule(moduleSlug)) {
+    return getApisAcademyTopicLimit(topicSlug);
+  }
+  if (isAuthAcademyModule(moduleSlug)) {
+    return getAuthAcademyTopicLimit(topicSlug);
+  }
+  if (isSqlAcademyModule(moduleSlug)) {
+    return getSqlAcademyTopicLimit(topicSlug);
+  }
+  if (isModelingAcademyModule(moduleSlug)) {
+    return getModelingAcademyTopicLimit(topicSlug);
+  }
+  if (isDeploymentAcademyModule(moduleSlug)) {
+    return getDeploymentAcademyTopicLimit(topicSlug);
+  }
+  if (isCicdAcademyModule(moduleSlug)) {
+    return getCicdAcademyTopicLimit(topicSlug);
+  }
+  if (isLlmAcademyModule(moduleSlug)) {
+    return getLlmAcademyTopicLimit(topicSlug);
+  }
+  if (isAiFeaturesAcademyModule(moduleSlug)) {
+    return getAiFeaturesAcademyTopicLimit(topicSlug);
+  }
+  if (isCapstoneAcademyModule(moduleSlug)) {
+    return getCapstoneAcademyTopicLimit(topicSlug);
+  }
+  if (isShipAcademyModule(moduleSlug)) {
+    return getShipAcademyTopicLimit(topicSlug);
+  }
+  if (isInterviewAcademyModule(moduleSlug)) {
+    return getInterviewAcademyTopicLimit(topicSlug);
+  }
+  if (isSystemsAcademyModule(moduleSlug)) {
+    return getSystemsAcademyTopicLimit(topicSlug);
   }
   return 4;
 }
@@ -301,6 +573,295 @@ export function resolveTopicChallenges(
             lesson: c.lesson,
             source: "synthetic" as const,
             experience: "html-live" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isCssAcademyModule(moduleSlug)) {
+    const max = limit ?? getCssAcademyTopicLimit(topicSlug);
+    return listCssAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "css-live" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isJsAcademyModule(moduleSlug)) {
+    const max = limit ?? getJsAcademyTopicLimit(topicSlug);
+    return listJsAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "javascript-console" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isReactAcademyModule(moduleSlug)) {
+    const max = limit ?? getReactAcademyTopicLimit(topicSlug);
+    return listReactAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "react-preview" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isNextjsAcademyModule(moduleSlug)) {
+    const max = limit ?? getNextjsAcademyTopicLimit(topicSlug);
+    return listNextjsAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "nextjs-preview" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isTypescriptAcademyModule(moduleSlug)) {
+    const max = limit ?? getTypescriptAcademyTopicLimit(topicSlug);
+    return listTypescriptAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "typescript-console" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isApisAcademyModule(moduleSlug)) {
+    const max = limit ?? getApisAcademyTopicLimit(topicSlug);
+    return listApisAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "api-playground" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isAuthAcademyModule(moduleSlug)) {
+    const max = limit ?? getAuthAcademyTopicLimit(topicSlug);
+    return listAuthAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "auth-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isSqlAcademyModule(moduleSlug)) {
+    const max = limit ?? getSqlAcademyTopicLimit(topicSlug);
+    return listSqlAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "sql-editor" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isModelingAcademyModule(moduleSlug)) {
+    const max = limit ?? getModelingAcademyTopicLimit(topicSlug);
+    return listModelingAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "modeling-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isDeploymentAcademyModule(moduleSlug)) {
+    const max = limit ?? getDeploymentAcademyTopicLimit(topicSlug);
+    return listDeploymentAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "deploy-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isCicdAcademyModule(moduleSlug)) {
+    const max = limit ?? getCicdAcademyTopicLimit(topicSlug);
+    return listCicdAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "cicd-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isLlmAcademyModule(moduleSlug)) {
+    const max = limit ?? getLlmAcademyTopicLimit(topicSlug);
+    return listLlmAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "llm-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isAiFeaturesAcademyModule(moduleSlug)) {
+    const max = limit ?? getAiFeaturesAcademyTopicLimit(topicSlug);
+    return listAiFeaturesAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "ai-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isCapstoneAcademyModule(moduleSlug)) {
+    const max = limit ?? getCapstoneAcademyTopicLimit(topicSlug);
+    return listCapstoneAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "capstone-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isShipAcademyModule(moduleSlug)) {
+    const max = limit ?? getShipAcademyTopicLimit(topicSlug);
+    return listShipAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "ship-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isInterviewAcademyModule(moduleSlug)) {
+    const max = limit ?? getInterviewAcademyTopicLimit(topicSlug);
+    return listInterviewAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "interview-lab" as const,
+          }) satisfies TopicChallenge
+      );
+  }
+
+  if (isSystemsAcademyModule(moduleSlug)) {
+    const max = limit ?? getSystemsAcademyTopicLimit(topicSlug);
+    return listSystemsAcademyChallenges(topicSlug)
+      .slice(0, max)
+      .map(
+        (c) =>
+          ({
+            id: c.id,
+            weekId: c.weekId,
+            topicSlug: c.topicSlug,
+            lesson: c.lesson,
+            source: "synthetic" as const,
+            experience: "systems-lab" as const,
           }) satisfies TopicChallenge
       );
   }
@@ -397,6 +958,227 @@ export function findTopicChallenge(
     } satisfies TopicChallenge;
   }
 
+  if (isCssAcademyModule(moduleSlug)) {
+    const found = findCssAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "css-live" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isJsAcademyModule(moduleSlug)) {
+    const found = findJsAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "javascript-console" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isReactAcademyModule(moduleSlug)) {
+    const found = findReactAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "react-preview" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isNextjsAcademyModule(moduleSlug)) {
+    const found = findNextjsAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "nextjs-preview" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isTypescriptAcademyModule(moduleSlug)) {
+    const found = findTypescriptAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "typescript-console" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isApisAcademyModule(moduleSlug)) {
+    const found = findApisAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "api-playground" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isAuthAcademyModule(moduleSlug)) {
+    const found = findAuthAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "auth-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isSqlAcademyModule(moduleSlug)) {
+    const found = findSqlAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "sql-editor" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isModelingAcademyModule(moduleSlug)) {
+    const found = findModelingAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "modeling-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isDeploymentAcademyModule(moduleSlug)) {
+    const found = findDeploymentAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "deploy-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isCicdAcademyModule(moduleSlug)) {
+    const found = findCicdAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "cicd-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isLlmAcademyModule(moduleSlug)) {
+    const found = findLlmAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "llm-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isAiFeaturesAcademyModule(moduleSlug)) {
+    const found = findAiFeaturesAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "ai-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isCapstoneAcademyModule(moduleSlug)) {
+    const found = findCapstoneAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "capstone-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isShipAcademyModule(moduleSlug)) {
+    const found = findShipAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "ship-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isInterviewAcademyModule(moduleSlug)) {
+    const found = findInterviewAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "interview-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isSystemsAcademyModule(moduleSlug)) {
+    const found = findSystemsAcademyChallenge(topicSlug, decoded);
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "systems-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
   const searchLimit = 12;
   const experience = getModuleChallengeExperience(moduleSlug);
   return (
@@ -460,6 +1242,261 @@ export function findModuleChallenge(
       lesson: found.lesson,
       source: "synthetic" as const,
       experience: "html-live" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isCssAcademyModule(moduleSlug)) {
+    const found = allCssAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "css-live" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isJsAcademyModule(moduleSlug)) {
+    const found = allJsAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "javascript-console" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isReactAcademyModule(moduleSlug)) {
+    const found = allReactAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "react-preview" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isNextjsAcademyModule(moduleSlug)) {
+    const found = allNextjsAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "nextjs-preview" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isTypescriptAcademyModule(moduleSlug)) {
+    const found = allTypescriptAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "typescript-console" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isApisAcademyModule(moduleSlug)) {
+    const found = allApisAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "api-playground" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isAuthAcademyModule(moduleSlug)) {
+    const found = allAuthAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "auth-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isSqlAcademyModule(moduleSlug)) {
+    const found = allSqlAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "sql-editor" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isModelingAcademyModule(moduleSlug)) {
+    const found = allModelingAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "modeling-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isDeploymentAcademyModule(moduleSlug)) {
+    const found = allDeploymentAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "deploy-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isCicdAcademyModule(moduleSlug)) {
+    const found = allCicdAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "cicd-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isLlmAcademyModule(moduleSlug)) {
+    const found = allLlmAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "llm-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isAiFeaturesAcademyModule(moduleSlug)) {
+    const found = allAiFeaturesAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "ai-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isCapstoneAcademyModule(moduleSlug)) {
+    const found = allCapstoneAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "capstone-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isShipAcademyModule(moduleSlug)) {
+    const found = allShipAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "ship-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isInterviewAcademyModule(moduleSlug)) {
+    const found = allInterviewAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "interview-lab" as const,
+    } satisfies TopicChallenge;
+  }
+
+  if (isSystemsAcademyModule(moduleSlug)) {
+    const found = allSystemsAcademyChallenges().find(
+      (c) => c.id === decoded || c.lesson.id === decoded
+    );
+    if (!found) return null;
+    return {
+      id: found.id,
+      weekId: found.weekId,
+      topicSlug: found.topicSlug,
+      lesson: found.lesson,
+      source: "synthetic" as const,
+      experience: "systems-lab" as const,
     } satisfies TopicChallenge;
   }
 

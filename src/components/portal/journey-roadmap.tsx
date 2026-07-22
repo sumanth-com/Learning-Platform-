@@ -41,6 +41,91 @@ import {
   isHtmlAcademyModule,
 } from "@/features/curriculum/lib/html-academy";
 import { flattenHtmlTopics } from "@/features/curriculum/lib/html-academy-curriculum";
+import {
+  cssAcademyChallengeCounts,
+  isCssAcademyModule,
+} from "@/features/curriculum/lib/css-academy";
+import { flattenCssTopics } from "@/features/curriculum/lib/css-academy-curriculum";
+import {
+  jsAcademyChallengeCounts,
+  isJsAcademyModule,
+} from "@/features/curriculum/lib/js-academy";
+import { flattenJsTopics } from "@/features/curriculum/lib/js-academy-curriculum";
+import {
+  reactAcademyChallengeCounts,
+  isReactAcademyModule,
+} from "@/features/curriculum/lib/react-academy";
+import { flattenReactTopics } from "@/features/curriculum/lib/react-academy-curriculum";
+import {
+  nextjsAcademyChallengeCounts,
+  isNextjsAcademyModule,
+} from "@/features/curriculum/lib/nextjs-academy";
+import { flattenNextjsTopics } from "@/features/curriculum/lib/nextjs-academy-curriculum";
+import {
+  typescriptAcademyChallengeCounts,
+  isTypescriptAcademyModule,
+} from "@/features/curriculum/lib/typescript-academy";
+import { flattenTypescriptTopics } from "@/features/curriculum/lib/typescript-academy-curriculum";
+import {
+  apisAcademyChallengeCounts,
+  isApisAcademyModule,
+} from "@/features/curriculum/lib/apis-academy";
+import { flattenApisTopics } from "@/features/curriculum/lib/apis-academy-curriculum";
+import {
+  authAcademyChallengeCounts,
+  isAuthAcademyModule,
+} from "@/features/curriculum/lib/auth-academy";
+import { flattenAuthTopics } from "@/features/curriculum/lib/auth-academy-curriculum";
+import {
+  sqlAcademyChallengeCounts,
+  isSqlAcademyModule,
+} from "@/features/curriculum/lib/sql-academy";
+import { flattenSqlTopics } from "@/features/curriculum/lib/sql-academy-curriculum";
+import {
+  modelingAcademyChallengeCounts,
+  isModelingAcademyModule,
+} from "@/features/curriculum/lib/modeling-academy";
+import { flattenModelingTopics } from "@/features/curriculum/lib/modeling-academy-curriculum";
+import {
+  deploymentAcademyChallengeCounts,
+  isDeploymentAcademyModule,
+} from "@/features/curriculum/lib/deployment-academy";
+import { flattenDeploymentTopics } from "@/features/curriculum/lib/deployment-academy-curriculum";
+import {
+  cicdAcademyChallengeCounts,
+  isCicdAcademyModule,
+} from "@/features/curriculum/lib/cicd-academy";
+import { flattenCicdTopics } from "@/features/curriculum/lib/cicd-academy-curriculum";
+import {
+  llmAcademyChallengeCounts,
+  isLlmAcademyModule,
+} from "@/features/curriculum/lib/llm-academy";
+import { flattenLlmTopics } from "@/features/curriculum/lib/llm-academy-curriculum";
+import {
+  aiFeaturesAcademyChallengeCounts,
+  isAiFeaturesAcademyModule,
+} from "@/features/curriculum/lib/ai-features-academy";
+import { flattenAiFeaturesTopics } from "@/features/curriculum/lib/ai-features-academy-curriculum";
+import {
+  capstoneAcademyChallengeCounts,
+  isCapstoneAcademyModule,
+} from "@/features/curriculum/lib/capstone-academy";
+import { flattenCapstoneTopics } from "@/features/curriculum/lib/capstone-academy-curriculum";
+import {
+  shipAcademyChallengeCounts,
+  isShipAcademyModule,
+} from "@/features/curriculum/lib/ship-academy";
+import { flattenShipTopics } from "@/features/curriculum/lib/ship-academy-curriculum";
+import {
+  interviewAcademyChallengeCounts,
+  isInterviewAcademyModule,
+} from "@/features/curriculum/lib/interview-academy";
+import { flattenInterviewTopics } from "@/features/curriculum/lib/interview-academy-curriculum";
+import {
+  systemsAcademyChallengeCounts,
+  isSystemsAcademyModule,
+} from "@/features/curriculum/lib/systems-academy";
+import { flattenSystemsTopics } from "@/features/curriculum/lib/systems-academy-curriculum";
 import type {
   CourseJourney,
   LessonDifficulty,
@@ -670,16 +755,164 @@ function buildModuleCards(
               module.slug,
               flattenHtmlTopics()[0]!.slug
             )
-          : CURRICULUM_ROUTES.module(module.slug);
+          : isCssAcademyModule(module.slug)
+            ? CURRICULUM_ROUTES.moduleHub(
+                module.slug,
+                flattenCssTopics()[0]!.slug
+              )
+            : isJsAcademyModule(module.slug)
+              ? CURRICULUM_ROUTES.moduleHub(
+                  module.slug,
+                  flattenJsTopics()[0]!.slug
+                )
+              : isReactAcademyModule(module.slug)
+                ? CURRICULUM_ROUTES.moduleHub(
+                    module.slug,
+                    flattenReactTopics()[0]!.slug
+                  )
+                : isNextjsAcademyModule(module.slug)
+                  ? CURRICULUM_ROUTES.moduleHub(
+                      module.slug,
+                      flattenNextjsTopics()[0]!.slug
+                    )
+                  : isTypescriptAcademyModule(module.slug)
+                    ? CURRICULUM_ROUTES.moduleHub(
+                        module.slug,
+                        flattenTypescriptTopics()[0]!.slug
+                      )
+                    : isApisAcademyModule(module.slug)
+                      ? CURRICULUM_ROUTES.moduleHub(
+                          module.slug,
+                          flattenApisTopics()[0]!.slug
+                        )
+                      : isAuthAcademyModule(module.slug)
+                        ? CURRICULUM_ROUTES.moduleHub(
+                            module.slug,
+                            flattenAuthTopics()[0]!.slug
+                          )
+                        : isSqlAcademyModule(module.slug)
+                          ? CURRICULUM_ROUTES.moduleHub(
+                              module.slug,
+                              flattenSqlTopics()[0]!.slug
+                            )
+                          : isModelingAcademyModule(module.slug)
+                            ? CURRICULUM_ROUTES.moduleHub(
+                                module.slug,
+                                flattenModelingTopics()[0]!.slug
+                              )
+                            : isDeploymentAcademyModule(module.slug)
+                              ? CURRICULUM_ROUTES.moduleHub(
+                                  module.slug,
+                                  flattenDeploymentTopics()[0]!.slug
+                                )
+                              : isCicdAcademyModule(module.slug)
+                                ? CURRICULUM_ROUTES.moduleHub(
+                                    module.slug,
+                                    flattenCicdTopics()[0]!.slug
+                                  )
+                                : isLlmAcademyModule(module.slug)
+                                  ? CURRICULUM_ROUTES.moduleHub(
+                                      module.slug,
+                                      flattenLlmTopics()[0]!.slug
+                                    )
+                                  : isAiFeaturesAcademyModule(module.slug)
+                                    ? CURRICULUM_ROUTES.moduleHub(
+                                        module.slug,
+                                        flattenAiFeaturesTopics()[0]!.slug
+                                      )
+                                    : isCapstoneAcademyModule(module.slug)
+                                      ? CURRICULUM_ROUTES.moduleHub(
+                                          module.slug,
+                                          flattenCapstoneTopics()[0]!.slug
+                                        )
+                                      : isShipAcademyModule(module.slug)
+                                        ? CURRICULUM_ROUTES.moduleHub(
+                                            module.slug,
+                                            flattenShipTopics()[0]!.slug
+                                          )
+                                        : isInterviewAcademyModule(module.slug)
+                                          ? CURRICULUM_ROUTES.moduleHub(
+                                              module.slug,
+                                              flattenInterviewTopics()[0]!
+                                                .slug
+                                            )
+                                          : isSystemsAcademyModule(module.slug)
+                                            ? CURRICULUM_ROUTES.moduleHub(
+                                                module.slug,
+                                                flattenSystemsTopics()[0]!
+                                                  .slug
+                                              )
+                                            : CURRICULUM_ROUTES.module(
+                                                module.slug
+                                              );
 
     const pf = isProgrammingFundamentalsModule(module.slug);
     const dt = isDeveloperToolingModule(module.slug);
     const html = isHtmlAcademyModule(module.slug);
+    const css = isCssAcademyModule(module.slug);
+    const js = isJsAcademyModule(module.slug);
+    const react = isReactAcademyModule(module.slug);
+    const nextjs = isNextjsAcademyModule(module.slug);
+    const ts = isTypescriptAcademyModule(module.slug);
+    const apis = isApisAcademyModule(module.slug);
+    const auth = isAuthAcademyModule(module.slug);
+    const sql = isSqlAcademyModule(module.slug);
+    const modeling = isModelingAcademyModule(module.slug);
+    const deploy = isDeploymentAcademyModule(module.slug);
+    const cicd = isCicdAcademyModule(module.slug);
+    const llm = isLlmAcademyModule(module.slug);
+    const aiFeatures = isAiFeaturesAcademyModule(module.slug);
+    const capstone = isCapstoneAcademyModule(module.slug);
+    const ship = isShipAcademyModule(module.slug);
+    const interview = isInterviewAcademyModule(module.slug);
+    const systems = isSystemsAcademyModule(module.slug);
     const pfCounts = pf ? programmingFundamentalsChallengeCounts() : null;
     const dtCounts = dt ? developerToolingChallengeCounts() : null;
     const htmlCounts = html ? htmlAcademyChallengeCounts() : null;
-    const specialCounts = pfCounts ?? dtCounts ?? htmlCounts;
+    const cssCounts = css ? cssAcademyChallengeCounts() : null;
+    const jsCounts = js ? jsAcademyChallengeCounts() : null;
+    const reactCounts = react ? reactAcademyChallengeCounts() : null;
+    const nextjsCounts = nextjs ? nextjsAcademyChallengeCounts() : null;
+    const tsCounts = ts ? typescriptAcademyChallengeCounts() : null;
+    const apisCounts = apis ? apisAcademyChallengeCounts() : null;
+    const authCounts = auth ? authAcademyChallengeCounts() : null;
+    const sqlCounts = sql ? sqlAcademyChallengeCounts() : null;
+    const modelingCounts = modeling ? modelingAcademyChallengeCounts() : null;
+    const deployCounts = deploy ? deploymentAcademyChallengeCounts() : null;
+    const cicdCounts = cicd ? cicdAcademyChallengeCounts() : null;
+    const llmCounts = llm ? llmAcademyChallengeCounts() : null;
+    const aiFeaturesCounts = aiFeatures
+      ? aiFeaturesAcademyChallengeCounts()
+      : null;
+    const capstoneCounts = capstone ? capstoneAcademyChallengeCounts() : null;
+    const shipCounts = ship ? shipAcademyChallengeCounts() : null;
+    const interviewCounts = interview
+      ? interviewAcademyChallengeCounts()
+      : null;
+    const systemsCounts = systems ? systemsAcademyChallengeCounts() : null;
+    const specialCounts =
+      pfCounts ??
+      dtCounts ??
+      htmlCounts ??
+      cssCounts ??
+      jsCounts ??
+      reactCounts ??
+      nextjsCounts ??
+      tsCounts ??
+      apisCounts ??
+      authCounts ??
+      sqlCounts ??
+      modelingCounts ??
+      deployCounts ??
+      cicdCounts ??
+      llmCounts ??
+      aiFeaturesCounts ??
+      capstoneCounts ??
+      shipCounts ??
+      interviewCounts ??
+      systemsCounts;
     const lessonCounts = countDifficulties(
+
       module.lessons.map((l) => l.difficulty)
     );
     const minutes = module.lessons.reduce(
@@ -692,7 +925,41 @@ function buildModuleCards(
         ? flattenToolingTopics().length
         : html
           ? flattenHtmlTopics().length
-          : module.totalCount;
+          : css
+            ? flattenCssTopics().length
+            : js
+              ? flattenJsTopics().length
+              : react
+                ? flattenReactTopics().length
+                : nextjs
+                  ? flattenNextjsTopics().length
+                  : ts
+                    ? flattenTypescriptTopics().length
+                    : apis
+                      ? flattenApisTopics().length
+                      : auth
+                        ? flattenAuthTopics().length
+                        : sql
+                          ? flattenSqlTopics().length
+                          : modeling
+                            ? flattenModelingTopics().length
+                            : deploy
+                              ? flattenDeploymentTopics().length
+                              : cicd
+                                ? flattenCicdTopics().length
+                                : llm
+                                  ? flattenLlmTopics().length
+                                  : aiFeatures
+                                    ? flattenAiFeaturesTopics().length
+                                    : capstone
+                                      ? flattenCapstoneTopics().length
+                                      : ship
+                                        ? flattenShipTopics().length
+                                        : interview
+                                          ? flattenInterviewTopics().length
+                                          : systems
+                                            ? flattenSystemsTopics().length
+                                            : module.totalCount;
 
     return {
       module,
