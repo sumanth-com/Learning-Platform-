@@ -31,16 +31,43 @@ const CONTENT: Record<string, ProjectDetail> = {
   ...(portfolio as Record<string, ProjectDetail>),
 };
 
+function fallbackDetail(project: CurriculumProject): ProjectDetail {
+  const features = (project.features ?? [])
+    .map((f, i) => `${i + 1}. ${f.title}`)
+    .join("\n");
+  return {
+    mode: "inline",
+    overview: project.description,
+    explanation: [
+      `Build **${project.title}** end to end.`,
+      "",
+      "Acceptance checklist:",
+      features || "1. Core happy path works",
+      "2. Clear run instructions in a README",
+      "3. Invalid input handled gracefully",
+    ].join("\n"),
+    code: [
+      `/**`,
+      ` * ${project.title}`,
+      ` * ${project.description}`,
+      ` */`,
+      ``,
+      `// Start here — implement the project goals above.`,
+      `// Keep functions small, name things clearly, and add a short demo path.`,
+      ``,
+      `function main() {`,
+      `  console.log("TODO: ${project.title}");`,
+      `}`,
+      ``,
+      `main();`,
+      ``,
+    ].join("\n"),
+    filename: "main.js",
+    sampleOutput: `TODO: ${project.title}`,
+    runInstructions: "node main.js",
+  };
+}
+
 export function getProjectDetail(project: CurriculumProject): ProjectDetail {
-  return (
-    CONTENT[project.id] ?? {
-      mode: "inline",
-      overview: project.description,
-      explanation: `Build ${project.title} step by step.`,
-      code: `// ${project.title}\npublic class Main {\n    public static void main(String[] args) {}\n}`,
-      filename: "Main.java",
-      sampleOutput: "Output appears here after Run.",
-      runInstructions: "javac Main.java\njava Main",
-    }
-  );
+  return CONTENT[project.id] ?? fallbackDetail(project);
 }

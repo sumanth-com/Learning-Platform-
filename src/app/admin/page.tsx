@@ -26,7 +26,7 @@ export default async function AdminDashboardPage() {
     { label: "Total Lessons", value: stats.lessons, href: ADMIN_ROUTES.lessons, icon: FileText },
     { label: "Total Assignments", value: stats.assignments, href: ADMIN_ROUTES.assignments, icon: ClipboardList },
     { label: "Total Students", value: stats.students, href: ADMIN_ROUTES.students, icon: Users },
-    { label: "Assignment Submissions", value: stats.submissions, href: ADMIN_ROUTES.students, icon: Inbox },
+    { label: "Assignment Submissions", value: stats.submissions, href: ADMIN_ROUTES.submissions, icon: Inbox },
   ];
 
   return (

@@ -1,21 +1,28 @@
-import { getCurriculumWeeks } from "@/curriculum/registry";
-import portfolioProjects from "./portfolio-projects.json";
-import portfolioMeta from "./portfolio-meta.json";
 import type {
-  ProjectCategory,
-  ProjectDifficulty,
   ProjectListingItem,
   ProjectMeta,
-  PortfolioProject,
 } from "./types";
-import { PORTFOLIO_WEEK_ID } from "./types";
+import {
+  ROADMAP_MODULE_PROJECTS,
+  getRoadmapModuleMeta,
+  listRoadmapModuleOptions,
+  type ModuleProjectDef,
+} from "./module-projects";
 import type { CurriculumProject } from "@/curriculum/types";
 
 export { PORTFOLIO_WEEK_ID } from "./types";
 export type { ProjectListingItem, ProjectDifficulty, ProjectCategory } from "./types";
+export { listRoadmapModuleOptions, getRoadmapModuleMeta, ROADMAP_MODULE_PROJECTS };
 
-const PORTFOLIO = portfolioProjects as PortfolioProject[];
-const PORTFOLIO_META = portfolioMeta as Record<string, ProjectMeta>;
+/** Public URL slug from internal id (`m01-console-calculator` → `console-calculator`). */
+export function projectPublicSlug(projectId: string): string {
+  return projectId.replace(/^m\d+-/i, "");
+}
+
+/** Canonical professional project URL. */
+export function projectHref(moduleSlug: string, projectId: string): string {
+  return `/projects/${moduleSlug}/${projectPublicSlug(projectId)}`;
+}
 
 function hashCount(id: string, base: number): number {
   let h = 0;
@@ -23,92 +30,153 @@ function hashCount(id: string, base: number): number {
   return base + (Math.abs(h) % 8000);
 }
 
-function inferCurriculumMeta(weekId: number, projectId: string): ProjectMeta {
-  let difficulty: ProjectDifficulty = "easy";
-  if (weekId >= 8) difficulty = "hard";
-  else if (weekId >= 4) difficulty = "medium";
-
-  let category: ProjectCategory = "CLI";
-  if (weekId >= 10) category = "API";
-  else if (weekId >= 8) category = "API";
-  else if (weekId === 7) category = "CLI";
-
-  return {
-    difficulty,
-    category,
-    startedCount: hashCount(projectId, weekId * 1200),
-  };
-}
-
 function toListing(
-  project: { id: string; title: string; description: string },
-  weekId: number,
-  meta: ProjectMeta
+  project: ModuleProjectDef,
+  moduleNumber: number,
+  moduleSlug: string,
+  moduleTitle: string
 ): ProjectListingItem {
   return {
     id: project.id,
     title: project.title,
     description: project.description,
-    weekId,
-    difficulty: meta.difficulty,
-    category: meta.category,
-    startedCount: meta.startedCount,
-    href: `/projects/${weekId}/${project.id}`,
+    weekId: moduleNumber,
+    moduleNumber,
+    moduleSlug,
+    moduleTitle,
+    difficulty: project.difficulty,
+    category: project.category,
+    startedCount: hashCount(project.id, moduleNumber * 1200),
+    href: projectHref(moduleSlug, project.id),
   };
 }
 
 export function getAllProjectListings(): ProjectListingItem[] {
   const items: ProjectListingItem[] = [];
-
-  for (const week of getCurriculumWeeks()) {
-    for (const project of week.projects) {
-      items.push(toListing(project, week.id, inferCurriculumMeta(week.id, project.id)));
+  for (const mod of ROADMAP_MODULE_PROJECTS) {
+    for (const project of mod.projects) {
+      items.push(
+        toListing(project, mod.moduleNumber, mod.slug, mod.title)
+      );
     }
   }
-
-  for (const project of PORTFOLIO) {
-    const meta = PORTFOLIO_META[project.id] ?? {
-      difficulty: "medium" as const,
-      category: "CLI" as const,
-      startedCount: hashCount(project.id, 5000),
-    };
-    items.push(toListing(project, PORTFOLIO_WEEK_ID, meta));
-  }
-
   return items;
 }
 
-export function isPortfolioWeek(weekId: number) {
-  return weekId === PORTFOLIO_WEEK_ID;
+export function isPortfolioWeek(_weekId: number) {
+  return false;
 }
 
-export function getPortfolioProject(projectId: string): PortfolioProject | null {
-  return PORTFOLIO.find((p) => p.id === projectId) ?? null;
+export function getPortfolioProject(_projectId: string) {
+  return null;
+}
+
+function findModuleByKey(moduleKey: string) {
+  const asNumber = Number(moduleKey);
+  if (Number.isFinite(asNumber) && asNumber > 0) {
+    return (
+      ROADMAP_MODULE_PROJECTS.find((m) => m.moduleNumber === asNumber) ?? null
+    );
+  }
+  return (
+    ROADMAP_MODULE_PROJECTS.find((m) => m.slug === moduleKey) ?? null
+  );
+}
+
+function findProjectInModule(
+  mod: (typeof ROADMAP_MODULE_PROJECTS)[number],
+  projectKey: string
+) {
+  return (
+    mod.projects.find(
+      (p) =>
+        p.id === projectKey || projectPublicSlug(p.id) === projectKey
+    ) ?? null
+  );
 }
 
 export function resolveProject(
   weekId: number,
   projectId: string
 ): { project: CurriculumProject; weekId: number } | null {
-  if (isPortfolioWeek(weekId)) {
-    const p = getPortfolioProject(projectId);
-    if (!p) return null;
-    return { project: p, weekId };
-  }
+  const mod = getRoadmapModuleMeta(weekId);
+  const project = mod?.projects.find(
+    (p) => p.id === projectId || projectPublicSlug(p.id) === projectId
+  );
+  if (!mod || !project) return null;
+  return {
+    project: {
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      features: project.features,
+    },
+    weekId,
+  };
+}
 
-  const week = getCurriculumWeeks().find((w) => w.id === weekId);
-  const project = week?.projects.find((p) => p.id === projectId);
-  if (!week || !project) return null;
-  return { project, weekId };
+/** Resolve `/projects/[module]/[project]` for slug or legacy numeric paths. */
+export function resolveProjectRoute(
+  moduleKey: string,
+  projectKey: string
+): {
+  project: CurriculumProject;
+  listing: ProjectListingItem;
+  href: string;
+} | null {
+  const mod = findModuleByKey(moduleKey);
+  if (!mod) return null;
+  const def = findProjectInModule(mod, projectKey);
+  if (!def) return null;
+  const listing = toListing(def, mod.moduleNumber, mod.slug, mod.title);
+  return {
+    project: {
+      id: def.id,
+      title: def.title,
+      description: def.description,
+      features: def.features,
+    },
+    listing,
+    href: listing.href,
+  };
 }
 
 export function findProjectListing(projectId: string): ProjectListingItem | null {
-  return getAllProjectListings().find((p) => p.id === projectId) ?? null;
+  return (
+    getAllProjectListings().find(
+      (p) =>
+        p.id === projectId || projectPublicSlug(p.id) === projectId
+    ) ?? null
+  );
 }
 
 export function getProjectMeta(projectId: string, weekId: number): ProjectMeta {
-  if (isPortfolioWeek(weekId) && PORTFOLIO_META[projectId]) {
-    return PORTFOLIO_META[projectId];
+  const listing = getAllProjectListings().find(
+    (p) =>
+      p.moduleNumber === weekId &&
+      (p.id === projectId || projectPublicSlug(p.id) === projectId)
+  );
+  if (listing) {
+    return {
+      difficulty: listing.difficulty,
+      category: listing.category,
+      startedCount: listing.startedCount,
+    };
   }
-  return inferCurriculumMeta(weekId, projectId);
+  return {
+    difficulty: "medium",
+    category: "CLI",
+    startedCount: hashCount(projectId, weekId * 1200),
+  };
+}
+
+export function getModuleProjectDef(
+  moduleNumber: number,
+  projectId: string
+): ModuleProjectDef | null {
+  return (
+    getRoadmapModuleMeta(moduleNumber)?.projects.find(
+      (p) => p.id === projectId || projectPublicSlug(p.id) === projectId
+    ) ?? null
+  );
 }

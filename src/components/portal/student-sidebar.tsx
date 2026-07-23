@@ -7,7 +7,6 @@ import {
   Bot,
   Briefcase,
   ClipboardList,
-  Code2,
   FolderKanban,
   LayoutDashboard,
   Library,
@@ -34,7 +33,6 @@ const ICONS: Record<PortalNavId, typeof LayoutDashboard> = {
   roadmap: Map,
   projects: FolderKanban,
   assignments: ClipboardList,
-  practice: Code2,
   "ai-mentor": Bot,
   interview: Briefcase,
   resources: Library,
@@ -69,7 +67,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
               : PORTAL_SIDEBAR_WIDTH,
       }}
       className={cn(
-        "flex h-full flex-col overflow-hidden border-r border-zinc-800/90 bg-zinc-950 transition-[width] duration-200",
+        "flex h-full flex-col overflow-hidden border-r border-zinc-800/90 bg-background transition-[width] duration-200",
         mode === "drawer" && "shadow-2xl shadow-black/50"
       )}
     >
@@ -90,10 +88,10 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
           <SupraLearnMark className="h-9 w-9 shrink-0" id={markId} />
           {!isCollapsed ? (
             <div className="min-w-0">
-              <p className="truncate text-[15px] font-semibold leading-none tracking-tight text-zinc-50">
+              <p className="truncate text-[15px] font-semibold leading-none tracking-tight text-foreground">
                 SupraLearn
               </p>
-              <p className="mt-1.5 truncate text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-zinc-500">
+              <p className="mt-1.5 truncate text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-muted-foreground">
                 Learn · Build · Ship
               </p>
             </div>
@@ -131,20 +129,20 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isCollapsed && "justify-center px-2",
                 active
-                  ? "bg-zinc-800/90 text-white"
+                  ? "bg-black text-white shadow-sm"
                   : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
               )}
             >
               {active ? (
                 <motion.span
                   layoutId="portal-nav-indicator"
-                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-indigo-400"
+                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-white/80"
                 />
               ) : null}
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0",
-                  active ? "text-indigo-300" : "text-zinc-500"
+                  active ? "text-white" : "text-zinc-500"
                 )}
               />
               {!isCollapsed ? (

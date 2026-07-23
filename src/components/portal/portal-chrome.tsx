@@ -7,15 +7,25 @@ import {
   useEffect,
   useMemo,
   useState,
+  type ReactNode,
 } from "react";
+
+export type PortalBreadcrumb = {
+  label: string;
+  href?: string;
+};
 
 type PortalChromeState = {
   title?: string;
   subtitle?: string;
+  breadcrumbs?: PortalBreadcrumb[];
+  headerAside?: ReactNode;
   fillViewport: boolean;
   setChrome: (next: {
     title?: string;
     subtitle?: string;
+    breadcrumbs?: PortalBreadcrumb[];
+    headerAside?: ReactNode;
     fillViewport?: boolean;
   }) => void;
   resetChrome: () => void;
@@ -30,12 +40,22 @@ export function PortalChromeProvider({
 }) {
   const [title, setTitle] = useState<string | undefined>();
   const [subtitle, setSubtitle] = useState<string | undefined>();
+  const [breadcrumbs, setBreadcrumbs] = useState<PortalBreadcrumb[] | undefined>();
+  const [headerAside, setHeaderAside] = useState<ReactNode>();
   const [fillViewport, setFillViewport] = useState(false);
 
   const setChrome = useCallback(
-    (next: { title?: string; subtitle?: string; fillViewport?: boolean }) => {
+    (next: {
+      title?: string;
+      subtitle?: string;
+      breadcrumbs?: PortalBreadcrumb[];
+      headerAside?: ReactNode;
+      fillViewport?: boolean;
+    }) => {
       if ("title" in next) setTitle(next.title);
       if ("subtitle" in next) setSubtitle(next.subtitle);
+      if ("breadcrumbs" in next) setBreadcrumbs(next.breadcrumbs);
+      if ("headerAside" in next) setHeaderAside(next.headerAside);
       if ("fillViewport" in next) setFillViewport(Boolean(next.fillViewport));
     },
     []
@@ -44,12 +64,30 @@ export function PortalChromeProvider({
   const resetChrome = useCallback(() => {
     setTitle(undefined);
     setSubtitle(undefined);
+    setBreadcrumbs(undefined);
+    setHeaderAside(undefined);
     setFillViewport(false);
   }, []);
 
   const value = useMemo(
-    () => ({ title, subtitle, fillViewport, setChrome, resetChrome }),
-    [title, subtitle, fillViewport, setChrome, resetChrome]
+    () => ({
+      title,
+      subtitle,
+      breadcrumbs,
+      headerAside,
+      fillViewport,
+      setChrome,
+      resetChrome,
+    }),
+    [
+      title,
+      subtitle,
+      breadcrumbs,
+      headerAside,
+      fillViewport,
+      setChrome,
+      resetChrome,
+    ]
   );
 
   return (
@@ -71,18 +109,22 @@ export function usePortalChrome() {
 export function PortalChrome({
   title,
   subtitle,
+  breadcrumbs,
+  headerAside,
   fillViewport = false,
 }: {
   title?: string;
   subtitle?: string;
+  breadcrumbs?: PortalBreadcrumb[];
+  headerAside?: ReactNode;
   fillViewport?: boolean;
 }) {
   const { setChrome, resetChrome } = usePortalChrome();
 
   useEffect(() => {
-    setChrome({ title, subtitle, fillViewport });
+    setChrome({ title, subtitle, breadcrumbs, headerAside, fillViewport });
     return () => resetChrome();
-  }, [title, subtitle, fillViewport, setChrome, resetChrome]);
+  }, [title, subtitle, breadcrumbs, headerAside, fillViewport, setChrome, resetChrome]);
 
   return null;
 }

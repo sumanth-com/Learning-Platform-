@@ -10,6 +10,7 @@ import {
   Boxes,
   ClipboardList,
   FileText,
+  Inbox,
   Layers,
   LayoutDashboard,
   Link2,
@@ -38,6 +39,7 @@ const NAV: Array<{
   { href: ADMIN_ROUTES.assignments, label: "Assignments", icon: ClipboardList },
   { href: ADMIN_ROUTES.resources, label: "Resources", icon: Link2 },
   { href: ADMIN_ROUTES.students, label: "Students", icon: Users },
+  { href: ADMIN_ROUTES.submissions, label: "Submissions", icon: Inbox },
   { href: ADMIN_ROUTES.analytics, label: "Analytics", icon: BarChart3 },
   { href: ADMIN_ROUTES.settings, label: "Settings", icon: Settings },
 ];

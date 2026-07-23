@@ -1,13 +1,20 @@
 import Image, { type StaticImageData } from "next/image";
+import { cn } from "@/lib/utils";
 
 interface WeekRoadmapArtProps {
   src: StaticImageData;
+  className?: string;
 }
 
 /** Fixed art slot so every week image aligns like Week 1 — bottom-anchored, scaled to fill. */
-export function WeekRoadmapArt({ src }: WeekRoadmapArtProps) {
+export function WeekRoadmapArt({ src, className }: WeekRoadmapArtProps) {
   return (
-    <div className="pointer-events-none absolute bottom-0 right-3 z-10 h-40 w-36 sm:right-4 sm:h-[13rem] sm:w-44">
+    <div
+      className={cn(
+        "pointer-events-none absolute bottom-0 right-3 z-10 h-40 w-36 sm:right-4 sm:h-[13rem] sm:w-44",
+        className
+      )}
+    >
       <div className="relative h-[118%] w-full origin-bottom">
         <Image
           src={src}

@@ -1,12 +1,26 @@
 import type { ProjectStatus } from "@/types";
 import type { ModuleWeekGates, ResumePosition } from "@/lib/module-progress";
 import { createDefaultModuleGates } from "@/lib/module-progress";
+import type { AssignmentSubmissionStatus } from "@/curriculum/assignment-catalog/types";
 
 export interface ProjectProgressMeta {
   progress: number;
   status: ProjectStatus;
   githubLink: string;
   notes: string;
+}
+
+export interface AssignmentProgressMeta {
+  status: AssignmentSubmissionStatus;
+  githubUrl: string;
+  liveUrl: string;
+  screenshots: string;
+  notes: string;
+  reflection: string;
+  submittedAt?: string;
+  reviewedAt?: string;
+  feedback?: string;
+  marks?: number;
 }
 
 export interface UserProgressState {
@@ -17,6 +31,9 @@ export interface UserProgressState {
   bookmarks: Record<string, boolean>;
   completionDates: Record<string, string>;
   projectMeta: Record<string, ProjectProgressMeta>;
+  assignmentMeta: Record<string, AssignmentProgressMeta>;
+  /** One-time seed flag for demo A1–A4 completion */
+  assignmentJourneySeeded?: boolean;
   githubRepoLinks: Record<string, string>;
   weekNotes: Record<number, string>;
   /** Per-module week unlock/completion (v3+) */
@@ -29,7 +46,7 @@ export interface UserProgressState {
   completedWeekIds: number[];
 }
 
-export const PROGRESS_VERSION = 19;
+export const PROGRESS_VERSION = 20;
 
 export const defaultProgressState: UserProgressState = {
   version: PROGRESS_VERSION,
@@ -38,6 +55,8 @@ export const defaultProgressState: UserProgressState = {
   bookmarks: {},
   completionDates: {},
   projectMeta: {},
+  assignmentMeta: {},
+  assignmentJourneySeeded: false,
   githubRepoLinks: {},
   weekNotes: {},
   moduleGates: createDefaultModuleGates(),

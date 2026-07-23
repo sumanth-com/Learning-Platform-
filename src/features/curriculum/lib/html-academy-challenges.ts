@@ -205,15 +205,15 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
   // 3) Fix a topic-specific mistake
   const mistake = commonMistakes[0];
   if (mistake) {
-    push({
+  push({
       key: "fix",
       title: `Fix: ${clip(mistake, 52)}`,
       difficulty: "medium",
       minutes: 14,
-      kind: "fix",
+    kind: "fix",
       scenario: `A teammate shipped broken markup for "${title}". Reviewer note: "${mistake}".`,
       task: `Rewrite a correct HTML snippet for ${title} that avoids this mistake: ${mistake}. Deliver clean HTML5 a reviewer would approve.`,
-      hints: [
+    hints: [
         commonMistakes[1] ? `Also watch for: ${commonMistakes[1]}` : "Validate nesting and DOCTYPE.",
         bestPractices[0] ?? "Prefer semantic tags.",
         "Keep the example small and correct.",
@@ -221,18 +221,18 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
       referenceSolution: shellWith(
         `${title} — fixed`,
         `<main>\n    <h1>${title}</h1>\n    <p>Correct approach: avoid “${clip(mistake, 80)}”.</p>\n  </main>`
-      ),
-      takeaways: [
+    ),
+    takeaways: [
         `Avoid: ${mistake}`,
         bestPractices[0] ?? "Readable markup is professional.",
       ],
       validateIncludes: ["<!doctype html>", "<main", "<h1"],
-      acceptanceCriteria: [
+    acceptanceCriteria: [
         "Mistake addressed in the markup",
         "Valid HTML5 structure",
         "Clear topic heading",
-      ],
-    });
+    ],
+  });
   }
 
   // 4) Apply a best practice

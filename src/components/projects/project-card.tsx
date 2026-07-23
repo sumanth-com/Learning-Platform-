@@ -6,9 +6,9 @@ import type { ProjectListingItem } from "@/curriculum/project-catalog";
 import { cn } from "@/lib/utils";
 
 const DIFFICULTY_STYLES = {
-  easy: "border-amber-500/40 bg-amber-500/15 text-amber-200",
-  medium: "border-emerald-500/40 bg-emerald-500/15 text-emerald-200",
-  hard: "border-sky-500/40 bg-sky-500/15 text-sky-200",
+  easy: "border-amber-500/35 bg-amber-500/10 text-amber-700",
+  medium: "border-emerald-500/35 bg-emerald-500/10 text-emerald-700",
+  hard: "border-sky-500/35 bg-sky-500/10 text-sky-700",
 } as const;
 
 const DIFFICULTY_LABEL = {
@@ -37,10 +37,10 @@ export function ProjectCard({
       whileHover={locked ? undefined : { y: -4, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 400, damping: 28 }}
       className={cn(
-        "flex h-full flex-col rounded-2xl border border-zinc-800/90 bg-zinc-900/50 p-5 transition-shadow duration-300",
+        "flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-shadow duration-300",
         locked
           ? "cursor-not-allowed opacity-55"
-          : "cursor-pointer hover:border-zinc-700 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-indigo-500/5",
+          : "cursor-pointer hover:border-muted-foreground/30 hover:shadow-md hover:shadow-black/5",
         complete && "ring-1 ring-emerald-500/30",
         className
       )}
@@ -56,25 +56,23 @@ export function ProjectCard({
         </span>
       </div>
 
-      <h3 className="text-base font-bold leading-snug text-zinc-50">{project.title}</h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-zinc-400 line-clamp-2">
+      <h3 className="text-base font-bold leading-snug text-foreground">
+        {project.title}
+      </h3>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-2">
         {project.description}
       </p>
 
-      {(project.weekId <= 11 || complete) && (
-        <div className="mt-5 flex items-center justify-end gap-2 border-t border-zinc-800/60 pt-4">
-          {project.weekId <= 11 && (
-            <span className="mr-auto text-[10px] font-medium uppercase tracking-wider text-zinc-600">
-              Week {project.weekId}
-            </span>
-          )}
-          {complete && (
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
-              Done
-            </span>
-          )}
-        </div>
-      )}
+      <div className="mt-5 flex items-center justify-end gap-2 border-t border-border pt-4">
+        <span className="mr-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          Module {project.moduleNumber}
+        </span>
+        {complete ? (
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-600">
+            Solved
+          </span>
+        ) : null}
+      </div>
     </motion.article>
   );
 
@@ -88,7 +86,10 @@ export function ProjectCard({
       {locked ? (
         inner
       ) : (
-        <Link href={project.href} className="block h-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-2xl">
+        <Link
+          href={project.href}
+          className="block h-full rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        >
           {inner}
         </Link>
       )}

@@ -69,11 +69,18 @@ export class AdminStudentsRepository {
   }
 
   async countSubmissions(): Promise<number> {
-    const { count, error } = await this.client
-      .from("assignment_submissions")
-      .select("*", { count: "exact", head: true });
-    if (error) throw error;
-    return count ?? 0;
+    const [lesson, journey] = await Promise.all([
+      this.client
+        .from("assignment_submissions")
+        .select("*", { count: "exact", head: true }),
+      this.client
+        .from("journey_assignment_submissions")
+        .select("*", { count: "exact", head: true }),
+    ]);
+    if (lesson.error) throw lesson.error;
+    // Journey table may not exist until migration is applied
+    const journeyCount = journey.error ? 0 : (journey.count ?? 0);
+    return (lesson.count ?? 0) + journeyCount;
   }
 
   async listProgress(profileId: string): Promise<

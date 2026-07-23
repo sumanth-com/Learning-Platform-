@@ -72,7 +72,12 @@ export function DifficultyTabs<T extends string>({
   className?: string;
 }) {
   return (
-    <div className={cn("inline-flex rounded-lg border border-zinc-800 bg-zinc-900/80 p-0.5", className)}>
+    <div
+      className={cn(
+        "inline-flex rounded-lg border border-border bg-card p-0.5",
+        className
+      )}
+    >
       {options.map((opt) => {
         const active = value === opt.id;
         return (
@@ -80,8 +85,10 @@ export function DifficultyTabs<T extends string>({
             key={opt.id}
             onClick={() => onChange(opt.id)}
             className={cn(
-              "rounded-md px-3 py-1.5 text-xs font-medium transition-colors sm:px-4",
-              active ? "bg-zinc-800 text-zinc-100 shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+              "flex-1 rounded-md px-2 py-1.5 text-center text-xs font-medium transition-colors",
+              active
+                ? "bg-muted text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {opt.label}
@@ -100,6 +107,7 @@ export function FilterSelect<T extends string | number>({
   options,
   placeholder,
   className,
+  compact = false,
 }: {
   label: string;
   value: T;
@@ -107,10 +115,18 @@ export function FilterSelect<T extends string | number>({
   options: { value: T; label: string }[];
   placeholder?: string;
   className?: string;
+  /** Size to content instead of stretching full width */
+  compact?: boolean;
 }) {
   const hasPlaceholder = placeholder != null && placeholder !== "" && (value === "" || value === undefined);
   return (
-    <div className={cn("relative inline-flex w-full max-w-full items-stretch", className)}>
+    <div
+      className={cn(
+        "relative inline-flex items-stretch",
+        compact ? "w-auto" : "w-full max-w-full",
+        className
+      )}
+    >
       <select
         value={String(value ?? "")}
         onChange={(e) => {
@@ -120,23 +136,28 @@ export function FilterSelect<T extends string | number>({
         }}
         aria-label={label}
         className={cn(
-          "h-8 w-full min-w-0 cursor-pointer appearance-none rounded-lg border border-zinc-800 bg-zinc-900/80 py-0 pl-3 pr-7 text-xs font-medium outline-none transition-colors hover:border-zinc-700 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30",
-          hasPlaceholder ? "text-zinc-500" : "text-zinc-300"
+          "h-8 cursor-pointer appearance-none rounded-lg border border-border bg-card py-0 pl-3 pr-7 text-xs font-medium text-foreground outline-none transition-colors hover:border-muted-foreground/40 focus:border-primary/50 focus:ring-1 focus:ring-primary/30",
+          compact ? "w-full" : "w-full min-w-0",
+          hasPlaceholder && "text-muted-foreground"
         )}
       >
         {placeholder != null && placeholder !== "" && (
-          <option value="" className="bg-zinc-900 text-zinc-500">
+          <option value="" className="bg-card text-muted-foreground">
             {placeholder}
           </option>
         )}
         {options.map((opt) => (
-          <option key={String(opt.value)} value={String(opt.value)} className="bg-zinc-900 text-zinc-300">
+          <option
+            key={String(opt.value)}
+            value={String(opt.value)}
+            className="bg-card text-foreground"
+          >
             {opt.label}
           </option>
         ))}
       </select>
-      <span className="pointer-events-none absolute inset-y-0 right-0 flex w-7 items-center justify-center border-l border-zinc-800/80">
-        <ChevronDown className="h-3.5 w-3.5 text-zinc-500" />
+      <span className="pointer-events-none absolute inset-y-0 right-0 flex w-7 items-center justify-center border-l border-border">
+        <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
       </span>
     </div>
   );

@@ -916,7 +916,7 @@ export function findTopicChallenge(
   topicTitle: string,
   challengeId: string
 ): TopicChallenge | null {
-  const decoded = decodeURIComponent(challengeId);
+    const decoded = decodeURIComponent(challengeId);
 
   if (isProgrammingFundamentalsModule(moduleSlug)) {
     const found = findProgrammingFundamentalsChallenge(topicSlug, decoded);

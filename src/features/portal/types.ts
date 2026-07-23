@@ -12,7 +12,6 @@ export const PORTAL_ROUTES = {
   courses: CURRICULUM_ROUTES.learn(DEFAULT_COURSE_SLUG),
   projects: "/projects",
   assignments: "/assignments",
-  practice: "/practice",
   aiMentor: "/ai-mentor",
   interview: "/interview",
   resources: "/resources",
@@ -27,7 +26,6 @@ export type PortalNavId =
   | "roadmap"
   | "projects"
   | "assignments"
-  | "practice"
   | "ai-mentor"
   | "interview"
   | "resources"
@@ -67,12 +65,7 @@ export const PORTAL_NAV: PortalNavItem[] = [
     id: "assignments",
     label: "Assignments",
     href: PORTAL_ROUTES.assignments,
-    match: (p) => p.startsWith("/assignment"),
-  },
-  {
-    id: "practice",
-    label: "Practice",
-    href: PORTAL_ROUTES.practice,
+    match: (p) => p.startsWith("/assignments") || p.startsWith("/assignment/"),
   },
   {
     id: "ai-mentor",

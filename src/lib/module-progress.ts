@@ -434,6 +434,7 @@ export function migrateProgressStateV3(
     ...withScroll,
     version: PROGRESS_VERSION,
     moduleGates,
+    assignmentMeta: withScroll.assignmentMeta ?? {},
     unlockedWeekIds: state.unlockedWeekIds?.length ? state.unlockedWeekIds : [1],
     completedWeekIds: state.completedWeekIds ?? [],
   };

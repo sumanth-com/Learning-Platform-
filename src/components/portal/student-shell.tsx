@@ -44,6 +44,9 @@ function StudentShellInner({ data, children }: StudentShellProps) {
     pathname.startsWith("/learn") ||
     pathname.startsWith("/module/") ||
     pathname.startsWith("/challenge/") ||
+    pathname.startsWith("/ai-mentor") ||
+    /^\/projects\/[^/]+\/[^/]+/.test(pathname) ||
+    /^\/assignments\/[^/]+\/[^/]+/.test(pathname) ||
     pathname === "/roadmap" ||
     pathname === "/dashboard";
 
@@ -65,7 +68,7 @@ function StudentShellInner({ data, children }: StudentShellProps) {
   }, [setCollapsed]);
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden bg-zinc-950 font-sans text-zinc-100 antialiased [&_.font-display]:font-sans">
+    <div className="flex h-[100dvh] overflow-hidden bg-background font-sans text-foreground antialiased [&_.font-display]:font-sans">
       <div className="hidden h-full md:block">
         <StudentSidebar mode="desktop" />
       </div>
@@ -95,24 +98,24 @@ function StudentShellInner({ data, children }: StudentShellProps) {
         ) : null}
       </AnimatePresence>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col bg-background">
         <StudentHeader title={title} subtitle={subtitle} user={data.user} />
         <main
           className={cn(
-            "relative min-h-0 flex-1",
-            flush ? "overflow-hidden" : "overflow-y-auto"
+            "relative min-h-0 min-w-0 flex-1",
+            flush ? "overflow-hidden" : "overflow-x-hidden overflow-y-auto"
           )}
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.07),_transparent_55%)]"
+            className="portal-ambient pointer-events-none absolute inset-0"
           />
           <div
             className={cn(
-              "relative h-full",
+              "relative w-full min-w-0",
               flush
-                ? "min-h-0"
-                : "mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8"
+                ? "h-full min-h-0"
+                : "mx-auto max-w-[1440px] px-4 py-6 pb-12 sm:px-6 lg:px-8"
             )}
           >
             {children}

@@ -563,7 +563,14 @@ function ModuleJourneyCard({
         </div>
 
         {!card.locked && art ? (
-          <WeekRoadmapArt src={art} />
+          <WeekRoadmapArt
+            src={art}
+            className={
+              card.globalIndex === 7 || card.globalIndex === 19
+                ? "-translate-y-7"
+                : undefined
+            }
+          />
         ) : !card.locked ? (
           <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-800/80 bg-zinc-900/80 text-zinc-500 transition-all duration-300 group-hover:border-zinc-700 group-hover:bg-zinc-800 group-hover:text-zinc-200">
             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

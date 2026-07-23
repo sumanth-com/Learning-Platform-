@@ -3,8 +3,10 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import type { UserProfile, AppNote, StudySession, ProjectStatus } from "@/types";
-import type { UserProgressState, ResumePosition } from "./progress-types";
+import type { UserProgressState, ResumePosition, AssignmentProgressMeta } from "./progress-types";
 import { defaultProgressState, PROGRESS_VERSION } from "./progress-types";
+import { getSeededCompletedAssignmentIds } from "@/curriculum/assignment-catalog";
+import type { AssignmentSubmissionStatus } from "@/curriculum/assignment-catalog/types";
 import { getCurriculumWeeks, getTotalWeeks } from "@/curriculum/registry";
 import {
   getResetEntityIds,
@@ -96,6 +98,15 @@ interface ProgressStore {
     updates: Partial<{ progress: number; status: ProjectStatus; githubLink: string; notes: string }>
   ) => void;
   setProjectComplete: (projectId: string, complete: boolean) => void;
+
+  // Assignment journey
+  getAssignmentMeta: (assignmentId: string) => AssignmentProgressMeta | undefined;
+  setAssignmentComplete: (assignmentId: string, complete: boolean) => void;
+  setAssignmentSubmission: (
+    assignmentId: string,
+    updates: Partial<AssignmentProgressMeta>
+  ) => void;
+  seedAssignmentJourneyIfNeeded: () => void;
 
   // GitHub repo links
   setGitHubRepoLink: (weekId: number, link: string) => void;
@@ -299,6 +310,100 @@ export const useProgressStore = create<ProgressStore>()(
         });
       },
 
+      getAssignmentMeta: (assignmentId) =>
+        get().progress.assignmentMeta?.[assignmentId],
+
+      setAssignmentComplete: (assignmentId, complete) => {
+        get().setComplete(`${assignmentId}-complete`, complete);
+        set((state) => {
+          const existing = state.progress.assignmentMeta?.[assignmentId] ?? {
+            status: "not_started" as AssignmentSubmissionStatus,
+            githubUrl: "",
+            liveUrl: "",
+            screenshots: "",
+            notes: "",
+            reflection: "",
+          };
+          return {
+            progress: {
+              ...state.progress,
+              assignmentMeta: {
+                ...(state.progress.assignmentMeta ?? {}),
+                [assignmentId]: {
+                  ...existing,
+                  status: complete ? "completed" : existing.status === "completed" ? "in_progress" : existing.status,
+                },
+              },
+            },
+          };
+        });
+      },
+
+      setAssignmentSubmission: (assignmentId, updates) =>
+        set((state) => {
+          const existing = state.progress.assignmentMeta?.[assignmentId] ?? {
+            status: "not_started" as AssignmentSubmissionStatus,
+            githubUrl: "",
+            liveUrl: "",
+            screenshots: "",
+            notes: "",
+            reflection: "",
+          };
+          const merged: AssignmentProgressMeta = {
+            ...existing,
+            ...updates,
+          };
+          if (updates.status === "submitted" || updates.status === "pending_review") {
+            merged.submittedAt = updates.submittedAt ?? new Date().toISOString();
+            if (!get().isDone(`${assignmentId}-complete`)) {
+              // mark in progress via meta only; completion stays explicit
+            }
+          }
+          return {
+            progress: {
+              ...state.progress,
+              assignmentMeta: {
+                ...(state.progress.assignmentMeta ?? {}),
+                [assignmentId]: merged,
+              },
+            },
+          };
+        }),
+
+      seedAssignmentJourneyIfNeeded: () => {
+        set((state) => {
+          if (state.progress.assignmentJourneySeeded) return state;
+          const ids = getSeededCompletedAssignmentIds();
+          const completed = { ...state.progress.completed };
+          const completionDates = { ...state.progress.completionDates };
+          const assignmentMeta = { ...(state.progress.assignmentMeta ?? {}) };
+          const seedDates = ["2026-06-10", "2026-06-18", "2026-07-02", "2026-07-12"];
+          ids.forEach((id, index) => {
+            completed[`${id}-complete`] = true;
+            completionDates[`${id}-complete`] = seedDates[index] ?? todayIso();
+            assignmentMeta[id] = {
+              status: "completed",
+              githubUrl: "",
+              liveUrl: "",
+              screenshots: "",
+              notes: "Seeded foundation completion",
+              reflection: "Completed as part of Developer Foundation.",
+              submittedAt: completionDates[`${id}-complete`],
+              reviewedAt: completionDates[`${id}-complete`],
+            };
+          });
+          return {
+            progress: {
+              ...state.progress,
+              completed,
+              completionDates,
+              assignmentMeta,
+              assignmentJourneySeeded: true,
+            },
+          };
+        });
+      },
+
       setGitHubRepoLink: (weekId, link) =>
         set((state) => ({
           progress: {
@@ -361,11 +466,14 @@ export const useProgressStore = create<ProgressStore>()(
             updates.todayGoalCompleted = false;
           }
           const weeks = getCurriculumWeeks();
-          const progress = syncModuleUnlocks(
+          let progress = syncModuleUnlocks(
             ensurePrathyuBootstrap(
               migrateProgressStateV3(state.progress, weeks, { rebuildGates: true })
             )
           );
+          if (!progress.assignmentMeta) {
+            progress = { ...progress, assignmentMeta: {} };
+          }
           updates.progress = progress;
 
           const practiceWeek = getModuleCurrentWeek("practice", progress, getTotalWeeks());
@@ -384,6 +492,7 @@ export const useProgressStore = create<ProgressStore>()(
           updates.profile = syncDerivedProfile(state.profile, stats, currentWeek);
           return { ...state, ...updates };
         });
+        get().seedAssignmentJourneyIfNeeded();
         get().updateStreak();
       },
 

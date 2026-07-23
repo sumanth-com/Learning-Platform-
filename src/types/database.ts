@@ -209,6 +209,135 @@ export type AssignmentSubmissionInsert = Partial<AssignmentSubmissionRow> &
   Pick<AssignmentSubmissionRow, "assignment_id" | "profile_id">;
 export type AssignmentSubmissionUpdate = Partial<AssignmentSubmissionRow>;
 
+export interface JourneyAssignmentSubmissionRow {
+  id: string;
+  catalog_id: string;
+  assignment_number: number;
+  assignment_title: string;
+  module_slug: string;
+  module_title: string;
+  profile_id: string;
+  student_name: string;
+  student_email: string;
+  github_url: string;
+  live_url: string;
+  screenshots: string;
+  notes: string;
+  reflection: string;
+  status: SubmissionStatus;
+  marks: number | null;
+  feedback: string | null;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type JourneyAssignmentSubmissionInsert =
+  Partial<JourneyAssignmentSubmissionRow> &
+    Pick<JourneyAssignmentSubmissionRow, "catalog_id" | "profile_id">;
+export type JourneyAssignmentSubmissionUpdate =
+  Partial<JourneyAssignmentSubmissionRow>;
+
+export type AiMessageRole = "user" | "assistant" | "system";
+export type AiMessageStatus =
+  | "pending"
+  | "streaming"
+  | "complete"
+  | "error"
+  | "cancelled";
+
+export interface AiConversationRow {
+  id: string;
+  profile_id: string;
+  title: string;
+  pinned: boolean;
+  archived: boolean;
+  favorited: boolean;
+  context: Json;
+  last_message_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type AiConversationInsert = Partial<AiConversationRow> &
+  Pick<AiConversationRow, "profile_id">;
+export type AiConversationUpdate = Partial<AiConversationRow>;
+
+export interface AiMessageRow {
+  id: string;
+  conversation_id: string;
+  profile_id: string;
+  role: AiMessageRole;
+  content: string;
+  status: AiMessageStatus;
+  model: string | null;
+  error: string | null;
+  token_input: number | null;
+  token_output: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type AiMessageInsert = Partial<AiMessageRow> &
+  Pick<AiMessageRow, "conversation_id" | "profile_id" | "role">;
+export type AiMessageUpdate = Partial<AiMessageRow>;
+
+export interface AiAttachmentRow {
+  id: string;
+  profile_id: string;
+  conversation_id: string;
+  message_id: string | null;
+  file_name: string;
+  mime_type: string;
+  size_bytes: number;
+  storage_path: string | null;
+  created_at: string;
+}
+
+export type AiAttachmentInsert = Partial<AiAttachmentRow> &
+  Pick<AiAttachmentRow, "profile_id" | "conversation_id" | "file_name">;
+
+export interface AiBookmarkRow {
+  id: string;
+  profile_id: string;
+  conversation_id: string;
+  message_id: string | null;
+  label: string;
+  snippet: string;
+  created_at: string;
+}
+
+export type AiBookmarkInsert = Partial<AiBookmarkRow> &
+  Pick<AiBookmarkRow, "profile_id" | "conversation_id">;
+
+export interface AiSavedPromptRow {
+  id: string;
+  profile_id: string;
+  title: string;
+  body: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type AiSavedPromptInsert = Partial<AiSavedPromptRow> &
+  Pick<AiSavedPromptRow, "profile_id" | "title" | "body">;
+export type AiSavedPromptUpdate = Partial<AiSavedPromptRow>;
+
+export interface AiMentorSettingsRow {
+  profile_id: string;
+  preferred_provider: string;
+  preferred_model: string | null;
+  temperature: number;
+  system_extra: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type AiMentorSettingsInsert = Partial<AiMentorSettingsRow> &
+  Pick<AiMentorSettingsRow, "profile_id">;
+export type AiMentorSettingsUpdate = Partial<AiMentorSettingsRow>;
+
 export type Database = {
   public: {
     Tables: {
@@ -270,6 +399,48 @@ export type Database = {
         Row: AssignmentSubmissionRow;
         Insert: AssignmentSubmissionInsert;
         Update: AssignmentSubmissionUpdate;
+        Relationships: [];
+      };
+      journey_assignment_submissions: {
+        Row: JourneyAssignmentSubmissionRow;
+        Insert: JourneyAssignmentSubmissionInsert;
+        Update: JourneyAssignmentSubmissionUpdate;
+        Relationships: [];
+      };
+      ai_conversations: {
+        Row: AiConversationRow;
+        Insert: AiConversationInsert;
+        Update: AiConversationUpdate;
+        Relationships: [];
+      };
+      ai_messages: {
+        Row: AiMessageRow;
+        Insert: AiMessageInsert;
+        Update: AiMessageUpdate;
+        Relationships: [];
+      };
+      ai_attachments: {
+        Row: AiAttachmentRow;
+        Insert: AiAttachmentInsert;
+        Update: Partial<AiAttachmentRow>;
+        Relationships: [];
+      };
+      ai_bookmarks: {
+        Row: AiBookmarkRow;
+        Insert: AiBookmarkInsert;
+        Update: Partial<AiBookmarkRow>;
+        Relationships: [];
+      };
+      ai_saved_prompts: {
+        Row: AiSavedPromptRow;
+        Insert: AiSavedPromptInsert;
+        Update: AiSavedPromptUpdate;
+        Relationships: [];
+      };
+      ai_mentor_settings: {
+        Row: AiMentorSettingsRow;
+        Insert: AiMentorSettingsInsert;
+        Update: AiMentorSettingsUpdate;
         Relationships: [];
       };
     };

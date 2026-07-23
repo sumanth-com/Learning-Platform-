@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getAppUrl } from "@/lib/supabase/env";
+import { ensureProfile } from "@/lib/supabase/ensure-profile";
 import type { AuthActionResult, AuthSessionUser } from "@/types/auth";
 import {
   forgotPasswordSchema,
@@ -237,11 +238,15 @@ export async function getCurrentUser(): Promise<AuthSessionUser | null> {
 
   if (!user) return null;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  return { user, profile };
+  try {
+    const profile = await ensureProfile(supabase, user);
+    return { user, profile };
+  } catch {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+    return { user, profile };
+  }
 }

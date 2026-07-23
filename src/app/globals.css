@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@theme inline {
+/* Use @theme (not inline) so utilities reference CSS vars and html.light can theme them */
+@theme {
   --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-source-serif), ui-serif, Georgia, serif;
   --font-family-display: var(--font-display);
@@ -28,6 +29,55 @@
   --radius-xl: 1rem;
 }
 
+/* Full-app light mode: invert zinc scale + semantic tokens */
+html.light {
+  --font-sans: "Segoe UI", var(--font-plus-jakarta), ui-sans-serif, system-ui,
+    sans-serif;
+  --color-background: #ffffff;
+  --color-foreground: #18181b;
+  --color-card: #ffffff;
+  --color-card-foreground: #18181b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #18181b;
+  --color-primary: #4f46e5;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f4f4f5;
+  --color-secondary-foreground: #18181b;
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #52525b;
+  --color-accent: #f4f4f5;
+  --color-accent-foreground: #18181b;
+  --color-border: #e4e4e7;
+  --color-input: #e4e4e7;
+  --color-ring: #4f46e5;
+
+  --color-zinc-50: #09090b;
+  --color-zinc-100: #18181b;
+  --color-zinc-200: #27272a;
+  --color-zinc-300: #3f3f46;
+  --color-zinc-400: #52525b;
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #a1a1aa;
+  --color-zinc-700: #d4d4d8;
+  --color-zinc-800: #e4e4e7;
+  --color-zinc-900: #f4f4f5;
+  --color-zinc-950: #ffffff;
+
+  /* Keep accent text readable on white */
+  --color-indigo-200: #3730a3;
+  --color-indigo-300: #4338ca;
+  --color-indigo-400: #4f46e5;
+  --color-emerald-300: #047857;
+  --color-emerald-400: #059669;
+  --color-amber-200: #b45309;
+  --color-amber-300: #d97706;
+  --color-rose-300: #e11d48;
+  --color-rose-400: #f43f5e;
+  --color-sky-200: #0369a1;
+  --color-sky-300: #0284c7;
+  --color-purple-300: #7e22ce;
+}
+
 * {
   border-color: var(--color-border);
 }
@@ -37,6 +87,12 @@ body {
   color: var(--color-foreground);
   font-family: var(--font-sans);
   font-feature-settings: "rlig" 1, "calt" 1;
+  letter-spacing: -0.011em;
+}
+
+html.light body {
+  letter-spacing: -0.014em;
+  -webkit-font-smoothing: antialiased;
 }
 
 ::-webkit-scrollbar {
@@ -53,14 +109,25 @@ body {
   border-radius: 3px;
 }
 
+html.light ::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
 }
 
-/* Topic pills: thin dark track; padding keeps pills fully visible above it */
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
+}
+
 .topic-pills-scroll {
   scrollbar-width: thin;
   scrollbar-color: #3f3f46 transparent;
+}
+
+html.light .topic-pills-scroll {
+  scrollbar-color: #d4d4d8 transparent;
 }
 
 .topic-pills-scroll::-webkit-scrollbar {
@@ -76,14 +143,21 @@ body {
   border-radius: 999px;
 }
 
+html.light .topic-pills-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+}
+
 .topic-pills-scroll::-webkit-scrollbar-thumb:hover {
   background: #52525b;
 }
 
-/* Challenge list vertical scrollbar */
 .module-list-scroll {
   scrollbar-width: thin;
   scrollbar-color: #3f3f46 transparent;
+}
+
+html.light .module-list-scroll {
+  scrollbar-color: #d4d4d8 transparent;
 }
 
 .module-list-scroll::-webkit-scrollbar {
@@ -97,6 +171,10 @@ body {
 .module-list-scroll::-webkit-scrollbar-thumb {
   background: #3f3f46;
   border-radius: 999px;
+}
+
+html.light .module-list-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
 }
 
 .module-list-scroll::-webkit-scrollbar-thumb:hover {
@@ -117,6 +195,10 @@ body {
   border-radius: 999px;
 }
 
+html.light .thinking-challenge-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+}
+
 .tooling-challenge-scroll {
   scrollbar-width: thin;
   scrollbar-color: #3f3f46 transparent;
@@ -129,6 +211,10 @@ body {
 .tooling-challenge-scroll::-webkit-scrollbar-thumb {
   background: #3f3f46;
   border-radius: 999px;
+}
+
+html.light .tooling-challenge-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
 }
 
 .html-challenge-scroll {
@@ -145,10 +231,19 @@ body {
   border-radius: 999px;
 }
 
+html.light .html-challenge-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+}
+
 .glass {
   background: rgba(15, 15, 18, 0.7);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+html.light .glass {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(24, 24, 27, 0.08);
 }
 
 .gradient-text {
@@ -185,4 +280,64 @@ body {
   background: linear-gradient(90deg, #18181b 25%, #27272a 50%, #18181b 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+html.light .skeleton {
+  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
+  background-size: 200% 100%;
+}
+
+html.light .mix-blend-lighten {
+  mix-blend-mode: normal;
+  opacity: 0.92;
+}
+
+.portal-ambient {
+  background: radial-gradient(
+    ellipse at top,
+    rgba(99, 102, 241, 0.07),
+    transparent 55%
+  );
+}
+
+html.light .portal-ambient {
+  background: radial-gradient(
+    ellipse at top,
+    rgba(79, 70, 229, 0.06),
+    transparent 55%
+  );
+}
+
+/* Hardcoded dark editor/chrome surfaces in light mode */
+html.light .bg-\[\#0a0a0b\],
+html.light .bg-\[\#0d1117\],
+html.light .bg-\[\#1e1e1e\] {
+  background-color: #ffffff !important;
+}
+
+html.light header.sticky,
+html.light aside {
+  background-color: #ffffff !important;
+}
+
+/* Ensure project lab never stays on a dark island in light mode */
+html.light [data-project-lab],
+html.light [data-assignment-lab] {
+  background-color: #ffffff !important;
+  color: #18181b;
+}
+
+html.light [data-project-lab] .monaco-editor,
+html.light [data-project-lab] .monaco-editor-background,
+html.light [data-project-lab] .margin,
+html.light [data-assignment-lab] .monaco-editor,
+html.light [data-assignment-lab] .monaco-editor-background,
+html.light [data-assignment-lab] .margin {
+  background-color: #ffffff !important;
+}
+
+html.light .shadow-black\/40,
+html.light .shadow-black\/50,
+html.light .shadow-2xl {
+  --tw-shadow-color: rgb(24 24 27 / 0.12);
 }

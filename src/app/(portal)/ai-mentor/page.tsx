@@ -1,5 +1,5 @@
-import { FeatureHub } from "@/components/portal/feature-hub";
-import { PORTAL_ROUTES } from "@/features/portal/types";
+import { Suspense } from "react";
+import { MentorWorkspace } from "@/components/ai-mentor/mentor-workspace";
 
 export const metadata = {
   title: "AI Mentor",
@@ -7,16 +7,14 @@ export const metadata = {
 
 export default function AiMentorPage() {
   return (
-    <FeatureHub
-      title="AI Mentor"
-      description="Get contextual help while you learn — explanations, debugging tips, and next-step guidance."
-      bullets={[
-        "Ask questions grounded in your current lesson",
-        "Get code review hints without spoiling solutions",
-        "Plan your next study block with the mentor",
-      ]}
-      primaryHref={PORTAL_ROUTES.roadmap}
-      primaryLabel="Open courses"
-    />
+    <Suspense
+      fallback={
+        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+          Loading AI Mentor…
+        </div>
+      }
+    >
+      <MentorWorkspace />
+    </Suspense>
   );
 }

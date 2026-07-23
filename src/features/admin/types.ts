@@ -22,6 +22,8 @@ export const ADMIN_ROUTES = {
   resourceEdit: (id: string) => `/admin/resources/${id}/edit`,
   students: "/admin/students",
   studentDetail: (id: string) => `/admin/students/${id}`,
+  submissions: "/admin/submissions",
+  submissionDetail: (id: string) => `/admin/submissions/${id}`,
   analytics: "/admin/analytics",
   settings: "/admin/settings",
   forbidden: "/forbidden",
@@ -60,6 +62,10 @@ export const ADMIN_NAV_ITEMS = [
   {
     href: "/admin/students",
     label: "Students",
+  },
+  {
+    href: "/admin/submissions",
+    label: "Submissions",
   },
   {
     href: "/admin/analytics",

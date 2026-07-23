@@ -22,9 +22,10 @@ export const WEEK_ROADMAP_ART: Record<number, StaticImageData> = {
   6: week06Art,
   7: week07Art,
   8: week08Art,
-  9: week09Art,
-  10: week10Art,
-  11: week11Art,
+  // Rotated so art matches module themes: API → Auth → SQL
+  9: week10Art,
+  10: week11Art,
+  11: week09Art,
   12: week12Art,
 };
 
