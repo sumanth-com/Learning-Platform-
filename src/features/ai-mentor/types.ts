@@ -13,6 +13,7 @@ export type LearningContext = {
 export type ChatMessageInput = {
   role: "user" | "assistant" | "system";
   content: string;
+  images?: { mediaType: string; data: string }[];
 };
 
 export type ConversationListItem = AiConversationRow;
@@ -23,6 +24,7 @@ export const AI_MENTOR_ROUTES = {
   root: "/ai-mentor",
   conversation: (id: string) => `/ai-mentor?c=${id}`,
   chatApi: "/api/ai-mentor/chat",
+  attachmentsApi: "/api/ai-mentor/attachments",
 } as const;
 
 export function groupConversationsByRecency(

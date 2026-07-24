@@ -7,7 +7,7 @@ import { AI_MENTOR_ROUTES } from "@/features/ai-mentor/types";
 import { listMessagesAction } from "@/features/ai-mentor/actions/mentor-actions";
 import { friendlyLlmError } from "@/features/ai-mentor/providers/types";
 
-type StreamMode = "send" | "regenerate" | "continue";
+type StreamMode = "send" | "regenerate" | "continue" | "edit";
 
 type StreamMeta = {
   title?: string;
@@ -21,16 +21,20 @@ export function useMentorChat(conversationId: string | null) {
   const abortRef = useRef<AbortController | null>(null);
   const requestSeq = useRef(0);
 
-  const loadMessages = useCallback(async (id: string) => {
+  const loadMessages = useCallback(async (id: string, opts?: { silent?: boolean }) => {
     const seq = ++requestSeq.current;
-    setIsLoading(true);
-    setError(null);
+    if (!opts?.silent) {
+      setIsLoading(true);
+      setError(null);
+    }
     const result = await listMessagesAction(id);
     if (seq !== requestSeq.current) return;
-    setIsLoading(false);
+    if (!opts?.silent) setIsLoading(false);
     if (!result.success) {
-      setError(result.error);
-      setMessages([]);
+      if (!opts?.silent) {
+        setError(result.error);
+        setMessages([]);
+      }
       return;
     }
     setMessages(result.data?.messages ?? []);
@@ -55,7 +59,8 @@ export function useMentorChat(conversationId: string | null) {
       mode: StreamMode,
       content: string,
       learningContext?: LearningContext | null,
-      messageId?: string
+      messageId?: string,
+      attachmentIds?: string[]
     ): Promise<StreamMeta | null> => {
       if (!conversationId) return null;
       setError(null);
@@ -66,7 +71,6 @@ export function useMentorChat(conversationId: string | null) {
       let assistantId: string | null = null;
       let meta: StreamMeta | null = null;
 
-      // Optimistic user bubble before network round-trip
       if (mode === "send" || mode === "continue") {
         const optimisticContent =
           mode === "continue"
@@ -91,6 +95,17 @@ export function useMentorChat(conversationId: string | null) {
         ]);
       }
 
+      if (mode === "edit" && messageId) {
+        setMessages((prev) => {
+          const idx = prev.findIndex((m) => m.id === messageId);
+          if (idx < 0) return prev;
+          return [
+            ...prev.slice(0, idx).map((m) => m),
+            { ...prev[idx]!, content, updated_at: new Date().toISOString() },
+          ];
+        });
+      }
+
       if (mode === "regenerate" && messageId) {
         setMessages((prev) => prev.filter((m) => m.id !== messageId));
       }
@@ -105,15 +120,14 @@ export function useMentorChat(conversationId: string | null) {
             learningContext: learningContext ?? undefined,
             mode,
             messageId,
+            attachmentIds,
           }),
           signal: controller.signal,
         });
 
         if (!res.ok || !res.body) {
           const payload = await res.json().catch(() => null);
-          throw new Error(
-            payload?.error ?? `Request failed (${res.status})`
-          );
+          throw new Error(payload?.error ?? `Request failed (${res.status})`);
         }
 
         const reader = res.body.getReader();
@@ -149,7 +163,9 @@ export function useMentorChat(conversationId: string | null) {
               const id = assistantId;
               if (!id) continue;
               setMessages((prev) => [
-                ...prev.filter((m) => m.id !== id && !m.id.startsWith("temp-assistant")),
+                ...prev.filter(
+                  (m) => m.id !== id && !m.id.startsWith("temp-assistant")
+                ),
                 {
                   id,
                   conversation_id: conversationId,
@@ -215,8 +231,7 @@ export function useMentorChat(conversationId: string | null) {
           }
         }
 
-        // Sync from server once (replaces temp ids) without blocking UI feel
-        void loadMessages(conversationId);
+        void loadMessages(conversationId, { silent: true });
         return meta;
       } catch (err) {
         if ((err as Error).name === "AbortError") {
@@ -231,6 +246,7 @@ export function useMentorChat(conversationId: string | null) {
         }
         const message = friendlyLlmError(err);
         setError(message);
+        void loadMessages(conversationId, { silent: true });
         return null;
       } finally {
         setIsStreaming(false);
@@ -241,8 +257,20 @@ export function useMentorChat(conversationId: string | null) {
   );
 
   const send = useCallback(
-    (content: string, learningContext?: LearningContext | null) =>
-      runStream("send", content, learningContext),
+    (
+      content: string,
+      learningContext?: LearningContext | null,
+      attachmentIds?: string[]
+    ) => runStream("send", content, learningContext, undefined, attachmentIds),
+    [runStream]
+  );
+
+  const editMessage = useCallback(
+    (
+      messageId: string,
+      content: string,
+      learningContext?: LearningContext | null
+    ) => runStream("edit", content, learningContext, messageId),
     [runStream]
   );
 
@@ -266,6 +294,7 @@ export function useMentorChat(conversationId: string | null) {
     error,
     setError,
     send,
+    editMessage,
     stop,
     regenerate,
     continueResponse,

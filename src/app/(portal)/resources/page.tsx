@@ -1,22 +1,11 @@
-import { FeatureHub } from "@/components/portal/feature-hub";
-import { PORTAL_ROUTES } from "@/features/portal/types";
+import { DeveloperHubWorkspace } from "@/components/developer-hub/hub-workspace";
 
 export const metadata = {
-  title: "Resources",
+  title: "Developer Hub",
+  description:
+    "Everything you need to build production-ready software — guides, architecture, AI, DevOps, and more.",
 };
 
 export default function ResourcesPage() {
-  return (
-    <FeatureHub
-      title="Resources"
-      description="Curated docs, cheatsheets, and reference material linked to every module in your path."
-      bullets={[
-        "Official docs and deep-dive articles",
-        "Cheatsheets for HTML, CSS, JS, and React",
-        "Downloadable assets from lesson resources",
-      ]}
-      primaryHref={PORTAL_ROUTES.roadmap}
-      primaryLabel="Explore journey"
-    />
-  );
+  return <DeveloperHubWorkspace />;
 }

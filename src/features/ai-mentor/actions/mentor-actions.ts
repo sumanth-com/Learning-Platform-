@@ -157,6 +157,23 @@ export async function deleteConversationAction(
   }
 }
 
+export async function duplicateConversationAction(
+  conversationId: string
+): Promise<ActionResult<{ conversation: AiConversationRow }>> {
+  const ctx = await requireUser();
+  if (!ctx.user) return { success: false, error: "User session missing. Sign in again." };
+  try {
+    const service = new MentorService(ctx.supabase);
+    const conversation = await service.duplicateConversation(
+      conversationId,
+      ctx.user.id
+    );
+    return { success: true, data: { conversation } };
+  } catch (error) {
+    return fail(error, "Failed to duplicate.");
+  }
+}
+
 export async function listMessagesAction(
   conversationId: string
 ): Promise<ActionResult<{ messages: AiMessageRow[] }>> {

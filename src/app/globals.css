@@ -341,3 +341,84 @@ html.light .shadow-black\/50,
 html.light .shadow-2xl {
   --tw-shadow-color: rgb(24 24 27 / 0.12);
 }
+
+/* AI Mentor scroll areas */
+.mentor-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
+}
+
+html.light .mentor-scroll {
+  scrollbar-color: #d4d4d8 transparent;
+}
+
+.mentor-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.mentor-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mentor-scroll::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+html.light .mentor-scroll::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  background-clip: padding-box;
+}
+
+@keyframes mentor-aurora-shift {
+  0% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+  100% {
+    background-position: 0% 40%;
+  }
+}
+
+@keyframes mentor-glow-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.mentor-aurora-mesh {
+  background: linear-gradient(
+    120deg,
+    rgba(91, 108, 255, 0.16),
+    rgba(56, 189, 248, 0.12),
+    rgba(52, 211, 153, 0.12),
+    rgba(251, 191, 36, 0.1),
+    rgba(244, 114, 182, 0.1),
+    rgba(91, 108, 255, 0.16)
+  );
+  background-size: 320% 320%;
+  animation: mentor-aurora-shift 16s ease-in-out infinite;
+}
+
+.mentor-composer-glow {
+  background: linear-gradient(
+    90deg,
+    #38bdf8,
+    #34d399,
+    #fbbf24,
+    #f472b6,
+    #818cf8,
+    #38bdf8
+  );
+  background-size: 200% 100%;
+  animation: mentor-glow-flow 4s linear infinite;
+}
+

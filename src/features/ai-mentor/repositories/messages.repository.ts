@@ -73,4 +73,18 @@ export class MessagesRepository {
       .eq("profile_id", profileId);
     if (error) throw error;
   }
+
+  async deleteAfter(
+    conversationId: string,
+    profileId: string,
+    afterCreatedAt: string
+  ): Promise<void> {
+    const { error } = await this.client
+      .from("ai_messages")
+      .delete()
+      .eq("conversation_id", conversationId)
+      .eq("profile_id", profileId)
+      .gt("created_at", afterCreatedAt);
+    if (error) throw error;
+  }
 }

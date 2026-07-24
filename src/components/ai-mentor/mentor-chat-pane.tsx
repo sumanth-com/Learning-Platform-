@@ -1,20 +1,72 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type DragEvent,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUp,
   Bookmark,
-  Loader2,
-  RefreshCw,
-  Square,
+  Check,
+  ChevronDown,
+  Code2,
+  Copy,
   CornerDownLeft,
+  FileArchive,
+  FileCode2,
+  FileText,
+  GitBranch,
+  ImageIcon,
+  Loader2,
+  NotebookPen,
+  Pencil,
+  Plus,
+  RefreshCw,
+  Share2,
+  Sparkles,
+  Square,
+  X,
 } from "lucide-react";
+import { toast } from "sonner";
 import type { AiMessageRow } from "@/types/database";
 import { MentorMarkdown } from "@/components/ai-mentor/mentor-markdown";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { bookmarkMessageAction } from "@/features/ai-mentor/actions/mentor-actions";
-import { toast } from "sonner";
+import { AI_MENTOR_ROUTES } from "@/features/ai-mentor/types";
+import { AI_MENTOR_MAX_ATTACHMENTS } from "@/features/ai-mentor/repositories/attachments.repository";
+import { isAllowedAttachment } from "@/features/ai-mentor/lib/attachments";
+import {
+  ComposerAttachmentChip,
+  ImagePreviewModal,
+  MessageAttachments,
+  stripAttachmentMarkup,
+  useConversationAttachments,
+  withPreservedAttachmentMarkup,
+  type DisplayAttachment,
+} from "@/components/ai-mentor/attachment-ui";
+import { cn } from "@/lib/utils";
+
+type UploadStatus = "queued" | "uploading" | "done" | "error";
+
+type PendingAttachment = {
+  localId: string;
+  file: File;
+  id?: string;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+  previewUrl?: string;
+  progress: number;
+  status: UploadStatus;
+  error?: string;
+};
 
 type MentorChatPaneProps = {
   title: string;
@@ -23,22 +75,571 @@ type MentorChatPaneProps = {
   isLoading: boolean;
   isStreaming: boolean;
   error: string | null;
-  onSend: (content: string) => void;
+  onSend: (content: string, attachmentIds?: string[]) => void;
+  onEditMessage: (messageId: string, content: string) => void;
   onStop: () => void;
   onRegenerate: (messageId?: string) => void;
   onContinue: () => void;
+  onEnsureConversation?: () => Promise<string | null>;
 };
 
-function formatTime(iso: string) {
+const MODEL_OPTIONS = [
+  { id: "supra", label: "Supra", available: true },
+  { id: "supra-pro", label: "Supra Pro", available: false },
+  { id: "supra-pro-plus", label: "Supra Pro+", available: false },
+  { id: "premium", label: "Premium", available: false },
+] as const;
+
+function MentorAuroraBackground({ vivid = false }: { vivid?: boolean }) {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-background" />
+      <motion.div
+        className={cn(
+          "absolute -left-[20%] top-[-10%] h-[55%] w-[70%] rounded-full blur-3xl",
+          vivid ? "opacity-50" : "opacity-25"
+        )}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(91,108,255,0.55) 0%, transparent 70%)",
+        }}
+        animate={{
+          x: [0, 40, -20, 0],
+          y: [0, 30, -10, 0],
+          scale: [1, 1.12, 0.96, 1],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className={cn(
+          "absolute -right-[15%] top-[5%] h-[50%] w-[60%] rounded-full blur-3xl",
+          vivid ? "opacity-45" : "opacity-20"
+        )}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(56,189,248,0.5) 0%, transparent 70%)",
+        }}
+        animate={{
+          x: [0, -35, 25, 0],
+          y: [0, 40, -15, 0],
+          scale: [1, 0.94, 1.1, 1],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className={cn(
+          "absolute bottom-[-10%] left-[15%] h-[45%] w-[65%] rounded-full blur-3xl",
+          vivid ? "opacity-40" : "opacity-18"
+        )}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(52,211,153,0.45) 0%, transparent 70%)",
+        }}
+        animate={{
+          x: [0, 30, -40, 0],
+          y: [0, -25, 20, 0],
+          scale: [1, 1.08, 0.92, 1],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className={cn(
+          "absolute right-[10%] bottom-[15%] h-[35%] w-[40%] rounded-full blur-3xl",
+          vivid ? "opacity-35" : "opacity-15"
+        )}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.35) 0%, transparent 70%)",
+        }}
+        animate={{
+          x: [0, -20, 15, 0],
+          y: [0, 25, -20, 0],
+          opacity: vivid ? [0.25, 0.4, 0.28, 0.25] : [0.1, 0.18, 0.12, 0.1],
+        }}
+        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <div className="mentor-aurora-mesh absolute inset-0 opacity-[0.35] mix-blend-soft-light dark:opacity-[0.22]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background/85" />
+    </div>
+  );
+}
+
+const PLACEHOLDERS = [
+  "Message AI Mentor…",
+  "Ask about React, SQL, system design…",
+  "Paste code to review…",
+  "Help me debug this…",
+];
+
+function ModelPicker() {
+  const [open, setOpen] = useState(false);
+  const [modelId, setModelId] = useState<(typeof MODEL_OPTIONS)[number]["id"]>(
+    "supra"
+  );
+  const ref = useRef<HTMLDivElement>(null);
+  const current = MODEL_OPTIONS.find((m) => m.id === modelId) ?? MODEL_OPTIONS[0];
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "inline-flex h-8 items-center gap-1.5 rounded-full border border-border/70 bg-muted/50 px-2.5",
+          "text-[12px] font-medium text-foreground/90 shadow-sm",
+          "transition-[background-color,border-color,box-shadow] duration-150",
+          "hover:border-border hover:bg-muted hover:shadow",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+          open && "border-border bg-muted"
+        )}
+      >
+        <span className="max-w-[140px] truncate">{current.label}</span>
+        <ChevronDown
+          className={cn(
+            "h-3.5 w-3.5 text-muted-foreground transition-transform duration-150",
+            open && "rotate-180"
+          )}
+        />
+      </button>
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            role="listbox"
+            aria-label="Model"
+            initial={{ opacity: 0, y: -4, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -2, scale: 0.98 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-10 z-40 min-w-[180px] overflow-hidden rounded-xl border border-border/80 bg-card p-1 shadow-[0_10px_32px_-10px_rgba(0,0,0,0.28)]"
+          >
+            {MODEL_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                role="option"
+                aria-selected={opt.id === modelId}
+                className={cn(
+                  "flex w-full items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors",
+                  opt.id === modelId
+                    ? "bg-muted font-medium text-foreground"
+                    : "text-foreground hover:bg-muted/70",
+                  !opt.available && "opacity-70"
+                )}
+                onClick={() => {
+                  if (!opt.available) {
+                    toast.message("Coming soon");
+                    setOpen(false);
+                    return;
+                  }
+                  setModelId(opt.id);
+                  setOpen(false);
+                }}
+              >
+                <span>{opt.label}</span>
+                {!opt.available ? (
+                  <span className="text-[10px] text-muted-foreground">Soon</span>
+                ) : opt.id === modelId ? (
+                  <Check className="h-3.5 w-3.5 text-foreground" />
+                ) : null}
+              </button>
+            ))}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+const SUGGESTIONS = [
+  "Explain React Server Components simply",
+  "Review this SQL schema for N+1 risks",
+  "Walk me through a clean Next.js app structure",
+  "Help me debug a Next.js hydration error",
+];
+
+const PLACEHOLDERS_HERO = "Ask anything";
+
+const ATTACH_OPTIONS: {
+  id: string;
+  label: string;
+  accept: string;
+  icon: ReactNode;
+  future?: boolean;
+}[] = [
+  {
+    id: "image",
+    label: "Upload Image",
+    accept: "image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp",
+    icon: <ImageIcon className="h-4 w-4" />,
+  },
+  {
+    id: "pdf",
+    label: "Upload PDF",
+    accept: "application/pdf,.pdf",
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
+    id: "doc",
+    label: "Upload Document",
+    accept: ".docx,.txt,.md,.csv",
+    icon: <NotebookPen className="h-4 w-4" />,
+  },
+  {
+    id: "code",
+    label: "Upload Code File",
+    accept: ".js,.ts,.tsx,.jsx,.py,.java,.cpp,.c,.h,.json",
+    icon: <FileCode2 className="h-4 w-4" />,
+  },
+  {
+    id: "zip",
+    label: "Upload ZIP",
+    accept: ".zip,application/zip",
+    icon: <FileArchive className="h-4 w-4" />,
+  },
+  {
+    id: "text",
+    label: "Upload Text File",
+    accept: ".txt,text/plain",
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
+    id: "md",
+    label: "Upload Markdown",
+    accept: ".md,text/markdown",
+    icon: <Code2 className="h-4 w-4" />,
+  },
+  {
+    id: "github",
+    label: "GitHub Repository",
+    accept: "",
+    icon: <GitBranch className="h-4 w-4" />,
+    future: true,
+  },
+];
+
+function wasEdited(message: AiMessageRow) {
   try {
-    return new Date(iso).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const created = new Date(message.created_at).getTime();
+    const updated = new Date(message.updated_at).getTime();
+    return Number.isFinite(created) && Number.isFinite(updated) && updated - created > 1500;
   } catch {
-    return "";
+    return false;
   }
 }
+
+function IconAction({
+  label,
+  onClick,
+  disabled,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      disabled={disabled}
+      onClick={onClick}
+      className={cn(
+        "inline-flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground",
+        "transition-colors duration-150 hover:bg-muted hover:text-foreground",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
+        "disabled:pointer-events-none disabled:opacity-40"
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function resizeTextarea(el: HTMLTextAreaElement | null, max = 240) {
+  if (!el) return;
+  el.style.height = "auto";
+  el.style.height = `${Math.min(el.scrollHeight, max)}px`;
+}
+
+const MessageRow = memo(function MessageRow({
+  message,
+  isLastAssistant,
+  conversationId,
+  isStreaming,
+  editingId,
+  attachments,
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
+  onRegenerate,
+  onContinue,
+  onOpenAttachments,
+}: {
+  message: AiMessageRow;
+  isLastAssistant: boolean;
+  conversationId: string | null;
+  isStreaming: boolean;
+  editingId: string | null;
+  attachments: DisplayAttachment[];
+  onStartEdit: (id: string) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (id: string, content: string) => void;
+  onRegenerate: (messageId?: string) => void;
+  onContinue: () => void;
+  onOpenAttachments: (attachments: DisplayAttachment[], index: number) => void;
+}) {
+  const isUser = message.role === "user";
+  const isAssistant = message.role === "assistant";
+  const streaming = message.status === "streaming";
+  const isEditing = editingId === message.id;
+  const visibleContent = useMemo(
+    () => stripAttachmentMarkup(message.content),
+    [message.content]
+  );
+  const [draft, setDraft] = useState(visibleContent);
+  const editRef = useRef<HTMLTextAreaElement>(null);
+  const edited =
+    wasEdited(message) || Boolean((message as { __edited?: boolean }).__edited);
+
+  useEffect(() => {
+    if (!isEditing) return;
+    setDraft(visibleContent);
+    const id = window.requestAnimationFrame(() => {
+      const el = editRef.current;
+      if (!el) return;
+      el.focus();
+      resizeTextarea(el, 280);
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [isEditing, visibleContent]);
+
+  const copyText = async () => {
+    await navigator.clipboard.writeText(visibleContent || message.content);
+    toast.success("Copied");
+  };
+
+  const save = () => {
+    const nextVisible = draft.replace(/\s+$/g, "");
+    if (!nextVisible.trim() && attachments.length === 0) return;
+    if (nextVisible.trim() === visibleContent.trim()) {
+      onCancelEdit();
+      return;
+    }
+    onSaveEdit(
+      message.id,
+      withPreservedAttachmentMarkup(message.content, nextVisible)
+    );
+  };
+
+  if (isUser && isEditing) {
+    return (
+      <div className="mx-auto w-full max-w-[760px]">
+        <div className="ml-auto max-w-[min(92%,34rem)] rounded-2xl border border-border/80 bg-muted/50 p-3 shadow-sm ring-1 ring-foreground/5">
+          <textarea
+            ref={editRef}
+            value={draft}
+            aria-label="Edit message"
+            onChange={(e) => {
+              setDraft(e.target.value);
+              resizeTextarea(e.target, 280);
+            }}
+            rows={2}
+            className="max-h-[280px] min-h-[52px] w-full resize-none bg-transparent text-[15px] leading-relaxed text-foreground outline-none"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                e.stopPropagation();
+                onCancelEdit();
+              }
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                save();
+              }
+            }}
+          />
+          <div className="mt-2.5 flex items-center justify-between gap-2">
+            <p className="text-[11px] text-muted-foreground">
+              ⌘/Ctrl+Enter to save · Esc to cancel
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={onCancelEdit}
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-[12px] font-medium text-foreground transition hover:bg-muted"
+              >
+                <X className="h-3.5 w-3.5" />
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={(!draft.trim() && attachments.length === 0) || isStreaming}
+                onClick={save}
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-foreground px-3 text-[12px] font-medium text-background transition hover:opacity-90 disabled:opacity-40"
+              >
+                <Check className="h-3.5 w-3.5" />
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+      className={cn(
+        "group/msg mx-auto w-full max-w-[760px]",
+        isUser && "flex justify-end"
+      )}
+    >
+      {isUser ? (
+        <div className="max-w-[min(85%,34rem)]">
+          <MessageAttachments
+            attachments={attachments}
+            onOpenImage={(index) => onOpenAttachments(attachments, index)}
+          />
+          {visibleContent ? (
+            <div className="rounded-2xl bg-muted px-3.5 py-2 text-[15px] leading-relaxed text-foreground">
+              <p className="whitespace-pre-wrap">{visibleContent}</p>
+            </div>
+          ) : null}
+          <div className="mt-1 flex items-center justify-end gap-1">
+            {edited ? (
+              <span className="mr-1 text-[10px] text-muted-foreground/80">
+                Edited
+              </span>
+            ) : null}
+            <div className="flex gap-0.5 opacity-0 transition-opacity duration-150 group-hover/msg:opacity-100 focus-within:opacity-100">
+              <IconAction label="Copy" onClick={copyText}>
+                <Copy className="h-3.5 w-3.5" />
+              </IconAction>
+              <IconAction
+                label="Edit"
+                disabled={isStreaming || message.id.startsWith("temp-")}
+                onClick={() => onStartEdit(message.id)}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </IconAction>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isAssistant ? (
+        <div className="w-full">
+          <div className="text-[15px] leading-[1.7] text-foreground">
+            {visibleContent ? (
+              <MentorMarkdown content={visibleContent} />
+            ) : message.content ? (
+              <MentorMarkdown content={message.content} />
+            ) : (
+              <div className="flex items-center gap-2 py-1 text-sm text-muted-foreground">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-foreground/40 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-foreground/70" />
+                </span>
+                Thinking
+                <span className="inline-block h-4 w-[2px] animate-pulse bg-foreground/70" />
+              </div>
+            )}
+            {streaming && message.content ? (
+              <span
+                aria-hidden
+                className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[2px] animate-pulse bg-foreground/80"
+              />
+            ) : null}
+          </div>
+
+          {message.status === "error" && message.error ? (
+            <p className="mt-2 text-sm text-rose-600">{message.error}</p>
+          ) : null}
+
+          {message.status === "complete" && message.content ? (
+            <div className="mt-1.5 flex items-center gap-0.5 opacity-0 transition-opacity duration-150 group-hover/msg:opacity-100 focus-within:opacity-100">
+              <IconAction label="Copy" onClick={copyText}>
+                <Copy className="h-3.5 w-3.5" />
+              </IconAction>
+              {isLastAssistant ? (
+                <>
+                  <IconAction
+                    label="Retry"
+                    disabled={isStreaming}
+                    onClick={() => onRegenerate(message.id)}
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                  </IconAction>
+                  <IconAction
+                    label="Continue"
+                    disabled={isStreaming}
+                    onClick={onContinue}
+                  >
+                    <CornerDownLeft className="h-3.5 w-3.5" />
+                  </IconAction>
+                </>
+              ) : null}
+              <IconAction
+                label="Bookmark"
+                disabled={!conversationId || message.id.startsWith("temp-")}
+                onClick={async () => {
+                  if (!conversationId) return;
+                  const result = await bookmarkMessageAction({
+                    conversationId,
+                    messageId: message.id,
+                    snippet: message.content,
+                  });
+                  if (!result.success) toast.error(result.error);
+                  else toast.success("Bookmarked");
+                }}
+              >
+                <Bookmark className="h-3.5 w-3.5" />
+              </IconAction>
+              <IconAction
+                label="Share"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(
+                    message.content.slice(0, 2000)
+                  );
+                  toast.success("Copied to share");
+                }}
+              >
+                <Share2 className="h-3.5 w-3.5" />
+              </IconAction>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </motion.div>
+  );
+});
 
 export function MentorChatPane({
   title,
@@ -48,226 +649,716 @@ export function MentorChatPane({
   isStreaming,
   error,
   onSend,
+  onEditMessage,
   onStop,
   onRegenerate,
   onContinue,
+  onEnsureConversation,
 }: MentorChatPaneProps) {
   const [draft, setDraft] = useState("");
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editedIds, setEditedIds] = useState<Set<string>>(() => new Set());
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [pendingFiles, setPendingFiles] = useState<PendingAttachment[]>([]);
+  const [dragOver, setDragOver] = useState(false);
+  const [preview, setPreview] = useState<{
+    attachments: DisplayAttachment[];
+    index: number;
+  } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const acceptRef = useRef("*/*");
+  const attachMenuRef = useRef<HTMLDivElement>(null);
+  const dropDepth = useRef(0);
+
+  const { attachmentsByMessageId, reloadAttachments } =
+    useConversationAttachments(conversationId);
+
+  const lastAssistantId = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      if (messages[i]?.role === "assistant") return messages[i]!.id;
+    }
+    return null;
+  }, [messages]);
+
+  const uploading = pendingFiles.some((p) => p.status === "uploading" || p.status === "queued");
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    void reloadAttachments();
+  }, [messages, reloadAttachments]);
+
+  useEffect(() => {
+    if (isStreaming) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
   }, [messages, isStreaming]);
+
+  useEffect(() => {
+    if (draft || isStreaming || messages.length > 0) return;
+    const id = window.setInterval(() => {
+      setPlaceholderIndex((i) => (i + 1) % PLACEHOLDERS.length);
+    }, 3200);
+    return () => window.clearInterval(id);
+  }, [draft, isStreaming, messages.length]);
+
+  useEffect(() => {
+    const empty = !isLoading && messages.length === 0;
+    resizeTextarea(textareaRef.current, empty ? 160 : 200);
+  }, [draft, isLoading, messages.length]);
+
+  useEffect(() => {
+    if (!attachOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (!attachMenuRef.current?.contains(e.target as Node)) {
+        setAttachOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", onDown);
+    return () => window.removeEventListener("mousedown", onDown);
+  }, [attachOpen]);
+
+  const uploadOne = useCallback(
+    async (item: PendingAttachment, convId: string) => {
+      setPendingFiles((prev) =>
+        prev.map((p) =>
+          p.localId === item.localId
+            ? { ...p, status: "uploading", progress: 12, error: undefined }
+            : p
+        )
+      );
+
+      try {
+        const form = new FormData();
+        form.set("conversationId", convId);
+        form.append("files", item.file);
+
+        // Simulated progress while waiting (fetch has no upload progress in browsers easily)
+        const tick = window.setInterval(() => {
+          setPendingFiles((prev) =>
+            prev.map((p) =>
+              p.localId === item.localId && p.status === "uploading"
+                ? { ...p, progress: Math.min(p.progress + 11, 88) }
+                : p
+            )
+          );
+        }, 180);
+
+        const res = await fetch(AI_MENTOR_ROUTES.attachmentsApi, {
+          method: "POST",
+          body: form,
+        });
+        window.clearInterval(tick);
+        const payload = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw new Error(payload?.error ?? "Upload failed. Please try again.");
+        }
+        const uploaded = (payload?.attachments?.[0] ?? null) as {
+          id: string;
+          fileName: string;
+        } | null;
+        if (!uploaded?.id) throw new Error("Upload failed. Please try again.");
+
+        setPendingFiles((prev) =>
+          prev.map((p) =>
+            p.localId === item.localId
+              ? { ...p, id: uploaded.id, status: "done", progress: 100 }
+              : p
+          )
+        );
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Upload failed. Please try again.";
+        setPendingFiles((prev) =>
+          prev.map((p) =>
+            p.localId === item.localId
+              ? { ...p, status: "error", progress: 0, error: message }
+              : p
+          )
+        );
+        toast.error(message);
+      }
+    },
+    []
+  );
+
+  const queueFiles = useCallback(
+    async (files: FileList | File[] | DataTransferItemList) => {
+      const list: File[] = [];
+      if (typeof DataTransferItemList !== "undefined" && files instanceof DataTransferItemList) {
+        for (const item of Array.from(files)) {
+          if (item.kind === "file") {
+            const f = item.getAsFile();
+            if (f) list.push(f);
+          }
+        }
+      } else {
+        list.push(...Array.from(files as FileList | File[]));
+      }
+      if (list.length === 0) return;
+
+      let convId = conversationId;
+      if (!convId && onEnsureConversation) {
+        convId = await onEnsureConversation();
+      }
+      if (!convId) {
+        toast.error("Start a chat first, then attach files.");
+        return;
+      }
+
+      setPendingFiles((prev) => {
+        const room = AI_MENTOR_MAX_ATTACHMENTS - prev.length;
+        if (room <= 0) {
+          toast.error(`You can attach up to ${AI_MENTOR_MAX_ATTACHMENTS} files.`);
+          return prev;
+        }
+
+        const locals: PendingAttachment[] = [];
+        for (const file of list.slice(0, room)) {
+          const check = isAllowedAttachment(file.name, file.size);
+          if (!check.ok) {
+            toast.error(check.error);
+            continue;
+          }
+          locals.push({
+            localId: crypto.randomUUID(),
+            file,
+            fileName: file.name,
+            mimeType: file.type || "application/octet-stream",
+            sizeBytes: file.size,
+            previewUrl: file.type.startsWith("image/")
+              ? URL.createObjectURL(file)
+              : undefined,
+            progress: 0,
+            status: "queued",
+          });
+        }
+        if (locals.length === 0) return prev;
+
+        // Kick off uploads after state commit
+        queueMicrotask(() => {
+          for (const local of locals) {
+            void uploadOne(local, convId!);
+          }
+        });
+
+        return [...prev, ...locals];
+      });
+    },
+    [conversationId, onEnsureConversation, uploadOne]
+  );
+
+  const retryUpload = async (localId: string) => {
+    const item = pendingFiles.find((p) => p.localId === localId);
+    if (!item) return;
+    let convId = conversationId;
+    if (!convId && onEnsureConversation) {
+      convId = await onEnsureConversation();
+    }
+    if (!convId) {
+      toast.error("Start a chat first, then attach files.");
+      return;
+    }
+    await uploadOne(item, convId);
+  };
+
+  const removePending = async (localId: string) => {
+    const item = pendingFiles.find((p) => p.localId === localId);
+    setPendingFiles((prev) => prev.filter((p) => p.localId !== localId));
+    if (item?.previewUrl) URL.revokeObjectURL(item.previewUrl);
+    if (item?.id) {
+      await fetch(
+        `${AI_MENTOR_ROUTES.attachmentsApi}?id=${encodeURIComponent(item.id)}`,
+        { method: "DELETE" }
+      ).catch(() => null);
+    }
+  };
 
   const submit = () => {
     const value = draft.trim();
-    if (!value || isStreaming) return;
+    const ids = pendingFiles.filter((p) => p.id && p.status === "done").map((p) => p.id!);
+    if ((!value && ids.length === 0) || isStreaming || uploading) return;
+    if (pendingFiles.some((p) => p.status === "error")) {
+      toast.message("Remove or retry failed uploads first");
+      return;
+    }
+    if (pendingFiles.some((p) => p.status !== "done")) {
+      toast.message("Wait for uploads to finish");
+      return;
+    }
     setDraft("");
-    onSend(value);
-    textareaRef.current?.focus();
+    setPendingFiles((prev) => {
+      for (const p of prev) if (p.previewUrl) URL.revokeObjectURL(p.previewUrl);
+      return [];
+    });
+    onSend(value || "Please review the attached files.", ids);
+    requestAnimationFrame(() => textareaRef.current?.focus());
   };
 
-  const lastAssistant = [...messages]
-    .reverse()
-    .find((m) => m.role === "assistant");
+  const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      submit();
+    }
+  };
+
+  const onDragEnter = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropDepth.current += 1;
+    if (e.dataTransfer?.types?.includes("Files")) setDragOver(true);
+  };
+  const onDragLeave = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropDepth.current = Math.max(0, dropDepth.current - 1);
+    if (dropDepth.current === 0) setDragOver(false);
+  };
+  const onDragOver = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  const onDrop = (e: DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropDepth.current = 0;
+    setDragOver(false);
+    if (e.dataTransfer?.files?.length) void queueFiles(e.dataTransfer.files);
+  };
+
+  const displayMessages = useMemo(
+    () =>
+      messages.map((m) =>
+        editedIds.has(m.id)
+          ? ({ ...m, __edited: true } as AiMessageRow & { __edited?: boolean })
+          : m
+      ),
+    [messages, editedIds]
+  );
+
+  const isEmptyChat = !isLoading && messages.length === 0;
+  const canSend =
+    !uploading &&
+    !isStreaming &&
+    (Boolean(draft.trim()) || pendingFiles.some((p) => p.status === "done")) &&
+    !(
+      pendingFiles.length > 0 &&
+      pendingFiles.some((p) => p.status !== "done")
+    );
+
+  const renderComposer = () => (
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-[28px] border border-border/50",
+        "bg-muted/45 dark:bg-muted/30",
+        "shadow-[0_12px_40px_-18px_rgba(40,60,120,0.28),0_0_0_1px_rgba(0,0,0,0.03)]",
+        "transition-[box-shadow,border-color,transform] duration-200",
+        "focus-within:border-border focus-within:shadow-[0_16px_48px_-16px_rgba(60,90,180,0.32),0_0_0_1px_rgba(0,0,0,0.04)]",
+        dragOver && "border-foreground/25 ring-2 ring-sky-500/15",
+        isEmptyChat && "rounded-[32px]"
+      )}
+    >
+      {pendingFiles.length > 0 ? (
+        <div className="flex flex-wrap gap-2 px-4 pb-1 pt-3.5">
+          <AnimatePresence mode="popLayout">
+            {pendingFiles.map((file) => (
+              <ComposerAttachmentChip
+                key={file.localId}
+                file={file}
+                onRemove={() => void removePending(file.localId)}
+                onRetry={() => void retryUpload(file.localId)}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
+      ) : null}
+
+      <div
+        className={cn(
+          "flex flex-col",
+          isEmptyChat ? "min-h-[132px] px-4 pt-4 pb-3" : "px-2 py-1.5"
+        )}
+      >
+        <div
+          className={cn(
+            "relative flex min-w-0 flex-1",
+            isEmptyChat ? "min-h-[52px]" : "items-center"
+          )}
+        >
+          {!draft ? (
+            <div
+              className={cn(
+                "pointer-events-none absolute inset-0 flex px-1",
+                isEmptyChat ? "items-start pt-0.5" : "items-center"
+              )}
+            >
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={
+                    isEmptyChat
+                      ? PLACEHOLDERS_HERO
+                      : PLACEHOLDERS[placeholderIndex]
+                  }
+                  initial={{ opacity: 0, y: 3 }}
+                  animate={{ opacity: 0.5, y: 0 }}
+                  exit={{ opacity: 0, y: -3 }}
+                  transition={{ duration: 0.2 }}
+                  className={cn(
+                    "block w-full text-[15px] leading-6 text-muted-foreground",
+                    !isEmptyChat && "truncate"
+                  )}
+                >
+                  {isEmptyChat
+                    ? PLACEHOLDERS_HERO
+                    : PLACEHOLDERS[placeholderIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+          ) : null}
+          <textarea
+            ref={textareaRef}
+            value={draft}
+            onChange={(e) => {
+              setDraft(e.target.value);
+              resizeTextarea(e.target, isEmptyChat ? 160 : 200);
+            }}
+            rows={isEmptyChat ? 2 : 1}
+            disabled={isStreaming}
+            aria-label="Message AI Mentor"
+            className={cn(
+              "w-full resize-none bg-transparent text-[15px] leading-6 text-foreground outline-none disabled:opacity-60",
+              isEmptyChat
+                ? "min-h-[52px] max-h-[160px] px-1 py-0.5"
+                : "max-h-[200px] min-h-9 px-2 py-[6px]"
+            )}
+            onKeyDown={onKeyDown}
+            onPaste={(e) => {
+              const items = e.clipboardData?.items;
+              const files = e.clipboardData?.files;
+              const hasFile =
+                (files && files.length > 0) ||
+                (items && Array.from(items).some((i) => i.kind === "file"));
+              if (hasFile) {
+                e.preventDefault();
+                if (items) void queueFiles(items);
+                else if (files) void queueFiles(files);
+              }
+            }}
+          />
+        </div>
+
+        <div
+          className={cn(
+            "flex items-center justify-between gap-2",
+            isEmptyChat ? "mt-3" : "mt-0"
+          )}
+        >
+          <div className="relative flex items-center gap-0.5" ref={attachMenuRef}>
+            <button
+              type="button"
+              aria-label="Add attachment"
+              aria-expanded={attachOpen}
+              disabled={isStreaming}
+              onClick={() => setAttachOpen((v) => !v)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-background/80 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:opacity-40"
+            >
+              <Plus className="h-5 w-5" strokeWidth={1.75} />
+            </button>
+            <button
+              type="button"
+              aria-label="Upload image"
+              disabled={isStreaming}
+              onClick={() => {
+                acceptRef.current =
+                  "image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp";
+                requestAnimationFrame(() => fileInputRef.current?.click());
+              }}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors duration-150 hover:bg-background/80 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:opacity-40"
+            >
+              <ImageIcon className="h-4 w-4" strokeWidth={1.75} />
+            </button>
+            <AnimatePresence>
+              {attachOpen ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                  transition={{ duration: 0.14 }}
+                  className="absolute bottom-11 left-0 z-30 w-[240px] overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl"
+                >
+                  {ATTACH_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-[13px] text-foreground transition hover:bg-muted"
+                      onClick={() => {
+                        if (opt.future) {
+                          toast.message("Coming soon");
+                          setAttachOpen(false);
+                          return;
+                        }
+                        acceptRef.current = opt.accept;
+                        setAttachOpen(false);
+                        requestAnimationFrame(() =>
+                          fileInputRef.current?.click()
+                        );
+                      }}
+                    >
+                      <span className="text-muted-foreground">{opt.icon}</span>
+                      <span className="flex-1">{opt.label}</span>
+                      {opt.future ? (
+                        <span className="text-[10px] text-muted-foreground">
+                          Soon
+                        </span>
+                      ) : null}
+                    </button>
+                  ))}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              className="hidden"
+              accept={acceptRef.current}
+              onChange={(e) => {
+                if (e.target.files) void queueFiles(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </div>
+
+          {isStreaming ? (
+            <button
+              type="button"
+              onClick={onStop}
+              aria-label="Stop generating"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
+              <Square className="h-3.5 w-3.5 fill-current" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={submit}
+              disabled={!canSend}
+              aria-label="Send message"
+              className={cn(
+                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-150",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40",
+                canSend
+                  ? "bg-[#5B6CFF] text-white shadow-[0_6px_16px_-6px_rgba(91,108,255,0.7)] hover:bg-[#4F60F0] hover:shadow-[0_8px_20px_-6px_rgba(91,108,255,0.85)]"
+                  : "bg-muted-foreground/20 text-muted-foreground/50"
+              )}
+            >
+              {uploading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
+              )}
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div
+        aria-hidden
+        className="mentor-composer-glow pointer-events-none absolute inset-x-5 bottom-0 h-[2.5px] rounded-full opacity-90"
+      />
+    </div>
+  );
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col bg-background">
-      <header className="flex h-14 shrink-0 items-center border-b border-border px-4">
-        <h1 className="truncate text-sm font-semibold text-foreground">
-          {title || "AI Mentor"}
-        </h1>
+    <div
+      className="relative flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-background"
+      onDragEnter={onDragEnter}
+      onDragLeave={onDragLeave}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+    >
+      <MentorAuroraBackground vivid={isEmptyChat} />
+
+      <AnimatePresence>
+        {dragOver ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center bg-background/70 backdrop-blur-[2px]"
+          >
+            <div className="rounded-2xl border border-dashed border-foreground/30 bg-card px-8 py-6 text-center shadow-lg">
+              <p className="text-sm font-medium text-foreground">
+                Drop files to attach
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Images, PDFs, code, and documents · max 10 MB each
+              </p>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <header className="relative z-10 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/40 px-4 backdrop-blur-md sm:px-6">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 shrink-0 text-foreground/70" />
+            <p className="text-[13px] font-semibold tracking-tight text-foreground">
+              AI Mentor
+            </p>
+          </div>
+          <p className="mt-0.5 truncate pl-5 text-[11px] text-muted-foreground">
+            {title && title !== "AI Mentor" ? title : "New conversation"}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          {isStreaming ? (
+            <span className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              Generating
+            </span>
+          ) : null}
+          <ModelPicker />
+        </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-8">
+      <div
+        className="mentor-scroll relative z-10 min-h-0 flex-1 overflow-y-auto"
+        aria-live="polite"
+      >
         {isLoading ? (
-          <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Loading conversation…
+          <div className="mx-auto max-w-[760px] space-y-4 px-4 py-8">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={cn(
+                  "h-14 animate-pulse rounded-2xl bg-muted/70",
+                  i % 2 === 0 ? "ml-auto w-2/5" : "w-3/4"
+                )}
+              />
+            ))}
           </div>
-        ) : messages.length === 0 ? (
-          <div className="mx-auto flex max-w-2xl flex-col items-center justify-center gap-4 py-20 text-center">
-            <p className="text-2xl font-semibold tracking-tight text-foreground">
-              What are you building today?
-            </p>
-            <p className="max-w-lg text-sm text-muted-foreground">
-              Ask anything about software engineering — code, architecture,
-              debugging, interviews, career, cloud, AI, and more.
-            </p>
-            <div className="mt-2 grid w-full gap-2 sm:grid-cols-2">
-              {[
-                "Explain React Server Components simply",
-                "Review this SQL schema for N+1 risks",
-                "Generate system design interview questions",
-                "Help me debug a Next.js hydration error",
-              ].map((hint) => (
+        ) : isEmptyChat ? (
+          <div className="mx-auto flex min-h-full w-full max-w-[640px] flex-col items-center justify-center px-4 py-10 sm:py-14">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full text-center"
+            >
+              <h1 className="text-[32px] font-semibold tracking-[-0.035em] text-foreground sm:text-[40px]">
+                <motion.span
+                  className="inline-block bg-gradient-to-r from-foreground via-sky-600 to-emerald-600 bg-clip-text text-transparent dark:via-sky-300 dark:to-emerald-300"
+                  style={{ backgroundSize: "200% 100%" }}
+                  animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  Meet Supra
+                </motion.span>
+              </h1>
+              <p className="mt-2 text-[15px] text-muted-foreground sm:text-[16px]">
+                Ask detailed questions for better responses
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.06, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-8 w-full"
+            >
+              {renderComposer()}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12, duration: 0.3 }}
+              className="mt-6 w-full space-y-1"
+            >
+              {SUGGESTIONS.map((hint) => (
                 <button
                   key={hint}
                   type="button"
                   onClick={() => onSend(hint)}
-                  className="rounded-xl border border-border bg-card px-3 py-3 text-left text-sm text-foreground transition hover:border-foreground/30"
+                  className={cn(
+                    "group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left",
+                    "text-[13px] text-muted-foreground transition-colors duration-150",
+                    "hover:bg-muted/60 hover:text-foreground",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                  )}
                 >
-                  {hint}
+                  <Sparkles className="h-3.5 w-3.5 shrink-0 opacity-50 transition-opacity group-hover:opacity-80" />
+                  <span className="truncate">{hint}</span>
                 </button>
               ))}
-            </div>
+            </motion.div>
           </div>
         ) : (
-          <div className="mx-auto max-w-3xl space-y-6">
-            {messages.map((message) => (
-              <div
+          <div className="space-y-6 px-4 py-6 sm:px-6 sm:py-8">
+            {displayMessages.map((message) => (
+              <MessageRow
                 key={message.id}
-                className={cn(
-                  "group",
-                  message.role === "user" ? "flex justify-end" : "block"
-                )}
-              >
-                <div
-                  className={cn(
-                    "max-w-[min(100%,42rem)] rounded-2xl px-4 py-3",
-                    message.role === "user"
-                      ? "bg-foreground text-background"
-                      : "border border-border bg-card text-foreground"
-                  )}
-                >
-                  {message.role === "assistant" ? (
-                    message.content ? (
-                      <MentorMarkdown content={message.content} />
-                    ) : (
-                      <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                        <span className="h-2 w-2 animate-pulse rounded-full bg-foreground/70" />
-                        Thinking…
-                      </span>
-                    )
-                  ) : (
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                      {message.content}
-                    </p>
-                  )}
-                  <div
-                    className={cn(
-                      "mt-2 flex items-center gap-2 text-[10px]",
-                      message.role === "user"
-                        ? "text-background/70"
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    <span>{formatTime(message.created_at)}</span>
-                    {message.status === "streaming" ? (
-                      <span>streaming</span>
-                    ) : null}
-                    {message.status === "error" ? (
-                      <span className="text-rose-500">{message.error}</span>
-                    ) : null}
-                  </div>
-                </div>
-
-                {message.role === "assistant" &&
-                message.status === "complete" ? (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {message.id === lastAssistant?.id ? (
-                      <>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="ghost"
-                          className="h-8 gap-1.5 text-xs"
-                          onClick={() => onRegenerate(message.id)}
-                          disabled={isStreaming}
-                        >
-                          <RefreshCw className="h-3.5 w-3.5" />
-                          Regenerate
-                        </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="ghost"
-                          className="h-8 gap-1.5 text-xs"
-                          onClick={onContinue}
-                          disabled={isStreaming}
-                        >
-                          <CornerDownLeft className="h-3.5 w-3.5" />
-                          Continue
-                        </Button>
-                      </>
-                    ) : null}
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="ghost"
-                      className="h-8 gap-1.5 text-xs"
-                      disabled={!conversationId || message.id.startsWith("temp-")}
-                      onClick={async () => {
-                        if (!conversationId) return;
-                        const result = await bookmarkMessageAction({
-                          conversationId,
-                          messageId: message.id,
-                          snippet: message.content,
-                        });
-                        if (!result.success) toast.error(result.error);
-                        else toast.success("Bookmarked");
-                      }}
-                    >
-                      <Bookmark className="h-3.5 w-3.5" />
-                      Bookmark
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
+                message={message}
+                isLastAssistant={message.id === lastAssistantId}
+                conversationId={conversationId}
+                isStreaming={isStreaming}
+                editingId={editingId}
+                attachments={attachmentsByMessageId[message.id] ?? []}
+                onStartEdit={setEditingId}
+                onCancelEdit={() => setEditingId(null)}
+                onSaveEdit={(id, content) => {
+                  setEditingId(null);
+                  setEditedIds((prev) => new Set(prev).add(id));
+                  onEditMessage(id, content);
+                }}
+                onRegenerate={onRegenerate}
+                onContinue={onContinue}
+                onOpenAttachments={(atts, index) =>
+                  setPreview({
+                    attachments: atts.filter((a) => a.isImage && a.url),
+                    index,
+                  })
+                }
+              />
             ))}
             <div ref={bottomRef} />
           </div>
         )}
       </div>
 
-      <div className="shrink-0 border-t border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-8">
-        {error ? (
-          <p className="mb-2 text-center text-xs text-rose-600">{error}</p>
-        ) : null}
-        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm">
-          <textarea
-            ref={textareaRef}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            rows={1}
-            placeholder="Message AI Mentor…"
-            className="max-h-40 min-h-[44px] flex-1 resize-none bg-transparent px-2 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                submit();
-              }
-            }}
-          />
-          {isStreaming ? (
-            <Button
-              type="button"
-              size="icon"
-              variant="secondary"
-              className="h-10 w-10 shrink-0 rounded-xl"
-              onClick={onStop}
-              title="Stop generating"
-            >
-              <Square className="h-4 w-4" />
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              size="icon"
-              className="h-10 w-10 shrink-0 rounded-xl"
-              onClick={submit}
-              disabled={!draft.trim()}
-              title="Send"
-            >
-              <ArrowUp className="h-4 w-4" />
-            </Button>
-          )}
+      {!isEmptyChat ? (
+        <div className="relative z-10 shrink-0 px-3 pb-3 pt-1 sm:px-6 sm:pb-4">
+          {error ? (
+            <p className="mb-2 text-center text-xs text-rose-600" role="alert">
+              {error}
+            </p>
+          ) : null}
+
+          <div className="mx-auto max-w-[760px]">
+            {renderComposer()}
+            <p className="mt-2.5 text-center text-[11px] text-muted-foreground/75">
+              Enter to send · Shift+Enter newline · Drop or paste files · Esc
+              stops generation
+            </p>
+          </div>
         </div>
-        <p className="mt-2 text-center text-[10px] text-muted-foreground">
-          Enter to send · Shift+Enter for newline · Esc to stop
+      ) : error ? (
+        <p className="px-4 pb-3 text-center text-xs text-rose-600" role="alert">
+          {error}
         </p>
-      </div>
+      ) : null}
+
+      <ImagePreviewModal
+        open={Boolean(preview)}
+        attachments={preview?.attachments ?? []}
+        index={preview?.index ?? 0}
+        onClose={() => setPreview(null)}
+        onIndexChange={(next) =>
+          setPreview((prev) => (prev ? { ...prev, index: next } : prev))
+        }
+      />
     </div>
   );
 }

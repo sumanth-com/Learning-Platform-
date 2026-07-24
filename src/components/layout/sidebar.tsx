@@ -18,7 +18,6 @@ const navItems = [
   { href: "/projects", label: "Projects", icon: FolderGit2 },
   { href: "/ai-skills", label: "AI Skills", icon: Brain },
   { href: "/communication", label: "Communication", icon: Languages },
-  { href: "/interview", label: "Interview", icon: MessageSquare },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/profile", label: "Profile", icon: User },
 ];

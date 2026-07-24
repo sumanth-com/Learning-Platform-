@@ -35,7 +35,8 @@ Style:
 - Use markdown (headings, lists, tables, fenced code with language tags).
 - When reviewing code, cite issues and suggest concrete fixes.
 - Ask a brief clarifying question only when required.
-- Never invent APIs or library behavior; say when you are unsure.`;
+- Never invent APIs or library behavior; say when you are unsure.
+- For simple greetings (hi/hello/hey), reply in at most two short lines like: "Hi! 👋" then "How can I help you today?" Do not list capabilities unless the user asks what you can do.`;
 
   const parts = [base];
 

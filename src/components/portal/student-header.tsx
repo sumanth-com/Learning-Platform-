@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, ChevronRight, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { usePortalShell } from "@/components/portal/portal-shell-context";
 import { usePortalChrome } from "@/components/portal/portal-chrome";
 import { ProfileMenu } from "@/components/portal/profile-menu";
@@ -29,32 +28,39 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
 
   return (
     <header className="sticky top-0 z-20 border-b border-zinc-800/90 bg-background/95 backdrop-blur-xl">
-      <div className="flex min-h-16 items-center gap-3 px-4 py-2.5 sm:px-6">
-        <Button
+      <div className="flex min-h-16 items-center gap-2.5 px-4 py-2.5 sm:gap-3 sm:px-6">
+        <button
           type="button"
-          size="icon"
-          variant="ghost"
-          className="h-9 w-9 md:hidden"
+          className={cn(
+            "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md md:hidden",
+            "text-muted-foreground transition-colors",
+            "hover:bg-muted hover:text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          )}
           onClick={toggleMobile}
           aria-label="Open navigation"
         >
-          <Menu className="h-4 w-4" />
-        </Button>
+          <Menu className="h-4 w-4" strokeWidth={1.75} />
+        </button>
 
-        <Button
+        <button
           type="button"
-          size="icon"
-          variant="ghost"
-          className="hidden h-9 w-9 md:inline-flex"
+          className={cn(
+            "hidden h-8 w-8 shrink-0 items-center justify-center rounded-md md:inline-flex",
+            "text-muted-foreground transition-colors",
+            "hover:bg-muted hover:text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          )}
           onClick={toggleCollapsed}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? (
-            <PanelLeftOpen className="h-4 w-4" />
+            <PanelLeftOpen className="h-4 w-4" strokeWidth={1.75} />
           ) : (
-            <PanelLeftClose className="h-4 w-4" />
+            <PanelLeftClose className="h-4 w-4" strokeWidth={1.75} />
           )}
-        </Button>
+        </button>
 
         {showBackToProjects ? (
           <Link
@@ -105,12 +111,14 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
               </ol>
             </nav>
           ) : title ? (
-            <div className="min-w-0 flex-1">
-              <h1 className="truncate text-lg font-semibold tracking-tight text-zinc-50 sm:text-xl">
+            <div className="flex min-w-0 flex-1 items-center">
+              <h1 className="truncate text-base font-semibold leading-none tracking-tight text-foreground sm:text-lg">
                 {title}
               </h1>
               {subtitle ? (
-                <p className="mt-0.5 truncate text-xs text-zinc-500">{subtitle}</p>
+                <p className="ml-2 truncate text-xs text-muted-foreground">
+                  {subtitle}
+                </p>
               ) : null}
             </div>
           ) : (

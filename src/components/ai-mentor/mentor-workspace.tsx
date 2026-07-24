@@ -20,7 +20,6 @@ import { useMentorChat } from "@/hooks/use-mentor-chat";
 import { useProgressStore } from "@/store/use-progress-store";
 import { MentorSidebar } from "@/components/ai-mentor/mentor-sidebar";
 import { MentorChatPane } from "@/components/ai-mentor/mentor-chat-pane";
-import { MentorContextPanel } from "@/components/ai-mentor/mentor-context-panel";
 import { PortalChrome } from "@/components/portal/portal-chrome";
 import { cn } from "@/lib/utils";
 
@@ -53,15 +52,38 @@ export function MentorWorkspace() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeId = searchParams.get("c");
+  const bootAsk = searchParams.get("q");
 
   const [conversations, setConversations] = useState<AiConversationRow[]>([]);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 250);
-  const [contextOpen, setContextOpen] = useState(true);
   const [mobileSidebar, setMobileSidebar] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [pending, startTransition] = useTransition();
   const learningContext = useLearningContextFromStore();
   const pendingPromptRef = useRef<string | null>(null);
+  const bootAskHandled = useRef(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("supralearn.ai-mentor.sidebar-collapsed");
+      if (raw === "1") setSidebarCollapsed(true);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const setCollapsed = useCallback((next: boolean) => {
+    setSidebarCollapsed(next);
+    try {
+      localStorage.setItem(
+        "supralearn.ai-mentor.sidebar-collapsed",
+        next ? "1" : "0"
+      );
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const {
     messages,
@@ -69,10 +91,13 @@ export function MentorWorkspace() {
     isStreaming,
     error,
     send,
+    editMessage,
     stop,
     regenerate,
     continueResponse,
   } = useMentorChat(activeId);
+
+  const pendingAttachmentsRef = useRef<string[] | undefined>(undefined);
 
   const refreshConversations = useCallback(async (q?: string) => {
     const result = await listConversationsAction(q);
@@ -97,6 +122,43 @@ export function MentorWorkspace() {
     [pathname, router, searchParams]
   );
 
+  useEffect(() => {
+    if (!bootAsk || bootAskHandled.current) return;
+    bootAskHandled.current = true;
+    pendingPromptRef.current = bootAsk;
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("q");
+    const next = params.toString();
+    router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+
+    if (!activeId) {
+      startTransition(async () => {
+        const result = await createConversationAction(learningContext);
+        if (!result.success) {
+          pendingPromptRef.current = null;
+          toast.error(result.error);
+          return;
+        }
+        const conversation = result.data?.conversation;
+        if (!conversation) {
+          pendingPromptRef.current = null;
+          return;
+        }
+        setConversations((prev) => [conversation, ...prev]);
+        selectConversation(conversation.id);
+      });
+    }
+  }, [
+    bootAsk,
+    activeId,
+    learningContext,
+    pathname,
+    router,
+    searchParams,
+    selectConversation,
+  ]);
+
   const newChat = useCallback(() => {
     startTransition(async () => {
       const result = await createConversationAction(learningContext);
@@ -114,8 +176,10 @@ export function MentorWorkspace() {
   useEffect(() => {
     if (!activeId || !pendingPromptRef.current) return;
     const prompt = pendingPromptRef.current;
+    const attachmentIds = pendingAttachmentsRef.current;
     pendingPromptRef.current = null;
-    void send(prompt, learningContext).then((meta) => {
+    pendingAttachmentsRef.current = undefined;
+    void send(prompt, learningContext, attachmentIds).then((meta) => {
       if (meta?.title) {
         setConversations((prev) =>
           prev.map((c) =>
@@ -163,9 +227,23 @@ export function MentorWorkspace() {
   const activeTitle =
     conversations.find((c) => c.id === activeId)?.title ?? "AI Mentor";
 
-  const handleSend = (content: string) => {
+  const ensureConversation = useCallback(async () => {
+    if (activeId) return activeId;
+    const result = await createConversationAction(learningContext);
+    if (!result.success) {
+      toast.error(result.error);
+      return null;
+    }
+    const conversation = result.data?.conversation;
+    if (!conversation) return null;
+    setConversations((prev) => [conversation, ...prev]);
+    selectConversation(conversation.id);
+    return conversation.id;
+  }, [activeId, learningContext, selectConversation]);
+
+  const handleSend = (content: string, attachmentIds?: string[]) => {
     if (activeId) {
-      void send(content, learningContext).then((meta) => {
+      void send(content, learningContext, attachmentIds).then((meta) => {
         if (meta?.title) {
           setConversations((prev) =>
             prev.map((c) =>
@@ -180,16 +258,19 @@ export function MentorWorkspace() {
     }
 
     pendingPromptRef.current = content;
+    pendingAttachmentsRef.current = attachmentIds;
     startTransition(async () => {
       const result = await createConversationAction(learningContext);
       if (!result.success) {
         pendingPromptRef.current = null;
+        pendingAttachmentsRef.current = undefined;
         toast.error(result.error);
         return;
       }
       const conversation = result.data?.conversation;
       if (!conversation) {
         pendingPromptRef.current = null;
+        pendingAttachmentsRef.current = undefined;
         return;
       }
       setConversations((prev) => [conversation, ...prev]);
@@ -206,8 +287,9 @@ export function MentorWorkspace() {
       >
         <button
           type="button"
-          className="absolute left-3 top-3 z-20 rounded-lg border border-border bg-card px-2 py-1 text-xs lg:hidden"
+          className="absolute left-3 top-3 z-20 rounded-xl border border-border/80 bg-background/95 px-2.5 py-1.5 text-xs font-medium shadow-sm backdrop-blur lg:hidden"
           onClick={() => setMobileSidebar((v) => !v)}
+          aria-label="Open chats"
         >
           Chats
         </button>
@@ -223,8 +305,10 @@ export function MentorWorkspace() {
 
         <div
           className={cn(
-            "h-full w-[280px] shrink-0 bg-background",
-            "max-lg:absolute max-lg:inset-y-0 max-lg:left-0 max-lg:z-30 max-lg:shadow-xl",
+            "h-full shrink-0 overflow-hidden bg-background",
+            "transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            sidebarCollapsed ? "lg:w-[68px]" : "lg:w-[272px] xl:w-[292px]",
+            "max-lg:absolute max-lg:inset-y-0 max-lg:left-0 max-lg:z-30 max-lg:w-[min(86vw,300px)] max-lg:shadow-2xl",
             mobileSidebar ? "max-lg:block" : "max-lg:hidden",
             "lg:block"
           )}
@@ -233,6 +317,8 @@ export function MentorWorkspace() {
             conversations={conversations}
             activeId={activeId}
             search={search}
+            collapsed={sidebarCollapsed}
+            onCollapsedChange={setCollapsed}
             onSearchChange={setSearch}
             onSelect={selectConversation}
             onNewChat={newChat}
@@ -252,6 +338,9 @@ export function MentorWorkspace() {
             isStreaming={isStreaming || pending}
             error={error}
             onSend={handleSend}
+            onEditMessage={(messageId, content) => {
+              void editMessage(messageId, content, learningContext);
+            }}
             onStop={stop}
             onRegenerate={(id) => {
               void regenerate(id, learningContext);
@@ -259,19 +348,7 @@ export function MentorWorkspace() {
             onContinue={() => {
               void continueResponse(learningContext);
             }}
-          />
-        </div>
-
-        <div
-          className={cn(
-            "hidden h-full shrink-0 md:block",
-            contextOpen ? "w-[280px] xl:w-[300px]" : "w-12"
-          )}
-        >
-          <MentorContextPanel
-            open={contextOpen}
-            onToggle={() => setContextOpen((v) => !v)}
-            context={learningContext}
+            onEnsureConversation={ensureConversation}
           />
         </div>
       </div>

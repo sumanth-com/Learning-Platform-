@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
   Bot,
-  Briefcase,
   ClipboardList,
   FolderKanban,
   LayoutDashboard,
@@ -34,7 +33,6 @@ const ICONS: Record<PortalNavId, typeof LayoutDashboard> = {
   projects: FolderKanban,
   assignments: ClipboardList,
   "ai-mentor": Bot,
-  interview: Briefcase,
   resources: Library,
   notes: StickyNote,
   community: MessageSquare,

@@ -10,6 +10,7 @@ import { ConversationsRepository } from "@/features/ai-mentor/repositories/conve
 import { MessagesRepository } from "@/features/ai-mentor/repositories/messages.repository";
 import { MentorSettingsRepository } from "@/features/ai-mentor/repositories/settings.repository";
 import { BookmarksRepository } from "@/features/ai-mentor/repositories/bookmarks.repository";
+import { AttachmentsRepository } from "@/features/ai-mentor/repositories/attachments.repository";
 import type { LearningContext } from "@/features/ai-mentor/types";
 
 type Client = SupabaseClient<Database>;
@@ -19,12 +20,14 @@ export class MentorService {
   private readonly messages: MessagesRepository;
   private readonly settings: MentorSettingsRepository;
   private readonly bookmarks: BookmarksRepository;
+  readonly attachments: AttachmentsRepository;
 
   constructor(client: Client) {
     this.conversations = new ConversationsRepository(client);
     this.messages = new MessagesRepository(client);
     this.settings = new MentorSettingsRepository(client);
     this.bookmarks = new BookmarksRepository(client);
+    this.attachments = new AttachmentsRepository(client);
   }
 
   listConversations(profileId: string, q?: string) {
@@ -136,6 +139,52 @@ export class MentorService {
 
   getMessage(id: string, profileId: string) {
     return this.messages.findById(id, profileId);
+  }
+
+  updateMessage(
+    id: string,
+    profileId: string,
+    payload: { content?: string; status?: AiMessageRow["status"] }
+  ) {
+    return this.messages.update(id, profileId, payload);
+  }
+
+  deleteMessagesAfter(
+    conversationId: string,
+    profileId: string,
+    afterCreatedAt: string
+  ) {
+    return this.messages.deleteAfter(
+      conversationId,
+      profileId,
+      afterCreatedAt
+    );
+  }
+
+  async duplicateConversation(id: string, profileId: string) {
+    const source = await this.conversations.findByIdForUser(id, profileId);
+    if (!source) throw new Error("Chat not found.");
+    const copy = await this.conversations.create({
+      profile_id: profileId,
+      title: source.title.startsWith("Copy of ")
+        ? source.title
+        : `Copy of ${source.title}`.slice(0, 100),
+      context: source.context,
+    });
+    const msgs = await this.messages.listForConversation(id, profileId);
+    for (const m of msgs) {
+      if (m.role === "system") continue;
+      await this.messages.create({
+        conversation_id: copy.id,
+        profile_id: profileId,
+        role: m.role,
+        content: m.content,
+        status: m.status === "streaming" ? "complete" : m.status,
+        model: m.model,
+        error: m.error,
+      });
+    }
+    return copy;
   }
 
   deleteMessage(id: string, profileId: string) {

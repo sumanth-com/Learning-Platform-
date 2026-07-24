@@ -114,7 +114,7 @@ function StudentShellInner({ data, children }: StudentShellProps) {
             className={cn(
               "relative w-full min-w-0",
               flush
-                ? "h-full min-h-0"
+                ? "flex h-full min-h-0 flex-col"
                 : "mx-auto max-w-[1440px] px-4 py-6 pb-12 sm:px-6 lg:px-8"
             )}
           >

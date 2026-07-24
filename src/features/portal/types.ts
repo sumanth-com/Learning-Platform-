@@ -27,7 +27,6 @@ export type PortalNavId =
   | "projects"
   | "assignments"
   | "ai-mentor"
-  | "interview"
   | "resources"
   | "notes"
   | "community"
@@ -73,14 +72,8 @@ export const PORTAL_NAV: PortalNavItem[] = [
     href: PORTAL_ROUTES.aiMentor,
   },
   {
-    id: "interview",
-    label: "Interview Prep",
-    href: PORTAL_ROUTES.interview,
-    match: (p) => p.startsWith("/interview"),
-  },
-  {
     id: "resources",
-    label: "Resources",
+    label: "Developer Hub",
     href: PORTAL_ROUTES.resources,
   },
   {

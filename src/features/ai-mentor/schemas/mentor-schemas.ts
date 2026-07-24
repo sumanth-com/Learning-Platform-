@@ -16,13 +16,14 @@ export const chatRequestSchema = z.object({
   conversationId: z.string().uuid(),
   content: z.string().trim().min(1).max(32000),
   learningContext: learningContextSchema,
-  mode: z.enum(["send", "regenerate", "continue"]).default("send"),
+  mode: z.enum(["send", "regenerate", "continue", "edit"]).default("send"),
   messageId: z.string().uuid().optional(),
+  attachmentIds: z.array(z.string().uuid()).max(8).optional(),
 });
 
 export const renameConversationSchema = z.object({
   conversationId: z.string().uuid(),
-  title: z.string().trim().min(1).max(120),
+  title: z.string().trim().min(1).max(100),
 });
 
 export const updateMentorSettingsSchema = z.object({

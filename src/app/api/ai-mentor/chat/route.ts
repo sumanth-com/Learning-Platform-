@@ -9,11 +9,25 @@ import {
   getEnvProviderConfig,
 } from "@/features/ai-mentor/providers/create-provider";
 import { MentorService } from "@/features/ai-mentor/services/mentor.service";
+import { buildAttachmentPromptContext } from "@/features/ai-mentor/lib/attachments";
 import { createClient } from "@/lib/supabase/server";
 import { ensureProfile, formatDbError } from "@/lib/supabase/ensure-profile";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
+
+function toHistory(
+  messages: Awaited<ReturnType<MentorService["listMessages"]>>
+): ChatMessageInput[] {
+  return messages
+    .filter((m) => m.role === "user" || m.role === "assistant")
+    .filter((m) => m.status === "complete" || m.role === "user")
+    .filter((m) => m.content.trim().length > 0)
+    .map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+    }));
+}
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -22,7 +36,10 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return Response.json({ error: "User session missing. Sign in again." }, { status: 401 });
+    return Response.json(
+      { error: "User session missing. Sign in again." },
+      { status: 401 }
+    );
   }
 
   try {
@@ -61,8 +78,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const { conversationId, content, learningContext, mode, messageId } =
-    parsed.data;
+  const {
+    conversationId,
+    content,
+    learningContext,
+    mode,
+    messageId,
+    attachmentIds,
+  } = parsed.data;
   const service = new MentorService(supabase);
 
   const conversation = await service.getConversation(conversationId, user.id);
@@ -70,7 +93,6 @@ export async function POST(request: Request) {
     return Response.json({ error: "Conversation not found." }, { status: 404 });
   }
 
-  // Prefer env provider; allow per-user model/temperature/system extras from settings
   const settings = await service.getSettings(user.id);
   const provider = createLlmProvider({
     provider: envConfig.provider,
@@ -78,28 +100,81 @@ export async function POST(request: Request) {
   });
 
   const history = await service.listMessages(conversationId, user.id);
-  const chatHistory: ChatMessageInput[] = history
-    .filter((m) => m.role === "user" || m.role === "assistant")
-    .filter((m) => m.status === "complete" || m.role === "user")
-    .filter((m) => m.content.trim().length > 0)
-    .map((m) => ({
-      role: m.role as "user" | "assistant",
-      content: m.content,
-    }));
+  const chatHistory: ChatMessageInput[] = toHistory(history);
 
   let userMessageId: string | null = null;
   let autoTitle: string | null = null;
+  let lastUserImages: { mediaType: string; data: string }[] = [];
+
+  const attachments =
+    attachmentIds && attachmentIds.length > 0
+      ? await service.attachments.listByIds(attachmentIds, user.id)
+      : [];
+  const attachmentCtx =
+    attachments.length > 0
+      ? await buildAttachmentPromptContext(supabase, attachments)
+      : {
+          textBlock: "",
+          imageParts: [] as { mediaType: string; data: string }[],
+        };
 
   if (mode === "send") {
+    const fullContent = `${content}${attachmentCtx.textBlock}`;
     const userMessage = await service.createUserMessage(
       conversationId,
       user.id,
-      content
+      fullContent
     );
     userMessageId = userMessage.id;
-    chatHistory.push({ role: "user", content });
+    if (attachments.length > 0) {
+      await service.attachments.bindToMessage(
+        attachments.map((a) => a.id),
+        userMessage.id,
+        user.id
+      );
+    }
+    chatHistory.push({
+      role: "user",
+      content: fullContent,
+      images: attachmentCtx.imageParts,
+    });
+    lastUserImages = attachmentCtx.imageParts;
     const titled = await service.maybeAutoTitle(conversation, user.id, content);
     if (titled.title !== conversation.title) autoTitle = titled.title;
+  } else if (mode === "edit") {
+    if (!messageId) {
+      return Response.json(
+        { error: "messageId is required to edit a message." },
+        { status: 400 }
+      );
+    }
+    const target = await service.getMessage(messageId, user.id);
+    if (!target || target.role !== "user") {
+      return Response.json({ error: "User message not found." }, { status: 404 });
+    }
+    const fullContent = `${content}${attachmentCtx.textBlock}`;
+    await service.updateMessage(messageId, user.id, { content: fullContent });
+    await service.deleteMessagesAfter(
+      conversationId,
+      user.id,
+      target.created_at
+    );
+    if (attachments.length > 0) {
+      await service.attachments.bindToMessage(
+        attachments.map((a) => a.id),
+        messageId,
+        user.id
+      );
+    }
+    userMessageId = messageId;
+    const refreshed = await service.listMessages(conversationId, user.id);
+    chatHistory.length = 0;
+    chatHistory.push(...toHistory(refreshed));
+    const last = chatHistory.at(-1);
+    if (last?.role === "user" && attachmentCtx.imageParts.length) {
+      last.images = attachmentCtx.imageParts;
+      lastUserImages = attachmentCtx.imageParts;
+    }
   } else if (mode === "regenerate") {
     const targetId =
       messageId ?? history.filter((m) => m.role === "assistant").at(-1)?.id;
@@ -108,16 +183,7 @@ export async function POST(request: Request) {
     }
     const refreshed = await service.listMessages(conversationId, user.id);
     chatHistory.length = 0;
-    chatHistory.push(
-      ...refreshed
-        .filter((m) => m.role === "user" || m.role === "assistant")
-        .filter((m) => m.status === "complete" || m.role === "user")
-        .filter((m) => m.content.trim().length > 0)
-        .map((m) => ({
-          role: m.role as "user" | "assistant",
-          content: m.content,
-        }))
-    );
+    chatHistory.push(...toHistory(refreshed));
   } else if (mode === "continue") {
     const continueText = "Please continue from where you left off.";
     chatHistory.push({ role: "user", content: continueText });
@@ -134,6 +200,11 @@ export async function POST(request: Request) {
       { error: "No messages to send. Start a new chat first." },
       { status: 400 }
     );
+  }
+
+  if (lastUserImages.length > 0) {
+    const lastUser = [...chatHistory].reverse().find((m) => m.role === "user");
+    if (lastUser) lastUser.images = lastUserImages;
   }
 
   const assistant = await service.createAssistantPlaceholder(

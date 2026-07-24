@@ -31,11 +31,25 @@ async function* streamFromAiSdk(
 function toCoreMessages(input: StreamChatInput) {
   return input.messages
     .filter((m) => m.role === "user" || m.role === "assistant")
-    .filter((m) => m.content.trim().length > 0)
-    .map((m) => ({
-      role: m.role as "user" | "assistant",
-      content: m.content,
-    }));
+    .filter((m) => m.content.trim().length > 0 || (m.images?.length ?? 0) > 0)
+    .map((m) => {
+      if (m.role === "user" && m.images && m.images.length > 0) {
+        return {
+          role: "user" as const,
+          content: [
+            { type: "text" as const, text: m.content || "Please review the attached image(s)." },
+            ...m.images.map((img) => ({
+              type: "image" as const,
+              image: `data:${img.mediaType};base64,${img.data}`,
+            })),
+          ],
+        };
+      }
+      return {
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      };
+    });
 }
 
 class GeminiProvider implements LlmProvider {
