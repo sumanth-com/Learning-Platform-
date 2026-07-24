@@ -941,6 +941,7 @@ export function gradeAnswer(
       text.includes(part.toLowerCase())
     );
   }
+  if (typeof question.answer !== "string" || !question.answer) return false;
   const expected = question.answer.replace(/\s+/g, " ").trim().toLowerCase();
   return text.includes(expected) || text === expected;
 }

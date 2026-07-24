@@ -2,14 +2,16 @@ import type { AssessmentQuestion, CertLevel } from "../types";
 
 function challenge(
   id: string,
-  data: Omit<AssessmentQuestion, "id" | "kind"> & {
+  data: Omit<AssessmentQuestion, "id" | "kind" | "answer"> & {
     kind?: AssessmentQuestion["kind"];
+    answer?: AssessmentQuestion["answer"];
   }
 ): AssessmentQuestion {
   return {
     kind: "code",
     language: "javascript",
     timeLimit: "20 min suggested",
+    answer: "",
     ...data,
     id,
   };
