@@ -17,7 +17,7 @@ export function generateMetadata({
   return params.then(({ slug }) => {
     const resource = getHubResource(slug);
     return {
-      title: resource ? `${resource.title} · Developer Hub` : "Developer Hub",
+      title: resource ? `${resource.title} · Dev Forge` : "Dev Forge",
       description: resource?.description,
     };
   });

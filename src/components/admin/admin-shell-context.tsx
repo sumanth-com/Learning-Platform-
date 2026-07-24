@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-const STORAGE_KEY = "supralearn.admin.sidebarCollapsed";
+const STORAGE_KEY = "SupraBase.admin.sidebarCollapsed";
 
 type AdminShellContextValue = {
   collapsed: boolean;

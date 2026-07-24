@@ -1,6 +1,6 @@
 /**
  * Generic node for the vertical adventure / timeline map.
- * Used by Java week roadmap and SupraLearn curriculum phases.
+ * Used by Java week roadmap and SupraBase curriculum phases.
  */
 export interface JourneyMapNode {
   id: number;

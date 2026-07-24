@@ -16,7 +16,7 @@ const TITLE_SIZES: Record<LogoSize, string> = {
   lg: "text-2xl",
 };
 
-interface SupraLearnLogoProps {
+interface SupraBaseLogoProps {
   size?: LogoSize;
   showText?: boolean;
   showTagline?: boolean;
@@ -26,7 +26,7 @@ interface SupraLearnLogoProps {
   markOnly?: boolean;
 }
 
-export function SupraLearnMark({ className, id }: { className?: string; id?: string }) {
+export function SupraBaseMark({ className, id }: { className?: string; id?: string }) {
   const uid = id ?? "default";
   const ringId = `sl-ring-${uid}`;
   const coreId = `sl-core-${uid}`;
@@ -87,21 +87,21 @@ export function SupraLearnMark({ className, id }: { className?: string; id?: str
   );
 }
 
-export function SupraLearnLogo({
+export function SupraBaseLogo({
   size = "sm",
   showText = true,
   showTagline = true,
   tagline = "Learn. Build. Ship.",
   className,
   markOnly = false,
-}: SupraLearnLogoProps) {
+}: SupraBaseLogoProps) {
   if (markOnly) {
-    return <SupraLearnMark className={cn(MARK_SIZES[size], className)} />;
+    return <SupraBaseMark className={cn(MARK_SIZES[size], className)} />;
   }
 
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
-      <SupraLearnMark className={MARK_SIZES[size]} id={size} />
+      <SupraBaseMark className={MARK_SIZES[size]} id={size} />
       {showText && (
         <div className="flex min-w-0 flex-col justify-center gap-1">
           <span
@@ -110,7 +110,7 @@ export function SupraLearnLogo({
               TITLE_SIZES[size]
             )}
           >
-            SupraCodez
+            SupraBase
           </span>
           {showTagline && (
             <span className="text-[10px] font-medium uppercase leading-none tracking-[0.14em] text-zinc-500">

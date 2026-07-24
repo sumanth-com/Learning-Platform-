@@ -75,7 +75,7 @@ export function PhaseJourneyMap({
       overallPct={overallPct}
       mapLabel="Learning Roadmap"
       nodeLabel="Phase"
-      finaleTitle="SupraLearn Graduate"
+      finaleTitle="SupraBase Graduate"
       finaleSubtitle={`Complete all ${phases.length} phases in ${courseTitle}`}
       showSkillRoadmapLink={false}
     />

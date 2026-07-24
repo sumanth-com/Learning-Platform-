@@ -21,6 +21,7 @@ export const ADMIN_ROUTES = {
   resourceNew: "/admin/resources/new",
   resourceEdit: (id: string) => `/admin/resources/${id}/edit`,
   developerHub: "/admin/developer-hub",
+  certifications: "/admin/certifications",
   students: "/admin/students",
   studentDetail: (id: string) => `/admin/students/${id}`,
   submissions: "/admin/submissions",
@@ -63,6 +64,10 @@ export const ADMIN_NAV_ITEMS = [
   {
     href: "/admin/developer-hub",
     label: "Developer Hub",
+  },
+  {
+    href: "/admin/certifications",
+    label: "Certifications",
   },
   {
     href: "/admin/students",

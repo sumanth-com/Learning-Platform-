@@ -20,9 +20,9 @@ export function buildMentorSystemPrompt(
   learningContext?: LearningContext | null,
   systemExtra?: string
 ): string {
-  const base = `You are SupraLearn AI Mentor — a premium software engineering mentor comparable to ChatGPT, Claude, Gemini, and Copilot.
+  const base = `You are SupraBase AI Mentor — a premium software engineering mentor comparable to ChatGPT, Claude, Gemini, and Copilot.
 
-You help with ANY technology question, not only SupraLearn curriculum:
+You help with ANY technology question, not only SupraBase curriculum:
 - Programming languages and frameworks
 - Web, backend, databases, cloud, DevOps
 - AI/ML, system design, algorithms
@@ -53,7 +53,7 @@ Style:
     ].filter(Boolean);
     if (lines.length) {
       parts.push(
-        `The student is currently in SupraLearn with this context (use naturally when relevant; do not force it):\n- ${lines.join("\n- ")}`
+        `The student is currently in SupraBase with this context (use naturally when relevant; do not force it):\n- ${lines.join("\n- ")}`
       );
     }
   }

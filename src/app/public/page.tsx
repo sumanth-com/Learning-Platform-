@@ -6,7 +6,7 @@ import { AUTH_ROUTES } from "@/features/auth/constants";
 export const metadata = {
   title: "Learn Full Stack & AI",
   description:
-    "SupraLearn helps students become Full Stack and AI developers through structured paths, projects, and AI mentoring.",
+    "SupraBase helps students become Full Stack and AI developers through structured paths, projects, and AI mentoring.",
 };
 
 export default function PublicPage() {
@@ -25,7 +25,7 @@ export default function PublicPage() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
             S
           </span>
-          <span className="gradient-text">SupraLearn</span>
+          <span className="gradient-text">SupraBase</span>
         </Link>
         <div className="flex items-center gap-3">
           <Link href={AUTH_ROUTES.login}>
@@ -45,7 +45,7 @@ export default function PublicPage() {
           Become a Full Stack &amp; AI developer with structure that scales.
         </h1>
         <p className="mt-6 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg">
-          SupraLearn combines learning paths, assignments, projects, AI mentoring,
+          SupraBase combines learning paths, assignments, projects, AI mentoring,
           and progress tracking — built as a production SaaS, not a course site.
         </p>
 

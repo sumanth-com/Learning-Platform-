@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-const STORAGE_KEY = "supralearn.portal.sidebarCollapsed";
+const STORAGE_KEY = "SupraBase.portal.sidebarCollapsed";
 
 type PortalShellContextValue = {
   collapsed: boolean;

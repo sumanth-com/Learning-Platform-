@@ -23,7 +23,7 @@ export function AppHeader({ active }: AppHeaderProps) {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
             S
           </span>
-          <span className="gradient-text">SupraLearn</span>
+          <span className="gradient-text">SupraBase</span>
         </Link>
 
         <nav className="flex items-center gap-1 sm:gap-2">

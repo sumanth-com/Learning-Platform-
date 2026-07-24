@@ -41,6 +41,6 @@ function describePath(pathname: string): string {
 
 export function getAskCurdriceWhatsAppUrl(pathname: string): string {
   const context = describePath(pathname);
-  const message = `Hi Curdrice! I have a question about SupraCodez — ${context}.`;
+  const message = `Hi Curdrice! I have a question about SupraBase — ${context}.`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }

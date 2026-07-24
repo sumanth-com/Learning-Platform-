@@ -23,7 +23,7 @@ const BY_SLUG: Record<string, string> = {
   "postgres-indexing-deep-dive":
     "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=1200&q=80",
   "prompt-engineering-playbook":
-    "https://images.unsplash.com/photo-1677756119517-59df003dcad9?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
   "clean-architecture-essentials":
     "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1200&q=80",
   "jwt-deep-dive":

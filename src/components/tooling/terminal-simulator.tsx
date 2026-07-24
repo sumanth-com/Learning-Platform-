@@ -44,7 +44,7 @@ export function TerminalSimulator({
     createInitialTerminalState()
   );
   const [lines, setLines] = useState<Line[]>([
-    { type: "out", text: "SupraLearn Terminal — type help to begin." },
+    { type: "out", text: "SupraBase Terminal — type help to begin." },
   ]);
   const [input, setInput] = useState("");
   const [historyIdx, setHistoryIdx] = useState<number | null>(null);
@@ -85,7 +85,7 @@ export function TerminalSimulator({
       })),
     ];
     if (result.clear) {
-      setLines([{ type: "out", text: "SupraLearn Terminal — screen cleared." }]);
+      setLines([{ type: "out", text: "SupraBase Terminal — screen cleared." }]);
     } else {
       setLines(nextLines);
     }

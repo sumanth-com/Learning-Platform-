@@ -82,7 +82,7 @@ function scenarioForTopic(topicSlug: string, topicTitle: string): string {
       "",
       "Developers use the terminal because it is fast, scriptable, and universal — servers, Git, CI, and deploy tools all speak command line.",
       "",
-      "In SupraLearn you practice in a safe simulated terminal. Same commands you will use on the job, with zero risk to your real machine.",
+      "In SupraBase you practice in a safe simulated terminal. Same commands you will use on the job, with zero risk to your real machine.",
       "",
       "Your goal in this warm-up: get comfortable looking around before you change anything.",
     ].join("\n");
@@ -109,7 +109,7 @@ function scenarioForTopic(topicSlug: string, topicTitle: string): string {
   }
 
   return [
-    `You are learning ${topicTitle} inside the SupraLearn terminal academy.`,
+    `You are learning ${topicTitle} inside the SupraBase terminal academy.`,
     "",
     "The terminal is how professional developers navigate files, run tools, and control Git without leaving the keyboard.",
     "This simulator is safe — nothing on your real computer can break.",

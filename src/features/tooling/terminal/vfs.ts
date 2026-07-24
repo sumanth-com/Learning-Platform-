@@ -17,7 +17,7 @@ export function createEmptyRoot(): VfsDir {
               projects: { type: "dir", children: {} },
               "notes.txt": {
                 type: "file",
-                content: "Welcome to the SupraLearn terminal.\n",
+                content: "Welcome to the SupraBase terminal.\n",
               },
             },
           },

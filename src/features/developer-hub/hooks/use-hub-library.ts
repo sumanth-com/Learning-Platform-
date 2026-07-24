@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { HubLibraryState } from "../types";
 
-const KEY = "supralearn.developer-hub.library";
+const KEY = "SupraBase.developer-hub.library";
 
 const EMPTY: HubLibraryState = {
   bookmarks: [],

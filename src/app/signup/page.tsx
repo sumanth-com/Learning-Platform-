@@ -11,7 +11,7 @@ export default function SignupPage() {
   return (
     <AuthShell
       title="Create your account"
-      description="Join SupraLearn and start building with structure."
+      description="Join SupraBase and start building with structure."
       footer={
         <>
           Already have an account?{" "}

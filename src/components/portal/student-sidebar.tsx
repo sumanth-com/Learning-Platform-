@@ -10,14 +10,14 @@ import {
   LayoutDashboard,
   Library,
   Map,
-  MessageSquare,
   Settings,
   StickyNote,
+  Trophy,
   UserRound,
   X,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { SupraLearnMark } from "@/components/brand/supra-learn-logo";
+import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { usePortalShell } from "@/components/portal/portal-shell-context";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -35,7 +35,7 @@ const ICONS: Record<PortalNavId, typeof LayoutDashboard> = {
   "ai-mentor": Bot,
   resources: Library,
   notes: StickyNote,
-  community: MessageSquare,
+  certifications: Trophy,
   profile: UserRound,
   settings: Settings,
 };
@@ -83,11 +83,11 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
             isCollapsed ? "justify-center p-1" : "gap-3 py-1"
           )}
         >
-          <SupraLearnMark className="h-9 w-9 shrink-0" id={markId} />
+          <SupraBaseMark className="h-9 w-9 shrink-0" id={markId} />
           {!isCollapsed ? (
             <div className="min-w-0">
               <p className="truncate text-[15px] font-semibold leading-none tracking-tight text-foreground">
-                SupraLearn
+                SupraBase
               </p>
               <p className="mt-1.5 truncate text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-muted-foreground">
                 Learn · Build · Ship

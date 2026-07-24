@@ -98,7 +98,7 @@ export function AdminSidebar({ userName, userRole }: AdminSidebarProps) {
             ) : (
               <div>
                 <p className="font-display text-lg leading-tight text-zinc-50">
-                  SupraLearn
+                  SupraBase
                 </p>
                 <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
                   Admin Portal

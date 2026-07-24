@@ -1,6 +1,6 @@
 import type { ResumePosition } from "@/lib/module-progress";
 
-export const LIVE_ACTIVITY_CHANNEL = "supracodez-live-activity";
+export const LIVE_ACTIVITY_CHANNEL = "SupraBase-live-activity";
 
 export interface LiveActivitySnapshot extends ResumePosition {
   learnerName: string;

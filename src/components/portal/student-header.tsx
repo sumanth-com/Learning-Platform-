@@ -28,7 +28,7 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
 
   return (
     <header className="sticky top-0 z-20 border-b border-zinc-800/90 bg-background/95 backdrop-blur-xl">
-      <div className="flex min-h-16 items-center gap-2.5 px-4 py-2.5 sm:gap-3 sm:px-6">
+      <div className="flex min-h-16 items-center gap-2.5 px-4 py-3 sm:gap-3 sm:px-6">
         <button
           type="button"
           className={cn(
@@ -111,12 +111,12 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
               </ol>
             </nav>
           ) : title ? (
-            <div className="flex min-w-0 flex-1 items-center">
-              <h1 className="truncate text-base font-semibold leading-none tracking-tight text-foreground sm:text-lg">
+            <div className="flex min-w-0 flex-1 items-center overflow-visible py-0.5">
+              <h1 className="truncate text-base font-semibold leading-snug tracking-tight text-foreground sm:text-lg">
                 {title}
               </h1>
               {subtitle ? (
-                <p className="ml-2 truncate text-xs text-muted-foreground">
+                <p className="ml-2 truncate text-xs leading-snug text-muted-foreground">
                   {subtitle}
                 </p>
               ) : null}

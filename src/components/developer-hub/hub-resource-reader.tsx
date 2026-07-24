@@ -1,74 +1,96 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
   Bookmark,
-  Check,
-  Copy,
-  Download,
   Heart,
-  MessageSquare,
-  NotebookPen,
-  Printer,
-  Share2,
-  Sparkles,
-  Target,
+  Rocket,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PortalChrome } from "@/components/portal/portal-chrome";
 import { HubResourceCard } from "@/components/developer-hub/hub-resource-card";
+import { HubShareMenu } from "@/components/developer-hub/hub-share-menu";
+import {
+  HubArchitectureDiagram,
+  HubFlowDiagram,
+} from "@/components/developer-hub/hub-architecture-diagram";
 import { categoryMeta } from "@/features/developer-hub/data/categories";
 import {
   getHubResource,
   HUB_CATALOG,
 } from "@/features/developer-hub/data/catalog";
-import { getHubCoverImage } from "@/features/developer-hub/data/cover-images";
-import {
-  hubAskAiHref,
-  useHubLibrary,
-} from "@/features/developer-hub/hooks/use-hub-library";
-import type { HubResource } from "@/features/developer-hub/types";
+import { buildLearningJourney } from "@/features/developer-hub/lib/learning-curriculum";
+import { useHubLibrary } from "@/features/developer-hub/hooks/use-hub-library";
+import type { HubResource, HubSection } from "@/features/developer-hub/types";
 import { cn } from "@/lib/utils";
 
-function AiAction({
-  href,
-  icon,
-  label,
-  onClick,
-}: {
-  href?: string;
-  icon: ReactNode;
-  label: string;
-  onClick?: () => void;
-}) {
-  const className = cn(
-    "inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background/70 px-3 py-1.5",
-    "text-[12px] font-medium text-foreground transition hover:bg-muted"
-  );
-  if (href) {
-    return (
-      <Link href={href} className={className}>
-        {icon}
-        {label}
-      </Link>
-    );
-  }
+function SectionBlock({ section }: { section: HubSection }) {
   return (
-    <button type="button" onClick={onClick} className={className}>
-      {icon}
-      {label}
-    </button>
+    <section
+      id={section.id}
+      className="hub-section scroll-mt-24 rounded-2xl border border-border/70 bg-card p-5 shadow-sm sm:p-6"
+    >
+      <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
+        {section.title}
+      </h2>
+
+      <div className="mt-3 whitespace-pre-wrap text-[15px] leading-[1.75] text-foreground/90">
+        {section.body}
+      </div>
+
+      {section.bullets?.length ? (
+        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[14px] leading-relaxed text-foreground/90">
+          {section.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+      ) : null}
+
+      {section.checklist?.length ? (
+        <ul className="mt-3 space-y-2">
+          {section.checklist.map((item) => (
+            <li
+              key={item}
+              className="flex items-start gap-2 rounded-xl border border-border/60 bg-background/70 px-3 py-2 text-[13px]"
+            >
+              <span className="mt-0.5 text-muted-foreground">☐</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {section.kind === "architecture" ? (
+        <HubArchitectureDiagram title="How a request moves in production" />
+      ) : null}
+
+      {section.kind === "diagram" ? <HubFlowDiagram /> : null}
+
+      {section.code?.map((block) => (
+        <div key={`${block.title}-${block.language}`} className="mt-4">
+          {block.title ? (
+            <p className="mb-1.5 text-[12px] font-medium text-muted-foreground">
+              {block.title}
+            </p>
+          ) : null}
+          <pre className="overflow-x-auto rounded-xl border border-border/60 bg-zinc-950 p-4 text-[12px] leading-relaxed text-zinc-100">
+            <code>{block.code}</code>
+          </pre>
+        </div>
+      ))}
+    </section>
   );
 }
 
 export function HubResourceReader({ resource }: { resource: HubResource }) {
   const library = useHubLibrary();
-  const [activeSection, setActiveSection] = useState(resource.sections[0]?.id);
+  const journey = useMemo(() => buildLearningJourney(resource), [resource]);
+  const [activeSection, setActiveSection] = useState(journey[0]?.id);
   const [progress, setProgress] = useState(0);
+  const [shareUrl, setShareUrl] = useState("");
   const articleRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const cat = categoryMeta(resource.category);
@@ -77,20 +99,33 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
     const fromSlugs = (resource.relatedSlugs ?? [])
       .map((s) => getHubResource(s))
       .filter(Boolean) as HubResource[];
-    if (fromSlugs.length >= 2) return fromSlugs;
-    return HUB_CATALOG.filter(
+    const sameCategory = HUB_CATALOG.filter(
       (r) => r.category === resource.category && r.slug !== resource.slug
-    ).slice(0, 3);
+    );
+    const next =
+      (resource.nextSlug && getHubResource(resource.nextSlug)) ||
+      sameCategory[0] ||
+      null;
+    const cards = [
+      ...(next ? [next] : []),
+      ...(fromSlugs.length ? fromSlugs : sameCategory),
+    ].filter(
+      (r, i, arr) =>
+        r.slug !== resource.slug &&
+        arr.findIndex((x) => x.slug === r.slug) === i
+    );
+    return cards.slice(0, 3);
   }, [resource]);
 
   const index = HUB_CATALOG.findIndex((r) => r.slug === resource.slug);
   const prev = index > 0 ? HUB_CATALOG[index - 1] : null;
-  const next =
+  const nextGuide =
     index >= 0 && index < HUB_CATALOG.length - 1 ? HUB_CATALOG[index + 1] : null;
 
   useEffect(() => {
+    setShareUrl(window.location.href);
     library.trackView(resource.slug, 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- track once per guide
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resource.slug]);
 
   useEffect(() => {
@@ -100,16 +135,16 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
     const onScroll = () => {
       const max = scroller.scrollHeight - scroller.clientHeight;
       const pct = Math.round(
-        (Math.min(scroller.scrollTop, Math.max(max, 1)) / Math.max(max, 1)) * 100
+        (Math.min(scroller.scrollTop, Math.max(max, 1)) / Math.max(max, 1)) *
+          100
       );
       setProgress(pct);
       library.setProgress(resource.slug, pct);
 
-      for (const section of [...resource.sections].reverse()) {
+      for (const section of [...journey].reverse()) {
         const node = document.getElementById(section.id);
         if (!node) continue;
-        const top = node.getBoundingClientRect().top;
-        if (top <= 140) {
+        if (node.getBoundingClientRect().top <= 140) {
           setActiveSection(section.id);
           break;
         }
@@ -119,51 +154,28 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
     scroller.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => scroller.removeEventListener("scroll", onScroll);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- stable setProgress from hook
-  }, [resource.slug, resource.sections, library.setProgress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resource.slug, journey, library.setProgress]);
 
-  const copySection = async (text: string) => {
-    await navigator.clipboard.writeText(text);
-    toast.success("Copied");
+  const onBookmark = () => {
+    const willBookmark = !library.isBookmarked(resource.slug);
+    library.toggleBookmark(resource.slug);
+    toast.success(
+      willBookmark
+        ? "Saved to My Library · Bookmarks · Continue Reading"
+        : "Removed from Bookmarks"
+    );
   };
-
-  const share = async () => {
-    const url = window.location.href;
-    try {
-      if (navigator.share) await navigator.share({ title: resource.title, url });
-      else {
-        await navigator.clipboard.writeText(url);
-        toast.success("Link copied");
-      }
-    } catch {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link copied");
-    }
-  };
-
-  const askHref = hubAskAiHref(resource.title, resource.description);
-  const summarizeHref = hubAskAiHref(
-    resource.title,
-    `Summarize this guide in 8 bullet points for a busy engineer:\n${resource.sections.map((s) => s.title).join(", ")}`
-  );
-  const quizHref = hubAskAiHref(
-    resource.title,
-    `Quiz me on "${resource.title}" with 5 progressive questions. Wait for my answers.`
-  );
-  const projectHref = hubAskAiHref(
-    resource.title,
-    `Propose a weekend project that applies "${resource.title}". Include milestones and acceptance criteria.`
-  );
 
   return (
     <>
       <PortalChrome title={resource.title} fillViewport />
       <div
         ref={scrollRef}
-        className="relative h-full min-h-0 overflow-y-auto overscroll-y-contain"
+        className="hub-reader relative h-full min-h-0 overflow-y-auto overscroll-y-contain"
       >
         <div
-          className="pointer-events-none sticky top-0 z-30 h-0.5 bg-muted"
+          className="hub-no-print pointer-events-none sticky top-0 z-30 h-0.5 bg-muted"
           aria-hidden
         >
           <div
@@ -172,63 +184,64 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
           />
         </div>
 
-        <div className="relative overflow-hidden border-b border-border/50 px-4 py-12 sm:px-6 sm:py-14">
-          <Image
-            src={getHubCoverImage(resource)}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/35" />
-          <div className="relative mx-auto max-w-5xl text-white">
+        <div className="border-b border-border/50 bg-muted/20 px-3 py-5 sm:px-4 sm:py-6 lg:px-5">
+          <div className="mx-auto w-full max-w-3xl">
             <Link
               href="/resources"
-              className="inline-flex items-center gap-1.5 text-[12px] text-white/80 transition hover:text-white"
+              className="hub-no-print mb-3 inline-flex items-center gap-1.5 text-[12px] text-muted-foreground transition hover:text-foreground"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              Developer Hub
+              Dev Forge
             </Link>
-            <h1 className="mt-5 max-w-3xl text-[28px] font-semibold tracking-[-0.03em] sm:text-[36px]">
-              {resource.title}
-            </h1>
-            <p className="mt-2 max-w-2xl text-[15px] text-white/85">
-              {resource.description}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-white/90">
-              <span className="rounded-full bg-white/15 px-2.5 py-1 backdrop-blur">
-                {resource.difficulty}
-              </span>
-              <span className="rounded-full bg-white/15 px-2.5 py-1 backdrop-blur">
-                {resource.readingMinutes} min read
-              </span>
-              <span className="rounded-full bg-white/15 px-2.5 py-1 backdrop-blur">
-                {cat.label}
-              </span>
-              <span className="rounded-full bg-white/15 px-2.5 py-1 backdrop-blur">
-                Updated {resource.updatedAt}
-              </span>
-              <span className="rounded-full bg-white/15 px-2.5 py-1 backdrop-blur">
-                ★ {resource.rating.toFixed(1)}
-              </span>
+
+            <div className="rounded-2xl border border-border/70 bg-card px-5 py-7 text-center shadow-sm sm:px-8 sm:py-8">
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                  <Rocket className="h-3 w-3" />
+                  Learning path
+                </span>
+                <span className="rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-[11px] capitalize text-muted-foreground">
+                  {resource.difficulty}
+                </span>
+                <span className="rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-[11px] text-muted-foreground">
+                  {resource.readingMinutes} min
+                </span>
+                <span className="rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-[11px] text-muted-foreground">
+                  {cat.label}
+                </span>
+              </div>
+
+              <h1 className="mt-4 text-[26px] font-semibold tracking-[-0.035em] text-foreground sm:text-[32px]">
+                {resource.title}
+              </h1>
+              <p className="mx-auto mt-2 max-w-xl text-[14px] leading-relaxed text-muted-foreground sm:text-[15px]">
+                {resource.description}
+              </p>
+
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12px] text-muted-foreground">
+                <span>{resource.author}</span>
+                <span aria-hidden>·</span>
+                <span>Updated {resource.updatedAt}</span>
+                <span aria-hidden>·</span>
+                <span>★ {resource.rating.toFixed(1)}</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mx-auto grid max-w-5xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[200px_minmax(0,1fr)]">
-          <aside className="hidden lg:block">
-            <div className="sticky top-20 space-y-4">
+        <div className="grid w-full gap-6 px-3 py-6 sm:gap-7 sm:px-4 sm:py-7 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-8 lg:px-5 lg:pr-8">
+          <aside className="hub-no-print hidden lg:block">
+            <div className="sticky top-20 space-y-3 pl-0">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                On this page
+                Learning journey
               </p>
-              <nav className="space-y-1">
-                {resource.sections.map((section) => (
+              <nav className="max-h-[70vh] space-y-0.5 overflow-y-auto pr-1">
+                {journey.map((section) => (
                   <a
                     key={section.id}
                     href={`#${section.id}`}
                     className={cn(
-                      "block rounded-lg px-2 py-1.5 text-[12px] transition",
+                      "block rounded-lg px-2 py-1.5 text-[11.5px] leading-snug transition",
                       activeSection === section.id
                         ? "bg-muted font-medium text-foreground"
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -244,46 +257,11 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
             </div>
           </aside>
 
-          <div>
-            <div className="mb-6 flex flex-wrap gap-2">
-              <AiAction
-                href={askHref}
-                icon={<MessageSquare className="h-3.5 w-3.5" />}
-                label="Ask AI About This"
-              />
-              <AiAction
-                href={summarizeHref}
-                icon={<Sparkles className="h-3.5 w-3.5" />}
-                label="Summarize"
-              />
-              <AiAction
-                href={quizHref}
-                icon={<Check className="h-3.5 w-3.5" />}
-                label="Quiz Me"
-              />
-              <AiAction
-                href={projectHref}
-                icon={<Target className="h-3.5 w-3.5" />}
-                label="Build a Project"
-              />
-              <AiAction
-                icon={<NotebookPen className="h-3.5 w-3.5" />}
-                label="Save to Notes"
-                onClick={() => toast.message("Saved to Notes — coming soon")}
-              />
-              <AiAction
-                icon={<Sparkles className="h-3.5 w-3.5" />}
-                label="Add to Learning Plan"
-                onClick={() =>
-                  toast.message("Learning plan — coming soon")
-                }
-              />
-            </div>
-
-            <div className="mb-6 flex flex-wrap gap-2">
+          <div className="min-w-0 max-w-4xl">
+            <div className="hub-no-print mb-5 flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => library.toggleBookmark(resource.slug)}
+                onClick={onBookmark}
                 className={cn(
                   "inline-flex h-9 items-center gap-1.5 rounded-xl border px-3 text-[12px] font-medium transition",
                   library.isBookmarked(resource.slug)
@@ -301,69 +279,30 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
               </button>
               <button
                 type="button"
-                onClick={() => library.toggleLike(resource.slug)}
+                onClick={() => {
+                  const willLike = !library.isLiked(resource.slug);
+                  library.toggleLike(resource.slug);
+                  toast.success(
+                    willLike ? "Liked — saved to My Library" : "Removed like"
+                  );
+                }}
                 className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-[12px] font-medium transition hover:bg-muted"
               >
                 <Heart
                   className={cn(
                     "h-3.5 w-3.5",
-                    library.isLiked(resource.slug) && "fill-rose-500 text-rose-500"
+                    library.isLiked(resource.slug) &&
+                      "fill-rose-500 text-rose-500"
                   )}
                 />
                 Like
               </button>
-              <button
-                type="button"
-                onClick={() => void share()}
-                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-[12px] font-medium transition hover:bg-muted"
-              >
-                <Share2 className="h-3.5 w-3.5" />
-                Share
-              </button>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-[12px] font-medium transition hover:bg-muted"
-              >
-                <Printer className="h-3.5 w-3.5" />
-                Print
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  toast.message("PDF export — coming soon in admin CMS")
-                }
-                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border px-3 text-[12px] font-medium transition hover:bg-muted"
-              >
-                <Download className="h-3.5 w-3.5" />
-                Download PDF
-              </button>
+              <HubShareMenu title={resource.title} url={shareUrl || ""} />
             </div>
 
-            <article ref={articleRef} className="space-y-8">
-              {resource.sections.map((section) => (
-                <section
-                  key={section.id}
-                  id={section.id}
-                  className="scroll-mt-24 rounded-2xl border border-border/60 bg-card/50 p-5 sm:p-6"
-                >
-                  <div className="mb-3 flex items-start justify-between gap-3">
-                    <h2 className="text-[18px] font-semibold tracking-tight">
-                      {section.title}
-                    </h2>
-                    <button
-                      type="button"
-                      aria-label="Copy section"
-                      onClick={() => void copySection(section.body)}
-                      className="rounded-lg p-1.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
-                    >
-                      <Copy className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                  <div className="whitespace-pre-wrap text-[15px] leading-[1.75] text-foreground/90">
-                    {section.body}
-                  </div>
-                </section>
+            <article ref={articleRef} className="space-y-5">
+              {journey.map((section) => (
+                <SectionBlock key={section.id} section={section} />
               ))}
             </article>
 
@@ -374,12 +313,12 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
                 rel="noreferrer"
                 className="mt-6 flex items-center justify-between rounded-2xl border border-border bg-muted/40 px-4 py-3 text-[13px] transition hover:bg-muted"
               >
-                <span>Explore related GitHub repositories</span>
+                <span>Hands-on project repos for this topic</span>
                 <ArrowRight className="h-4 w-4" />
               </a>
             ) : null}
 
-            <div className="mt-10 flex flex-wrap justify-between gap-3 border-t border-border/60 pt-6">
+            <div className="hub-no-print mt-10 flex flex-wrap justify-between gap-3 border-t border-border/60 pt-6">
               {prev ? (
                 <Link
                   href={`/resources/${prev.slug}`}
@@ -393,14 +332,14 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
               ) : (
                 <span />
               )}
-              {next ? (
+              {nextGuide ? (
                 <Link
-                  href={`/resources/${next.slug}`}
+                  href={`/resources/${nextGuide.slug}`}
                   className="group max-w-[46%] rounded-xl border border-border px-3 py-3 text-right transition hover:bg-muted/50"
                 >
                   <p className="text-[11px] text-muted-foreground">Next</p>
                   <p className="mt-0.5 truncate text-[13px] font-medium group-hover:underline">
-                    {next.title}
+                    {nextGuide.title}
                   </p>
                 </Link>
               ) : null}
@@ -408,11 +347,8 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
 
             {related.length > 0 ? (
               <section className="mt-12">
-                <h3 className="text-[16px] font-semibold tracking-tight">
-                  Related resources
-                </h3>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {related.slice(0, 2).map((r) => (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {related.map((r) => (
                     <HubResourceCard
                       key={r.id}
                       resource={r}

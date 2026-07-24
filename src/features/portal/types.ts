@@ -16,7 +16,7 @@ export const PORTAL_ROUTES = {
   interview: "/interview",
   resources: "/resources",
   notes: "/notes",
-  community: "/communication",
+  certifications: "/certifications",
   profile: AUTH_ROUTES.profile,
   settings: "/settings",
 } as const;
@@ -29,7 +29,7 @@ export type PortalNavId =
   | "ai-mentor"
   | "resources"
   | "notes"
-  | "community"
+  | "certifications"
   | "profile"
   | "settings";
 
@@ -73,7 +73,7 @@ export const PORTAL_NAV: PortalNavItem[] = [
   },
   {
     id: "resources",
-    label: "Developer Hub",
+    label: "Dev Forge",
     href: PORTAL_ROUTES.resources,
   },
   {
@@ -83,10 +83,13 @@ export const PORTAL_NAV: PortalNavItem[] = [
     match: (p) => p.startsWith("/notes"),
   },
   {
-    id: "community",
-    label: "Community",
-    href: PORTAL_ROUTES.community,
-    match: (p) => p.startsWith("/communication"),
+    id: "certifications",
+    label: "Certifications",
+    href: PORTAL_ROUTES.certifications,
+    match: (p) =>
+      p.startsWith("/certifications") ||
+      p.startsWith("/community") ||
+      p.startsWith("/communication"),
   },
   {
     id: "profile",

@@ -83,7 +83,7 @@ Developers use the terminal because it is:
 - **Scriptable** — automate builds, deploys, checks
 - **Universal** — servers, CI, Docker, and Git all speak CLI
 
-In SupraLearn you practice in a safe **simulated terminal**. Same commands, zero risk to your real machine.`,
+In SupraBase you practice in a safe **simulated terminal**. Same commands, zero risk to your real machine.`,
         examples: [
           {
             title: "See where you are",
@@ -134,7 +134,7 @@ In SupraLearn you practice in a safe **simulated terminal**. Same commands, zero
 **Bash** — default on many Linux servers and Git Bash on Windows.
 **Zsh** — Bash-like, popular on macOS (Oh My Zsh).
 
-SupraLearn uses **Bash-style** commands so your skills transfer to GitHub Actions, Linux servers, and most tutorials.`,
+SupraBase uses **Bash-style** commands so your skills transfer to GitHub Actions, Linux servers, and most tutorials.`,
         examples: [
           {
             title: "Same idea, different shells",
@@ -151,7 +151,7 @@ SupraLearn uses **Bash-style** commands so your skills transfer to GitHub Action
           "On Windows, use Git Bash or WSL for this module’s habits",
         ],
         cheatSheet: {
-          summary: "SupraLearn = Bash-style. Servers and CI usually speak Bash too.",
+          summary: "SupraBase = Bash-style. Servers and CI usually speak Bash too.",
           commands: [
             { cmd: "echo $SHELL", desc: "Show shell (real machines)" },
             { cmd: "whoami", desc: "Current user" },
@@ -330,7 +330,7 @@ Real workflow: \`mkdir app && cd app && touch README.md\`.`,
 
 Pros live in history — never retype long commands.`,
         examples: [
-          { title: "Read", command: "cat notes.txt", output: "Welcome to the SupraLearn terminal." },
+          { title: "Read", command: "cat notes.txt", output: "Welcome to the SupraBase terminal." },
         ],
         commonMistakes: ["cat on huge files (use less/head on real systems)"],
         bestPractices: ["clear when the screen gets noisy", "Search history with Ctrl+R on real shells"],
@@ -363,7 +363,7 @@ Pros live in history — never retype long commands.`,
 Together they replace hours of manual clicking.`,
         examples: [
           { title: "Find by name", command: "find . -name notes", output: "/home/student/notes.txt" },
-          { title: "Search content", command: "grep Welcome notes.txt", output: "Welcome to the SupraLearn terminal." },
+          { title: "Search content", command: "grep Welcome notes.txt", output: "Welcome to the SupraBase terminal." },
         ],
         commonMistakes: ["Wrong cwd so find returns nothing"],
         bestPractices: ["Start find from the project root", "Combine with Git later for code search"],
@@ -412,7 +412,7 @@ Use \`export NAME=value\` in a session; real machines persist via \`.bashrc\` / 
         practiceTasks: [
           {
             id: "t1",
-            prompt: "export LEARN=supralearn then echo $LEARN",
+            prompt: "export LEARN=SupraBase then echo $LEARN",
             expectCommandIncludes: ["export"],
             successMessage: "You can shape the shell environment.",
           },

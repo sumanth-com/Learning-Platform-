@@ -26,10 +26,54 @@ export type HubCategoryId =
   | "data"
   | "open-source";
 
+export type HubSectionKind =
+  | "overview"
+  | "objectives"
+  | "prerequisites"
+  | "meta"
+  | "why"
+  | "usecases"
+  | "interview"
+  | "architecture"
+  | "implementation"
+  | "steps"
+  | "diagram"
+  | "examples"
+  | "code"
+  | "best-practices"
+  | "mistakes"
+  | "performance"
+  | "security"
+  | "scalability"
+  | "debugging"
+  | "testing"
+  | "deployment"
+  | "standards"
+  | "summary"
+  | "takeaways"
+  | "quiz"
+  | "challenge"
+  | "exercise"
+  | "project"
+  | "next"
+  | "related"
+  | "content";
+
+export type HubCodeBlock = {
+  language: string;
+  title?: string;
+  code: string;
+};
+
 export type HubSection = {
   id: string;
   title: string;
   body: string;
+  kind?: HubSectionKind;
+  bullets?: string[];
+  code?: HubCodeBlock[];
+  diagram?: string;
+  checklist?: string[];
 };
 
 export type HubResource = {
@@ -54,9 +98,12 @@ export type HubResource = {
   emoji: string;
   sections: HubSection[];
   relatedSlugs?: string[];
+  nextSlug?: string;
   externalUrl?: string;
   githubUrl?: string;
   videoUrl?: string;
+  objectives?: string[];
+  prerequisites?: string[];
 };
 
 export type HubCategoryMeta = {

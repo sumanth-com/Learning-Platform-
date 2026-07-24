@@ -56,7 +56,7 @@ function StudentShellInner({ data, children }: StudentShellProps) {
       if (!mq.matches) {
         try {
           const stored = window.localStorage.getItem(
-            "supralearn.portal.sidebarCollapsed"
+            "SupraBase.portal.sidebarCollapsed"
           );
           if (stored === null) setCollapsed(true);
         } catch {

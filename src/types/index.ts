@@ -139,12 +139,16 @@ export interface StudySession {
   weekId: number;
 }
 
+export type NoteAccent = "indigo" | "emerald" | "amber" | "rose" | "sky";
+
 export interface AppNote {
   id: string;
   title: string;
   content: string;
   weekId?: number;
   updatedAt: string;
+  pinned?: boolean;
+  accent?: NoteAccent;
 }
 
 export interface ProgressState {

@@ -254,7 +254,7 @@ export function gitLog(repo: GitRepo, max = 8): string[] {
     const c: GitCommit | undefined = repo.commits[cur];
     if (!c) break;
     lines.push(`commit ${c.hash}`);
-    lines.push(`Author: Student <student@supralearn.dev>`);
+    lines.push(`Author: Student <student@SupraBase.dev>`);
     lines.push(`Date:   ${new Date(c.timestamp).toUTCString()}`);
     lines.push("");
     lines.push(`    ${c.message}`);

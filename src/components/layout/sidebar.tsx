@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Map, FolderGit2, Brain, Languages,
   MessageSquare, StickyNote, User, Menu, X, ArrowUpRight,
 } from "lucide-react";
-import { SupraLearnLogo } from "@/components/brand/supra-learn-logo";
+import { SupraBaseLogo } from "@/components/brand/supra-learn-logo";
 import { cn } from "@/lib/utils";
 import { getAskCurdriceWhatsAppUrl } from "@/lib/ask-curdrice";
 import { useState } from "react";
@@ -17,7 +17,7 @@ const navItems = [
   { href: "/roadmap", label: "Roadmap", icon: Map },
   { href: "/projects", label: "Projects", icon: FolderGit2 },
   { href: "/ai-skills", label: "AI Skills", icon: Brain },
-  { href: "/communication", label: "Communication", icon: Languages },
+  { href: "/certifications", label: "Certifications", icon: Languages },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/profile", label: "Profile", icon: User },
 ];
@@ -31,7 +31,7 @@ export function Sidebar() {
     <>
       <div className="px-3 py-5">
         <Link href="/" className="inline-flex rounded-lg px-3 py-1 transition-opacity hover:opacity-90">
-          <SupraLearnLogo size="sm" tagline="Learn. Build. Ship." />
+          <SupraBaseLogo size="sm" tagline="Learn. Build. Ship." />
         </Link>
       </div>
       <nav className="flex-1 space-y-1 px-3 overflow-y-auto">

@@ -11,7 +11,7 @@ export default function ResetPasswordPage() {
   return (
     <AuthShell
       title="Choose a new password"
-      description="Enter a strong password to secure your SupraLearn account."
+      description="Enter a strong password to secure your SupraBase account."
       footer={
         <>
           Need a new link?{" "}

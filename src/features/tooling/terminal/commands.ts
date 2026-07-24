@@ -293,7 +293,7 @@ export function runCommand(state: TerminalState, raw: string): CommandResult {
     case "help":
       return {
         lines: [
-          "SupraLearn Terminal — try:",
+          "SupraBase Terminal — try:",
           "  pwd  ls  cd  mkdir  touch  cat  cp  mv  rm  clear  history",
           "  find  grep  echo  export  env",
           "  git init | status | add | commit | branch | checkout | log | remote | push | pull | stash | merge",

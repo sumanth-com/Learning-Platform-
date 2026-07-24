@@ -66,7 +66,7 @@ export function MentorWorkspace() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("supralearn.ai-mentor.sidebar-collapsed");
+      const raw = localStorage.getItem("SupraBase.ai-mentor.sidebar-collapsed");
       if (raw === "1") setSidebarCollapsed(true);
     } catch {
       /* ignore */
@@ -77,7 +77,7 @@ export function MentorWorkspace() {
     setSidebarCollapsed(next);
     try {
       localStorage.setItem(
-        "supralearn.ai-mentor.sidebar-collapsed",
+        "SupraBase.ai-mentor.sidebar-collapsed",
         next ? "1" : "0"
       );
     } catch {

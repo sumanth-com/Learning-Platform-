@@ -8,10 +8,14 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useServerInsertedHTML } from "next/navigation";
 
 export type AppTheme = "dark" | "light";
 
-const STORAGE_KEY = "supralearn.theme";
+const STORAGE_KEY = "SupraBase.theme";
+const LEGACY_THEME_KEYS = ["supralearn.theme"];
+
+const THEME_BOOT_SCRIPT = `(function(){try{var t=localStorage.getItem('${STORAGE_KEY}')||localStorage.getItem('supralearn.theme');var theme=t==='light'?'light':'dark';var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(theme);root.style.colorScheme=theme;}catch(e){document.documentElement.classList.add('dark');}})();`;
 
 type ThemeContextValue = {
   theme: AppTheme;
@@ -30,9 +34,12 @@ function applyThemeClass(theme: AppTheme) {
 
 function readStoredTheme(): AppTheme {
   try {
-    return window.localStorage.getItem(STORAGE_KEY) === "light"
-      ? "light"
-      : "dark";
+    const raw =
+      window.localStorage.getItem(STORAGE_KEY) ??
+      LEGACY_THEME_KEYS.map((k) => window.localStorage.getItem(k)).find(
+        Boolean
+      );
+    return raw === "light" ? "light" : "dark";
   } catch {
     return "dark";
   }
@@ -40,6 +47,14 @@ function readStoredTheme(): AppTheme {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<AppTheme>("dark");
+
+  // Inject outside the React client tree so React 19 does not warn about <script>.
+  useServerInsertedHTML(() => (
+    <script
+      id="SupraBase-theme-boot"
+      dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
+    />
+  ));
 
   useEffect(() => {
     const next = readStoredTheme();

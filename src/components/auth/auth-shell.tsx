@@ -49,7 +49,7 @@ export function AuthShell({
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-sm font-bold text-white shadow-lg shadow-indigo-500/30">
               S
             </span>
-            <span className="gradient-text">SupraLearn</span>
+            <span className="gradient-text">SupraBase</span>
           </Link>
         </div>
 

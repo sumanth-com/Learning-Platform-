@@ -363,7 +363,7 @@ def create_item(payload: ItemIn):
       label: "Spring Boot",
       filename: `${name}Controller.java`,
       language: monaco,
-      code: `package com.supralearn.${slug.replace(/-/g, "")};
+      code: `package com.SupraBase.${slug.replace(/-/g, "")};
 
 import java.time.Instant;
 import java.util.ArrayList;

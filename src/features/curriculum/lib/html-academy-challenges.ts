@@ -308,7 +308,7 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
         seoNotes[1] ?? "One clear h1",
       ],
       referenceSolution: shellWith(
-        `${title} | SupraLearn`,
+        `${title} | SupraBase`,
         `<main>\n    <h1>${title}</h1>\n    <p>${seoNotes[0]}</p>\n    <p>Read the <a href="/docs/${slug}">${title} guide</a>.</p>\n  </main>`,
         `\n  <meta name="description" content="${clip(summary, 140)}" />`
       ),
@@ -649,7 +649,7 @@ function projectPack(topicSlug: string, topicTitle: string): Spec[] {
       task: "Create header with nav, main with h1, and footer.",
       hints: ["header/nav/main/footer"],
       referenceSolution:
-        `<header><nav aria-label="Primary"><a href="/">Home</a></nav></header>\n<main><h1>${topicTitle}</h1></main>\n<footer><p>© SupraLearn</p></footer>`,
+        `<header><nav aria-label="Primary"><a href="/">Home</a></nav></header>\n<main><h1>${topicTitle}</h1></main>\n<footer><p>© SupraBase</p></footer>`,
       takeaways: ["Landmarks first"],
       validateIncludes: ["<header", "<nav", "<main", "<footer", "<h1"],
       acceptanceCriteria: ["header/nav/main/footer", "h1"],

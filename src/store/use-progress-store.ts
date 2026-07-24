@@ -608,7 +608,7 @@ export const useProgressStore = create<ProgressStore>()(
           todayGoalCompleted: state.todayGoalCompleted,
           resumePosition: state.resumePosition,
         };
-        downloadJson(`supracodez-progress-${todayIso()}.json`, JSON.stringify(payload, null, 2));
+        downloadJson(`SupraBase-progress-${todayIso()}.json`, JSON.stringify(payload, null, 2));
       },
 
       importProgress: (json) => {

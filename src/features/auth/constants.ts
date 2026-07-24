@@ -22,6 +22,8 @@ export const PROTECTED_ROUTES = [
   "/projects",
   "/interview",
   "/communication",
+  "/community",
+  "/certifications",
   "/notes",
   "/ai-skills",
   "/roadmap",
@@ -40,7 +42,7 @@ export const AUTH_GUEST_ROUTES = [
 ] as const;
 
 export const AUTH_MESSAGES = {
-  loginSuccess: "Welcome back to SupraLearn.",
+  loginSuccess: "Welcome back to SupraBase.",
   signupSuccess:
     "Account created. Check your email to verify your address before signing in.",
   signupNeedsVerification:
