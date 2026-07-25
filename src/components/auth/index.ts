@@ -9,3 +9,5 @@ export { SignupForm } from "@/components/auth/signup-form";
 export { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 export { ResetPasswordForm } from "@/components/auth/reset-password-form";
 export { LogoutButton } from "@/components/auth/logout-button";
+export { PasswordField } from "@/components/auth/password-field";
+export { VerifyEmailContent } from "@/components/auth/verify-email-content";

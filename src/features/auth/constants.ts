@@ -55,5 +55,10 @@ export const AUTH_MESSAGES = {
   logoutSuccess: "You have been signed out.",
   emailVerified: "Email verified successfully. You are signed in.",
   unauthorized: "You must be signed in to continue.",
-  confirmationResent: "Verification email sent. Check your inbox and spam folder.",
+  confirmationResent:
+    "Verification email sent. Check your inbox and spam folder.",
+  invalidCredentials:
+    "Incorrect email or password. Reset your password if you've forgotten it.",
+  emailNotVerified:
+    "Your email address has not been verified yet. Check your inbox, or resend the verification email below.",
 } as const;

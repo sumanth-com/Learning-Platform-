@@ -187,11 +187,13 @@ export function CertificationsWorkspace() {
                     href={
                       passed
                         ? CERT_FLOW.certificate(cert.id)
-                        : attempt?.status === "in-progress"
-                          ? continueHref(cert.id, attempt.lastPath)
-                          : attempt?.status === "failed"
-                            ? CERT_FLOW.results(cert.id)
-                            : CERT_FLOW.root(cert.id)
+                        : onCooldown
+                          ? CERT_FLOW.retest(cert.id)
+                          : attempt?.status === "in-progress"
+                            ? continueHref(cert.id, attempt.lastPath)
+                            : attempt?.status === "failed"
+                              ? CERT_FLOW.results(cert.id)
+                              : CERT_FLOW.root(cert.id)
                     }
                     className={cn(
                       "relative mt-6 inline-flex rounded-md border px-3.5 py-1.5 text-[13px] font-medium transition",

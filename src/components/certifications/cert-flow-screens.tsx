@@ -75,8 +75,15 @@ function usePersistStep(step: string) {
 
 export function CertLandingScreen() {
   const router = useRouter();
-  const { certification, locked, lockedReason, earned, result, ready } =
-    useCertSession();
+  const {
+    certification,
+    locked,
+    lockedReason,
+    earned,
+    result,
+    ready,
+    cooldownMs,
+  } = useCertSession();
   usePersistStep("landing");
 
   useEffect(() => {
@@ -85,10 +92,31 @@ export function CertLandingScreen() {
       router.replace(CERT_FLOW.certificate(certification.id));
       return;
     }
+    // Cooldown: timer-only page — do not open assessment content
+    if (locked && cooldownMs > 0) {
+      router.replace(CERT_FLOW.retest(certification.id));
+      return;
+    }
     if (result) {
       router.replace(CERT_FLOW.results(certification.id));
     }
-  }, [ready, earned, result, router, certification.id]);
+  }, [
+    ready,
+    earned,
+    result,
+    locked,
+    cooldownMs,
+    router,
+    certification.id,
+  ]);
+
+  if (locked && cooldownMs > 0) {
+    return (
+      <div className="flex h-full items-center justify-center bg-background text-sm text-zinc-500">
+        Opening timer…
+      </div>
+    );
+  }
 
   return (
     <CertLandingPage
@@ -793,13 +821,26 @@ export function CertResultsScreen() {
     if (!ready) return;
     if (!result) {
       router.replace(CERT_FLOW.root(certification.id));
+      return;
     }
-  }, [ready, result, router, certification.id]);
+    // During cooldown, only show the dedicated timer page — no results UI
+    if (!result.passed && cooldownMs > 0) {
+      router.replace(CERT_FLOW.retest(certification.id));
+    }
+  }, [ready, result, cooldownMs, router, certification.id]);
 
   if (!result) {
     return (
       <div className="flex h-full items-center justify-center bg-background text-sm text-zinc-500">
         Loading results…
+      </div>
+    );
+  }
+
+  if (!result.passed && cooldownMs > 0) {
+    return (
+      <div className="flex h-full items-center justify-center bg-background text-sm text-zinc-500">
+        Opening timer…
       </div>
     );
   }

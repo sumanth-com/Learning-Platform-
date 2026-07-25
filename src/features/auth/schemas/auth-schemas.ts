@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isStrongPassword } from "@/lib/auth/password-strength";
 
 const emailSchema = z
   .string()
@@ -6,10 +7,14 @@ const emailSchema = z
   .min(1, "Email is required")
   .email("Enter a valid email address");
 
-const passwordSchema = z
+const strongPasswordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters")
-  .max(72, "Password must be at most 72 characters");
+  .max(72, "Password must be at most 72 characters")
+  .refine(isStrongPassword, {
+    message:
+      "Use 8+ characters with uppercase, lowercase, a number, and a special character.",
+  });
 
 export const loginSchema = z.object({
   email: emailSchema,
@@ -24,7 +29,7 @@ export const signupSchema = z
       .min(2, "Full name must be at least 2 characters")
       .max(80, "Full name must be at most 80 characters"),
     email: emailSchema,
-    password: passwordSchema,
+    password: strongPasswordSchema,
     confirmPassword: z.string().min(1, "Confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -38,7 +43,7 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    password: passwordSchema,
+    password: strongPasswordSchema,
     confirmPassword: z.string().min(1, "Confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {

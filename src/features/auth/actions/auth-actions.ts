@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getAppUrl } from "@/lib/supabase/env";
 import { ensureProfile } from "@/lib/supabase/ensure-profile";
@@ -13,9 +14,24 @@ import {
   signupSchema,
 } from "@/features/auth/schemas/auth-schemas";
 import { AUTH_MESSAGES, AUTH_ROUTES } from "@/features/auth/constants";
-import { z } from "zod";
+import { isCustomEmailEnabled } from "@/lib/email/env";
+import {
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+  sendWelcomeEmail,
+} from "@/lib/email/send";
+import {
+  generateMagicLink,
+  generateRecoveryLink,
+  generateSignupLink,
+  resolveUserDisplayName,
+} from "@/lib/auth/links";
+import { AUTH_RATE_LIMITS, checkRateLimit } from "@/lib/auth/rate-limit";
+import { logAuthEvent } from "@/lib/auth/audit";
 
-function mapAuthError(error: { message: string; code?: string; status?: number } | null): string {
+function mapAuthError(
+  error: { message: string; code?: string; status?: number } | null
+): string {
   if (!error) return "Something went wrong. Please try again.";
 
   const message = error.message.toLowerCase();
@@ -25,25 +41,33 @@ function mapAuthError(error: { message: string; code?: string; status?: number }
     code === "email_not_confirmed" ||
     message.includes("email not confirmed")
   ) {
-    return "Please verify your email before signing in. Check your inbox (and spam) for the link from Supabase.";
+    return AUTH_MESSAGES.emailNotVerified;
   }
 
-  if (message.includes("invalid login credentials") || code === "invalid_credentials") {
-    return "Invalid email or password. If you just signed up, verify your email first — or turn off Confirm email in Supabase Auth for local development.";
+  if (
+    message.includes("invalid login credentials") ||
+    code === "invalid_credentials"
+  ) {
+    return AUTH_MESSAGES.invalidCredentials;
   }
 
   if (
     message.includes("user already registered") ||
-    code === "user_already_exists"
+    code === "user_already_exists" ||
+    message.includes("already been registered")
   ) {
     return AUTH_MESSAGES.accountExists;
   }
 
-  if (message.includes("password")) {
+  if (message.includes("password should be") || message.includes("password")) {
     return error.message;
   }
 
-  return error.message || "Something went wrong. Please try again.";
+  if (message.includes("rate limit") || code.includes("over_request")) {
+    return "Too many attempts. Please wait a minute and try again.";
+  }
+
+  return "Something went wrong. Please try again.";
 }
 
 export async function loginAction(
@@ -57,16 +81,31 @@ export async function loginAction(
     };
   }
 
+  const email = parsed.data.email.trim().toLowerCase();
+  const limit = checkRateLimit(`login:${email}`, AUTH_RATE_LIMITS.login);
+  if (!limit.allowed) {
+    await logAuthEvent("rate_limited", { action: "login", email });
+    return {
+      success: false,
+      error: `Too many sign-in attempts. Try again in ${limit.retryAfterSec}s.`,
+    };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email.trim().toLowerCase(),
+    email,
     password: parsed.data.password,
   });
 
   if (error) {
+    await logAuthEvent("login_failed", {
+      email,
+      code: error.code,
+    });
     return { success: false, error: mapAuthError(error) };
   }
 
+  await logAuthEvent("login_success", { email });
   revalidatePath("/", "layout");
   redirect(AUTH_ROUTES.dashboard);
 }
@@ -83,39 +122,83 @@ export async function signupAction(
   }
 
   const email = parsed.data.email.trim().toLowerCase();
+  const fullName = parsed.data.fullName.trim();
+
+  // Branded Resend path — generateLink creates the user without Supabase SMTP.
+  if (isCustomEmailEnabled()) {
+    try {
+      const { actionLink, user } = await generateSignupLink({
+        email,
+        password: parsed.data.password,
+        fullName,
+      });
+
+      const send = await sendVerificationEmail({
+        to: email,
+        verifyUrl: actionLink,
+        fullName,
+      });
+
+      if (!send.ok) {
+        await logAuthEvent("signup_failed", { email, error: send.error });
+        return {
+          success: false,
+          error:
+            "We couldn't send your verification email. Please try again in a moment.",
+        };
+      }
+
+      await logAuthEvent("signup", { email, userId: user?.id, mode: "resend" });
+
+      // If confirmations somehow already satisfied.
+      if (user?.email_confirmed_at) {
+        await sendWelcomeEmail({ to: email, fullName });
+        revalidatePath("/", "layout");
+        redirect(AUTH_ROUTES.dashboard);
+      }
+
+      return {
+        success: true,
+        message: AUTH_MESSAGES.signupNeedsVerification,
+        data: { email, needsVerification: true },
+      };
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Could not create account.";
+      await logAuthEvent("signup_failed", { email, error: message });
+      return { success: false, error: mapAuthError({ message }) };
+    }
+  }
+
+  // Fallback: Supabase-hosted auth emails.
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password: parsed.data.password,
     options: {
-      data: {
-        full_name: parsed.data.fullName,
-      },
+      data: { full_name: fullName },
       emailRedirectTo: `${getAppUrl()}${AUTH_ROUTES.callback}?next=${AUTH_ROUTES.dashboard}`,
     },
   });
 
   if (error) {
+    await logAuthEvent("signup_failed", { email, error: error.message });
     return { success: false, error: mapAuthError(error) };
   }
 
-  // Supabase returns a user with empty identities when the email is already registered
-  // (anti-enumeration). Treat that as an existing account.
   const identities = data.user?.identities ?? [];
   if (data.user && identities.length === 0) {
-    return {
-      success: false,
-      error: AUTH_MESSAGES.accountExists,
-    };
+    return { success: false, error: AUTH_MESSAGES.accountExists };
   }
 
-  // Confirm email disabled → session present → go straight in.
+  await logAuthEvent("signup", { email, mode: "supabase" });
+
   if (data.session) {
+    await sendWelcomeEmail({ to: email, fullName }).catch(() => undefined);
     revalidatePath("/", "layout");
     redirect(AUTH_ROUTES.dashboard);
   }
 
-  // Confirm email enabled → no session until the user clicks the link.
   return {
     success: true,
     message: AUTH_MESSAGES.signupNeedsVerification,
@@ -129,28 +212,93 @@ const resendSchema = z.object({
 
 export async function resendConfirmationAction(
   input: unknown
-): Promise<AuthActionResult> {
+): Promise<AuthActionResult<{ retryAfterSec?: number }>> {
   const parsed = resendSchema.safeParse(input);
   if (!parsed.success) {
     return { success: false, error: "Enter a valid email address." };
   }
 
+  const email = parsed.data.email.trim().toLowerCase();
+  const limit = checkRateLimit(
+    `resend:${email}`,
+    AUTH_RATE_LIMITS.resendVerification
+  );
+  if (!limit.allowed) {
+    await logAuthEvent("rate_limited", { action: "resend", email });
+    return {
+      success: false,
+      error: `Please wait ${limit.retryAfterSec}s before requesting another email.`,
+      data: { retryAfterSec: limit.retryAfterSec },
+    };
+  }
+
+  if (isCustomEmailEnabled()) {
+    try {
+      const { actionLink, user } = await generateMagicLink(email);
+      const display = await resolveUserDisplayName(
+        email,
+        (user?.user_metadata?.full_name as string | undefined) ?? undefined
+      );
+      const send = await sendVerificationEmail({
+        to: email,
+        verifyUrl: actionLink,
+        fullName: display.fullName,
+        firstName: display.firstName,
+      });
+      if (!send.ok) {
+        return {
+          success: false,
+          error: "Couldn't send verification email. Try again shortly.",
+        };
+      }
+      await logAuthEvent("verification_resent", { email, mode: "resend" });
+      return {
+        success: true,
+        message: AUTH_MESSAGES.confirmationResent,
+        data: { retryAfterSec: 60 },
+      };
+    } catch (err) {
+      // Enumeration protection — always look successful-ish for unknown emails.
+      await logAuthEvent("verification_resent", {
+        email,
+        mode: "resend",
+        softFail: err instanceof Error ? err.message : "error",
+      });
+      return {
+        success: true,
+        message: AUTH_MESSAGES.confirmationResent,
+        data: { retryAfterSec: 60 },
+      };
+    }
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.auth.resend({
     type: "signup",
-    email: parsed.data.email.trim().toLowerCase(),
+    email,
     options: {
       emailRedirectTo: `${getAppUrl()}${AUTH_ROUTES.callback}?next=${AUTH_ROUTES.dashboard}`,
     },
   });
 
   if (error) {
+    // Still return success-ish for unknown emails when possible.
+    const msg = error.message.toLowerCase();
+    if (msg.includes("already") || msg.includes("not found")) {
+      return {
+        success: true,
+        message: AUTH_MESSAGES.confirmationResent,
+        data: { retryAfterSec: 60 },
+      };
+    }
     return { success: false, error: mapAuthError(error) };
   }
 
+  await logAuthEvent("verification_resent", { email, mode: "supabase" });
   return {
     success: true,
     message: AUTH_MESSAGES.confirmationResent,
+    data: { retryAfterSec: 60 },
   };
 }
 
@@ -165,22 +313,56 @@ export async function forgotPasswordAction(
     };
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(
-    parsed.data.email.trim().toLowerCase(),
-    {
-      redirectTo: `${getAppUrl()}${AUTH_ROUTES.callback}?next=${AUTH_ROUTES.resetPassword}`,
-    }
+  const email = parsed.data.email.trim().toLowerCase();
+  const limit = checkRateLimit(
+    `forgot:${email}`,
+    AUTH_RATE_LIMITS.forgotPassword
   );
 
-  if (error) {
-    return { success: false, error: mapAuthError(error) };
-  }
-
-  return {
-    success: true,
+  // Always return the same message (email enumeration protection).
+  const ok = {
+    success: true as const,
     message: AUTH_MESSAGES.forgotPasswordSuccess,
   };
+
+  if (!limit.allowed) {
+    await logAuthEvent("rate_limited", { action: "forgot", email });
+    return ok;
+  }
+
+  if (isCustomEmailEnabled()) {
+    try {
+      const { actionLink, user } = await generateRecoveryLink(email);
+      const display = await resolveUserDisplayName(
+        email,
+        (user?.user_metadata?.full_name as string | undefined) ?? undefined
+      );
+      await sendPasswordResetEmail({
+        to: email,
+        resetUrl: actionLink,
+        fullName: display.fullName,
+        firstName: display.firstName,
+      });
+      await logAuthEvent("password_reset_requested", {
+        email,
+        mode: "resend",
+      });
+    } catch (err) {
+      await logAuthEvent("password_reset_requested", {
+        email,
+        mode: "resend",
+        softFail: err instanceof Error ? err.message : "error",
+      });
+    }
+    return ok;
+  }
+
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${getAppUrl()}${AUTH_ROUTES.callback}?next=${AUTH_ROUTES.resetPassword}`,
+  });
+  await logAuthEvent("password_reset_requested", { email, mode: "supabase" });
+  return ok;
 }
 
 export async function resetPasswordAction(
@@ -214,6 +396,7 @@ export async function resetPasswordAction(
     return { success: false, error: mapAuthError(error) };
   }
 
+  await logAuthEvent("password_reset_completed", { userId: user.id });
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
 

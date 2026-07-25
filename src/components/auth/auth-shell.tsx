@@ -36,9 +36,9 @@ export function AuthShell({
       />
 
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 w-full max-w-md"
       >
         <div className="mb-8 text-center">

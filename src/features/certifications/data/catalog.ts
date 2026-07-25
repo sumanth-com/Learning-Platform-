@@ -93,6 +93,30 @@ export function getCertification(id: string) {
   return CERTIFICATIONS.find((c) => c.id === id) ?? null;
 }
 
+/** Lightweight card/timer meta — does not load coding questions. */
+export function getCertCardMeta(id: string) {
+  for (const cat of CERT_CATEGORIES) {
+    for (const level of CERT_LEVELS) {
+      const certId = `${cat.id}-${level}`;
+      if (certId !== id) continue;
+      const meta = LEVEL_META[level];
+      return {
+        id: certId,
+        categoryId: cat.id,
+        categoryLabel: cat.label,
+        level,
+        shortTitle: `${cat.label} (${meta.label})`,
+        title: `${cat.label} (${meta.label})`,
+        durationMinutes: meta.duration,
+        questionCount: meta.questions,
+        passingScore: meta.passing,
+        xp: meta.xp,
+      };
+    }
+  }
+  return null;
+}
+
 export function getCertificationsByCategory(categoryId: CertCategoryId) {
   return CERTIFICATIONS.filter((c) => c.categoryId === categoryId);
 }

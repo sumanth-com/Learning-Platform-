@@ -1,13 +1,14 @@
 "use client";
 
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
+import { PasswordField } from "@/components/auth/password-field";
 import { signupAction } from "@/features/auth/actions/auth-actions";
 import {
   signupSchema,
@@ -20,6 +21,7 @@ export function SignupForm() {
   const [isPending, startTransition] = useTransition();
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<SignupInput>({
@@ -30,6 +32,7 @@ export function SignupForm() {
       password: "",
       confirmPassword: "",
     },
+    mode: "onChange",
   });
 
   const onSubmit = handleSubmit((values) => {
@@ -74,22 +77,34 @@ export function SignupForm() {
         error={errors.email}
         {...register("email")}
       />
-      <AuthFormField
-        label="Password"
-        type="password"
-        autoComplete="new-password"
-        placeholder="At least 8 characters"
-        hint="Use 8+ characters with a mix of letters and numbers."
-        error={errors.password}
-        {...register("password")}
+      <Controller
+        name="password"
+        control={control}
+        render={({ field }) => (
+          <PasswordField
+            id="signup-password"
+            label="Password"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.password?.message}
+            placeholder="Create a strong password"
+          />
+        )}
       />
-      <AuthFormField
-        label="Confirm password"
-        type="password"
-        autoComplete="new-password"
-        placeholder="Repeat password"
-        error={errors.confirmPassword}
-        {...register("confirmPassword")}
+      <Controller
+        name="confirmPassword"
+        control={control}
+        render={({ field }) => (
+          <PasswordField
+            id="signup-confirm"
+            label="Confirm password"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.confirmPassword?.message}
+            placeholder="Repeat password"
+            showStrength={false}
+          />
+        )}
       />
 
       <Button type="submit" className="w-full" size="lg" disabled={isPending}>

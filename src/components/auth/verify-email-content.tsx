@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Loader2, Mail } from "lucide-react";
@@ -14,11 +14,18 @@ export function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
   const [isPending, startTransition] = useTransition();
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setInterval(() => setCooldown((c) => Math.max(0, c - 1)), 1000);
+    return () => clearInterval(t);
+  }, [cooldown]);
 
   return (
     <AuthShell
       title="Verify your email"
-      description="Supabase requires email confirmation before you can sign in."
+      description="Confirm your address to unlock your SupraBase account."
       footer={
         <>
           Already verified?{" "}
@@ -46,39 +53,50 @@ export function VerifyEmailContent() {
               . Open it, then come back and sign in.
             </p>
             <p className="mt-2 text-xs text-zinc-500">
-              For local development you can also disable{" "}
-              <span className="text-zinc-400">Confirm email</span> in Supabase →
-              Authentication → Providers → Email, then sign up again.
+              The link expires in 24 hours. Check spam if you don’t see it.
             </p>
           </div>
         </div>
 
         {email ? (
-          <Button
-            type="button"
-            variant="secondary"
-            className="w-full"
-            disabled={isPending}
-            onClick={() => {
-              startTransition(async () => {
-                const result = await resendConfirmationAction({ email });
-                if (!result.success) {
-                  toast.error(result.error);
-                  return;
-                }
-                toast.success(result.message);
-              });
-            }}
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Sending…
-              </>
-            ) : (
-              "Resend verification email"
-            )}
-          </Button>
+          <div className="space-y-2">
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full"
+              disabled={isPending || cooldown > 0}
+              onClick={() => {
+                startTransition(async () => {
+                  const result = await resendConfirmationAction({ email });
+                  if (!result.success) {
+                    toast.error(result.error);
+                    if (result.data?.retryAfterSec) {
+                      setCooldown(result.data.retryAfterSec);
+                    }
+                    return;
+                  }
+                  toast.success(result.message ?? "Email sent successfully.");
+                  setCooldown(result.data?.retryAfterSec ?? 60);
+                });
+              }}
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Sending…
+                </>
+              ) : cooldown > 0 ? (
+                `Resend in ${cooldown}s`
+              ) : (
+                "Resend verification email"
+              )}
+            </Button>
+            {cooldown > 0 ? (
+              <p className="text-center text-[11px] text-zinc-500">
+                Email sent successfully. You can request another in {cooldown}s.
+              </p>
+            ) : null}
+          </div>
         ) : null}
 
         <Link href={AUTH_ROUTES.login} className="block">

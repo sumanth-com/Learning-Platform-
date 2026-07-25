@@ -38,3 +38,5 @@ next-env.d.ts
 # supabase CLI local cache
 supabase/.temp/
 
+
+.tmp-email-previews/

@@ -7,14 +7,15 @@ export type AuthActionSuccess<T = undefined> = {
   data?: T;
 };
 
-export type AuthActionFailure = {
+export type AuthActionFailure<T = undefined> = {
   success: false;
   error: string;
+  data?: T;
 };
 
 export type AuthActionResult<T = undefined> =
   | AuthActionSuccess<T>
-  | AuthActionFailure;
+  | AuthActionFailure<T>;
 
 export interface AuthSessionUser {
   user: User;

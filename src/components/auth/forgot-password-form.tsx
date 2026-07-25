@@ -46,7 +46,7 @@ export function ForgotPasswordForm() {
         type="email"
         autoComplete="email"
         placeholder="you@company.com"
-        hint="We'll send a secure link to reset your password."
+        hint="We'll email you a secure SupraBase link to choose a new password."
         error={errors.email}
         {...register("email")}
       />

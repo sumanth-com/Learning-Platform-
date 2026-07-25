@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginForm } from "@/components/auth/login-form";
@@ -11,7 +12,7 @@ export default function LoginPage() {
   return (
     <AuthShell
       title="Welcome back"
-      description="Sign in to continue your learning path."
+      description="Sign in to continue your learning path on SupraBase."
       footer={
         <>
           Don&apos;t have an account?{" "}
@@ -24,7 +25,15 @@ export default function LoginPage() {
         </>
       }
     >
-      <LoginForm />
+      <Suspense
+        fallback={
+          <div className="flex justify-center py-10 text-sm text-zinc-500">
+            Loading…
+          </div>
+        }
+      >
+        <LoginForm />
+      </Suspense>
     </AuthShell>
   );
 }

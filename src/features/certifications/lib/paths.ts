@@ -13,6 +13,8 @@ export const CERT_FLOW = {
     `/certifications/${certId}/problems/${slug}`,
   results: (certId: string) => `/certifications/${certId}/results`,
   certificate: (certId: string) => `/certifications/${certId}/certificate`,
+  /** Timer-only cooldown page — no assessment content loaded. */
+  retest: (certId: string) => `/certifications/retest/${certId}`,
 } as const;
 
 export function slugifyTitle(title: string) {
