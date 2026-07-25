@@ -141,7 +141,7 @@ export function ProfileWorkspace({
       const supabase = createClient();
       const { error } = await supabase
         .from("profiles")
-        .update({ full_name: name })
+        .update({ full_name: name } as never)
         .eq("id", userId);
       if (error) throw error;
 
@@ -219,7 +219,7 @@ export function ProfileWorkspace({
 
         const { error: updateError } = await supabase
           .from("profiles")
-          .update({ avatar_url: publicUrl })
+          .update({ avatar_url: publicUrl } as never)
           .eq("id", userId);
         if (updateError) throw updateError;
 
@@ -252,7 +252,7 @@ export function ProfileWorkspace({
 
       const { error } = await supabase
         .from("profiles")
-        .update({ avatar_url: null })
+        .update({ avatar_url: null } as never)
         .eq("id", userId);
       if (error) throw error;
 
