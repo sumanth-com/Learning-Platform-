@@ -1,6 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { PortalChrome } from "@/components/portal/portal-chrome";
 import { ModuleChallengeSolve } from "@/components/module-hub/module-challenge-solve";
+import { getCurrentUser } from "@/features/auth/actions/auth-actions";
+import { AUTH_ROUTES } from "@/features/auth/constants";
 import { loadModuleHubAction } from "@/features/curriculum/actions/module-hub-actions";
 import { findModuleChallenge } from "@/features/curriculum/lib/topic-challenges";
 import {
@@ -49,58 +51,86 @@ export async function generateMetadata({
   };
 }
 
+function resolveTopicTitle(
+  slug: string,
+  topicSlug: string,
+  fallbackTitle?: string
+) {
+  return (
+    fallbackTitle ||
+    (isProgrammingFundamentalsModule(slug)
+      ? PROGRAMMING_FUNDAMENTALS_TOPICS.find((t) => t.slug === topicSlug)?.title
+      : undefined) ||
+    getDeveloperToolingTopic(topicSlug)?.title ||
+    getHtmlAcademyTopic(topicSlug)?.title ||
+    getCssAcademyTopic(topicSlug)?.title ||
+    getJsAcademyTopic(topicSlug)?.title ||
+    getReactAcademyTopic(topicSlug)?.title ||
+    getNextjsAcademyTopic(topicSlug)?.title ||
+    getTypescriptAcademyTopic(topicSlug)?.title ||
+    getApisAcademyTopic(topicSlug)?.title ||
+    getAuthAcademyTopic(topicSlug)?.title ||
+    getSqlAcademyTopic(topicSlug)?.title ||
+    getModelingAcademyTopic(topicSlug)?.title ||
+    getDeploymentAcademyTopic(topicSlug)?.title ||
+    getCicdAcademyTopic(topicSlug)?.title ||
+    getLlmAcademyTopic(topicSlug)?.title ||
+    getAiFeaturesAcademyTopic(topicSlug)?.title ||
+    getCapstoneAcademyTopic(topicSlug)?.title ||
+    getShipAcademyTopic(topicSlug)?.title ||
+    getInterviewAcademyTopic(topicSlug)?.title ||
+    getSystemsAcademyTopic(topicSlug)?.title ||
+    topicSlug
+  );
+}
+
 export default async function ChallengeSolvePage({
   params,
 }: {
   params: Promise<{ slug: string; challengeId: string }>;
 }) {
+  const session = await getCurrentUser();
+  if (!session) redirect(AUTH_ROUTES.login);
+
   const { slug, challengeId } = await params;
   const decodedId = decodeURIComponent(challengeId);
 
+  // Academy challenges live in static banks — resolve before any DB hub load so a
+  // hub/auth flake cannot 404 a challenge that findModuleChallenge already knows.
+  const challenge = findModuleChallenge(slug, decodedId);
+  if (!challenge) notFound();
+
   const hub = await loadModuleHubAction(slug);
-  if (!hub.success) notFound();
+  if (!hub.success) {
+    if (hub.error === "Sign in required.") redirect(AUTH_ROUTES.login);
+    // Challenge is valid; render with static titles if the module hub is unavailable.
+    const topicTitle = resolveTopicTitle(slug, challenge.topicSlug);
+    return (
+      <div className="flex h-full min-h-0 flex-col overflow-hidden">
+        <PortalChrome title="Roadmap" subtitle={topicTitle} fillViewport />
+        <ModuleChallengeSolve
+          moduleSlug={slug}
+          topicSlug={challenge.topicSlug}
+          topicTitle={topicTitle}
+          moduleTitle={slug}
+          challenge={challenge}
+        />
+      </div>
+    );
+  }
 
   const { detail } = hub.data;
   const cards = buildTopicCards(detail.lessons, slug);
-  const challenge = findModuleChallenge(
-    slug,
-    decodedId,
-    detail.lessons.map((l) => ({ slug: l.slug, title: l.title }))
-  );
-  if (!challenge) notFound();
-
   const topicCard = cards.find((c) => c.slug === challenge.topicSlug);
   if (topicCard?.status === "locked") {
     redirect(CURRICULUM_ROUTES.moduleHub(slug));
   }
 
-  const topicTitle =
-    topicCard?.title ||
-    (isProgrammingFundamentalsModule(slug)
-      ? PROGRAMMING_FUNDAMENTALS_TOPICS.find(
-          (t) => t.slug === challenge.topicSlug
-        )?.title
-      : undefined) ||
-    getDeveloperToolingTopic(challenge.topicSlug)?.title ||
-    getHtmlAcademyTopic(challenge.topicSlug)?.title ||
-    getCssAcademyTopic(challenge.topicSlug)?.title ||
-    getJsAcademyTopic(challenge.topicSlug)?.title ||
-    getReactAcademyTopic(challenge.topicSlug)?.title ||
-    getNextjsAcademyTopic(challenge.topicSlug)?.title ||
-    getTypescriptAcademyTopic(challenge.topicSlug)?.title ||
-    getApisAcademyTopic(challenge.topicSlug)?.title ||
-    getAuthAcademyTopic(challenge.topicSlug)?.title ||
-    getSqlAcademyTopic(challenge.topicSlug)?.title ||
-    getModelingAcademyTopic(challenge.topicSlug)?.title ||
-    getDeploymentAcademyTopic(challenge.topicSlug)?.title ||
-    getCicdAcademyTopic(challenge.topicSlug)?.title ||
-    getLlmAcademyTopic(challenge.topicSlug)?.title ||
-    getAiFeaturesAcademyTopic(challenge.topicSlug)?.title ||
-    getCapstoneAcademyTopic(challenge.topicSlug)?.title ||
-    getShipAcademyTopic(challenge.topicSlug)?.title ||
-    getInterviewAcademyTopic(challenge.topicSlug)?.title ||
-    getSystemsAcademyTopic(challenge.topicSlug)?.title ||
-    challenge.topicSlug;
+  const topicTitle = resolveTopicTitle(
+    slug,
+    challenge.topicSlug,
+    topicCard?.title
+  );
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">

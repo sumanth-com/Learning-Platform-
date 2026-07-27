@@ -267,15 +267,20 @@ export const useProgressStore = create<ProgressStore>()(
         })),
 
       toggleBookmark: (entityId) =>
-        set((state) => ({
-          progress: {
-            ...state.progress,
-            bookmarks: {
-              ...state.progress.bookmarks,
-              [entityId]: !state.progress.bookmarks[entityId],
+        set((state) => {
+          const next = { ...state.progress.bookmarks };
+          if (next[entityId]) {
+            delete next[entityId];
+          } else {
+            next[entityId] = true;
+          }
+          return {
+            progress: {
+              ...state.progress,
+              bookmarks: next,
             },
-          },
-        })),
+          };
+        }),
 
       updateProjectMeta: (projectId, updates) =>
         set((state) => {

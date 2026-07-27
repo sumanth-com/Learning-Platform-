@@ -54,10 +54,10 @@ function Section({
 }) {
   return (
     <section className="space-y-2">
-      <h2 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+      <h2 className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
         {title}
       </h2>
-      <div className="text-sm leading-relaxed text-zinc-300">{children}</div>
+      <div className="text-sm leading-relaxed text-zinc-100">{children}</div>
     </section>
   );
 }
@@ -140,18 +140,24 @@ export function ThinkingChallengeSolve({
           orderedSteps?: string[];
         };
         if (parsed.answer) setAnswer(parsed.answer);
-        if (parsed.selectedOption !== undefined) {
+        if (thinking.kind !== "multiple-choice" && parsed.selectedOption !== undefined) {
           setSelectedOption(parsed.selectedOption);
         }
         if (parsed.orderedSteps?.length) {
           setOrderedSteps(parsed.orderedSteps);
         }
       }
-      if (wasSubmitted) setSubmitted(true);
+      if (thinking.kind === "multiple-choice") {
+        // MCQs always start unselected so the learner must actively choose.
+        setSelectedOption(null);
+        setSubmitted(false);
+      } else if (wasSubmitted) {
+        setSubmitted(true);
+      }
     } catch {
       /* ignore */
     }
-  }, [hydrated, storageKey, submittedKey]);
+  }, [hydrated, storageKey, submittedKey, thinking.kind]);
 
   useEffect(() => {
     if (thinking.kind !== "arrange-steps" || !thinking.arrangeSteps?.length) {
@@ -219,8 +225,8 @@ export function ThinkingChallengeSolve({
     thinking.options?.find((o) => o.id === selectedOption)?.correct === true;
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0d0d]">
-      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-zinc-800 px-3 sm:px-4">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
+      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-zinc-800/80 bg-background/95 px-3 backdrop-blur-sm sm:px-4">
         <Link
           href={backHref}
           className="inline-flex shrink-0 items-center gap-1.5 text-xs text-zinc-500 transition hover:text-zinc-300"
@@ -229,13 +235,13 @@ export function ThinkingChallengeSolve({
           <span className="hidden sm:inline">Challenges</span>
         </Link>
         <div className="min-w-0 flex-1 truncate text-sm">
-          <span className="font-medium text-zinc-100">{thinking.title}</span>
-          <span className="text-zinc-600"> · </span>
-          <span className="capitalize text-zinc-500">
+          <span className="font-semibold text-zinc-50">{thinking.title}</span>
+          <span className="text-zinc-500"> · </span>
+          <span className="capitalize text-zinc-300">
             {thinking.difficulty}
           </span>
-          <span className="text-zinc-600"> · </span>
-          <span className="text-zinc-500">
+          <span className="text-zinc-500"> · </span>
+          <span className="text-zinc-300">
             {THINKING_KIND_LABELS[thinking.kind]}
           </span>
         </div>
@@ -260,20 +266,20 @@ export function ThinkingChallengeSolve({
       <div className="thinking-challenge-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain">
         <div className="mx-auto max-w-3xl space-y-8 px-4 py-8 sm:px-6">
           <div className="space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-500/80">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
               Thinking Challenge
             </p>
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl">
               {thinking.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500">
+            <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-zinc-300">
               <span className="capitalize">{thinking.difficulty}</span>
-              <span className="text-zinc-700">·</span>
+              <span className="text-zinc-500">·</span>
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
                 {thinking.estimatedMinutes} min
               </span>
-              <span className="text-zinc-700">·</span>
+              <span className="text-zinc-500">·</span>
               <span>{THINKING_KIND_LABELS[thinking.kind]}</span>
             </div>
           </div>
@@ -283,7 +289,7 @@ export function ThinkingChallengeSolve({
           </Section>
 
           <Section title="Task">
-            <p className="whitespace-pre-wrap text-zinc-200">{thinking.task}</p>
+            <p className="whitespace-pre-wrap text-zinc-100">{thinking.task}</p>
           </Section>
 
           <Section title="Your answer">
@@ -291,21 +297,19 @@ export function ThinkingChallengeSolve({
               <div className="space-y-2">
                 {thinking.options.map((opt) => {
                   const selected = selectedOption === opt.id;
-                  const showResult = submitted;
+                  const showResult = selectedOption !== null;
                   return (
                     <button
                       key={opt.id}
                       type="button"
-                      disabled={submitted}
                       onClick={() => {
                         setSelectedOption(opt.id);
-                        persist({ selectedOption: opt.id });
                       }}
                       className={cn(
                         "flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left text-sm transition",
                         selected
-                          ? "border-emerald-500/50 bg-emerald-500/10 text-zinc-100"
-                          : "border-zinc-800 bg-zinc-900/40 text-zinc-300 hover:border-zinc-700",
+                          ? "border-emerald-500/50 bg-emerald-500/10 text-zinc-50"
+                          : "border-zinc-700 bg-zinc-900 text-zinc-100 hover:border-zinc-600",
                         showResult &&
                           opt.correct &&
                           "border-emerald-500/60 bg-emerald-500/15",
@@ -322,7 +326,7 @@ export function ThinkingChallengeSolve({
                     </button>
                   );
                 })}
-                {submitted ? (
+                {selectedOption !== null ? (
                   <p
                     className={cn(
                       "text-xs",
@@ -340,7 +344,7 @@ export function ThinkingChallengeSolve({
                 {orderedSteps.map((step, i) => (
                   <li
                     key={`${step}-${i}`}
-                    className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/40 px-3 py-2 text-sm text-zinc-200"
+                    className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-50"
                   >
                     <span className="w-5 tabular-nums text-zinc-500">
                       {i + 1}.
@@ -374,19 +378,23 @@ export function ThinkingChallengeSolve({
             ) : (
               <Textarea
                 value={answer}
-                disabled={submitted}
+                readOnly={submitted}
                 onChange={(e) => {
+                  if (submitted) return;
                   setAnswer(e.target.value);
                   persist({ answer: e.target.value });
                 }}
                 placeholder="Write your reasoning here…"
-                className="min-h-[160px] border-zinc-800 bg-zinc-950/80 focus-visible:ring-emerald-500/40"
+                className={cn(
+                  "min-h-[160px] border-zinc-700 bg-zinc-900 text-[15px] leading-relaxed text-zinc-50 placeholder:text-zinc-500 focus-visible:ring-emerald-500/40",
+                  submitted && "cursor-default border-emerald-700/30 bg-zinc-900"
+                )}
               />
             )}
           </Section>
 
           <div className="flex flex-wrap items-center gap-2">
-            {!submitted ? (
+            {thinking.kind !== "multiple-choice" && !submitted ? (
               <Button
                 size="sm"
                 disabled={!canSubmit}
@@ -395,14 +403,18 @@ export function ThinkingChallengeSolve({
               >
                 Submit answer
               </Button>
+            ) : thinking.kind !== "multiple-choice" ? (
+              <span className="text-xs font-semibold text-emerald-600">Answer submitted</span>
             ) : (
-              <span className="text-xs text-emerald-400">Answer submitted</span>
+              <span className="text-xs font-medium text-zinc-300">
+                Select an option to see instant feedback.
+              </span>
             )}
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="gap-1.5 text-zinc-400"
+              className="gap-1.5 font-medium text-zinc-300 hover:text-zinc-50"
               onClick={() => setHintsOpen((v) => !v)}
             >
               <Lightbulb className="h-3.5 w-3.5" />
@@ -412,7 +424,7 @@ export function ThinkingChallengeSolve({
 
           {hintsOpen ? (
             <Section title="Hints">
-              <ul className="list-disc space-y-1 pl-5 text-zinc-400">
+              <ul className="list-disc space-y-1 pl-5 font-medium text-zinc-200">
                 {thinking.hints.map((hint) => (
                   <li key={hint}>{hint}</li>
                 ))}
@@ -423,12 +435,12 @@ export function ThinkingChallengeSolve({
           {submitted ? (
             <>
               <Section title="Reference solution">
-                <pre className="whitespace-pre-wrap rounded-lg border border-zinc-800 bg-zinc-950/80 p-4 font-sans text-sm text-zinc-300">
+                <pre className="whitespace-pre-wrap rounded-lg border border-zinc-700 bg-zinc-900 p-4 font-sans text-sm leading-relaxed text-zinc-100">
                   {thinking.referenceSolution}
                 </pre>
               </Section>
               <Section title="Key takeaways">
-                <ul className="list-disc space-y-1.5 pl-5 text-zinc-300">
+                <ul className="list-disc space-y-1.5 pl-5 font-medium text-zinc-100">
                   {thinking.takeaways.map((item) => (
                     <li key={item}>{item}</li>
                   ))}

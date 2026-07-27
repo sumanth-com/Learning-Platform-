@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Bookmark, ChevronRight, Star } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import {
+  SaveDiamondButton,
+  TrackSavedDiamond,
+  DiamondGem,
+} from "@/components/shared/save-diamond-button";
 import type { LearnDifficulty, LearnLesson, LearnWeekBundle } from "@/learning-engine/types";
 import { lessonEntityId } from "@/learning-engine/types";
 import { DIFFICULTY_LABELS, problemTypeLabel, weekProgress } from "@/learning-engine/labels";
@@ -120,8 +125,8 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
   );
 
   const isDoneFn = useProgressStore((s) => s.isDone);
+  const bookmarks = useProgressStore((s) => s.progress.bookmarks);
   const isBookmarkedFn = useProgressStore((s) => s.isBookmarked);
-  const toggleBookmark = useProgressStore((s) => s.toggleBookmark);
 
   const allChallenges = useMemo<ChallengeItem[]>(() => {
     return week.topics.flatMap((bundle, topicIndex) =>
@@ -175,9 +180,11 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
     activeTopic,
     allChallenges,
     bookmarkedOnly,
+    bookmarks,
     diffEasy,
     diffHard,
     diffMedium,
+    hydrated,
     isBookmarkedFn,
     isDoneFn,
     showSolved,
@@ -186,6 +193,11 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
 
   const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / PAGE_SIZE));
   const pageItems = filteredAndSorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  const savedCount = useMemo(() => {
+    if (!hydrated) return 0;
+    return allChallenges.filter((c) => isBookmarkedFn(c.entityId)).length;
+  }, [allChallenges, bookmarks, hydrated, isBookmarkedFn]);
 
   const selectTopic = (slug: string) => {
     setActiveTopic(slug);
@@ -243,7 +255,7 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <span className="rounded-md bg-violet-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-300 ring-1 ring-violet-500/25">
+            <span className="rounded-full border border-indigo-500/40 bg-indigo-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-300">
               Week {week.weekId}
             </span>
           </div>
@@ -256,8 +268,12 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
               : "Week complete — great job!"}
           </p>
           <div className="mt-2 flex items-center gap-2">
-            <Progress value={displayProgress.percent} className="h-2 flex-1" />
-            <span className="text-sm font-semibold tabular-nums text-emerald-400" suppressHydrationWarning>
+            <Progress
+              value={displayProgress.percent}
+              className="h-2.5 flex-1 bg-[#b7a994] ring-1 ring-[#5C3A21]/30"
+              indicatorClassName="bg-emerald-500"
+            />
+            <span className="text-sm font-semibold tabular-nums text-emerald-600" suppressHydrationWarning>
               {hydrated ? `${displayProgress.percent}%` : "\u00a0"}
             </span>
           </div>
@@ -269,52 +285,80 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
         </div>
       </div>
 
-      {/* Topic tabs */}
-      <div className="flex gap-6 overflow-x-auto border-b border-zinc-800 pb-1">
-        <button
-          type="button"
-          onClick={() => selectTopic("all")}
-          className={cn(
-            "shrink-0 border-b-2 pb-2.5 text-sm font-medium transition-colors",
-            activeTopic === "all"
-              ? "border-emerald-500 text-emerald-400"
-              : "border-transparent text-zinc-500 hover:text-zinc-300"
-          )}
-        >
-          All Topics
-        </button>
-        {week.topics.map((t) => (
+      {/* Topic pills + saved track diamond */}
+      <div className="flex items-center gap-2.5">
+        <TrackSavedDiamond
+          active={bookmarkedOnly}
+          count={savedCount}
+          onClick={() => {
+            setBookmarkedOnly((v) => !v);
+            setPage(0);
+          }}
+        />
+        <div className="topic-pills-scroll min-w-0 flex-1 flex items-center gap-2 overflow-x-auto pb-2.5">
           <button
-            key={t.topic.slug}
             type="button"
-            onClick={() => selectTopic(t.topic.slug)}
+            onClick={() => selectTopic("all")}
             className={cn(
-              "shrink-0 border-b-2 pb-2.5 text-sm font-medium transition-colors",
-              activeTopic === t.topic.slug
-                ? "border-emerald-500 text-emerald-400"
-                : "border-transparent text-zinc-500 hover:text-zinc-300"
+              "shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors",
+              activeTopic === "all"
+                ? "bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/60"
+                : "bg-zinc-900 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 hover:text-zinc-50"
             )}
           >
-            {t.topic.title}
+            All
           </button>
-        ))}
+          {week.topics.map((t) => (
+            <button
+              key={t.topic.slug}
+              type="button"
+              onClick={() => selectTopic(t.topic.slug)}
+              className={cn(
+                "shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors",
+                activeTopic === t.topic.slug
+                  ? "bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/60"
+                  : "bg-zinc-900 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 hover:text-zinc-50"
+              )}
+            >
+              {t.topic.title}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-6 lg:flex-row">
         {/* Challenge list */}
         <div className="min-w-0 flex-1 space-y-3">
           {pageItems.length === 0 ? (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-10 text-center text-sm text-zinc-500">
-              No challenges match your filters.
+            <div className="surface-card-3d p-8 sm:p-10">
+              {bookmarkedOnly ? (
+                <div className="mx-auto max-w-md space-y-3 text-left">
+                  <div className="flex items-center gap-2.5">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#5C3A21] text-[#f5efe8]">
+                      <DiamondGem filled className="h-3.5 w-3.5" />
+                    </span>
+                    <p className="text-sm font-semibold text-zinc-100">
+                      No saved questions
+                    </p>
+                  </div>
+                  <p className="text-sm leading-relaxed text-zinc-400">
+                    You have not saved any challenges yet. Click the diamond next
+                    to a challenge title to save it — it turns dark brown when
+                    saved. Then click the diamond on the topic track bar above to
+                    come back and review your saved list.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-center text-sm text-zinc-500">
+                  No challenges match your filters.
+                </p>
+              )}
             </div>
           ) : (
             pageItems.map((item, i) => {
-              const { lesson, topicSlug, topicTitle, entityId } = item;
+              const { lesson, topicSlug, entityId } = item;
               const done = hydrated && isDoneFn(entityId);
-              const bookmarked = isBookmarkedFn(entityId);
               const isFirst = page === 0 && i === 0;
-              const globalIndex = page * PAGE_SIZE + i + 1;
-              const challengeNumber = globalIndex.toString().padStart(3, "0");
               const estimatedMinutes = lesson.estimatedMinutes ?? (lesson.difficulty === "easy" ? 8 : lesson.difficulty === "medium" ? 15 : 25);
               const xpPoints = estimatedMinutes * (lesson.difficulty === "easy" ? 2 : lesson.difficulty === "medium" ? 3 : 4);
               const successRate =
@@ -329,35 +373,21 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
               return (
                 <article
                   key={entityId}
-                  className="rounded-xl border border-zinc-800/90 bg-zinc-900/40 p-4 transition-colors hover:border-zinc-700"
+                  className="surface-card-3d p-4 sm:p-5"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-start gap-3">
-                        <button
-                          type="button"
-                          onClick={() => toggleBookmark(entityId)}
-                          className={cn(
-                            "mt-0.5 shrink-0 rounded-full border border-zinc-800 p-1 transition-colors",
-                            bookmarked ? "border-amber-400/60 bg-amber-500/10" : "hover:border-amber-500/60"
-                          )}
-                          aria-label={bookmarked ? "Remove bookmark" : "Bookmark challenge"}
-                        >
-                          {bookmarked ? (
-                            <Bookmark className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          ) : (
-                            <Star className="h-3.5 w-3.5 text-zinc-500" />
-                          )}
-                        </button>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
-                            <span className="rounded bg-zinc-800/70 px-1.5 py-0.5 text-[10px] text-zinc-300">
-                              #{challengeNumber}
-                            </span>
-                            <span>{topicTitle}</span>
-                          </div>
-                          <h2 className="mt-1 text-base font-semibold text-zinc-100">{lesson.title}</h2>
-                          <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <SaveDiamondButton
+                          entityId={entityId}
+                          showUnsaveAction={bookmarkedOnly}
+                        />
+                        <h2 className="min-w-0 truncate text-base font-semibold text-zinc-100">
+                          {lesson.title}
+                        </h2>
+                      </div>
+                      <div className="mt-1.5 min-w-0 sm:pl-9">
+                          <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
                             <span className={cn("font-semibold", DIFFICULTY_COLORS[lesson.difficulty])}>
                               {DIFFICULTY_LABELS[lesson.difficulty]}
                             </span>
@@ -392,14 +422,13 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
                               lesson.description ??
                               `Practice ${categoryLabel(lesson.category)} concepts.`}
                           </p>
-                        </div>
                       </div>
                     </div>
                     <Link href={learnUrl(week.weekId, topicSlug, lesson)} className="shrink-0">
                       <Button
                         size="sm"
                         className={cn(
-                          "h-9 min-w-[8.5rem] font-semibold",
+                          "h-9 min-w-[8.5rem] rounded-full font-semibold",
                           isFirst && !done
                             ? "bg-emerald-600 hover:bg-emerald-500"
                             : done
@@ -449,7 +478,7 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
           <FilterSection title="Status">
             <FilterCheckbox label="Solved" checked={showSolved} onChange={setShowSolved} />
             <FilterCheckbox label="Unsolved" checked={showUnsolved} onChange={setShowUnsolved} />
-            <FilterCheckbox label="Bookmarked only" checked={bookmarkedOnly} onChange={setBookmarkedOnly} />
+            <FilterCheckbox label="Saved only" checked={bookmarkedOnly} onChange={setBookmarkedOnly} />
           </FilterSection>
 
           <FilterSection title="Difficulty">

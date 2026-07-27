@@ -14,6 +14,7 @@ export { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
 export const CURRICULUM_PROTECTED_ROUTES = [
   "/roadmap",
   "/module",
+  "/challenge",
   "/lesson",
   "/learn",
 ] as const;

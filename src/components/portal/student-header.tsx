@@ -27,7 +27,7 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
   const hasBreadcrumbs = Boolean(breadcrumbs && breadcrumbs.length > 0);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-zinc-800/90 bg-background/95 backdrop-blur-xl">
+    <header className="portal-topbar sticky top-0 z-20 border-b border-zinc-800/90 backdrop-blur-xl">
       <div className="flex min-h-16 items-center gap-2.5 px-4 py-3 sm:gap-3 sm:px-6">
         <button
           type="button"

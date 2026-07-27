@@ -137,8 +137,8 @@ function CodeWorkspaceSolve({
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0d0d]">
-      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-zinc-800 px-3 sm:px-4">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
+      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-zinc-800/80 bg-background/95 px-3 backdrop-blur-sm sm:px-4">
         <Link
           href={backHref}
           className="inline-flex shrink-0 items-center gap-1.5 text-xs text-zinc-500 transition hover:text-zinc-300"
@@ -176,7 +176,7 @@ function CodeWorkspaceSolve({
           className="flex min-h-0 shrink-0 overflow-hidden border-r border-zinc-800"
           style={{ width: `${splitPct}%` }}
         >
-          <nav className="flex w-10 shrink-0 flex-col border-r border-zinc-800 bg-[#0a0a0a]">
+          <nav className="flex w-10 shrink-0 flex-col border-r border-zinc-800 bg-zinc-950">
             {SIDE_TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -185,7 +185,7 @@ function CodeWorkspaceSolve({
                 className={cn(
                   "flex min-h-[88px] flex-1 items-center justify-center border-b border-zinc-800/80 px-1 py-3 text-[10px] font-semibold uppercase tracking-widest transition-colors [writing-mode:vertical-rl] rotate-180",
                   sideTab === tab.id
-                    ? "bg-[#1a1a1a] text-emerald-400"
+                    ? "bg-zinc-900 text-emerald-500"
                     : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300"
                 )}
               >
@@ -196,7 +196,7 @@ function CodeWorkspaceSolve({
 
           <div
             ref={problemScrollRef}
-            className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#1a1a1a]"
+            className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-zinc-950"
           >
             <ProblemDocument lesson={lesson} tab={sideTab} />
           </div>
@@ -230,7 +230,7 @@ function CodeWorkspaceSolve({
           {lessonHasWorkspace(lesson) ? (
             <HackerrankEditor key={lesson.id} lesson={lesson} />
           ) : (
-            <div className="flex h-full items-center justify-center bg-[#0a0a0b] text-sm text-zinc-500">
+            <div className="flex h-full items-center justify-center bg-background text-sm text-zinc-500">
               No code editor for this challenge type.
             </div>
           )}

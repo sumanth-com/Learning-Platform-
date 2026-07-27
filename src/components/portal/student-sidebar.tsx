@@ -65,7 +65,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
               : PORTAL_SIDEBAR_WIDTH,
       }}
       className={cn(
-        "flex h-full flex-col overflow-hidden border-r border-zinc-800/90 bg-background transition-[width] duration-200",
+        "portal-rail flex h-full flex-col overflow-hidden border-r border-zinc-800/90 transition-[width] duration-200",
         mode === "drawer" && "shadow-2xl shadow-black/50"
       )}
     >

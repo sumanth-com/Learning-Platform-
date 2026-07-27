@@ -18,7 +18,7 @@ export function HubAuroraBackground({ className }: { className?: string }) {
         className="absolute -left-[18%] -top-[8%] h-[48%] w-[62%] rounded-full opacity-35 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(91,108,255,0.42) 0%, transparent 70%)",
+            "radial-gradient(circle, color-mix(in srgb, var(--palette-terracotta, #5b6cff) 42%, transparent) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, 36, -18, 0],
@@ -31,7 +31,7 @@ export function HubAuroraBackground({ className }: { className?: string }) {
         className="absolute -right-[12%] top-[2%] h-[42%] w-[55%] rounded-full opacity-30 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(56,189,248,0.38) 0%, transparent 70%)",
+            "radial-gradient(circle, color-mix(in srgb, var(--palette-slate, #38bdf8) 40%, transparent) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, -28, 20, 0],
@@ -44,7 +44,7 @@ export function HubAuroraBackground({ className }: { className?: string }) {
         className="absolute bottom-[-8%] left-[18%] h-[40%] w-[58%] rounded-full opacity-28 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(52,211,153,0.34) 0%, transparent 70%)",
+            "radial-gradient(circle, color-mix(in srgb, var(--palette-sage, #34d399) 38%, transparent) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, 24, -30, 0],
@@ -57,7 +57,7 @@ export function HubAuroraBackground({ className }: { className?: string }) {
         className="absolute bottom-[12%] right-[8%] h-[30%] w-[36%] rounded-full opacity-22 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(251,191,36,0.28) 0%, transparent 70%)",
+            "radial-gradient(circle, color-mix(in srgb, var(--palette-sand, #fbbf24) 45%, transparent) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, -16, 12, 0],

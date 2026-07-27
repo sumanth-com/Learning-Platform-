@@ -4,10 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  Bookmark,
   Lock,
-  Star,
 } from "lucide-react";
+import { SaveDiamondButton, TrackSavedDiamond, DiamondGem } from "@/components/shared/save-diamond-button";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { DifficultyBadge } from "@/components/curriculum/difficulty-badge";
@@ -424,24 +423,10 @@ function ModuleTopicExplorerInner({
 
   useEffect(() => {
     const topic = searchParams.get("topic");
-    const hubModule = isChallengeHubModule(moduleSlug);
-
-    if (hubModule) {
-      const fallback = cards[0]?.slug;
-      const next =
-        topic && validTopicSlugs.has(topic) ? topic : (fallback ?? "all");
-      setActiveTopic(next);
-      if (!topic && fallback) {
-        router.replace(CURRICULUM_ROUTES.moduleHub(moduleSlug, fallback), {
-          scroll: false,
-        });
-      }
-      return;
-    }
-
+    // No topic param → show All. Valid topic param → select that topic.
     const next = topic && validTopicSlugs.has(topic) ? topic : "all";
     setActiveTopic(next);
-  }, [searchParams, validTopicSlugs, moduleSlug, cards, router]);
+  }, [searchParams, validTopicSlugs]);
 
   useEffect(() => {
     for (const card of cards.slice(0, 5)) {
@@ -461,8 +446,8 @@ function ModuleTopicExplorerInner({
   );
 
   const isDoneFn = useProgressStore((s) => s.isDone);
+  const bookmarks = useProgressStore((s) => s.progress.bookmarks);
   const isBookmarkedFn = useProgressStore((s) => s.isBookmarked);
-  const toggleBookmark = useProgressStore((s) => s.toggleBookmark);
 
   const allChallenges = useMemo<ModuleChallengeItem[]>(() => {
     const items: ModuleChallengeItem[] = [];
@@ -634,6 +619,7 @@ function ModuleTopicExplorerInner({
     activeTopic,
     allChallenges,
     bookmarkedOnly,
+    bookmarks,
     diffEasy,
     diffHard,
     diffMedium,
@@ -649,6 +635,12 @@ function ModuleTopicExplorerInner({
     page * PAGE_SIZE,
     (page + 1) * PAGE_SIZE
   );
+
+  useEffect(() => {
+    if (page > 0 && page >= totalPages) {
+      setPage(Math.max(0, totalPages - 1));
+    }
+  }, [page, totalPages]);
 
   const selectTopic = (slug: string, card?: TopicCardModel) => {
     if (card?.status === "locked") return;
@@ -688,13 +680,18 @@ function ModuleTopicExplorerInner({
     ? challengeProgress
     : { completed: 0, total: challengeProgress.total, percent: 0 };
 
+  const savedCount = useMemo(() => {
+    if (!hydrated) return 0;
+    return allChallenges.filter((c) => isBookmarkedFn(c.entityId)).length;
+  }, [allChallenges, bookmarks, hydrated, isBookmarkedFn]);
+
   return (
-    <div className="mx-auto flex h-full w-full max-w-7xl flex-col">
-      <div className="shrink-0 space-y-4 border-b border-zinc-800/80 bg-zinc-950 pb-4">
+    <div className="mx-auto flex h-full w-full max-w-7xl flex-col gap-4 px-1 pt-1 sm:px-2">
+      <div className="surface-card-3d shrink-0 space-y-4 p-4 sm:p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div className="min-w-0 flex-1">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <span className="rounded-md bg-violet-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-300 ring-1 ring-violet-500/25">
+            <div className="mb-2.5 flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-indigo-500/40 bg-indigo-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-300">
                 Module
               </span>
               <DifficultyBadge difficulty={moduleDifficulty(detail.lessons)} />
@@ -725,9 +722,13 @@ function ModuleTopicExplorerInner({
           </div>
 
           <div className="flex w-full shrink-0 items-center gap-3 sm:w-52 sm:pt-8">
-            <Progress value={displayProgress.percent} className="h-2 flex-1" />
+            <Progress
+              value={displayProgress.percent}
+              className="h-2.5 flex-1 bg-[#b7a994] ring-1 ring-[#5C3A21]/30"
+              indicatorClassName="bg-emerald-500"
+            />
             <span
-              className="min-w-[2.5rem] text-right text-sm font-semibold tabular-nums text-emerald-400"
+              className="min-w-[2.5rem] text-right text-sm font-semibold tabular-nums text-emerald-600"
               suppressHydrationWarning
             >
               {hydrated ? `${displayProgress.percent}%` : "\u00a0"}
@@ -735,65 +736,91 @@ function ModuleTopicExplorerInner({
           </div>
         </div>
 
-        <div className="topic-pills-scroll -mx-1 flex items-center gap-2 overflow-x-auto px-1 pt-1 pb-2.5">
-          {!isChallengeHubModule(moduleSlug) ? (
+        <div className="flex items-center gap-2.5 pt-1">
+          <TrackSavedDiamond
+            active={bookmarkedOnly}
+            count={savedCount}
+            onClick={() => {
+              setBookmarkedOnly((v) => !v);
+              setPage(0);
+            }}
+          />
+          <div className="topic-pills-scroll min-w-0 flex-1 -mx-0.5 flex items-center gap-2 overflow-x-auto px-0.5 pb-2.5">
             <button
               type="button"
               onClick={() => selectTopic("all")}
               className={cn(
-                "shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+                "shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors",
                 activeTopic === "all"
-                  ? "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/35"
-                  : "bg-zinc-900/80 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-800 hover:text-zinc-200"
+                  ? "bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/60"
+                  : "bg-zinc-900 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 hover:text-zinc-50"
               )}
             >
-              All Topics
+              All
             </button>
-          ) : null}
-          {cards.map((card) => {
-            const locked = card.status === "locked";
-            const active = activeTopic === card.slug;
-            return (
-              <button
-                key={card.slug}
-                type="button"
-                disabled={locked}
-                onClick={() => selectTopic(card.slug, card)}
-                className={cn(
-                  "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                  active
-                    ? "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/35"
-                    : locked
-                      ? "cursor-not-allowed bg-zinc-950 text-zinc-600 ring-1 ring-zinc-900"
-                      : "bg-zinc-900/80 text-zinc-400 ring-1 ring-zinc-800 hover:bg-zinc-800 hover:text-zinc-200"
-                )}
-              >
-                {locked ? <Lock className="h-3 w-3" /> : null}
-                {card.title}
-              </button>
-            );
-          })}
+            {cards.map((card) => {
+              const locked = card.status === "locked";
+              const active = activeTopic === card.slug;
+              return (
+                <button
+                  key={card.slug}
+                  type="button"
+                  disabled={locked}
+                  onClick={() => selectTopic(card.slug, card)}
+                  className={cn(
+                    "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors",
+                    active
+                      ? "bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-500/60"
+                      : locked
+                        ? "cursor-not-allowed bg-zinc-950 text-zinc-500 ring-1 ring-zinc-800"
+                        : "bg-zinc-900 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 hover:text-zinc-50"
+                  )}
+                >
+                  {locked ? <Lock className="h-3 w-3 shrink-0 opacity-70" /> : null}
+                  {card.title}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-hidden pt-4 lg:flex-row">
         <div className="module-list-scroll min-h-0 min-w-0 flex-1 space-y-3 overflow-y-auto overscroll-contain pb-8 pr-1">
           {pageItems.length === 0 ? (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-10 text-center text-sm text-zinc-500">
-              {activeCard?.status === "locked"
-                ? "Complete the previous topic to unlock practice here."
-                : "No challenges match your filters."}
+            <div className="surface-card-3d p-8 sm:p-10">
+              {activeCard?.status === "locked" ? (
+                <p className="text-center text-sm text-zinc-500">
+                  Complete the previous topic to unlock practice here.
+                </p>
+              ) : bookmarkedOnly ? (
+                <div className="mx-auto max-w-md space-y-3 text-left">
+                  <div className="flex items-center gap-2.5">
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#5C3A21] text-[#f5efe8]">
+                      <DiamondGem filled className="h-3.5 w-3.5" />
+                    </span>
+                    <p className="text-sm font-semibold text-zinc-100">
+                      No saved questions
+                    </p>
+                  </div>
+                  <p className="text-sm leading-relaxed text-zinc-400">
+                    You have not saved any challenges yet. Click the diamond next
+                    to a challenge title to save it — it turns dark brown when
+                    saved. Then click the diamond on the topic track bar above to
+                    come back and review your saved list.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-center text-sm text-zinc-500">
+                  No challenges match your filters.
+                </p>
+              )}
             </div>
           ) : (
             pageItems.map((item, i) => {
-              const { lesson, curriculumTopicTitle, entityId } = item;
-              const done = hydrated && isDoneFn(entityId);
-              const bookmarked = isBookmarkedFn(entityId);
               const isFirst = page === 0 && i === 0;
-              const challengeNumber = String(page * PAGE_SIZE + i + 1).padStart(
-                3,
-                "0"
-              );
+              const { lesson, entityId } = item;
+              const done = hydrated && isDoneFn(entityId);
               const estimatedMinutes =
                 lesson.estimatedMinutes ??
                 (lesson.difficulty === "easy"
@@ -818,45 +845,21 @@ function ModuleTopicExplorerInner({
               return (
                 <article
                   key={entityId}
-                  className="rounded-xl border border-zinc-800/90 bg-zinc-900/40 p-4 transition-colors hover:border-zinc-700"
+                  className="surface-card-3d p-4 sm:p-5"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-start gap-3">
-                        <button
-                          type="button"
-                          onClick={() => toggleBookmark(entityId)}
-                          className={cn(
-                            "mt-0.5 shrink-0 rounded-full border border-zinc-800 p-1 transition-colors",
-                            bookmarked
-                              ? "border-amber-400/60 bg-amber-500/10"
-                              : "hover:border-amber-500/60"
-                          )}
-                          aria-label={
-                            bookmarked
-                              ? "Remove bookmark"
-                              : "Bookmark challenge"
-                          }
-                        >
-                          {bookmarked ? (
-                            <Bookmark className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                          ) : (
-                            <Star className="h-3.5 w-3.5 text-zinc-500" />
-                          )}
-                        </button>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
-                            <span className="rounded bg-zinc-800/70 px-1.5 py-0.5 text-[10px] text-zinc-300">
-                              #{challengeNumber}
-                            </span>
-                            {activeTopic === "all" ? (
-                              <span>{curriculumTopicTitle}</span>
-                            ) : null}
-                          </div>
-                          <h2 className="mt-1 text-base font-semibold text-zinc-100">
-                            {lesson.title}
-                          </h2>
-                          <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <SaveDiamondButton
+                          entityId={entityId}
+                          showUnsaveAction={bookmarkedOnly}
+                        />
+                        <h2 className="min-w-0 truncate text-base font-semibold text-zinc-100">
+                          {lesson.title}
+                        </h2>
+                      </div>
+                      <div className="mt-1.5 min-w-0 sm:pl-9">
+                          <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
                             <span
                               className={cn(
                                 "font-semibold",
@@ -987,16 +990,15 @@ function ModuleTopicExplorerInner({
                               lesson.description ??
                               `Practice ${categoryLabel(lesson.category)} concepts.`}
                           </p>
-                        </div>
                       </div>
                     </div>
                     <Button
                       asChild
                       size="sm"
                       className={cn(
-                        "h-9 min-w-[8.5rem] shrink-0 font-semibold",
+                        "h-9 min-w-[8.5rem] shrink-0 rounded-full font-semibold shadow-sm",
                         isFirst && !done
-                          ? "bg-emerald-600 hover:bg-emerald-500"
+                          ? "bg-emerald-600 shadow-emerald-600/25 hover:bg-emerald-500"
                           : done
                             ? "border border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800"
                             : "border border-emerald-600/60 bg-transparent text-emerald-400 hover:bg-emerald-500/10"
@@ -1046,7 +1048,7 @@ function ModuleTopicExplorerInner({
           ) : null}
         </div>
 
-        <aside className="hidden w-64 shrink-0 space-y-4 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-900/30 p-4 lg:block">
+        <aside className="surface-card-3d hidden w-64 shrink-0 space-y-4 overflow-y-auto p-4 lg:block">
           <FilterSection title="Status">
             <FilterCheckbox
               label="Solved"
@@ -1059,7 +1061,7 @@ function ModuleTopicExplorerInner({
               onChange={setShowUnsolved}
             />
             <FilterCheckbox
-              label="Bookmarked only"
+              label="Saved only"
               checked={bookmarkedOnly}
               onChange={setBookmarkedOnly}
             />

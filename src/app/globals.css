@@ -29,53 +29,70 @@
   --radius-xl: 1rem;
 }
 
-/* Full-app light mode: invert zinc scale + semantic tokens */
+/* Full-app light mode: earthy palette + soft mesh (not flat white) */
 html.light {
   --font-sans: "Segoe UI", var(--font-plus-jakarta), ui-sans-serif, system-ui,
     sans-serif;
-  --color-background: #ffffff;
-  --color-foreground: #18181b;
-  --color-card: #ffffff;
-  --color-card-foreground: #18181b;
-  --color-popover: #ffffff;
-  --color-popover-foreground: #18181b;
-  --color-primary: #4f46e5;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #f4f4f5;
-  --color-secondary-foreground: #18181b;
-  --color-muted: #f4f4f5;
-  --color-muted-foreground: #52525b;
-  --color-accent: #f4f4f5;
-  --color-accent-foreground: #18181b;
-  --color-border: #e4e4e7;
-  --color-input: #e4e4e7;
-  --color-ring: #4f46e5;
 
-  --color-zinc-50: #09090b;
-  --color-zinc-100: #18181b;
-  --color-zinc-200: #27272a;
-  --color-zinc-300: #3f3f46;
-  --color-zinc-400: #52525b;
-  --color-zinc-500: #71717a;
-  --color-zinc-600: #a1a1aa;
-  --color-zinc-700: #d4d4d8;
-  --color-zinc-800: #e4e4e7;
-  --color-zinc-900: #f4f4f5;
-  --color-zinc-950: #ffffff;
+  /* Palette from design reference */
+  --palette-terracotta: #b06c49;
+  --palette-slate: #94a6ab;
+  --palette-sand: #eae0d1;
+  --palette-sage: #8f9d7e;
+  --palette-mint: #cbd4c2;
+  --palette-cream: #fdfbf7;
+  --palette-base: #f5f1ea;
 
-  /* Keep accent text readable on white */
-  --color-indigo-200: #3730a3;
-  --color-indigo-300: #4338ca;
-  --color-indigo-400: #4f46e5;
-  --color-emerald-300: #047857;
-  --color-emerald-400: #059669;
-  --color-amber-200: #b45309;
-  --color-amber-300: #d97706;
-  --color-rose-300: #e11d48;
-  --color-rose-400: #f43f5e;
-  --color-sky-200: #0369a1;
-  --color-sky-300: #0284c7;
-  --color-purple-300: #7e22ce;
+  --color-background: #f5f1ea;
+  --color-foreground: #1c1917;
+  --color-card: rgba(253, 251, 247, 0.78);
+  --color-card-foreground: #1c1917;
+  --color-popover: #fdfbf7;
+  --color-popover-foreground: #1c1917;
+  --color-primary: #8a5a3c;
+  --color-primary-foreground: #fdfbf7;
+  --color-secondary: #ebe4d8;
+  --color-secondary-foreground: #1c1917;
+  --color-muted: #ebe4d8;
+  --color-muted-foreground: #57534e;
+  --color-accent: #e4ecdf;
+  --color-accent-foreground: #1c1917;
+  --color-border: #ddd5c8;
+  --color-input: #ddd5c8;
+  --color-ring: #8a5a3c;
+
+  /* Warmer inverted zinc (cream paper, not pure white) */
+  --color-zinc-50: #1c1917;
+  --color-zinc-100: #292524;
+  --color-zinc-200: #44403c;
+  --color-zinc-300: #57534e;
+  --color-zinc-400: #78716c;
+  --color-zinc-500: #8a847c;
+  --color-zinc-600: #b0a89e;
+  --color-zinc-700: #d5cdc0;
+  --color-zinc-800: #e4ddd2;
+  --color-zinc-900: #efe9df;
+  --color-zinc-950: #f5f1ea;
+
+  /* Keep accent text readable on warm paper */
+  --color-indigo-200: #4338ca;
+  --color-indigo-300: #3730a3;
+  --color-indigo-400: #312e81;
+  --color-emerald-300: #3f6212;
+  --color-emerald-400: #4d7c0f;
+  --color-emerald-600: #047857;
+  --color-emerald-700: #065f46;
+  --color-amber-200: #9a3412;
+  --color-amber-300: #c2410c;
+  --color-rose-300: #be123c;
+  --color-rose-400: #e11d48;
+  --color-sky-200: #0e7490;
+  --color-sky-300: #155e75;
+  --color-purple-300: #6b21a8;
+  --color-violet-200: #5b21b6;
+  --color-violet-300: #6d28d9;
+  --color-violet-400: #7c3aed;
+  --color-red-300: #b91c1c;
 }
 
 * {
@@ -90,9 +107,49 @@ body {
   letter-spacing: -0.011em;
 }
 
+html.light {
+  background-color: var(--palette-base);
+  background-image:
+    radial-gradient(
+      ellipse 90% 70% at 8% -5%,
+      rgba(176, 108, 73, 0.2),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 80% 65% at 96% 4%,
+      rgba(148, 166, 171, 0.24),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 75% 55% at 92% 96%,
+      rgba(143, 157, 126, 0.22),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 6% 92%,
+      rgba(203, 212, 194, 0.42),
+      transparent 48%
+    ),
+    radial-gradient(
+      ellipse 55% 45% at 48% 42%,
+      rgba(234, 224, 209, 0.55),
+      transparent 58%
+    ),
+    linear-gradient(
+      165deg,
+      #fdfbf7 0%,
+      #f5f1ea 32%,
+      #eef2eb 68%,
+      #f7f3ee 100%
+    );
+  background-attachment: fixed;
+  background-size: cover;
+}
+
 html.light body {
   letter-spacing: -0.014em;
   -webkit-font-smoothing: antialiased;
+  background: transparent;
 }
 
 ::-webkit-scrollbar {
@@ -122,33 +179,51 @@ html.light ::-webkit-scrollbar-thumb:hover {
 }
 
 .topic-pills-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #3f3f46 transparent;
+  scrollbar-width: auto;
+  scrollbar-color: #71717a #3f3f46;
+  padding-bottom: 0.45rem;
 }
 
 html.light .topic-pills-scroll {
-  scrollbar-color: #d4d4d8 transparent;
+  scrollbar-width: auto;
+  scrollbar-color: #5c3a21 #b7a994;
 }
 
 .topic-pills-scroll::-webkit-scrollbar {
-  height: 4px;
+  height: 10px;
 }
 
 .topic-pills-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.topic-pills-scroll::-webkit-scrollbar-thumb {
   background: #3f3f46;
   border-radius: 999px;
 }
 
+html.light .topic-pills-scroll::-webkit-scrollbar-track {
+  background: #b7a994;
+  box-shadow: inset 0 0 0 1px rgba(92, 58, 33, 0.28);
+}
+
+.topic-pills-scroll::-webkit-scrollbar-thumb {
+  background: #71717a;
+  border-radius: 999px;
+  border: 2px solid #3f3f46;
+  background-clip: padding-box;
+}
+
 html.light .topic-pills-scroll::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
+  background: #5c3a21;
+  border: 2px solid #b7a994;
+  background-clip: padding-box;
 }
 
 .topic-pills-scroll::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #a1a1aa;
+}
+
+html.light .topic-pills-scroll::-webkit-scrollbar-thumb:hover {
+  background: #4a2e1a;
+  border: 2px solid #b7a994;
+  background-clip: padding-box;
 }
 
 .module-list-scroll {
@@ -242,12 +317,20 @@ html.light .html-challenge-scroll::-webkit-scrollbar-thumb {
 }
 
 html.light .glass {
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(24, 24, 27, 0.08);
+  background: rgba(253, 251, 247, 0.72);
+  border: 1px solid rgba(176, 108, 73, 0.12);
+  backdrop-filter: blur(16px);
 }
 
 .gradient-text {
   background: linear-gradient(135deg, #6366f1, #8b5cf6, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+html.light .gradient-text {
+  background: linear-gradient(135deg, #b06c49, #8f9d7e, #94a6ab);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -283,7 +366,7 @@ html.light .glass {
 }
 
 html.light .skeleton {
-  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
+  background: linear-gradient(90deg, #efe9df 25%, #e4ddd2 50%, #efe9df 75%);
   background-size: 200% 100%;
 }
 
@@ -300,31 +383,246 @@ html.light .mix-blend-lighten {
   );
 }
 
+@keyframes light-mesh-drift {
+  0% {
+    background-position:
+      0% 0%,
+      100% 0%,
+      100% 100%,
+      0% 100%,
+      50% 45%,
+      0% 0%;
+    opacity: 1;
+  }
+  50% {
+    background-position:
+      18% 12%,
+      82% 8%,
+      88% 88%,
+      12% 86%,
+      46% 52%,
+      100% 40%;
+    opacity: 0.96;
+  }
+  100% {
+    background-position:
+      0% 0%,
+      100% 0%,
+      100% 100%,
+      0% 100%,
+      50% 45%,
+      0% 0%;
+    opacity: 1;
+  }
+}
+
 html.light .portal-ambient {
-  background: radial-gradient(
-    ellipse at top,
-    rgba(79, 70, 229, 0.06),
-    transparent 55%
-  );
+  background-color: transparent;
+  background-image:
+    radial-gradient(
+      ellipse 95% 75% at 6% -8%,
+      rgba(176, 108, 73, 0.22),
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse 85% 70% at 98% 2%,
+      rgba(148, 166, 171, 0.26),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 94% 100%,
+      rgba(143, 157, 126, 0.24),
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse 75% 55% at 4% 95%,
+      rgba(203, 212, 194, 0.48),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 50% 40%,
+      rgba(234, 224, 209, 0.5),
+      transparent 58%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(253, 251, 247, 0.55) 0%,
+      rgba(245, 241, 234, 0.35) 40%,
+      rgba(238, 242, 235, 0.45) 100%
+    );
+  background-size:
+    140% 140%,
+    140% 140%,
+    140% 140%,
+    140% 140%,
+    120% 120%,
+    200% 200%;
+  animation: light-mesh-drift 28s ease-in-out infinite;
+  will-change: background-position, opacity;
 }
 
-/* Hardcoded dark editor/chrome surfaces in light mode */
+@media (prefers-reduced-motion: reduce) {
+  html.light .portal-ambient,
+  html.light .mentor-aurora-mesh {
+    animation: none;
+  }
+}
+
+/* Progress bar: brown track + green fill (matches topic track palette) */
+[data-progress-root] {
+  background-color: #b7a994 !important;
+}
+
+[data-progress-indicator] {
+  background-color: #10b981 !important;
+  background-image: none !important;
+}
+
+html.light [data-progress-root] {
+  background-color: #b7a994 !important;
+  box-shadow: inset 0 0 0 1px rgba(92, 58, 33, 0.28);
+}
+
+html.light [data-progress-indicator] {
+  background-color: #059669 !important;
+}
+
+/* Soft translucent panels so the mesh shows through every section */
+html.light .bg-background {
+  background-color: transparent !important;
+}
+
+html.light .bg-zinc-950 {
+  background-color: rgb(245 241 234 / 0.55) !important;
+  backdrop-filter: blur(10px);
+}
+
+html.light .bg-zinc-950\/90,
+html.light .bg-zinc-950\/95,
+html.light .bg-zinc-950\/80 {
+  background-color: rgb(245 241 234 / 0.72) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* Portal chrome defaults (dark) */
+.portal-topbar {
+  background-color: rgba(9, 9, 11, 0.92);
+}
+
+.portal-rail {
+  background-color: var(--color-background);
+}
+
+html.light .bg-zinc-900,
+html.light .bg-zinc-900\/80,
+html.light .bg-zinc-900\/50,
+html.light .bg-zinc-900\/40,
+html.light .bg-zinc-900\/30 {
+  background-color: rgb(239 233 223 / 0.7) !important;
+}
+
+/* Hardcoded dark challenge/editor chrome → warm light surfaces */
 html.light .bg-\[\#0a0a0b\],
+html.light .bg-\[\#0a0a0a\],
+html.light .bg-\[\#0d0d0d\],
 html.light .bg-\[\#0d1117\],
+html.light .bg-\[\#1a1a1a\],
 html.light .bg-\[\#1e1e1e\] {
-  background-color: #ffffff !important;
+  background-color: #f5f1ea !important;
+  color: #1c1917;
 }
 
+html.light .hover\:bg-\[\#1a1a1a\]:hover,
+html.light .bg-\[\#1a1a1a\] {
+  background-color: #efe9df !important;
+}
+
+/* Top navbar + left rail — sand/mint, never flat white */
 html.light header.sticky,
-html.light aside {
-  background-color: #ffffff !important;
+html.light .portal-topbar {
+  background:
+    linear-gradient(
+      105deg,
+      rgba(234, 224, 209, 0.96) 0%,
+      rgba(203, 212, 194, 0.88) 55%,
+      rgba(214, 222, 212, 0.94) 100%
+    ) !important;
+  border-bottom-color: rgba(143, 157, 126, 0.28) !important;
+  backdrop-filter: blur(18px) saturate(1.1);
+  box-shadow: 0 1px 0 rgba(253, 251, 247, 0.45) inset;
+}
+
+html.light aside.portal-rail,
+html.light aside:not(.surface-card-3d) {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(234, 224, 209, 0.94) 0%,
+      rgba(203, 212, 194, 0.78) 100%
+    ) !important;
+  border-color: rgba(143, 157, 126, 0.22) !important;
+  backdrop-filter: blur(16px);
+}
+
+/* Soft 3D curved cards (challenge list, filter panel) */
+.surface-card-3d {
+  border-radius: 1.35rem;
+  border: 1px solid rgba(63, 63, 70, 0.7);
+  background:
+    linear-gradient(
+      165deg,
+      rgba(39, 39, 42, 0.72) 0%,
+      rgba(24, 24, 27, 0.55) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 12px 28px -14px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.25);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.surface-card-3d:hover {
+  border-color: rgba(113, 113, 122, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 34px -14px rgba(0, 0, 0, 0.6),
+    0 4px 10px rgba(0, 0, 0, 0.28);
+}
+
+html.light .surface-card-3d {
+  border-color: rgba(176, 108, 73, 0.16);
+  background:
+    linear-gradient(
+      160deg,
+      rgba(253, 251, 247, 0.94) 0%,
+      rgba(234, 224, 209, 0.72) 48%,
+      rgba(203, 212, 194, 0.55) 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(143, 157, 126, 0.12),
+    0 14px 32px -16px rgba(87, 83, 78, 0.28),
+    0 4px 12px rgba(148, 166, 171, 0.12);
+}
+
+html.light .surface-card-3d:hover {
+  border-color: rgba(143, 157, 126, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(143, 157, 126, 0.16),
+    0 18px 36px -14px rgba(87, 83, 78, 0.32),
+    0 6px 14px rgba(148, 166, 171, 0.16);
+  transform: translateY(-1px);
 }
 
 /* Ensure project lab never stays on a dark island in light mode */
 html.light [data-project-lab],
 html.light [data-assignment-lab] {
-  background-color: #ffffff !important;
-  color: #18181b;
+  background-color: #f5f1ea !important;
+  color: #1c1917;
 }
 
 html.light [data-project-lab] .monaco-editor,
@@ -333,13 +631,13 @@ html.light [data-project-lab] .margin,
 html.light [data-assignment-lab] .monaco-editor,
 html.light [data-assignment-lab] .monaco-editor-background,
 html.light [data-assignment-lab] .margin {
-  background-color: #ffffff !important;
+  background-color: #fdfbf7 !important;
 }
 
 html.light .shadow-black\/40,
 html.light .shadow-black\/50,
 html.light .shadow-2xl {
-  --tw-shadow-color: rgb(24 24 27 / 0.12);
+  --tw-shadow-color: rgb(87 83 78 / 0.12);
 }
 
 /* AI Mentor scroll areas */
@@ -406,6 +704,43 @@ html.light .mentor-scroll::-webkit-scrollbar-thumb {
   );
   background-size: 320% 320%;
   animation: mentor-aurora-shift 16s ease-in-out infinite;
+}
+
+html.light .mentor-aurora-mesh {
+  background: linear-gradient(
+    120deg,
+    rgba(176, 108, 73, 0.18),
+    rgba(148, 166, 171, 0.16),
+    rgba(143, 157, 126, 0.16),
+    rgba(234, 224, 209, 0.22),
+    rgba(203, 212, 194, 0.18),
+    rgba(176, 108, 73, 0.18)
+  );
+  background-size: 320% 320%;
+  animation: mentor-aurora-shift 22s ease-in-out infinite;
+}
+
+/* Light-mode section wash — soft Framer-like panel surfaces */
+html.light .light-section,
+html.light [data-light-section] {
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 0% 0%,
+      rgba(176, 108, 73, 0.1),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 100% 100%,
+      rgba(143, 157, 126, 0.12),
+      transparent 55%
+    ),
+    linear-gradient(
+      160deg,
+      rgba(253, 251, 247, 0.65),
+      rgba(234, 224, 209, 0.35) 50%,
+      rgba(203, 212, 194, 0.28)
+    );
+  border-color: rgba(176, 108, 73, 0.1);
 }
 
 .mentor-composer-glow {

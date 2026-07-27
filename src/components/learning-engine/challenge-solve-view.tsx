@@ -144,14 +144,14 @@ export function ChallengeSolveView({ weekId }: ChallengeSolveViewProps) {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0d0d]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
       <div ref={splitRef} className="flex min-h-0 flex-1 overflow-hidden">
         {/* Left: vertical tabs + problem pane */}
         <div
           className="flex min-h-0 shrink-0 overflow-hidden border-r border-zinc-800"
           style={{ width: `${splitPct}%` }}
         >
-          <nav className="flex w-10 shrink-0 flex-col border-r border-zinc-800 bg-[#0a0a0a]">
+          <nav className="flex w-10 shrink-0 flex-col border-r border-zinc-800 bg-zinc-950">
             {SIDE_TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -160,7 +160,7 @@ export function ChallengeSolveView({ weekId }: ChallengeSolveViewProps) {
                 className={cn(
                   "flex min-h-[88px] flex-1 items-center justify-center border-b border-zinc-800/80 px-1 py-3 text-[10px] font-semibold uppercase tracking-widest transition-colors [writing-mode:vertical-rl] rotate-180",
                   sideTab === tab.id
-                    ? "bg-[#1a1a1a] text-emerald-400"
+                    ? "bg-zinc-900 text-emerald-500"
                     : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300"
                 )}
               >
@@ -171,7 +171,7 @@ export function ChallengeSolveView({ weekId }: ChallengeSolveViewProps) {
 
           <div
             ref={problemScrollRef}
-            className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#1a1a1a]"
+            className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-zinc-950"
           >
             <ProblemDocument lesson={activeLesson} tab={sideTab} />
           </div>
