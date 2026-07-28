@@ -102,8 +102,11 @@ export type HubResource = {
   externalUrl?: string;
   githubUrl?: string;
   videoUrl?: string;
+  /** Optional longer overview (falls back to description). */
+  overviewBody?: string;
   objectives?: string[];
   prerequisites?: string[];
+  takeaways?: string[];
 };
 
 export type HubCategoryMeta = {

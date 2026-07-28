@@ -1,5 +1,4 @@
 import type { HubResource, HubSection } from "@/features/developer-hub/types";
-import { getHubCoverImage } from "@/features/developer-hub/data/cover-images";
 import { categoryMeta } from "@/features/developer-hub/data/categories";
 
 /** Opens a print-ready window — user can Save as PDF with formatting preserved. */
@@ -8,7 +7,6 @@ export function exportHubGuidePdf(
   sections: HubSection[]
 ) {
   const cat = categoryMeta(resource.category);
-  const cover = getHubCoverImage(resource);
   const escape = (s: string) =>
     s
       .replace(/&/g, "&amp;")
@@ -73,7 +71,17 @@ export function exportHubGuidePdf(
       border-bottom: 2px solid #111; padding-bottom: 8px; margin-bottom: 18px;
       font-size: 10pt; letter-spacing: 0.04em; text-transform: uppercase;
     }
-    .cover { width: 100%; max-height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 16px; }
+    .cover-block {
+      background: linear-gradient(145deg, #f4f5f3, #e8ebe6);
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 22px 20px;
+      margin-bottom: 16px;
+    }
+    .cover-kicker {
+      font-size: 9pt; letter-spacing: 0.06em; text-transform: uppercase; color: #64748b;
+      margin-bottom: 6px;
+    }
     h1 { font-size: 22pt; margin: 0 0 8px; letter-spacing: -0.02em; }
     .desc { color: #444; margin: 0 0 12px; }
     .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
@@ -102,9 +110,11 @@ export function exportHubGuidePdf(
   </style>
 </head>
 <body>
-  <div class="brand"><span>SupraBase · Developer Hub</span><span>Learning Path</span></div>
-  <img class="cover" src="${escape(cover)}" alt="" />
-  <h1>${escape(resource.title)}</h1>
+  <div class="brand"><span>SupraBase · Developer Hub</span><span>Pro Guide</span></div>
+  <div class="cover-block">
+    <div class="cover-kicker">${escape(cat.label)} · ${escape(resource.difficulty)}</div>
+    <h1 style="margin:0">${escape(resource.title)}</h1>
+  </div>
   <p class="desc">${escape(resource.description)}</p>
   <div class="meta">
     <span class="pill">${escape(resource.difficulty)}</span>

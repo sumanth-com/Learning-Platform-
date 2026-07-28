@@ -24,6 +24,7 @@ export const PROTECTED_ROUTES = [
   "/communication",
   "/community",
   "/certifications",
+  "/notifications",
   "/notes",
   "/ai-skills",
   "/roadmap",
@@ -52,6 +53,7 @@ export const AUTH_MESSAGES = {
   forgotPasswordSuccess:
     "If an account exists for that email, a reset link has been sent.",
   resetPasswordSuccess: "Your password has been updated. You can sign in now.",
+  changePasswordSuccess: "Your password has been updated.",
   logoutSuccess: "You have been signed out.",
   emailVerified: "Email verified successfully. You are signed in.",
   unauthorized: "You must be signed in to continue.",

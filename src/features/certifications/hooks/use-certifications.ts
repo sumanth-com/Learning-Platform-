@@ -6,6 +6,7 @@ import type {
   CertProgressState,
   EarnedCertificate,
 } from "@/features/certifications/types";
+import { notifyCertificateEarned } from "@/lib/notifications";
 
 const STORAGE_KEY = "SupraBase.certifications.v1";
 const LEGACY_STORAGE_KEYS = ["supralearn.certifications.v1"];
@@ -79,6 +80,13 @@ export function useCertifications() {
         badges: current.badges.includes(badge)
           ? current.badges
           : [...current.badges, badge],
+      });
+      notifyCertificateEarned({
+        certificateId: cert.id,
+        certificationId: cert.certificationId,
+        title: cert.title,
+        recipientName: cert.recipientName,
+        score: cert.score,
       });
     },
     [persist]

@@ -32,7 +32,7 @@ function DigitCard({ value, label }: { value: string; label: string }) {
       <div
         className={cn(
           "relative flex h-14 w-12 items-center justify-center overflow-hidden rounded-xl border border-border",
-          "bg-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+          "bg-card shadow-sm"
         )}
       >
         <AnimatePresence mode="popLayout" initial={false}>
@@ -42,7 +42,7 @@ function DigitCard({ value, label }: { value: string; label: string }) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -14, opacity: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="absolute font-mono text-[1.45rem] font-semibold tabular-nums tracking-tight text-[#27d17c]"
+            className="absolute font-mono text-[1.45rem] font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-[#27d17c]"
           >
             {value}
           </motion.span>
@@ -167,51 +167,68 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
           </div>
 
           <div className="mt-6 rounded-2xl border border-border/80 bg-muted/20 p-5">
-            <p className="text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              {unlocked ? "Retest available" : "Retest unlocks in"}
-            </p>
-
-            <div className="mt-4 flex items-end justify-center gap-2.5">
-              <DigitCard value={unlocked ? "00" : hours} label="Hrs" />
-              <Colon />
-              <DigitCard value={unlocked ? "00" : minutes} label="Min" />
-              <Colon />
-              <DigitCard value={unlocked ? "00" : seconds} label="Sec" />
-            </div>
-
-            <div className="mt-5 rounded-xl border border-border/70 bg-background/90 px-4 py-3.5">
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#27d17c]/12">
-                  <Shield className="h-3.5 w-3.5 text-[#27d17c]" />
-                </span>
-                <p className="text-[12px] font-semibold tracking-tight text-foreground">
-                  Cooldown policy
+            {unlocked ? (
+              <div className="text-center">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-600">
+                  Ready to certify
+                </p>
+                <h2 className="mt-3 text-[18px] font-semibold tracking-tight text-foreground">
+                  Start fresh
+                </h2>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
+                  Your cooldown is over. Take the assessment again when you&apos;re
+                  ready — same flow as getting certified for the first time.
                 </p>
               </div>
-              <ul className="mt-2.5 space-y-1.5 pl-0.5 text-[12px] leading-relaxed text-muted-foreground">
-                <li className="flex gap-2">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
-                  <span>
-                    A {CERT_RETRY_COOLDOWN_HOURS}-hour wait applies after an
-                    unsuccessful attempt.
-                  </span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
-                  <span>
-                    Use this time to review concepts and practice related
-                    problems.
-                  </span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
-                  <span>
-                    Cooldowns protect credential quality and keep passes
-                    meaningful for hiring.
-                  </span>
-                </li>
-              </ul>
-            </div>
+            ) : (
+              <>
+                <p className="text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  Retest unlocks in
+                </p>
+
+                <div className="mt-4 flex items-end justify-center gap-2.5">
+                  <DigitCard value={hours} label="Hrs" />
+                  <Colon />
+                  <DigitCard value={minutes} label="Min" />
+                  <Colon />
+                  <DigitCard value={seconds} label="Sec" />
+                </div>
+
+                <div className="mt-5 rounded-xl border border-border/70 bg-background/90 px-4 py-3.5">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#27d17c]/12">
+                      <Shield className="h-3.5 w-3.5 text-[#27d17c]" />
+                    </span>
+                    <p className="text-[12px] font-semibold tracking-tight text-foreground">
+                      Cooldown policy
+                    </p>
+                  </div>
+                  <ul className="mt-2.5 space-y-1.5 pl-0.5 text-[12px] leading-relaxed text-muted-foreground">
+                    <li className="flex gap-2">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+                      <span>
+                        A {CERT_RETRY_COOLDOWN_HOURS}-hour wait applies after an
+                        unsuccessful attempt.
+                      </span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+                      <span>
+                        Use this time to review concepts and practice related
+                        problems.
+                      </span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+                      <span>
+                        Cooldowns protect credential quality and keep passes
+                        meaningful for hiring.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="mt-6 flex flex-col gap-2.5">
@@ -225,7 +242,7 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
                   onClick={startRetest}
                   className="inline-flex w-full items-center justify-center rounded-xl bg-[#27d17c] px-4 py-2.5 text-[13px] font-bold text-zinc-950 transition hover:brightness-110"
                 >
-                  Start retest
+                  Get Certified
                 </motion.button>
               ) : null}
             </AnimatePresence>

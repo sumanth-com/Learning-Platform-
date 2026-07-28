@@ -37,27 +37,6 @@ export const RESET_SECTIONS: ResetSectionMeta[] = [
     variant: "default",
   },
   {
-    id: "ai-skills",
-    label: "Reset AI Skills",
-    description: "AI learning topics, exercises, and prompts.",
-    supportsWeekScope: true,
-    variant: "default",
-  },
-  {
-    id: "communication",
-    label: "Reset Communication",
-    description: "Communication programme lessons and practice.",
-    supportsWeekScope: true,
-    variant: "default",
-  },
-  {
-    id: "interview",
-    label: "Reset Interview",
-    description: "Interview question completions and notes.",
-    supportsWeekScope: true,
-    variant: "default",
-  },
-  {
     id: "projects",
     label: "Reset Projects",
     description: "Project progress, status, and feature completions.",

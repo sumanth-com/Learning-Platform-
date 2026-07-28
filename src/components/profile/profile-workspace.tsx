@@ -283,7 +283,7 @@ export function ProfileWorkspace({
   }, [hasPhoto, userId]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-12 px-1 pb-14">
+    <div className="mx-auto max-w-6xl space-y-8 px-1 pb-14">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-stretch lg:gap-8">
         {/* Candidate Information */}
         <section className="flex h-full min-h-0 flex-col rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] sm:p-8">

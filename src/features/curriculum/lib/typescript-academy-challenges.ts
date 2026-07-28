@@ -3,6 +3,7 @@ import {
   flattenTypescriptTopics,
   type TypescriptTopicDef,
 } from "@/features/curriculum/lib/typescript-academy-curriculum";
+import { hardTsBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type TypescriptChallengeKind =
   | "build"
@@ -281,35 +282,22 @@ function specsForTopic(topic: TypescriptTopicDef): Spec[] {
 
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardTsBundle(title, interviewQ, summary);
     push({
       key: "interview",
       title: clip(
         interviewQ.endsWith("?") ? interviewQ : `Interview: ${interviewQ}`
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with a small HTML + TypeScript example. Add TS comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in TypeScript",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Prefer unknown + narrowing over any",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ)],
-      referenceHtml: htmlPage(
-        `Interview - ${title}`,
-        `<h1 class="title">${title}</h1>\n    <p class="lead">${clip(summary)}</p>\n    <output id="out" class="out"></output>`
-      ),
-      referenceTs: defaultTs(
-        title,
-        `// Answering: ${interviewQ}\nconst answer: string = ${JSON.stringify(clip(summary))};\nif (out) out.textContent = answer;\nconsole.log(answer);\n`
-      ),
-      acceptanceCriteria: [
-        "TS comments explain the answer",
-        "Working HTML + TypeScript pair",
-        "Tied to the interview question",
-      ],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
+      referenceHtml: hard.referenceHtml,
+      referenceTs: hard.referenceJs,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

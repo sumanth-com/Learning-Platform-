@@ -10,11 +10,14 @@ import {
   LayoutDashboard,
   Library,
   Map,
+  PanelLeftClose,
+  PanelLeftOpen,
   Settings,
   StickyNote,
   Trophy,
   UserRound,
   X,
+  Bell,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
@@ -36,6 +39,7 @@ const ICONS: Record<PortalNavId, typeof LayoutDashboard> = {
   resources: Library,
   notes: StickyNote,
   certifications: Trophy,
+  notifications: Bell,
   profile: UserRound,
   settings: Settings,
 };
@@ -46,7 +50,7 @@ type StudentSidebarProps = {
 
 export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
   const pathname = usePathname();
-  const { collapsed, closeMobile } = usePortalShell();
+  const { collapsed, closeMobile, toggleCollapsed } = usePortalShell();
   const isCollapsed = mode === "desktop" && collapsed;
   const markId = mode === "drawer" ? "portal-drawer" : "portal-desktop";
 
@@ -71,8 +75,10 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
     >
       <div
         className={cn(
-          "flex h-16 shrink-0 items-center border-b border-zinc-800/90",
-          isCollapsed ? "justify-center px-3" : "gap-2 px-4"
+          "flex shrink-0 items-center border-b border-zinc-800/90",
+          isCollapsed
+            ? "h-auto flex-col gap-2 px-2 py-3"
+            : "h-16 gap-2 px-4"
         )}
       >
         <Link
@@ -96,7 +102,26 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
           ) : null}
         </Link>
 
-        {mode === "drawer" ? (
+        {mode === "desktop" ? (
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className={cn(
+              "h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground",
+              !isCollapsed && "ml-auto"
+            )}
+            onClick={toggleCollapsed}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isCollapsed ? (
+              <PanelLeftOpen className="h-4 w-4" strokeWidth={1.75} />
+            ) : (
+              <PanelLeftClose className="h-4 w-4" strokeWidth={1.75} />
+            )}
+          </Button>
+        ) : (
           <Button
             type="button"
             size="icon"
@@ -107,7 +132,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
           >
             <X className="h-4 w-4" />
           </Button>
-        ) : null}
+        )}
       </div>
 
       <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 py-4">

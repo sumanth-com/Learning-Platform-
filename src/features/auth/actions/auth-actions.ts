@@ -406,6 +406,46 @@ export async function resetPasswordAction(
   };
 }
 
+/** Update password while signed in (settings). Stays logged in. */
+export async function changePasswordAction(
+  input: unknown
+): Promise<AuthActionResult> {
+  const parsed = resetPasswordSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.issues[0]?.message ?? "Invalid input.",
+    };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      error: AUTH_MESSAGES.unauthorized,
+    };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+
+  if (error) {
+    return { success: false, error: mapAuthError(error) };
+  }
+
+  await logAuthEvent("password_changed", { userId: user.id });
+
+  return {
+    success: true,
+    message: AUTH_MESSAGES.changePasswordSuccess,
+  };
+}
+
 export async function logoutAction(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();

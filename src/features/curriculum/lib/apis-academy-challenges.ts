@@ -3,6 +3,7 @@ import {
   flattenApisTopics,
   type ApisTopicDef,
 } from "@/features/curriculum/lib/apis-academy-curriculum";
+import { hardApiBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type ApisChallengeKind =
   | "build"
@@ -272,36 +273,26 @@ function specsForTopic(topic: ApisTopicDef): Spec[] {
 
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardApiBundle(title, interviewQ);
     push({
       key: "interview",
       title: clip(
         interviewQ.endsWith("?") ? interviewQ : `Interview: ${interviewQ}`
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with HTTP request/response examples and a fetch client. Add JS comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in the JS client",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Show status codes and headers that matter",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ)],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
       referenceHttp: httpExchange(
         `Interview - ${title}`,
-        `GET /api/interview HTTP/1.1\nHost: api.example.com\nAccept: application/json\n`,
-        `HTTP/1.1 200 OK\nContent-Type: application/json\n\n{"answer": ${JSON.stringify(clip(summary))}}\n`
+        `GET /api/v1/metrics HTTP/1.1\nHost: api.example.com\nAccept: application/json\nAuthorization: Bearer <token>\n`,
+        `HTTP/1.1 200 OK\nContent-Type: application/json\nCache-Control: private, max-age=30\n\n{"revenueCents":1284500,"orders":412}\n`
       ),
-      referenceJs: defaultJs(
-        title,
-        `// Answering: ${interviewQ}\nasync function answer() {\n  const res = await fetch("https://api.example.com/interview");\n  const data = await res.json();\n  console.log(data.answer);\n  return data.answer;\n}\n\nanswer().catch(console.error);\n`
-      ),
-      acceptanceCriteria: [
-        "JS comments explain the answer",
-        "Working HTTP + fetch client pair",
-        "Tied to the interview question",
-      ],
+      referenceJs: hard.referenceJs,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

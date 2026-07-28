@@ -513,9 +513,9 @@ const MessageRow = memo(function MessageRow({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 6 }}
+      initial={streaming ? false : { opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: streaming ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "group/msg mx-auto w-full max-w-[760px]",
         isUser && "flex justify-end"
@@ -558,25 +558,20 @@ const MessageRow = memo(function MessageRow({
         <div className="w-full">
           <div className="text-[15px] leading-[1.7] text-foreground">
             {visibleContent ? (
-              <MentorMarkdown content={visibleContent} />
+              <MentorMarkdown content={visibleContent} streaming={streaming} />
             ) : message.content ? (
-              <MentorMarkdown content={message.content} />
-            ) : (
-              <div className="flex items-center gap-2 py-1 text-sm text-muted-foreground">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-foreground/40 opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-foreground/70" />
+              <MentorMarkdown content={message.content} streaming={streaming} />
+            ) : streaming ? (
+              <div className="flex items-center gap-2 py-2 text-sm text-zinc-500">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/50 opacity-70" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 </span>
-                Thinking
-                <span className="inline-block h-4 w-[2px] animate-pulse bg-foreground/70" />
+                Supra is thinking…
               </div>
+            ) : (
+              <p className="text-sm text-zinc-500">No reply yet.</p>
             )}
-            {streaming && message.content ? (
-              <span
-                aria-hidden
-                className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[2px] animate-pulse bg-foreground/80"
-              />
-            ) : null}
           </div>
 
           {message.status === "error" && message.error ? (
@@ -667,11 +662,13 @@ export function MentorChatPane({
     index: number;
   } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const acceptRef = useRef("*/*");
   const attachMenuRef = useRef<HTMLDivElement>(null);
   const dropDepth = useRef(0);
+  const stickToBottomRef = useRef(true);
 
   const { attachmentsByMessageId, reloadAttachments } =
     useConversationAttachments(conversationId);
@@ -683,16 +680,23 @@ export function MentorChatPane({
     return null;
   }, [messages]);
 
+  const messageIdsKey = useMemo(
+    () => messages.map((m) => m.id).join("|"),
+    [messages]
+  );
+
   const uploading = pendingFiles.some((p) => p.status === "uploading" || p.status === "queued");
 
+  // Reload attachments when the conversation or message set changes — not on every streamed token.
   useEffect(() => {
+    if (isStreaming) return;
     void reloadAttachments();
-  }, [messages, reloadAttachments]);
+  }, [conversationId, messageIdsKey, isStreaming, reloadAttachments]);
 
   useEffect(() => {
-    if (isStreaming) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-    }
+    if (!isStreaming && messages.length === 0) return;
+    if (!stickToBottomRef.current) return;
+    bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   }, [messages, isStreaming]);
 
   useEffect(() => {
@@ -887,6 +891,7 @@ export function MentorChatPane({
       toast.message("Wait for uploads to finish");
       return;
     }
+    stickToBottomRef.current = true;
     setDraft("");
     setPendingFiles((prev) => {
       for (const p of prev) if (p.previewUrl) URL.revokeObjectURL(p.previewUrl);
@@ -1224,8 +1229,16 @@ export function MentorChatPane({
       </header>
 
       <div
+        ref={scrollRef}
         className="mentor-scroll relative z-10 min-h-0 flex-1 overflow-y-auto"
         aria-live="polite"
+        onScroll={() => {
+          const el = scrollRef.current;
+          if (!el) return;
+          const distanceFromBottom =
+            el.scrollHeight - el.scrollTop - el.clientHeight;
+          stickToBottomRef.current = distanceFromBottom < 160;
+        }}
       >
         {isLoading ? (
           <div className="mx-auto max-w-[760px] space-y-4 px-4 py-8">
@@ -1281,7 +1294,10 @@ export function MentorChatPane({
                 <button
                   key={hint}
                   type="button"
-                  onClick={() => onSend(hint)}
+                  onClick={() => {
+                    stickToBottomRef.current = true;
+                    onSend(hint);
+                  }}
                   className={cn(
                     "group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left",
                     "text-[13px] text-muted-foreground transition-colors duration-150",

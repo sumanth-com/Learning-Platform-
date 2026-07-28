@@ -3,6 +3,7 @@ import {
   flattenJsTopics,
   type JsTopicDef,
 } from "@/features/curriculum/lib/js-academy-curriculum";
+import { hardJsBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type JsChallengeKind =
   | "build"
@@ -281,6 +282,7 @@ function specsForTopic(topic: JsTopicDef): Spec[] {
 
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardJsBundle(title, interviewQ);
     push({
       key: "interview",
       title: clip(
@@ -288,29 +290,15 @@ function specsForTopic(topic: JsTopicDef): Spec[] {
         64
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with a small HTML + JS example. Add JS comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in JS",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Prefer modern syntax (let/const, arrow when it helps)",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ, 80)],
-      referenceHtml: htmlPage(
-        `Interview — ${title}`,
-        `<h1 class="title">${title}</h1>\n    <p class="lead">${clip(summary, 100)}</p>\n    <output id="out" class="out"></output>`
-      ),
-      referenceJs: defaultJs(
-        title,
-        `// Answering: ${interviewQ}\nconst answer = ${JSON.stringify(clip(summary, 90))};\nif (out) out.textContent = answer;\nconsole.log(answer);\n`
-      ),
-      acceptanceCriteria: [
-        "JS comments explain the answer",
-        "Working HTML + JS pair",
-        "Tied to the interview question",
-      ],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
+      referenceHtml: hard.referenceHtml,
+      referenceJs: hard.referenceJs,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

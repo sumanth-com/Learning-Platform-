@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  ArrowRight,
   BookOpen,
   Check,
   CheckCircle2,
@@ -12,14 +13,11 @@ import {
   Clock,
   Copy,
   Lightbulb,
-  Play,
-  RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MonacoHtmlReference } from "@/components/html-academy/workspace/monaco-html-reference";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
 import {
-  isHtmlTheoryChallenge,
   listHtmlAcademyChallenges,
   type HtmlChallenge,
 } from "@/features/curriculum/lib/html-academy-challenges";
@@ -158,46 +156,6 @@ function cleanText(value: string): string {
     .trim();
 }
 
-/** Build a full document for the sandboxed preview iframe. */
-function buildPreviewDocument(html: string): string {
-  const trimmed = html.trim();
-  const baseStyle =
-    "html,body{margin:0;padding:0;background:#fff;color:#111}" +
-    "body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;padding:20px;line-height:1.5;font-size:16px}" +
-    "h1,h2,h3{line-height:1.25;margin:0.6em 0 0.35em}" +
-    "p,ul,ol{margin:0.5em 0}" +
-    "img,video,iframe{max-width:100%;height:auto}" +
-    "a{color:#0563c1}";
-
-  if (/<!doctype\s+html/i.test(trimmed) || /<html[\s>]/i.test(trimmed)) {
-    if (/<\/head>/i.test(trimmed)) {
-      return trimmed.replace(
-        /<\/head>/i,
-        `<style>${baseStyle}</style></head>`
-      );
-    }
-    if (/<body[\s>]/i.test(trimmed)) {
-      return trimmed.replace(
-        /<body([^>]*)>/i,
-        `<head><meta charset="UTF-8"/><style>${baseStyle}</style></head><body$1>`
-      );
-    }
-    return trimmed;
-  }
-
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>${baseStyle}</style>
-</head>
-<body>
-${trimmed}
-</body>
-</html>`;
-}
-
 type HtmlPlaygroundSolveProps = {
   moduleSlug: string;
   topicSlug: string;
@@ -214,323 +172,12 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-2">
-      <h2 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+    <section className="space-y-1.5">
+      <h2 className="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-700">
         {title}
       </h2>
-      <div className="text-sm leading-relaxed text-zinc-300">{children}</div>
+      <div className="text-[15px] leading-relaxed text-zinc-100">{children}</div>
     </section>
-  );
-}
-
-function HtmlPreviewFrame({
-  documentHtml,
-  runId,
-}: {
-  documentHtml: string;
-  runId: number;
-}) {
-  return (
-    <iframe
-      key={runId}
-      title="HTML preview"
-      srcDoc={documentHtml}
-      sandbox="allow-scripts allow-forms"
-      className="absolute inset-0 block h-full w-full border-0 bg-white"
-    />
-  );
-}
-
-function ChallengeGuide({
-  challenge,
-  learnAbout,
-  htmlRefs,
-  hintsOpen,
-  onToggleHints,
-  refsOpen,
-  onToggleRefs,
-}: {
-  challenge: HtmlChallenge;
-  learnAbout: string;
-  htmlRefs: Array<{ tag: string; desc: string }>;
-  hintsOpen: boolean;
-  onToggleHints: () => void;
-  refsOpen: boolean;
-  onToggleRefs: () => void;
-}) {
-  const title = cleanText(challenge.title);
-  const task = cleanText(challenge.task);
-  const hints = challenge.hints.map(cleanText);
-
-  return (
-    <div className="html-challenge-scroll min-h-0 space-y-5 overflow-y-auto border-r border-zinc-800 px-4 py-5 sm:px-5">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
-          {title}
-        </h1>
-        <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500">
-          <span className="capitalize">{challenge.difficulty}</span>
-          <span className="text-zinc-700">·</span>
-          <span className="inline-flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
-            {challenge.minutes} min
-          </span>
-        </div>
-      </div>
-
-      <Section title="About">
-        <p className="whitespace-pre-wrap text-zinc-300">{learnAbout}</p>
-      </Section>
-
-      <Section title="Instructions">
-        <p className="whitespace-pre-wrap text-zinc-200">{task}</p>
-      </Section>
-
-      <Section title="Acceptance criteria">
-        <ul className="space-y-1.5 text-zinc-400">
-          {challenge.acceptanceCriteria.map((c) => (
-            <li key={c} className="flex gap-2">
-              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-zinc-500" />
-              <span>{c}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {challenge.takeaways.length > 0 ? (
-        <Section title="Key takeaways">
-          <ul className="space-y-1.5 text-zinc-400">
-            {challenge.takeaways.map((t) => (
-              <li key={t} className="flex gap-2">
-                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-zinc-500" />
-                <span>{cleanText(t)}</span>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : null}
-
-      <div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="mb-2 gap-1.5 px-0 text-zinc-400 hover:bg-transparent hover:text-zinc-200"
-          onClick={onToggleHints}
-        >
-          <Lightbulb className="h-3.5 w-3.5" />
-          {hintsOpen ? "Hide hints" : "Show hints"}
-        </Button>
-        {hintsOpen ? (
-          <Section title="Hints">
-            <ul className="space-y-1.5 text-zinc-400">
-              {hints.map((h) => (
-                <li key={h} className="flex gap-2">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-zinc-500" />
-                  <span>{h}</span>
-                </li>
-              ))}
-            </ul>
-          </Section>
-        ) : null}
-      </div>
-
-      <div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="mb-2 gap-1.5 px-0 text-zinc-400 hover:bg-transparent hover:text-zinc-200"
-          onClick={onToggleRefs}
-        >
-          <BookOpen className="h-3.5 w-3.5" />
-          {refsOpen ? "Hide HTML reference" : "Show HTML reference"}
-        </Button>
-        {refsOpen ? (
-          <Section title="HTML reference">
-            <ul className="space-y-3">
-              {htmlRefs.map((ref) => (
-                <li key={ref.tag} className="text-sm leading-relaxed">
-                  <code className="text-[13px] font-medium text-sky-300/90">
-                    {ref.tag}
-                  </code>
-                  <p className="mt-1 text-zinc-400">{ref.desc}</p>
-                </li>
-              ))}
-            </ul>
-          </Section>
-        ) : null}
-      </div>
-    </div>
-  );
-}
-
-/** Theory lessons: read-only code reference + mark complete. */
-function HtmlTheoryReferencePanel({
-  code,
-  isDone,
-  completing,
-  onCopy,
-  copied,
-  onMarkComplete,
-}: {
-  code: string;
-  isDone: boolean;
-  completing: boolean;
-  onCopy: () => void;
-  copied: boolean;
-  onMarkComplete: () => void;
-}) {
-  return (
-    <div className="flex min-h-0 flex-col overflow-hidden bg-[#0a0a0b]">
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-zinc-800 px-3 py-2">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
-          Code reference
-        </p>
-        <Button
-          type="button"
-          size="sm"
-          variant="ghost"
-          className="h-7 gap-1.5 text-xs text-zinc-400 hover:text-zinc-200"
-          onClick={onCopy}
-        >
-          {copied ? (
-            <Check className="h-3.5 w-3.5 text-emerald-400" />
-          ) : (
-            <Copy className="h-3.5 w-3.5" />
-          )}
-          {copied ? "Copied" : "Copy"}
-        </Button>
-      </div>
-
-      <div className="relative min-h-0 flex-1 overflow-visible">
-        <MonacoHtmlReference value={code} />
-      </div>
-
-      <div className="flex shrink-0 justify-center border-t border-zinc-800 bg-zinc-950 px-4 py-4">
-        <Button
-          type="button"
-          size="sm"
-          disabled={completing}
-          className={cn(
-            "h-10 min-w-[12rem] gap-2 px-6 text-sm font-semibold transition",
-            isDone
-              ? "border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/15"
-              : "bg-emerald-600 text-white hover:bg-emerald-500"
-          )}
-          onClick={onMarkComplete}
-        >
-          {isDone ? (
-            <CheckCircle2 className="h-4 w-4" />
-          ) : (
-            <Circle className="h-4 w-4" />
-          )}
-          {isDone ? "Completed" : "Mark as Complete"}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-/** Practical lessons: editable playground (kept for later exercises). */
-function HtmlInteractivePlayground({
-  challenge,
-}: {
-  challenge: HtmlChallenge;
-}) {
-  const [code, setCode] = useState(challenge.starterHtml);
-  const [previewDoc, setPreviewDoc] = useState<string | null>(null);
-  const [runId, setRunId] = useState(0);
-  const [showingSolution, setShowingSolution] = useState(false);
-
-  useEffect(() => {
-    setCode(challenge.starterHtml);
-    setPreviewDoc(null);
-    setRunId(0);
-    setShowingSolution(false);
-  }, [challenge.id, challenge.starterHtml]);
-
-  const runPreview = () => {
-    setPreviewDoc(buildPreviewDocument(code));
-    setRunId((id) => id + 1);
-  };
-
-  const resetEditor = () => {
-    setCode(challenge.starterHtml);
-    setPreviewDoc(null);
-    setRunId(0);
-    setShowingSolution(false);
-  };
-
-  const hasPreview = previewDoc !== null;
-
-  return (
-    <div className="flex min-h-0 flex-col overflow-hidden bg-[#0a0a0b]">
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-zinc-800 px-3 py-2">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
-          HTML · index.html
-        </p>
-        <Button
-          type="button"
-          size="sm"
-          variant="ghost"
-          className="h-7 gap-1.5 text-xs text-zinc-400"
-          onClick={resetEditor}
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          Reset
-        </Button>
-      </div>
-
-      <textarea
-        value={code}
-        onChange={(e) => {
-          setCode(e.target.value);
-          setShowingSolution(false);
-        }}
-        spellCheck={false}
-        className="min-h-0 w-full flex-1 resize-none overflow-auto border-0 bg-[#0d0d0d] p-3 font-mono text-[13px] leading-relaxed text-zinc-200 outline-none focus:ring-0"
-        aria-label="HTML editor"
-      />
-
-      <div className="flex shrink-0 items-center gap-2 border-t border-zinc-800 bg-zinc-950 px-3 py-2.5">
-        <Button
-          type="button"
-          size="sm"
-          className="h-8 gap-1.5 bg-emerald-600 px-4 font-medium text-white hover:bg-emerald-500"
-          onClick={runPreview}
-        >
-          <Play className="h-3.5 w-3.5 fill-current" />
-          Run
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          className="h-8 border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-900"
-          onClick={() => {
-            setCode(challenge.referenceSolution);
-            setShowingSolution(true);
-          }}
-        >
-          {showingSolution ? "Solution loaded" : "Show solution"}
-        </Button>
-      </div>
-
-      {hasPreview && previewDoc ? (
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-t border-zinc-800">
-          <div className="flex shrink-0 items-center gap-2 border-b border-zinc-800 bg-zinc-950 px-3 py-1.5">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            <span className="text-[10px] font-semibold tracking-wider text-zinc-500 uppercase">
-              Output
-            </span>
-          </div>
-          <div className="relative min-h-0 flex-1 bg-white">
-            <HtmlPreviewFrame documentHtml={previewDoc} runId={runId} />
-          </div>
-        </div>
-      ) : null}
-    </div>
   );
 }
 
@@ -549,8 +196,6 @@ export function HtmlPlaygroundSolve({
   const [refsOpen, setRefsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [completing, setCompleting] = useState(false);
-
-  const theory = isHtmlTheoryChallenge(challenge);
 
   const entityId = useMemo(
     () =>
@@ -651,68 +296,199 @@ export function HtmlPlaygroundSolve({
     );
   };
 
+  const title = cleanText(challenge.title);
+  const task = cleanText(challenge.task);
+  const hints = challenge.hints.map(cleanText);
+
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#0d0d0d]">
-      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-zinc-800 px-3 sm:px-4">
-        <Link
-          href={backHref}
-          className="inline-flex shrink-0 items-center gap-1.5 text-xs text-zinc-500 transition hover:text-zinc-300"
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
+      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-zinc-800/80 bg-background/95 px-4 backdrop-blur-sm sm:px-6">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="h-8 shrink-0 gap-1.5 border-zinc-700 bg-zinc-900/40 text-xs font-medium text-zinc-200 hover:bg-zinc-800 hover:text-zinc-50"
         >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Challenges</span>
-        </Link>
-        <div className="min-w-0 flex-1 text-sm leading-snug">
-          <span className="font-medium text-zinc-100">
-            {cleanText(challenge.title)}
+          <Link href={backHref}>
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back to challenges</span>
+          </Link>
+        </Button>
+        <div className="min-w-0 flex-1 truncate text-sm">
+          <span className="font-semibold text-zinc-50">{title}</span>
+          <span className="hidden text-zinc-500 sm:inline"> · </span>
+          <span className="hidden capitalize text-zinc-300 sm:inline">
+            {challenge.difficulty}
           </span>
-          <span className="text-zinc-600"> · </span>
-          <span className="capitalize text-zinc-500">{challenge.difficulty}</span>
-          <span className="text-zinc-600"> · </span>
-          <span className="text-zinc-500">{topicTitle}</span>
+          <span className="hidden text-zinc-500 sm:inline"> · </span>
+          <span className="hidden text-zinc-300 sm:inline">{topicTitle}</span>
         </div>
-        {!theory ? (
+        {nextHref ? (
           <Button
-            variant={isDone ? "secondary" : "default"}
+            asChild
             size="sm"
-            className={cn(
-              "h-8 shrink-0 gap-1.5 text-xs",
-              !isDone && "bg-emerald-600 hover:bg-emerald-500"
-            )}
-            onClick={() => setComplete(entityId, !isDone)}
+            className="h-8 shrink-0 gap-1.5 bg-emerald-600 px-3 text-xs font-semibold hover:bg-emerald-500"
           >
-            {isDone ? (
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-            ) : (
-              <Circle className="h-3.5 w-3.5" />
-            )}
-            {isDone ? "Solved" : "Mark as complete"}
+            <Link href={nextHref}>
+              Next
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </Button>
         ) : null}
       </header>
 
       <div className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden lg:grid-cols-2">
-        <ChallengeGuide
-          challenge={challenge}
-          learnAbout={learnAbout}
-          htmlRefs={htmlRefs}
-          hintsOpen={hintsOpen}
-          onToggleHints={() => setHintsOpen((v) => !v)}
-          refsOpen={refsOpen}
-          onToggleRefs={() => setRefsOpen((v) => !v)}
-        />
+        <aside className="html-challenge-scroll flex min-h-0 flex-col gap-4 overflow-y-auto border-b border-zinc-800/80 px-4 py-5 sm:px-6 lg:border-b-0 lg:border-r">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-700">
+              Question
+            </p>
+            <h1 className="mt-1.5 text-xl font-semibold tracking-tight text-zinc-50 sm:text-2xl">
+              {title}
+            </h1>
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-medium text-zinc-300">
+              <span className="capitalize text-emerald-600">
+                {challenge.difficulty}
+              </span>
+              <span className="text-zinc-500">·</span>
+              <span className="inline-flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" />
+                {challenge.minutes} min
+              </span>
+            </div>
+          </div>
 
-        {theory ? (
-          <HtmlTheoryReferencePanel
-            code={referenceCode}
-            isDone={isDone}
-            completing={completing || pending}
-            onCopy={handleCopy}
-            copied={copied}
-            onMarkComplete={handleMarkComplete}
-          />
-        ) : (
-          <HtmlInteractivePlayground challenge={challenge} />
-        )}
+          <Section title="About">
+            <p className="whitespace-pre-wrap font-medium">{learnAbout}</p>
+          </Section>
+
+          <Section title="Instructions">
+            <p className="whitespace-pre-wrap font-medium">{task}</p>
+          </Section>
+
+          <Section title="Acceptance criteria">
+            <ul className="space-y-1.5 font-medium text-zinc-100">
+              {challenge.acceptanceCriteria.map((c) => (
+                <li key={c} className="flex gap-2">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" />
+                  <span>{c}</span>
+                </li>
+              ))}
+            </ul>
+          </Section>
+
+          {challenge.takeaways.length > 0 ? (
+            <Section title="Key takeaways">
+              <ul className="space-y-1.5 font-medium text-zinc-100">
+                {challenge.takeaways.map((t) => (
+                  <li key={t} className="flex gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" />
+                    <span>{cleanText(t)}</span>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          ) : null}
+
+          <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-zinc-800/60 pt-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 gap-1.5 border-zinc-700 bg-zinc-900/30 font-medium text-zinc-200 hover:bg-zinc-800"
+              onClick={() => setHintsOpen((v) => !v)}
+            >
+              <Lightbulb className="h-3.5 w-3.5" />
+              {hintsOpen ? "Hide hints" : "Show hints"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 gap-1.5 border-zinc-700 bg-zinc-900/30 font-medium text-zinc-200 hover:bg-zinc-800"
+              onClick={() => setRefsOpen((v) => !v)}
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              {refsOpen ? "Hide HTML reference" : "Show HTML reference"}
+            </Button>
+          </div>
+
+          {hintsOpen ? (
+            <Section title="Hints">
+              <ul className="space-y-1.5 font-medium text-zinc-100">
+                {hints.map((h) => (
+                  <li key={h} className="flex gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                    <span>{h}</span>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          ) : null}
+
+          {refsOpen ? (
+            <Section title="HTML reference">
+              <ul className="space-y-3">
+                {htmlRefs.map((ref) => (
+                  <li key={ref.tag} className="text-sm leading-relaxed">
+                    <code className="text-[13px] font-semibold text-emerald-700">
+                      {ref.tag}
+                    </code>
+                    <p className="mt-1 font-medium text-zinc-200">{ref.desc}</p>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          ) : null}
+        </aside>
+
+        <div className="flex min-h-0 flex-col overflow-hidden bg-zinc-950">
+          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-zinc-800 px-3 py-2">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+              Code reference
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              className="h-7 gap-1.5 text-xs text-zinc-400 hover:text-zinc-200"
+              onClick={handleCopy}
+            >
+              {copied ? (
+                <Check className="h-3.5 w-3.5 text-emerald-400" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
+              {copied ? "Copied" : "Copy"}
+            </Button>
+          </div>
+
+          <div className="relative min-h-0 flex-1 overflow-visible">
+            <MonacoHtmlReference value={referenceCode} />
+          </div>
+
+          <div className="flex shrink-0 justify-center border-t border-zinc-800 bg-zinc-950 px-4 py-4">
+            <Button
+              type="button"
+              size="sm"
+              disabled={completing || pending}
+              className={cn(
+                "h-10 min-w-[12rem] gap-2 px-6 text-sm font-semibold transition",
+                isDone
+                  ? "border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/15"
+                  : "bg-emerald-600 text-white hover:bg-emerald-500"
+              )}
+              onClick={handleMarkComplete}
+            >
+              {isDone ? (
+                <CheckCircle2 className="h-4 w-4" />
+              ) : (
+                <Circle className="h-4 w-4" />
+              )}
+              {isDone ? "Completed" : "Mark as Complete"}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

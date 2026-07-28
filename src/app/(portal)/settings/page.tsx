@@ -1,22 +1,29 @@
-import { FeatureHub } from "@/components/portal/feature-hub";
-import { PORTAL_ROUTES } from "@/features/portal/types";
+import { redirect } from "next/navigation";
+import { PortalChrome } from "@/components/portal/portal-chrome";
+import { SettingsWorkspace } from "@/components/settings/settings-workspace";
+import { getCurrentUser } from "@/features/auth/actions/auth-actions";
+import { AUTH_ROUTES } from "@/features/auth/constants";
 
 export const metadata = {
   title: "Settings",
 };
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const session = await getCurrentUser();
+  if (!session) redirect(AUTH_ROUTES.login);
+
+  const { user, profile } = session;
+
   return (
-    <FeatureHub
-      title="Settings"
-      description="Manage preferences, notification defaults, and learning experience options."
-      bullets={[
-        "Profile and account details",
-        "Study reminders and streak preferences",
-        "Theme and accessibility options",
-      ]}
-      primaryHref={PORTAL_ROUTES.profile}
-      primaryLabel="View profile"
-    />
+    <>
+      <PortalChrome
+        title="Settings"
+        subtitle="Appearance, password, and notification preferences."
+      />
+      <SettingsWorkspace
+        email={user.email || profile?.email || ""}
+        fullName={profile?.full_name ?? undefined}
+      />
+    </>
   );
 }

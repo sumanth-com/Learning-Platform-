@@ -52,9 +52,24 @@ function CodeBlock({
 
 export const MentorMarkdown = memo(function MentorMarkdown({
   content,
+  streaming = false,
 }: {
   content: string;
+  streaming?: boolean;
 }) {
+  // While tokens are arriving, skip heavy rehype highlighting so paint stays smooth.
+  if (streaming) {
+    return (
+      <div className="mentor-md max-w-none whitespace-pre-wrap text-[15px] leading-[1.7] text-foreground">
+        {content}
+        <span
+          aria-hidden
+          className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[2px] animate-pulse bg-foreground/80"
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(

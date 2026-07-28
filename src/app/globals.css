@@ -111,39 +111,34 @@ html.light {
   background-color: var(--palette-base);
   background-image:
     radial-gradient(
-      ellipse 90% 70% at 8% -5%,
-      rgba(176, 108, 73, 0.2),
+      ellipse 100% 80% at 10% 0%,
+      rgba(176, 108, 73, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 90% 70% at 100% 8%,
+      rgba(148, 166, 171, 0.18),
       transparent 52%
     ),
     radial-gradient(
-      ellipse 80% 65% at 96% 4%,
-      rgba(148, 166, 171, 0.24),
+      ellipse 85% 70% at 90% 100%,
+      rgba(143, 157, 126, 0.16),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 0% 100%,
+      rgba(203, 212, 194, 0.28),
       transparent 50%
     ),
-    radial-gradient(
-      ellipse 75% 55% at 92% 96%,
-      rgba(143, 157, 126, 0.22),
-      transparent 52%
-    ),
-    radial-gradient(
-      ellipse 70% 50% at 6% 92%,
-      rgba(203, 212, 194, 0.42),
-      transparent 48%
-    ),
-    radial-gradient(
-      ellipse 55% 45% at 48% 42%,
-      rgba(234, 224, 209, 0.55),
-      transparent 58%
-    ),
     linear-gradient(
-      165deg,
-      #fdfbf7 0%,
-      #f5f1ea 32%,
-      #eef2eb 68%,
-      #f7f3ee 100%
+      180deg,
+      #f7f4ef 0%,
+      #f3f0ea 45%,
+      #f0f2ed 100%
     );
   background-attachment: fixed;
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 html.light body {
@@ -417,48 +412,13 @@ html.light .mix-blend-lighten {
 }
 
 html.light .portal-ambient {
-  background-color: transparent;
-  background-image:
-    radial-gradient(
-      ellipse 95% 75% at 6% -8%,
-      rgba(176, 108, 73, 0.22),
-      transparent 54%
-    ),
-    radial-gradient(
-      ellipse 85% 70% at 98% 2%,
-      rgba(148, 166, 171, 0.26),
-      transparent 52%
-    ),
-    radial-gradient(
-      ellipse 80% 60% at 94% 100%,
-      rgba(143, 157, 126, 0.24),
-      transparent 54%
-    ),
-    radial-gradient(
-      ellipse 75% 55% at 4% 95%,
-      rgba(203, 212, 194, 0.48),
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse 60% 50% at 50% 40%,
-      rgba(234, 224, 209, 0.5),
-      transparent 58%
-    ),
-    linear-gradient(
-      155deg,
-      rgba(253, 251, 247, 0.55) 0%,
-      rgba(245, 241, 234, 0.35) 40%,
-      rgba(238, 242, 235, 0.45) 100%
-    );
-  background-size:
-    140% 140%,
-    140% 140%,
-    140% 140%,
-    140% 140%,
-    120% 120%,
-    200% 200%;
-  animation: light-mesh-drift 28s ease-in-out infinite;
-  will-change: background-position, opacity;
+  /* Let the fixed page mesh show through — avoid a second layered band/seam */
+  display: none;
+}
+
+html.light .portal-shell,
+html.light .portal-shell-col {
+  background-color: transparent !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -796,16 +756,62 @@ html.light [data-light-section] {
   }
 }
 
-/* Certifications - landscape certificate */
+/* Certifications - landscape certificate PDF print (in-page fallback) */
 @media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
   .cert-print-area {
     padding: 0 !important;
   }
 
+  body.printing-certificate {
+    background: #fdfbf7 !important;
+  }
+
+  body.printing-certificate * {
+    visibility: hidden !important;
+  }
+
+  body.printing-certificate #certificate-print,
+  body.printing-certificate #certificate-print * {
+    visibility: visible !important;
+  }
+
+  body.printing-certificate .cert-no-print {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body.printing-certificate #certificate-print {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 297mm !important;
+    height: 210mm !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body.printing-certificate #certificate-print *,
+  body.printing-certificate #certificate-print svg,
+  body.printing-certificate #certificate-print img {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
   .cert-sheet {
     box-shadow: none !important;
-    max-width: none !important;
-    width: 100% !important;
     break-inside: avoid;
   }
 }

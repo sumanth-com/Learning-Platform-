@@ -3,6 +3,7 @@ import {
   flattenSqlTopics,
   type SqlTopicDef,
 } from "@/features/curriculum/lib/sql-academy-curriculum";
+import { hardSqlBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type SqlChallengeKind =
   | "build"
@@ -328,37 +329,27 @@ LIMIT 5;`
 
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardSqlBundle(
+      title,
+      interviewQ,
+      topic.slug,
+      topic.keywords ?? []
+    );
     push({
       key: "interview",
       title: clip(
         interviewQ.endsWith("?") ? interviewQ : `Interview: ${interviewQ}`
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with schema DDL and SQL queries. Add SQL comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in the SQL pane",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Show keys and filters that matter",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ)],
-      referenceSchema: baseSchema,
-      referenceSql: sqlBlock(
-        `Interview - ${title}`,
-        `-- Answering: ${interviewQ}
-SELECT id, label
-FROM ${tableNameFromTopic(topic)}
-WHERE label IS NOT NULL
-ORDER BY id
-LIMIT 10;`
-      ),
-      acceptanceCriteria: [
-        "SQL comments explain the answer",
-        "Working schema and query pair",
-        "Tied to the interview question",
-      ],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
+      referenceSchema: hard.referenceSchema,
+      referenceSql: hard.referenceSql,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

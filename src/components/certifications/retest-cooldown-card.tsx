@@ -14,7 +14,7 @@ function DigitCard({ value, label }: { value: string; label: string }) {
       <div
         className={cn(
           "relative flex h-12 w-[2.75rem] items-center justify-center overflow-hidden rounded-lg border border-border",
-          "bg-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+          "bg-card shadow-sm"
         )}
       >
         <AnimatePresence mode="popLayout" initial={false}>
@@ -24,7 +24,7 @@ function DigitCard({ value, label }: { value: string; label: string }) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -12, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute font-mono text-[1.35rem] font-semibold tabular-nums tracking-tight text-[#27d17c]"
+            className="absolute font-mono text-[1.35rem] font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-[#27d17c]"
           >
             {value}
           </motion.span>
@@ -69,7 +69,7 @@ export function RetestCooldownCard({
       )}
     >
       <p className="text-center text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-        {unlocked ? "Retest available" : "Retest unlocks in"}
+        {unlocked ? "Ready to certify" : "Retest unlocks in"}
       </p>
 
       <div className="mt-3.5 flex items-end justify-center gap-2">

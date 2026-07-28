@@ -27,6 +27,12 @@ import { useHubLibrary } from "@/features/developer-hub/hooks/use-hub-library";
 import type { HubResource, HubSection } from "@/features/developer-hub/types";
 import { cn } from "@/lib/utils";
 
+function parseGuideNavTitle(title: string): { index: string | null; label: string } {
+  const match = /^(\d+)\.\s+(.*)$/.exec(title.trim());
+  if (!match) return { index: null, label: title };
+  return { index: match[1]!, label: match[2]! };
+}
+
 function SectionBlock({ section }: { section: HubSection }) {
   return (
     <section
@@ -198,7 +204,7 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
                   <Rocket className="h-3 w-3" />
-                  Learning path
+                  Pro guide
                 </span>
                 <span className="rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-[11px] capitalize text-muted-foreground">
                   {resource.difficulty}
@@ -229,31 +235,80 @@ export function HubResourceReader({ resource }: { resource: HubResource }) {
           </div>
         </div>
 
-        <div className="grid w-full gap-6 px-3 py-6 sm:gap-7 sm:px-4 sm:py-7 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-8 lg:px-5 lg:pr-8">
+        <div className="grid w-full gap-6 px-3 py-6 sm:gap-7 sm:px-4 sm:py-7 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8 lg:px-5 lg:pr-8">
           <aside className="hub-no-print hidden lg:block">
-            <div className="sticky top-20 space-y-3 pl-0">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Learning journey
-              </p>
-              <nav className="max-h-[70vh] space-y-0.5 overflow-y-auto pr-1">
-                {journey.map((section) => (
-                  <a
-                    key={section.id}
-                    href={`#${section.id}`}
+            <div className="sticky top-20 flex max-h-[calc(100vh-6rem)] flex-col gap-3">
+              <div className="space-y-2.5 px-0.5">
+                <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                  In this guide
+                </p>
+                <div
+                  className={cn(
+                    "mx-0.5 flex items-center justify-between gap-2 rounded-full border px-2.5 py-1.5",
+                    progress >= 100
+                      ? "border-emerald-500/30 bg-emerald-500/10"
+                      : "border-border/70 bg-muted/40"
+                  )}
+                  role="status"
+                  aria-label={`${progress}% complete`}
+                >
+                  <span
                     className={cn(
-                      "block rounded-lg px-2 py-1.5 text-[11.5px] leading-snug transition",
-                      activeSection === section.id
-                        ? "bg-muted font-medium text-foreground"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      "text-[11px] font-medium tabular-nums",
+                      progress >= 100
+                        ? "text-emerald-800 dark:text-emerald-300"
+                        : "text-foreground/80"
                     )}
                   >
-                    {section.title}
-                  </a>
-                ))}
-              </nav>
-              <div className="pt-2 text-[11px] text-muted-foreground">
-                {progress}% complete
+                    {progress}% complete
+                  </span>
+                  <span
+                    className="h-1.5 w-14 overflow-hidden rounded-full bg-foreground/10"
+                    aria-hidden
+                  >
+                    <span
+                      className={cn(
+                        "block h-full rounded-full transition-[width] duration-200",
+                        progress >= 100 ? "bg-emerald-600" : "bg-foreground/70"
+                      )}
+                      style={{ width: `${Math.min(progress, 100)}%` }}
+                    />
+                  </span>
+                </div>
               </div>
+
+              <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto pr-1">
+                {journey.map((section) => {
+                  const { index, label } = parseGuideNavTitle(section.title);
+                  const active = activeSection === section.id;
+                  return (
+                    <a
+                      key={section.id}
+                      href={`#${section.id}`}
+                      className={cn(
+                        "grid grid-cols-[1.35rem_minmax(0,1fr)] items-start gap-x-2 rounded-xl px-2.5 py-2 transition-colors duration-150",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                        active
+                          ? "bg-foreground/[0.08] font-medium text-foreground shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)] dark:bg-white/10 dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]"
+                          : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "pt-px text-right text-[11px] tabular-nums leading-[1.4]",
+                          active
+                            ? "text-foreground/55"
+                            : "text-muted-foreground/65"
+                        )}
+                        aria-hidden={index ? undefined : true}
+                      >
+                        {index ?? ""}
+                      </span>
+                      <span className="text-[12px] leading-[1.4]">{label}</span>
+                    </a>
+                  );
+                })}
+              </nav>
             </div>
           </aside>
 

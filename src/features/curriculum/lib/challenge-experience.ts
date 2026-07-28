@@ -94,9 +94,9 @@ export function experienceLabel(kind: ChallengeExperienceKind): string {
     case "ship-lab":
       return "Ship Lab";
     case "interview-lab":
-      return "Interview Lab";
+      return "Interview Prep";
     case "systems-lab":
-      return "Systems & Behavioral Lab";
+      return "System Design Prep";
     case "code-workspace":
       return "Code Workspace";
   }

@@ -8,9 +8,13 @@ import {
   ChevronRight,
   ClipboardList,
   Clock,
+  Database,
   FolderKanban,
+  GitBranch,
   Layers,
   Lock,
+  Server,
+  Sparkles,
   Target,
   Trophy,
   type LucideIcon,
@@ -156,6 +160,7 @@ type ModuleCardModel = {
   challengeTotal: number | null;
   topicCount: number;
   durationLabel: string;
+  isInterviewPrep: boolean;
 };
 
 const THEME_KEYS = [
@@ -288,11 +293,51 @@ const THEME_STYLES: Record<
 const PILLAR_ICONS: LucideIcon[] = [
   BookOpen,
   Layers,
-  Target,
-  FolderKanban,
-  ClipboardList,
-  Clock,
+  Server,
+  Database,
+  GitBranch,
+  Sparkles,
 ];
+
+const PILLAR_THEMES = [
+  // Foundation — strong cyan (high contrast on light cream)
+  {
+    chip: "bg-cyan-600 text-white shadow-sm shadow-cyan-600/25",
+    card: "border-cyan-600/40 bg-cyan-500/15",
+  },
+  {
+    chip: "bg-violet-600 text-white shadow-sm shadow-violet-600/25",
+    card: "border-violet-600/40 bg-violet-500/15",
+  },
+  {
+    chip: "bg-emerald-600 text-white shadow-sm shadow-emerald-600/25",
+    card: "border-emerald-600/40 bg-emerald-500/15",
+  },
+  // Database — strong blue (high contrast on light cream)
+  {
+    chip: "bg-blue-600 text-white shadow-sm shadow-blue-600/25",
+    card: "border-blue-600/40 bg-blue-500/15",
+  },
+  {
+    chip: "bg-rose-600 text-white shadow-sm shadow-rose-600/25",
+    card: "border-rose-600/40 bg-rose-500/15",
+  },
+  {
+    chip: "bg-indigo-600 text-white shadow-sm shadow-indigo-600/25",
+    card: "border-indigo-600/40 bg-indigo-500/15",
+  },
+] as const;
+
+/** Keep pillar chips readable in a tight 3-col grid without ellipsis. */
+function shortenPillarLabel(title: string): string {
+  const cleaned = title
+    .replace(/\s+Development$/i, "")
+    .replace(/^Developer\s+/i, "")
+    .replace(/^Database\s+Engineering$/i, "Database")
+    .replace(/^AI\s+Engineering$/i, "AI")
+    .trim();
+  return cleaned || title;
+}
 
 export function JourneyRoadmap({
   journey,
@@ -309,15 +354,9 @@ export function JourneyRoadmap({
 
   const pillars = journey.phases.slice(0, 6).map((phase, i) => ({
     label: phase.title,
+    shortLabel: shortenPillarLabel(phase.title),
     icon: PILLAR_ICONS[i % PILLAR_ICONS.length]!,
-    accent: [
-      "text-amber-400 bg-amber-500/10 ring-amber-500/20",
-      "text-violet-400 bg-violet-500/10 ring-violet-500/20",
-      "text-emerald-400 bg-emerald-500/10 ring-emerald-500/20",
-      "text-sky-400 bg-sky-500/10 ring-sky-500/20",
-      "text-orange-400 bg-orange-500/10 ring-orange-500/20",
-      "text-indigo-400 bg-indigo-500/10 ring-indigo-500/20",
-    ][i % 6]!,
+    theme: PILLAR_THEMES[i % PILLAR_THEMES.length]!,
   }));
 
   return (
@@ -326,8 +365,8 @@ export function JourneyRoadmap({
       <div className="h-full min-h-0 overflow-y-auto bg-zinc-950">
         <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:py-8">
           <header className="mb-8">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-              <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+              <div className="flex min-w-0 flex-1 flex-col gap-4">
                 <h1 className="text-2xl font-bold tracking-tight text-zinc-50 sm:text-3xl">
                   {journey.course.title}
                 </h1>
@@ -347,8 +386,8 @@ export function JourneyRoadmap({
                 </div>
               </div>
 
-              <div className="lg:max-w-md lg:pt-1">
-                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+              <div className="w-full shrink-0 lg:w-[22.5rem]">
+                <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
                   What you will learn
                 </p>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -357,13 +396,23 @@ export function JourneyRoadmap({
                     return (
                       <span
                         key={pillar.label}
+                        title={pillar.label}
                         className={cn(
-                          "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[11px] font-medium ring-1 ring-inset",
-                          pillar.accent
+                          "flex min-h-[3.25rem] w-full items-center gap-2.5 rounded-xl border-2 px-2.5 py-2 text-left sm:min-h-[3.4rem]",
+                          pillar.theme.card
                         )}
                       >
-                        <Icon className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{pillar.label}</span>
+                        <span
+                          className={cn(
+                            "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
+                            pillar.theme.chip
+                          )}
+                        >
+                          <Icon className="h-3.5 w-3.5" strokeWidth={2.4} />
+                        </span>
+                        <span className="min-w-0 text-[11px] font-semibold tracking-tight text-zinc-100 sm:text-xs">
+                          {pillar.shortLabel}
+                        </span>
                       </span>
                     );
                   })}
@@ -485,6 +534,9 @@ function ModuleJourneyCard({
             <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-500">
               Module {card.globalIndex + 1}
             </span>
+            {card.isInterviewPrep ? (
+              <StatusBadge variant="start">Career critical</StatusBadge>
+            ) : null}
             {card.active && !card.done ? (
               <StatusBadge variant="start">Start here</StatusBadge>
             ) : null}
@@ -531,7 +583,8 @@ function ModuleJourneyCard({
               ) : null}
               {card.challengeTotal != null ? (
                 <StatPill icon={Target}>
-                  {card.challengeTotal} challenges
+                  {card.challengeTotal}{" "}
+                  {card.isInterviewPrep ? "drills" : "challenges"}
                 </StatPill>
               ) : null}
               {card.assignmentCount > 0 ? (
@@ -747,111 +800,8 @@ function buildModuleCards(
     const active = !done && !activeAssigned;
     if (active) activeAssigned = true;
 
-    const href = isProgrammingFundamentalsModule(module.slug)
-      ? CURRICULUM_ROUTES.moduleHub(
-          module.slug,
-          PROGRAMMING_FUNDAMENTALS_TOPICS[0]!.slug
-        )
-      : isDeveloperToolingModule(module.slug)
-        ? CURRICULUM_ROUTES.moduleHub(
-            module.slug,
-            flattenToolingTopics()[0]!.slug
-          )
-        : isHtmlAcademyModule(module.slug)
-          ? CURRICULUM_ROUTES.moduleHub(
-              module.slug,
-              flattenHtmlTopics()[0]!.slug
-            )
-          : isCssAcademyModule(module.slug)
-            ? CURRICULUM_ROUTES.moduleHub(
-                module.slug,
-                flattenCssTopics()[0]!.slug
-              )
-            : isJsAcademyModule(module.slug)
-              ? CURRICULUM_ROUTES.moduleHub(
-                  module.slug,
-                  flattenJsTopics()[0]!.slug
-                )
-              : isReactAcademyModule(module.slug)
-                ? CURRICULUM_ROUTES.moduleHub(
-                    module.slug,
-                    flattenReactTopics()[0]!.slug
-                  )
-                : isNextjsAcademyModule(module.slug)
-                  ? CURRICULUM_ROUTES.moduleHub(
-                      module.slug,
-                      flattenNextjsTopics()[0]!.slug
-                    )
-                  : isTypescriptAcademyModule(module.slug)
-                    ? CURRICULUM_ROUTES.moduleHub(
-                        module.slug,
-                        flattenTypescriptTopics()[0]!.slug
-                      )
-                    : isApisAcademyModule(module.slug)
-                      ? CURRICULUM_ROUTES.moduleHub(
-                          module.slug,
-                          flattenApisTopics()[0]!.slug
-                        )
-                      : isAuthAcademyModule(module.slug)
-                        ? CURRICULUM_ROUTES.moduleHub(
-                            module.slug,
-                            flattenAuthTopics()[0]!.slug
-                          )
-                        : isSqlAcademyModule(module.slug)
-                          ? CURRICULUM_ROUTES.moduleHub(
-                              module.slug,
-                              flattenSqlTopics()[0]!.slug
-                            )
-                          : isModelingAcademyModule(module.slug)
-                            ? CURRICULUM_ROUTES.moduleHub(
-                                module.slug,
-                                flattenModelingTopics()[0]!.slug
-                              )
-                            : isDeploymentAcademyModule(module.slug)
-                              ? CURRICULUM_ROUTES.moduleHub(
-                                  module.slug,
-                                  flattenDeploymentTopics()[0]!.slug
-                                )
-                              : isCicdAcademyModule(module.slug)
-                                ? CURRICULUM_ROUTES.moduleHub(
-                                    module.slug,
-                                    flattenCicdTopics()[0]!.slug
-                                  )
-                                : isLlmAcademyModule(module.slug)
-                                  ? CURRICULUM_ROUTES.moduleHub(
-                                      module.slug,
-                                      flattenLlmTopics()[0]!.slug
-                                    )
-                                  : isAiFeaturesAcademyModule(module.slug)
-                                    ? CURRICULUM_ROUTES.moduleHub(
-                                        module.slug,
-                                        flattenAiFeaturesTopics()[0]!.slug
-                                      )
-                                    : isCapstoneAcademyModule(module.slug)
-                                      ? CURRICULUM_ROUTES.moduleHub(
-                                          module.slug,
-                                          flattenCapstoneTopics()[0]!.slug
-                                        )
-                                      : isShipAcademyModule(module.slug)
-                                        ? CURRICULUM_ROUTES.moduleHub(
-                                            module.slug,
-                                            flattenShipTopics()[0]!.slug
-                                          )
-                                        : isInterviewAcademyModule(module.slug)
-                                          ? CURRICULUM_ROUTES.moduleHub(
-                                              module.slug,
-                                              flattenInterviewTopics()[0]!
-                                                .slug
-                                            )
-                                          : isSystemsAcademyModule(module.slug)
-                                            ? CURRICULUM_ROUTES.moduleHub(
-                                                module.slug,
-                                                flattenSystemsTopics()[0]!
-                                                  .slug
-                                              )
-                                            : CURRICULUM_ROUTES.module(
-                                                module.slug
-                                              );
+    // Open every module on "All" topics — never jump straight to the first topic.
+    const href = CURRICULUM_ROUTES.moduleHub(module.slug);
 
     const pf = isProgrammingFundamentalsModule(module.slug);
     const dt = isDeveloperToolingModule(module.slug);
@@ -988,6 +938,7 @@ function buildModuleCards(
       durationLabel:
         module.estimated_duration ||
         (minutes > 0 ? formatMinutes(minutes) : "—"),
+      isInterviewPrep: interview || systems,
     };
   });
 }

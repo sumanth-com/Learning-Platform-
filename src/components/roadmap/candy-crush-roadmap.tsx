@@ -551,8 +551,8 @@ export function CandyCrushRoadmap({
     <div className="min-h-screen bg-zinc-950 pb-16">
       <div className="mx-auto max-w-4xl px-4 pt-8 sm:px-6 lg:pt-10">
         <header className="mb-10">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
               <h1 className="text-2xl font-bold tracking-tight text-zinc-50 sm:text-3xl">Java Roadmap</h1>
               <div className="inline-flex w-fit items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-indigo-500/30 bg-indigo-500/10">
@@ -571,22 +571,29 @@ export function CandyCrushRoadmap({
               </div>
             </div>
 
-            <div className="relative w-full lg:max-w-md lg:pt-1">
+            <div className="relative w-full shrink-0 lg:w-[22.5rem]">
               <div className="pointer-events-none absolute -inset-3 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-cyan-500/10 blur-xl" />
-              <h2 className="relative mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 lg:justify-end">
-                <Layers className="h-3.5 w-3.5 text-indigo-400" />
+              <h2 className="relative mb-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
                 What you will learn
               </h2>
-              <div className="relative grid grid-cols-3 gap-2 lg:ml-auto">
+              <div className="relative grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {SKILL_PILLARS.map(({ label, icon: Icon, accent }) => (
                   <span
                     key={label}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800/90 bg-zinc-900/60 px-2.5 py-2 text-[11px] font-medium text-zinc-200 shadow-[0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-sm transition-colors hover:border-indigo-500/30 hover:bg-zinc-900/80 sm:gap-2 sm:px-3 sm:text-xs"
+                    title={label}
+                    className="flex min-h-[3.25rem] w-full items-start gap-2 rounded-xl border border-zinc-800/90 bg-zinc-900/60 px-2.5 py-2 text-left text-[11px] font-medium leading-snug text-zinc-200 shadow-[0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-sm transition-colors hover:border-indigo-500/30 hover:bg-zinc-900/80 sm:min-h-[3.5rem] sm:text-xs"
                   >
-                    <span className={cn("flex h-5 w-5 shrink-0 items-center justify-center rounded-md ring-1 sm:h-6 sm:w-6", accent)}>
-                      <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    <span
+                      className={cn(
+                        "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md ring-1",
+                        accent
+                      )}
+                    >
+                      <Icon className="h-3 w-3" />
                     </span>
-                    <span className="truncate">{label}</span>
+                    <span className="min-w-0 whitespace-normal break-words">
+                      {label}
+                    </span>
                   </span>
                 ))}
               </div>

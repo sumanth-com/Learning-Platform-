@@ -20,6 +20,15 @@ export function useMentorChat(conversationId: string | null) {
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const requestSeq = useRef(0);
+  const conversationRef = useRef(conversationId);
+  const tokenBufferRef = useRef("");
+  const streamedByIdRef = useRef<Record<string, string>>({});
+  const flushRafRef = useRef<number | null>(null);
+  const assistantIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    conversationRef.current = conversationId;
+  }, [conversationId]);
 
   const loadMessages = useCallback(async (id: string, opts?: { silent?: boolean }) => {
     const seq = ++requestSeq.current;
@@ -29,6 +38,7 @@ export function useMentorChat(conversationId: string | null) {
     }
     const result = await listMessagesAction(id);
     if (seq !== requestSeq.current) return;
+    if (conversationRef.current !== id) return;
     if (!opts?.silent) setIsLoading(false);
     if (!result.success) {
       if (!opts?.silent) {
@@ -41,8 +51,21 @@ export function useMentorChat(conversationId: string | null) {
   }, []);
 
   useEffect(() => {
+    // Switching chats: cancel in-flight stream so tokens don't land on the wrong thread.
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setIsStreaming(false);
+    tokenBufferRef.current = "";
+    streamedByIdRef.current = {};
+    assistantIdRef.current = null;
+    if (flushRafRef.current != null) {
+      cancelAnimationFrame(flushRafRef.current);
+      flushRafRef.current = null;
+    }
+
     if (!conversationId) {
       setMessages([]);
+      setError(null);
       return;
     }
     void loadMessages(conversationId);
@@ -54,6 +77,44 @@ export function useMentorChat(conversationId: string | null) {
     setIsStreaming(false);
   }, []);
 
+  const flushTokens = useCallback(() => {
+    flushRafRef.current = null;
+    const id = assistantIdRef.current;
+    if (!id) return;
+    const content = streamedByIdRef.current[id];
+    if (content == null) return;
+
+    setMessages((prev) => {
+      const idx = prev.findIndex((m) => m.id === id);
+      if (idx < 0) return prev;
+      const current = prev[idx]!;
+      if (current.content === content && current.status === "streaming") {
+        return prev;
+      }
+      const next = [...prev];
+      next[idx] = { ...current, content, status: "streaming" };
+      return next;
+    });
+  }, []);
+
+  const queueToken = useCallback(
+    (text: string) => {
+      if (!text) return;
+      const id = assistantIdRef.current;
+      if (!id) {
+        tokenBufferRef.current += text;
+        return;
+      }
+      streamedByIdRef.current[id] =
+        (streamedByIdRef.current[id] ?? "") + text;
+      if (flushRafRef.current != null) return;
+      flushRafRef.current = requestAnimationFrame(() => {
+        flushRafRef.current = requestAnimationFrame(flushTokens);
+      });
+    },
+    [flushTokens]
+  );
+
   const runStream = useCallback(
     async (
       mode: StreamMode,
@@ -63,6 +124,18 @@ export function useMentorChat(conversationId: string | null) {
       attachmentIds?: string[]
     ): Promise<StreamMeta | null> => {
       if (!conversationId) return null;
+      const streamForId = conversationId;
+
+      // Cancel any previous stream on this hook instance.
+      abortRef.current?.abort();
+      if (flushRafRef.current != null) {
+        cancelAnimationFrame(flushRafRef.current);
+        flushRafRef.current = null;
+      }
+      tokenBufferRef.current = "";
+      streamedByIdRef.current = {};
+      assistantIdRef.current = null;
+
       setError(null);
       setIsStreaming(true);
       const controller = new AbortController();
@@ -70,6 +143,7 @@ export function useMentorChat(conversationId: string | null) {
 
       let assistantId: string | null = null;
       let meta: StreamMeta | null = null;
+      const tempAssistantId = `temp-assistant-${Date.now()}`;
 
       if (mode === "send" || mode === "continue") {
         const optimisticContent =
@@ -80,11 +154,25 @@ export function useMentorChat(conversationId: string | null) {
           ...prev,
           {
             id: `temp-user-${Date.now()}`,
-            conversation_id: conversationId,
+            conversation_id: streamForId,
             profile_id: "",
             role: "user",
             content: optimisticContent,
             status: "complete",
+            model: null,
+            error: null,
+            token_input: null,
+            token_output: null,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+          {
+            id: tempAssistantId,
+            conversation_id: streamForId,
+            profile_id: "",
+            role: "assistant",
+            content: "",
+            status: "streaming",
             model: null,
             error: null,
             token_input: null,
@@ -100,14 +188,48 @@ export function useMentorChat(conversationId: string | null) {
           const idx = prev.findIndex((m) => m.id === messageId);
           if (idx < 0) return prev;
           return [
-            ...prev.slice(0, idx).map((m) => m),
-            { ...prev[idx]!, content, updated_at: new Date().toISOString() },
+            ...prev.slice(0, idx),
+            {
+              ...prev[idx]!,
+              content,
+              updated_at: new Date().toISOString(),
+            },
+            {
+              id: tempAssistantId,
+              conversation_id: streamForId,
+              profile_id: "",
+              role: "assistant",
+              content: "",
+              status: "streaming",
+              model: null,
+              error: null,
+              token_input: null,
+              token_output: null,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            },
           ];
         });
       }
 
       if (mode === "regenerate" && messageId) {
-        setMessages((prev) => prev.filter((m) => m.id !== messageId));
+        setMessages((prev) => [
+          ...prev.filter((m) => m.id !== messageId),
+          {
+            id: tempAssistantId,
+            conversation_id: streamForId,
+            profile_id: "",
+            role: "assistant",
+            content: "",
+            status: "streaming",
+            model: null,
+            error: null,
+            token_input: null,
+            token_output: null,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+        ]);
       }
 
       try {
@@ -115,7 +237,7 @@ export function useMentorChat(conversationId: string | null) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            conversationId,
+            conversationId: streamForId,
             content,
             learningContext: learningContext ?? undefined,
             mode,
@@ -135,6 +257,11 @@ export function useMentorChat(conversationId: string | null) {
         let buffer = "";
 
         while (true) {
+          if (conversationRef.current !== streamForId) {
+            controller.abort();
+            break;
+          }
+
           const { done, value } = await reader.read();
           if (done) break;
           buffer += decoder.decode(value, { stream: true });
@@ -162,40 +289,66 @@ export function useMentorChat(conversationId: string | null) {
               assistantId = String(data.assistantMessageId ?? "");
               const id = assistantId;
               if (!id) continue;
-              setMessages((prev) => [
-                ...prev.filter(
-                  (m) => m.id !== id && !m.id.startsWith("temp-assistant")
-                ),
-                {
-                  id,
-                  conversation_id: conversationId,
-                  profile_id: "",
-                  role: "assistant",
-                  content: "",
-                  status: "streaming",
-                  model: (data.model as string) ?? null,
-                  error: null,
-                  token_input: null,
-                  token_output: null,
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString(),
-                },
-              ]);
+              assistantIdRef.current = id;
+              const early = tokenBufferRef.current;
+              tokenBufferRef.current = "";
+              streamedByIdRef.current[id] =
+                (streamedByIdRef.current[id] ?? "") + early;
+              setMessages((prev) => {
+                const tempIdx = prev.findIndex((m) =>
+                  m.id.startsWith("temp-assistant")
+                );
+                if (tempIdx >= 0) {
+                  const next = [...prev];
+                  const temp = next[tempIdx]!;
+                  next[tempIdx] = {
+                    ...temp,
+                    id,
+                    content: streamedByIdRef.current[id] ?? temp.content,
+                    status: "streaming",
+                    model: (data.model as string) ?? temp.model,
+                    error: null,
+                  };
+                  return next.filter(
+                    (m, i) => i === tempIdx || m.id !== id
+                  );
+                }
+                if (prev.some((m) => m.id === id)) return prev;
+                return [
+                  ...prev,
+                  {
+                    id,
+                    conversation_id: streamForId,
+                    profile_id: "",
+                    role: "assistant" as const,
+                    content: streamedByIdRef.current[id] ?? "",
+                    status: "streaming" as const,
+                    model: (data.model as string) ?? null,
+                    error: null,
+                    token_input: null,
+                    token_output: null,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                  },
+                ];
+              });
+              if (streamedByIdRef.current[id]) {
+                flushTokens();
+              }
             }
 
             if (event === "token" && assistantId) {
-              const text = String(data.text ?? "");
-              setMessages((prev) =>
-                prev.map((m) =>
-                  m.id === assistantId
-                    ? { ...m, content: m.content + text, status: "streaming" }
-                    : m
-                )
-              );
+              queueToken(String(data.text ?? ""));
             }
 
             if (event === "done" && assistantId) {
+              if (flushRafRef.current != null) {
+                cancelAnimationFrame(flushRafRef.current);
+                flushRafRef.current = null;
+              }
               const finalContent = String(data.content ?? "");
+              streamedByIdRef.current[assistantId] = finalContent;
+              flushTokens();
               if (typeof data.title === "string" && data.title.trim()) {
                 meta = { title: data.title.trim() };
               }
@@ -209,7 +362,15 @@ export function useMentorChat(conversationId: string | null) {
             }
 
             if (event === "error" || event === "cancelled") {
+              if (flushRafRef.current != null) {
+                cancelAnimationFrame(flushRafRef.current);
+                flushRafRef.current = null;
+              }
               const finalContent = String(data.content ?? "");
+              if (assistantId) {
+                streamedByIdRef.current[assistantId] = finalContent;
+                flushTokens();
+              }
               const msg = String(data.message ?? "Error");
               if (assistantId) {
                 setMessages((prev) =>
@@ -225,35 +386,80 @@ export function useMentorChat(conversationId: string | null) {
                       : m
                   )
                 );
+              } else {
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === tempAssistantId
+                      ? {
+                          ...m,
+                          content: finalContent || m.content,
+                          status: event === "cancelled" ? "cancelled" : "error",
+                          error: msg,
+                        }
+                      : m
+                  )
+                );
               }
               if (event === "error") setError(msg);
             }
           }
         }
 
-        void loadMessages(conversationId, { silent: true });
+        // Soft reconcile with DB — only if still on the same chat.
+        if (conversationRef.current === streamForId) {
+          window.setTimeout(() => {
+            if (conversationRef.current === streamForId) {
+              void loadMessages(streamForId, { silent: true });
+            }
+          }, 400);
+        }
         return meta;
       } catch (err) {
         if ((err as Error).name === "AbortError") {
           setMessages((prev) =>
-            prev.map((m) =>
-              m.status === "streaming"
-                ? { ...m, status: "cancelled" as const }
-                : m
-            )
+            prev
+              .filter((m) => !(m.id.startsWith("temp-assistant") && !m.content))
+              .map((m) =>
+                m.status === "streaming"
+                  ? { ...m, status: "cancelled" as const }
+                  : m
+              )
           );
           return null;
         }
         const message = friendlyLlmError(err);
         setError(message);
-        void loadMessages(conversationId, { silent: true });
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === tempAssistantId || m.status === "streaming"
+              ? {
+                  ...m,
+                  status: "error" as const,
+                  error: message,
+                  content:
+                    m.content ||
+                    "Something went wrong while generating a reply. Try again.",
+                }
+              : m
+          )
+        );
+        if (conversationRef.current === streamForId) {
+          void loadMessages(streamForId, { silent: true });
+        }
         return null;
       } finally {
-        setIsStreaming(false);
-        abortRef.current = null;
+        if (conversationRef.current === streamForId) {
+          setIsStreaming(false);
+        }
+        if (abortRef.current === controller) {
+          abortRef.current = null;
+        }
+        assistantIdRef.current = null;
+        tokenBufferRef.current = "";
+        streamedByIdRef.current = {};
       }
     },
-    [conversationId, loadMessages]
+    [conversationId, flushTokens, loadMessages, queueToken]
   );
 
   const send = useCallback(

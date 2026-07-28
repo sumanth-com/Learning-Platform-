@@ -1,8 +1,84 @@
 import type { HubResource } from "../types";
-
-function s(id: string, title: string, body: string) {
-  return { id, title, body };
-}
+import {
+  apiSecurityGuideMeta,
+  apiSecurityGuideSections,
+} from "./guides/api-security-guide";
+import {
+  authenticationArchitectureMeta,
+  authenticationArchitectureSections,
+} from "./guides/authentication-architecture";
+import {
+  awsDeploymentGuideMeta,
+  awsDeploymentGuideSections,
+} from "./guides/aws-deployment-guide";
+import {
+  buildAiAgentsFromScratchMeta,
+  buildAiAgentsFromScratchSections,
+} from "./guides/build-ai-agents-from-scratch";
+import {
+  buildSaasFromScratchMeta,
+  buildSaasFromScratchSections,
+} from "./guides/build-saas-from-scratch";
+import {
+  cleanArchitectureEssentialsMeta,
+  cleanArchitectureEssentialsSections,
+} from "./guides/clean-architecture-essentials";
+import {
+  designPatternsCatalogMeta,
+  designPatternsCatalogSections,
+} from "./guides/design-patterns-catalog";
+import {
+  dockerCompleteGuideMeta,
+  dockerCompleteGuideSections,
+} from "./guides/docker-complete-guide";
+import {
+  githubActionsCiMeta,
+  githubActionsCiSections,
+} from "./guides/github-actions-ci";
+import {
+  jwtDeepDiveMeta,
+  jwtDeepDiveSections,
+} from "./guides/jwt-deep-dive";
+import {
+  nextjsAppRouterPlaybookMeta,
+  nextjsAppRouterPlaybookSections,
+} from "./guides/nextjs-app-router-playbook";
+import {
+  portfolioAndInterviewSystemMeta,
+  portfolioAndInterviewSystemSections,
+} from "./guides/portfolio-and-interview-system";
+import {
+  postgresIndexingDeepDiveMeta,
+  postgresIndexingDeepDiveSections,
+} from "./guides/postgres-indexing-deep-dive";
+import {
+  prismaAndDrizzleMeta,
+  prismaAndDrizzleSections,
+} from "./guides/prisma-and-drizzle";
+import {
+  promptEngineeringPlaybookMeta,
+  promptEngineeringPlaybookSections,
+} from "./guides/prompt-engineering-playbook";
+import {
+  ragExplainedMeta,
+  ragExplainedSections,
+} from "./guides/rag-explained";
+import {
+  reactPerformanceMeta,
+  reactPerformanceSections,
+} from "./guides/react-performance";
+import {
+  redisCachingPatternsMeta,
+  redisCachingPatternsSections,
+} from "./guides/redis-caching-patterns";
+import {
+  systemDesignRoadmapMeta,
+  systemDesignRoadmapSections,
+} from "./guides/system-design-roadmap";
+import {
+  typescriptForProductEngineersMeta,
+  typescriptForProductEngineersSections,
+} from "./guides/typescript-for-product-engineers";
 
 export const HUB_CATALOG: HubResource[] = [
   {
@@ -10,13 +86,13 @@ export const HUB_CATALOG: HubResource[] = [
     slug: "build-ai-agents-from-scratch",
     title: "Build AI Agents from Scratch",
     description:
-      "Design tool-using agents with planning loops, memory, and safe execution — without drowning in framework magic.",
+      "Design tool-using agents with planning loops, memory, budgets, and safe execution — without drowning in framework magic.",
     category: "ai",
     type: "interactive",
     difficulty: "advanced",
-    readingMinutes: 28,
+    readingMinutes: 32,
     author: "SupraBase",
-    tags: ["agents", "tools", "langchain", "mcp"],
+    tags: ["agents", "tools", "evals", "mcp"],
     featured: true,
     trending: true,
     updatedAt: "2026-07-12",
@@ -26,33 +102,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-violet-600 via-indigo-500 to-sky-400",
     emoji: "🚀",
     relatedSlugs: ["rag-explained", "prompt-engineering-playbook"],
-    sections: [
-      s(
-        "why",
-        "Why agents matter",
-        "An agent is a loop: observe → reason → act → observe. Production agents need clear goals, bounded tools, and failure handling — not just a clever prompt."
-      ),
-      s(
-        "loop",
-        "The core agent loop",
-        "1. Parse user intent\n2. Choose a tool or respond\n3. Execute with timeouts\n4. Feed results back into context\n5. Stop when the goal is met or budget is exhausted"
-      ),
-      s(
-        "tools",
-        "Tool design",
-        "Expose few, high-leverage tools with strict JSON schemas. Prefer idempotent actions. Log every call. Never give unrestricted shell or payment access without human approval."
-      ),
-      s(
-        "memory",
-        "Memory patterns",
-        "Short-term: conversation window.\nLong-term: vector store + summaries.\nEpisodic: task logs for audits.\nKeep PII out of long-term memory by default."
-      ),
-      s(
-        "ship",
-        "Shipping checklist",
-        "- Max steps & token budgets\n- Retry + circuit breakers\n- Human-in-the-loop gates\n- Evaluation set for regressions\n- Observability (traces + tool metrics)"
-      ),
-    ],
+    nextSlug: "rag-explained",
+    ...buildAiAgentsFromScratchMeta,
+    sections: buildAiAgentsFromScratchSections,
   },
   {
     id: "r2",
@@ -63,7 +115,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "system-design",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 35,
+    readingMinutes: 40,
     author: "SupraBase",
     tags: ["scalability", "apis", "caching", "interviews"],
     featured: true,
@@ -74,29 +126,10 @@ export const HUB_CATALOG: HubResource[] = [
     rating: 4.8,
     coverGradient: "from-slate-700 via-zinc-600 to-amber-400",
     emoji: "🏗",
-    relatedSlugs: ["authentication-architecture", "api-security-guide"],
-    sections: [
-      s(
-        "clarify",
-        "Clarify before you draw",
-        "Lock functional requirements, scale (QPS, data size), latency SLOs, and consistency needs. Ask about read/write ratio and multi-region early."
-      ),
-      s(
-        "api",
-        "API & boundaries",
-        "Define clients, auth, and service boundaries. Prefer clear resource models over premature microservices."
-      ),
-      s(
-        "data",
-        "Data model",
-        "Choose SQL vs NoSQL from access patterns. Design primary keys and indexes for your hottest queries. Plan migrations."
-      ),
-      s(
-        "scale",
-        "Scale levers",
-        "Caching, async jobs, sharding, read replicas, CDNs, and backpressure. Name the bottleneck you are solving."
-      ),
-    ],
+    relatedSlugs: ["authentication-architecture", "redis-caching-patterns"],
+    nextSlug: "authentication-architecture",
+    ...systemDesignRoadmapMeta,
+    sections: systemDesignRoadmapSections,
   },
   {
     id: "r3",
@@ -107,7 +140,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "system-design",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 22,
+    readingMinutes: 28,
     author: "SupraBase",
     tags: ["auth", "jwt", "oauth", "sessions"],
     featured: true,
@@ -118,24 +151,10 @@ export const HUB_CATALOG: HubResource[] = [
     rating: 4.9,
     coverGradient: "from-emerald-600 via-teal-500 to-cyan-400",
     emoji: "⚡",
-    relatedSlugs: ["api-security-guide", "system-design-roadmap"],
-    sections: [
-      s(
-        "models",
-        "Auth models",
-        "Cookie sessions excel for first-party web apps. JWTs help APIs and mobile but need careful rotation and revocation strategy. OAuth/OIDC for social and enterprise SSO."
-      ),
-      s(
-        "refresh",
-        "Refresh tokens",
-        "Store refresh tokens hashed server-side. Rotate on use. Detect reuse as theft. Keep access tokens short-lived."
-      ),
-      s(
-        "threats",
-        "Threats to design for",
-        "CSRF (cookies), XSS (token theft), open redirects, weak redirect URI validation, and device binding for high-value accounts."
-      ),
-    ],
+    relatedSlugs: ["api-security-guide", "jwt-deep-dive"],
+    nextSlug: "jwt-deep-dive",
+    ...authenticationArchitectureMeta,
+    sections: authenticationArchitectureSections,
   },
   {
     id: "r4",
@@ -146,7 +165,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "ai",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 24,
+    readingMinutes: 30,
     author: "SupraBase",
     tags: ["rag", "embeddings", "vector-db", "evaluation"],
     featured: true,
@@ -158,23 +177,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-fuchsia-600 via-purple-500 to-indigo-400",
     emoji: "🧠",
     relatedSlugs: ["build-ai-agents-from-scratch", "prompt-engineering-playbook"],
-    sections: [
-      s(
-        "pipeline",
-        "The RAG pipeline",
-        "Ingest → chunk → embed → index → retrieve → rerank → generate with citations. Measure each stage separately."
-      ),
-      s(
-        "chunking",
-        "Chunking strategy",
-        "Prefer semantic chunks with overlap. Keep metadata (source, title, updated_at). Avoid giant blobs that drown the prompt."
-      ),
-      s(
-        "eval",
-        "Evaluation",
-        "Track retrieval precision, answer faithfulness, and groundedness. Build a golden set from real user questions."
-      ),
-    ],
+    nextSlug: "prompt-engineering-playbook",
+    ...ragExplainedMeta,
+    sections: ragExplainedSections,
   },
   {
     id: "r5",
@@ -185,7 +190,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "system-design",
     type: "interactive",
     difficulty: "advanced",
-    readingMinutes: 40,
+    readingMinutes: 38,
     author: "SupraBase",
     tags: ["saas", "billing", "multi-tenant", "mvp"],
     featured: true,
@@ -196,23 +201,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-orange-500 via-rose-500 to-pink-400",
     emoji: "📦",
     relatedSlugs: ["authentication-architecture", "docker-complete-guide"],
-    sections: [
-      s(
-        "tenant",
-        "Tenancy models",
-        "Shared DB with tenant_id is the default. Schema-per-tenant for stronger isolation. Cell architecture for large scale."
-      ),
-      s(
-        "billing",
-        "Billing basics",
-        "Stripe Customer + Subscription + webhook idempotency. Gate features by plan. Never trust client-side plan checks alone."
-      ),
-      s(
-        "mvp",
-        "MVP checklist",
-        "Auth, one core workflow, billing or waitlist, observability, and a kill-switch for bad deploys."
-      ),
-    ],
+    nextSlug: "authentication-architecture",
+    ...buildSaasFromScratchMeta,
+    sections: buildSaasFromScratchSections,
   },
   {
     id: "r6",
@@ -223,7 +214,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "security",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 20,
+    readingMinutes: 26,
     author: "SupraBase",
     tags: ["owasp", "rate-limiting", "validation", "api"],
     featured: true,
@@ -234,23 +225,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-red-600 via-rose-500 to-orange-400",
     emoji: "🔒",
     relatedSlugs: ["authentication-architecture", "jwt-deep-dive"],
-    sections: [
-      s(
-        "surface",
-        "Shrink the attack surface",
-        "Least privilege tokens, deny-by-default CORS, strict content types, and no verbose errors in production."
-      ),
-      s(
-        "limits",
-        "Rate limiting",
-        "Per-IP and per-user buckets. Separate expensive endpoints. Return Retry-After. Log abuse patterns."
-      ),
-      s(
-        "validate",
-        "Validate everything",
-        "Schema validation at the edge. Parameterized queries. Escape outputs. Treat file uploads as hostile."
-      ),
-    ],
+    nextSlug: "jwt-deep-dive",
+    ...apiSecurityGuideMeta,
+    sections: apiSecurityGuideSections,
   },
   {
     id: "r7",
@@ -261,7 +238,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "devops",
     type: "article",
     difficulty: "advanced",
-    readingMinutes: 32,
+    readingMinutes: 34,
     author: "SupraBase",
     tags: ["aws", "deploy", "rds", "alb"],
     featured: true,
@@ -272,18 +249,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-amber-500 via-orange-500 to-yellow-300",
     emoji: "☁",
     relatedSlugs: ["docker-complete-guide", "github-actions-ci"],
-    sections: [
-      s(
-        "layout",
-        "Reference layout",
-        "Public ALB → app targets in private subnets → RDS/Redis private. Secrets in Secrets Manager. Logs to CloudWatch."
-      ),
-      s(
-        "release",
-        "Safe releases",
-        "Blue/green or rolling. Health checks that mean something. Instant rollback path. Migrations before/after carefully ordered."
-      ),
-    ],
+    nextSlug: "github-actions-ci",
+    ...awsDeploymentGuideMeta,
+    sections: awsDeploymentGuideSections,
   },
   {
     id: "r8",
@@ -294,7 +262,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "devops",
     type: "article",
     difficulty: "beginner",
-    readingMinutes: 26,
+    readingMinutes: 28,
     author: "SupraBase",
     tags: ["docker", "compose", "containers"],
     featured: true,
@@ -306,24 +274,10 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-sky-600 via-blue-500 to-cyan-300",
     emoji: "🐳",
     relatedSlugs: ["github-actions-ci", "aws-deployment-guide"],
+    nextSlug: "github-actions-ci",
     githubUrl: "https://github.com/docker/awesome-compose",
-    sections: [
-      s(
-        "image",
-        "Good Dockerfiles",
-        "Multi-stage builds, non-root user, pinned base tags, .dockerignore, and small attack surface."
-      ),
-      s(
-        "compose",
-        "Local stacks",
-        "Compose for app + DB + redis. Named volumes for data. Healthchecks so depends_on is meaningful."
-      ),
-      s(
-        "prod",
-        "Production notes",
-        "Read-only root FS where possible, resource limits, secrets not in ENV files committed to git."
-      ),
-    ],
+    ...dockerCompleteGuideMeta,
+    sections: dockerCompleteGuideSections,
   },
   {
     id: "r9",
@@ -334,7 +288,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "frontend",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 30,
+    readingMinutes: 32,
     author: "SupraBase",
     tags: ["nextjs", "rsc", "caching", "react"],
     featured: false,
@@ -346,18 +300,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-zinc-800 via-neutral-700 to-sky-400",
     emoji: "⚛",
     relatedSlugs: ["typescript-for-product-engineers", "react-performance"],
-    sections: [
-      s(
-        "rsc",
-        "Server Components first",
-        "Fetch on the server by default. Push interactivity to small client islands. Avoid shipping secret logic to the browser."
-      ),
-      s(
-        "cache",
-        "Caching mental model",
-        "Understand request memoization, data cache, and full route cache. Invalidate deliberately."
-      ),
-    ],
+    nextSlug: "react-performance",
+    ...nextjsAppRouterPlaybookMeta,
+    sections: nextjsAppRouterPlaybookSections,
   },
   {
     id: "r10",
@@ -368,7 +313,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "database",
     type: "article",
     difficulty: "advanced",
-    readingMinutes: 27,
+    readingMinutes: 30,
     author: "SupraBase",
     tags: ["postgres", "indexes", "explain", "performance"],
     featured: false,
@@ -380,18 +325,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-blue-700 via-indigo-600 to-sky-400",
     emoji: "🗄",
     relatedSlugs: ["prisma-and-drizzle", "redis-caching-patterns"],
-    sections: [
-      s(
-        "explain",
-        "Read EXPLAIN",
-        "Look for Seq Scan on large tables, bad row estimates, and nested loops that explode. Measure before guessing."
-      ),
-      s(
-        "indexes",
-        "Index types that pay off",
-        "Composite indexes matching WHERE + ORDER BY. Partial indexes for hot subsets. Avoid over-indexing writes."
-      ),
-    ],
+    nextSlug: "redis-caching-patterns",
+    ...postgresIndexingDeepDiveMeta,
+    sections: postgresIndexingDeepDiveSections,
   },
   {
     id: "r11",
@@ -402,7 +338,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "ai",
     type: "article",
     difficulty: "beginner",
-    readingMinutes: 18,
+    readingMinutes: 22,
     author: "SupraBase",
     tags: ["prompts", "llm", "evals"],
     featured: false,
@@ -413,18 +349,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-indigo-500 via-blue-500 to-teal-300",
     emoji: "✨",
     relatedSlugs: ["rag-explained", "build-ai-agents-from-scratch"],
-    sections: [
-      s(
-        "structure",
-        "Structure that works",
-        "Goal → constraints → format → examples → refusal policy. Prefer JSON schemas for tool calls."
-      ),
-      s(
-        "eval",
-        "Ship with evals",
-        "Offline eval sets beat vibes. Track regressions when you change models or prompts."
-      ),
-    ],
+    nextSlug: "rag-explained",
+    ...promptEngineeringPlaybookMeta,
+    sections: promptEngineeringPlaybookSections,
   },
   {
     id: "r12",
@@ -435,7 +362,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "fundamentals",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 21,
+    readingMinutes: 24,
     author: "SupraBase",
     tags: ["architecture", "ddd", "modularity"],
     featured: false,
@@ -446,18 +373,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-stone-700 via-neutral-600 to-emerald-400",
     emoji: "🔥",
     relatedSlugs: ["design-patterns-catalog", "system-design-roadmap"],
-    sections: [
-      s(
-        "rules",
-        "Dependency rule",
-        "Domain should not depend on frameworks. Adapters translate IO. Keep use-cases explicit."
-      ),
-      s(
-        "pragmatic",
-        "Stay pragmatic",
-        "Start modular monolith. Extract services when team and scale demand it — not for fashion."
-      ),
-    ],
+    nextSlug: "design-patterns-catalog",
+    ...cleanArchitectureEssentialsMeta,
+    sections: cleanArchitectureEssentialsSections,
   },
   {
     id: "r13",
@@ -468,7 +386,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "security",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 16,
+    readingMinutes: 20,
     author: "SupraBase",
     tags: ["jwt", "auth", "security"],
     featured: false,
@@ -479,18 +397,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-rose-600 via-red-500 to-amber-400",
     emoji: "🔐",
     relatedSlugs: ["authentication-architecture", "api-security-guide"],
-    sections: [
-      s(
-        "claims",
-        "Claims that matter",
-        "sub, exp, iat, aud, iss. Keep payloads small. Never store secrets in JWT."
-      ),
-      s(
-        "pitfalls",
-        "Pitfalls",
-        "alg=none attacks, long-lived tokens without revocation, putting PII in claims, and trusting unsigned payloads."
-      ),
-    ],
+    nextSlug: "api-security-guide",
+    ...jwtDeepDiveMeta,
+    sections: jwtDeepDiveSections,
   },
   {
     id: "r14",
@@ -501,7 +410,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "devops",
     type: "article",
     difficulty: "beginner",
-    readingMinutes: 19,
+    readingMinutes: 22,
     author: "SupraBase",
     tags: ["ci", "github-actions", "cd"],
     featured: false,
@@ -512,18 +421,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-neutral-800 via-zinc-700 to-green-400",
     emoji: "🛠",
     relatedSlugs: ["docker-complete-guide", "aws-deployment-guide"],
-    sections: [
-      s(
-        "pipeline",
-        "A solid default pipeline",
-        "lint → typecheck → test → build → deploy. Fail fast. Cache dependencies. Pin action versions."
-      ),
-      s(
-        "security",
-        "Secrets & OIDC",
-        "Prefer OIDC to cloud over long-lived keys. Least privilege. Never echo secrets in logs."
-      ),
-    ],
+    nextSlug: "aws-deployment-guide",
+    ...githubActionsCiMeta,
+    sections: githubActionsCiSections,
   },
   {
     id: "r15",
@@ -534,7 +434,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "frontend",
     type: "article",
     difficulty: "beginner",
-    readingMinutes: 17,
+    readingMinutes: 20,
     author: "SupraBase",
     tags: ["typescript", "types", "dx"],
     featured: false,
@@ -545,18 +445,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-blue-600 via-sky-500 to-indigo-300",
     emoji: "📘",
     relatedSlugs: ["nextjs-app-router-playbook", "react-performance"],
-    sections: [
-      s(
-        "unions",
-        "Discriminated unions",
-        "Model UI and API states as unions with a kind field. Exhaustive switches catch bugs at compile time."
-      ),
-      s(
-        "boundaries",
-        "Validate at boundaries",
-        "Parse external input (Zod). Trust internal typed code. Don't sprinkle `any` to silence reality."
-      ),
-    ],
+    nextSlug: "nextjs-app-router-playbook",
+    ...typescriptForProductEngineersMeta,
+    sections: typescriptForProductEngineersSections,
   },
   {
     id: "r16",
@@ -567,7 +458,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "frontend",
     type: "article",
     difficulty: "advanced",
-    readingMinutes: 23,
+    readingMinutes: 26,
     author: "SupraBase",
     tags: ["react", "performance", "profiling"],
     featured: false,
@@ -578,18 +469,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-cyan-600 via-sky-500 to-blue-400",
     emoji: "⚡",
     relatedSlugs: ["nextjs-app-router-playbook", "typescript-for-product-engineers"],
-    sections: [
-      s(
-        "measure",
-        "Measure first",
-        "React Profiler + browser performance tools. Fix the expensive commit, not imaginary re-renders."
-      ),
-      s(
-        "lists",
-        "Lists & virtualization",
-        "Virtualize long lists. Stable keys. Avoid anonymous inline objects in hot paths when proven costly."
-      ),
-    ],
+    nextSlug: "nextjs-app-router-playbook",
+    ...reactPerformanceMeta,
+    sections: reactPerformanceSections,
   },
   {
     id: "r17",
@@ -600,7 +482,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "database",
     type: "article",
     difficulty: "intermediate",
-    readingMinutes: 15,
+    readingMinutes: 18,
     author: "SupraBase",
     tags: ["redis", "caching", "latency"],
     featured: false,
@@ -611,18 +493,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-red-500 via-rose-500 to-orange-300",
     emoji: "⚡",
     relatedSlugs: ["postgres-indexing-deep-dive", "system-design-roadmap"],
-    sections: [
-      s(
-        "aside",
-        "Cache-aside",
-        "Read miss → DB → set cache. Write → update DB → invalidate/update key. Choose TTL from freshness needs."
-      ),
-      s(
-        "stampede",
-        "Stampede control",
-        "Singleflight locks, probabilistic early expiration, and serving stale while revalidating."
-      ),
-    ],
+    nextSlug: "postgres-indexing-deep-dive",
+    ...redisCachingPatternsMeta,
+    sections: redisCachingPatternsSections,
   },
   {
     id: "r18",
@@ -633,7 +506,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "database",
     type: "docs",
     difficulty: "beginner",
-    readingMinutes: 14,
+    readingMinutes: 18,
     author: "SupraBase",
     tags: ["prisma", "drizzle", "orm", "sql"],
     featured: false,
@@ -644,18 +517,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-teal-600 via-emerald-500 to-lime-300",
     emoji: "📦",
     relatedSlugs: ["postgres-indexing-deep-dive", "nextjs-app-router-playbook"],
-    sections: [
-      s(
-        "choose",
-        "How to choose",
-        "Prisma: excellent DX and migrations. Drizzle: SQL-first, lightweight, great TypeScript inference. Both can ship production apps."
-      ),
-      s(
-        "perf",
-        "Performance notes",
-        "N+1 is your problem either way. Select only needed columns. Batch where possible. Index for real queries."
-      ),
-    ],
+    nextSlug: "postgres-indexing-deep-dive",
+    ...prismaAndDrizzleMeta,
+    sections: prismaAndDrizzleSections,
   },
   {
     id: "r19",
@@ -666,7 +530,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "fundamentals",
     type: "article",
     difficulty: "beginner",
-    readingMinutes: 25,
+    readingMinutes: 26,
     author: "SupraBase",
     tags: ["patterns", "oop", "architecture"],
     featured: false,
@@ -677,18 +541,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-purple-700 via-violet-600 to-fuchsia-400",
     emoji: "🧩",
     relatedSlugs: ["clean-architecture-essentials"],
-    sections: [
-      s(
-        "useful",
-        "Patterns that pay rent",
-        "Strategy for interchangeable algorithms, Adapter for third-party APIs, Factory for complex object setup, Observer for domain events."
-      ),
-      s(
-        "avoid",
-        "Avoid cargo cult",
-        "Don't invent layers for a 200-line script. Patterns exist to reduce change cost — measure that."
-      ),
-    ],
+    nextSlug: "clean-architecture-essentials",
+    ...designPatternsCatalogMeta,
+    sections: designPatternsCatalogSections,
   },
   {
     id: "r20",
@@ -699,7 +554,7 @@ export const HUB_CATALOG: HubResource[] = [
     category: "career",
     type: "article",
     difficulty: "beginner",
-    readingMinutes: 20,
+    readingMinutes: 24,
     author: "SupraBase",
     tags: ["portfolio", "interviews", "career"],
     featured: false,
@@ -711,18 +566,9 @@ export const HUB_CATALOG: HubResource[] = [
     coverGradient: "from-fuchsia-500 via-pink-500 to-rose-300",
     emoji: "🚀",
     relatedSlugs: ["system-design-roadmap", "build-saas-from-scratch"],
-    sections: [
-      s(
-        "portfolio",
-        "Portfolio that converts",
-        "3–5 projects with problem → approach → trade-offs → demo. Link live URLs and source. Show ownership."
-      ),
-      s(
-        "practice",
-        "Interview reps",
-        "Weekly system design + coding + storytelling. Record yourself. Iterate on clarity more than cleverness."
-      ),
-    ],
+    nextSlug: "system-design-roadmap",
+    ...portfolioAndInterviewSystemMeta,
+    sections: portfolioAndInterviewSystemSections,
   },
 ];
 

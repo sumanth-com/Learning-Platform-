@@ -3,6 +3,7 @@ import {
   flattenReactTopics,
   type ReactTopicDef,
 } from "@/features/curriculum/lib/react-academy-curriculum";
+import { hardReactBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type ReactChallengeKind =
   | "build"
@@ -262,6 +263,7 @@ function specsForTopic(topic: ReactTopicDef): Spec[] {
 
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardReactBundle(title, interviewQ);
     push({
       key: "interview",
       title: clip(
@@ -269,26 +271,15 @@ function specsForTopic(topic: ReactTopicDef): Spec[] {
         64
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with a small React component. Add JSX comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in JSX/JS",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Prefer modern hooks over class components",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ, 80)],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
       referenceHtml: htmlPage(`Interview — ${title}`),
-      referenceJsx: defaultJsx(
-        title,
-        `// Answering: ${interviewQ}\nexport default function Answer() {\n  const answer = ${JSON.stringify(clip(summary, 90))};\n  return (\n    <main className="page">\n      <h1>${title.replace(/"/g, "")}</h1>\n      <p>{answer}</p>\n    </main>\n  );\n}\n`
-      ),
-      acceptanceCriteria: [
-        "Comments explain the answer",
-        "Working React component",
-        "Tied to the interview question",
-      ],
+      referenceJsx: hard.referenceJs,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

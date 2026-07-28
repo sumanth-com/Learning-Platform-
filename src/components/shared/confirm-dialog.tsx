@@ -41,7 +41,7 @@ export function ConfirmDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <button
         type="button"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-foreground/25 backdrop-blur-[2px]"
         aria-label="Close dialog"
         onClick={onCancel}
       />
@@ -49,28 +49,41 @@ export function ConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
-        className="relative w-full max-w-md rounded-xl border border-zinc-800 bg-zinc-900 p-5 shadow-2xl"
+        className="relative w-full max-w-md rounded-2xl border border-border bg-card p-5 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.45)]"
       >
         <div className="flex items-start gap-3">
           <div
             className={cn(
               "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-              variant === "danger" ? "bg-red-500/10" : "bg-amber-500/10"
+              variant === "danger" ? "bg-destructive/10" : "bg-amber-500/10"
             )}
           >
             <AlertTriangle
-              className={cn("h-5 w-5", variant === "danger" ? "text-red-400" : "text-amber-400")}
+              className={cn(
+                "h-5 w-5",
+                variant === "danger" ? "text-destructive" : "text-amber-600"
+              )}
             />
           </div>
           <div className="min-w-0 flex-1">
-            <h3 id="confirm-dialog-title" className="text-base font-semibold text-zinc-100">
+            <h3
+              id="confirm-dialog-title"
+              className="text-base font-semibold text-foreground"
+            >
               {title}
             </h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">{description}</p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              {description}
+            </p>
           </div>
         </div>
         <div className="mt-5 flex justify-end gap-2">
-          <Button variant="ghost" size="sm" onClick={onCancel}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-border"
+            onClick={onCancel}
+          >
             {cancelLabel}
           </Button>
           <Button
@@ -78,7 +91,7 @@ export function ConfirmDialog({
             onClick={onConfirm}
             className={cn(
               variant === "danger"
-                ? "bg-red-600 text-white hover:bg-red-500"
+                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 : "bg-amber-600 text-white hover:bg-amber-500"
             )}
           >

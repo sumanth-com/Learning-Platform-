@@ -3,6 +3,7 @@ export {
   signupAction,
   forgotPasswordAction,
   resetPasswordAction,
+  changePasswordAction,
   resendConfirmationAction,
   logoutAction,
   getCurrentUser,

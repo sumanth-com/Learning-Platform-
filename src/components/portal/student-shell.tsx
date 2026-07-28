@@ -68,7 +68,7 @@ function StudentShellInner({ data, children }: StudentShellProps) {
   }, [setCollapsed]);
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden bg-background font-sans text-foreground antialiased [&_.font-display]:font-sans">
+    <div className="portal-shell flex h-[100dvh] overflow-hidden bg-background font-sans text-foreground antialiased [&_.font-display]:font-sans">
       <div className="hidden h-full md:block">
         <StudentSidebar mode="desktop" />
       </div>
@@ -98,7 +98,7 @@ function StudentShellInner({ data, children }: StudentShellProps) {
         ) : null}
       </AnimatePresence>
 
-      <div className="flex min-w-0 flex-1 flex-col bg-background">
+      <div className="portal-shell-col flex min-w-0 flex-1 flex-col bg-background">
         <StudentHeader title={title} subtitle={subtitle} user={data.user} />
         <main
           className={cn(

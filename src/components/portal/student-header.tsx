@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, ChevronRight, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { ArrowLeft, ChevronRight, Menu } from "lucide-react";
 import { usePortalShell } from "@/components/portal/portal-shell-context";
 import { usePortalChrome } from "@/components/portal/portal-chrome";
 import { ProfileMenu } from "@/components/portal/profile-menu";
+import { HeaderNotifications } from "@/components/notifications/header-notifications";
 import type { PortalUser } from "@/features/portal/types";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +22,7 @@ function isProjectDetailPath(pathname: string) {
 
 export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
   const pathname = usePathname();
-  const { collapsed, toggleCollapsed, toggleMobile } = usePortalShell();
+  const { toggleMobile } = usePortalShell();
   const { breadcrumbs } = usePortalChrome();
   const showBackToProjects = isProjectDetailPath(pathname);
   const hasBreadcrumbs = Boolean(breadcrumbs && breadcrumbs.length > 0);
@@ -41,25 +42,6 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
           aria-label="Open navigation"
         >
           <Menu className="h-4 w-4" strokeWidth={1.75} />
-        </button>
-
-        <button
-          type="button"
-          className={cn(
-            "hidden h-8 w-8 shrink-0 items-center justify-center rounded-md md:inline-flex",
-            "text-muted-foreground transition-colors",
-            "hover:bg-muted hover:text-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-          )}
-          onClick={toggleCollapsed}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? (
-            <PanelLeftOpen className="h-4 w-4" strokeWidth={1.75} />
-          ) : (
-            <PanelLeftClose className="h-4 w-4" strokeWidth={1.75} />
-          )}
         </button>
 
         {showBackToProjects ? (
@@ -126,7 +108,10 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
           )}
         </div>
 
-        <ProfileMenu name={user.name} role={user.role} />
+        <div className="flex shrink-0 items-center gap-2">
+          <HeaderNotifications />
+          <ProfileMenu name={user.name} role={user.role} />
+        </div>
       </div>
     </header>
   );

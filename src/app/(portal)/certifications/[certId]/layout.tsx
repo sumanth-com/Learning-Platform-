@@ -25,7 +25,7 @@ export default async function CertificationFlowLayout({
     <>
       <PortalChrome title={cert.title} fillViewport />
       <CertSessionProvider certification={cert} profileName={profileName}>
-        <div className="h-full min-h-0 overflow-hidden bg-[#0a0c10]">
+        <div className="h-full min-h-0 overflow-hidden bg-background">
           {children}
         </div>
       </CertSessionProvider>

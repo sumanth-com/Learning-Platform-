@@ -17,6 +17,7 @@ export const PORTAL_ROUTES = {
   resources: "/resources",
   notes: "/notes",
   certifications: "/certifications",
+  notifications: "/notifications",
   profile: AUTH_ROUTES.profile,
   settings: "/settings",
 } as const;
@@ -30,6 +31,7 @@ export type PortalNavId =
   | "resources"
   | "notes"
   | "certifications"
+  | "notifications"
   | "profile"
   | "settings";
 
@@ -92,10 +94,16 @@ export const PORTAL_NAV: PortalNavItem[] = [
       p.startsWith("/communication"),
   },
   {
+    id: "notifications",
+    label: "Notifications",
+    href: PORTAL_ROUTES.notifications,
+    match: (p) => p.startsWith("/notifications"),
+  },
+  {
     id: "profile",
     label: "Profile",
     href: PORTAL_ROUTES.profile,
-    match: (p) => p === "/profile",
+    match: (p) => p === "/profile" || p.startsWith("/profile/"),
   },
   {
     id: "settings",

@@ -64,6 +64,10 @@ import { isInterviewAcademyModule } from "@/features/curriculum/lib/interview-ac
 import { findInterviewAcademyChallenge } from "@/features/curriculum/lib/interview-academy-challenges";
 import { isSystemsAcademyModule } from "@/features/curriculum/lib/systems-academy";
 import { findSystemsAcademyChallenge } from "@/features/curriculum/lib/systems-academy-challenges";
+import {
+  InterviewPrepKitHub,
+  isInterviewPrepKitModule,
+} from "@/components/interview-prep/interview-prep-kit-hub";
 import { prefetchModuleTopic, useModuleHub } from "@/features/curriculum/hooks/use-module-hub";
 import { DIFFICULTY_LABELS, problemTypeLabel } from "@/learning-engine/labels";
 import type { LearnDifficulty } from "@/learning-engine/types";
@@ -385,6 +389,10 @@ export function ModuleTopicExplorer() {
         <div className="h-64 rounded-xl bg-zinc-900/40" />
       </div>
     );
+  }
+
+  if (isInterviewPrepKitModule(detail.module.slug)) {
+    return <InterviewPrepKitHub payload={payload} />;
   }
 
   return <ModuleTopicExplorerInner payload={payload} />;
@@ -710,13 +718,24 @@ function ModuleTopicExplorerInner({
                 suppressHydrationWarning
               >
                 {hydrated
-                  ? `Challenges: ${displayProgress.completed}/${displayProgress.total} · Topics: ${detail.completedCount}/${detail.totalCount}`
+                  ? isInterviewAcademyModule(moduleSlug) ||
+                    isSystemsAcademyModule(moduleSlug)
+                    ? `Drills ready: ${displayProgress.completed}/${displayProgress.total} · Topics: ${detail.completedCount}/${detail.totalCount}`
+                    : `Challenges: ${displayProgress.completed}/${displayProgress.total} · Topics: ${detail.completedCount}/${detail.totalCount}`
                   : "\u00a0"}
               </p>
             </div>
             {detail.module.description ? (
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-400">
                 {detail.module.description}
+              </p>
+            ) : null}
+            {isInterviewAcademyModule(moduleSlug) ||
+            isSystemsAcademyModule(moduleSlug) ? (
+              <p className="mt-3 max-w-2xl rounded-lg border border-emerald-600/30 bg-emerald-500/10 px-3 py-2.5 text-sm leading-relaxed text-zinc-200">
+                Interview Preparation Kit — practice aloud with a checklist.
+                No code editor. Mark complete when you can run the approach
+                cleanly.
               </p>
             ) : null}
           </div>
@@ -1012,7 +1031,14 @@ function ModuleTopicExplorerInner({
                           item.id
                         )}
                       >
-                        {done ? "Solved" : "Solve Challenge"}
+                        {isInterviewAcademyModule(moduleSlug) ||
+                        isSystemsAcademyModule(moduleSlug)
+                          ? done
+                            ? "Practiced"
+                            : "Start drill"
+                          : done
+                            ? "Solved"
+                            : "Solve Challenge"}
                       </Link>
                     </Button>
                   </div>

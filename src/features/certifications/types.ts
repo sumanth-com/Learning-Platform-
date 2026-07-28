@@ -104,6 +104,8 @@ export type AssessmentAttempt = {
   codeLanguages?: Record<string, string>;
   /** Saved drafts keyed by `${questionId}__${language}` */
   codeDrafts?: Record<string, string>;
+  /** Questions the learner marked complete in the lobby */
+  completedQuestionIds?: string[];
 };
 
 export type EarnedCertificate = {

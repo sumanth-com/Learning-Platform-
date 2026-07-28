@@ -3,6 +3,12 @@ import {
   flattenSystemsTopics,
   type SystemsTopicDef,
 } from "@/features/curriculum/lib/systems-academy-curriculum";
+import {
+  buildSystemsPrepDrills,
+  pickPrepDrillKeys,
+  type PrepDrillGuide,
+  type PrepPattern,
+} from "@/features/curriculum/lib/interview-prep-drill-factory";
 
 export type SystemsChallengeKind =
   | "build"
@@ -28,81 +34,12 @@ export type SystemsChallenge = {
   starterJson: string;
   referenceJson: string;
   acceptanceCriteria: string[];
+  prep: PrepDrillGuide;
   lesson: LearnLesson;
   experience: "systems-lab";
   source: "synthetic";
   weekId: number;
 };
-
-type Spec = {
-  key: string;
-  title: string;
-  difficulty: LearnDifficulty;
-  minutes: number;
-  kind: SystemsChallengeKind;
-  scenario: string;
-  task: string;
-  hints: string[];
-  takeaways: string[];
-  starterMarkdown?: string;
-  referenceMarkdown: string;
-  starterJson?: string;
-  referenceJson: string;
-  acceptanceCriteria: string[];
-};
-
-function clip(text: string): string {
-  return text.replace(/\s+/g, " ").trim();
-}
-
-function challengeLimit(weight: number): number {
-  return Math.min(5, Math.max(3, weight));
-}
-
-function blockA(title: string, body: string): string {
-  return "# " + title + "\n\n" + body + "\n";
-}
-
-function blockB(title: string, body: string): string {
-  return body.endsWith("\n") ? body : body + "\n";
-}
-
-function slugToken(topic: SystemsTopicDef): string {
-  const tag = topic.cheatSheet[0]?.tag ?? "demo";
-  return (
-    tag
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 24) || "demo"
-  );
-}
-
-function defaultA(topic: SystemsTopicDef): string {
-  return blockA(topic.title, `## Design notes: ${slugToken(topic)}
-### Requirements
-- Functional:
-- Non-functional:
-
-### High-level
-- Clients -> API -> Service -> Storage
-
-### Deep dive
-- Bottleneck:
-- Trade-offs:
-`);
-}
-
-function defaultB(topic: SystemsTopicDef): string {
-  return blockB(topic.title, `{
-  "topic": "${slugToken(topic)}",
-  "components": ["client", "api", "service", "db", "cache"],
-  "hot_path": "read",
-  "tradeoffs": ["latency", "consistency", "cost"],
-  "deep_dive": "cache-invalidation"
-}
-`);
-}
 
 function buildLesson(
   topicSlug: string,
@@ -136,212 +73,65 @@ function buildLesson(
   };
 }
 
-function specsForTopic(topic: SystemsTopicDef): Spec[] {
-  const specs: Spec[] = [];
-  const push = (spec: Spec) => specs.push(spec);
-  const title = topic.title;
-  const summary = topic.summary ?? title;
-  const explanation = topic.explanation ?? summary;
-  const commonMistakes = topic.commonMistakes ?? [];
-  const bestPractices = topic.bestPractices ?? [];
-  const interviewQuestions = topic.interviewQuestions ?? [];
-  const cheatSheet = topic.cheatSheet ?? [];
-  const primary = cheatSheet[0]?.tag ?? title;
-  const toolList =
-    cheatSheet.length > 0
-      ? cheatSheet.slice(0, 4).map((c) => c.tag).join(", ")
-      : primary;
-  const baseA = defaultA(topic);
-  const baseB = defaultB(topic);
+function talkTrackToMarkdown(title: string, prep: PrepDrillGuide): string {
+  return `# ${title}
 
-  push({
-    key: "concept",
-    title: clip(String(summary).replace(/\.$/, "")),
-    difficulty: "easy",
-    minutes: 8,
-    kind: "build",
-    scenario: String(explanation).split(/(?<=\.)\s+/).slice(0, 2).join(" "),
-    task: `Draft interview-ready references for "${title}". Use ideas from: ${toolList}.`,
-    hints: [
-      "Keep the talk track explicit.",
-      `Focus on ${primary}.`,
-      "Make the second pane concrete and reusable.",
-    ],
-    takeaways: [summary, "Clear structure beats improvisation under pressure"],
-    referenceMarkdown: baseA,
-    referenceJson: baseB,
-    acceptanceCriteria: [
-      "Demonstrates the topic idea",
-      "Both panes work together",
-      "Safe for a learning environment",
-    ],
-  });
+## Briefing
+${prep.briefing}
 
-  push({
-    key: "build",
-    title: cheatSheet[0] ? `Practice ${cheatSheet[0].tag}` : `Practice ${clip(title)}`,
-    difficulty: "easy",
-    minutes: 10,
-    kind: "build",
-    scenario: `Practice the core tools for "${title}": ${toolList}.`,
-    task: `Produce practical references using ${toolList}. Prefer clarity over cleverness.`,
-    hints: cheatSheet.slice(0, 3).map((c) => `Use ${c.tag}: ${c.desc}`).concat(["Keep it short enough to review in one pass."]),
-    takeaways: bestPractices.slice(0, 2),
-    referenceMarkdown: baseA,
-    referenceJson: baseB,
-    acceptanceCriteria: [
-      "Uses the topic's core concepts",
-      "Readable structure",
-      "Useful under interview pressure",
-    ],
-  });
+## Prompts
+${prep.prompts.map((p, i) => `${i + 1}. ${p}`).join("\n")}
 
-  push({
-    key: "fix",
-    title: `Fix a weak ${clip(title)} answer`,
-    difficulty: "medium",
-    minutes: 12,
-    kind: "fix",
-    scenario: `A candidate's "${title}" answer is fragile. Common mistakes include: ${commonMistakes.slice(0, 2).join("; ") || "vague structure and missing trade-offs"}.`,
-    task: `Repair the references so they follow stronger practices for ${title}.`,
-    hints: [
-      commonMistakes[0] || "Make the structure explicit",
-      bestPractices[0] || "Add concrete examples",
-      `Re-check ${primary}`,
-    ],
-    takeaways: [
-      commonMistakes[0] || "Avoid vague answers",
-      bestPractices[0] || "Prefer structured communication",
-    ],
-    referenceMarkdown: baseA,
-    referenceJson: baseB,
-    acceptanceCriteria: [
-      "Identifies the failure mode",
-      "Applies at least one best practice",
-      "Leaves a stronger reference than before",
-    ],
-  });
-
-  push({
-    key: "practice",
-    title: `Practice ${clip(title)}`,
-    difficulty: "medium",
-    minutes: 12,
-    kind: "layout",
-    scenario: `Prepare a reusable interview reference for "${title}" using: ${toolList}.`,
-    task: `Create a clean reference you could reuse in a mock interview, including checkpoints.`,
-    hints: [
-      "Keep steps checkable",
-      `Highlight ${primary}`,
-      bestPractices[1] || "Include a recovery move if you get stuck",
-    ],
-    takeaways: bestPractices.slice(0, 2),
-    referenceMarkdown: baseA,
-    referenceJson: baseB,
-    acceptanceCriteria: [
-      "Includes checkpoints",
-      "Uses topic terminology correctly",
-      "Suitable as a personal interview sheet",
-    ],
-  });
-
-  const hardKey = topic.challengeWeight >= 5 ? "project" : "interview";
-  if (hardKey === "interview") {
-    push({
-      key: "interview",
-      title: `Interview: ${clip(title)}`,
-      difficulty: "hard",
-      minutes: 15,
-      kind: "interview",
-      scenario: interviewQuestions[0]
-        ? `Interview prompt: ${interviewQuestions[0]}`
-        : `Explain "${title}" as you would in a staffing interview.`,
-      task: `Answer with concrete artifacts. Cover trade-offs for ${title}.`,
-      hints: [
-        interviewQuestions[1] || "Compare alternatives",
-        interviewQuestions[2] || "Describe how you verify success",
-        bestPractices[0] || "Mention failure modes",
-      ],
-      takeaways: [summary, bestPractices[0] || "Structure beats improvisation"],
-      referenceMarkdown: baseA,
-      referenceJson: baseB,
-      acceptanceCriteria: [
-        "Answers the interview angle",
-        "Includes a concrete example",
-        "Mentions at least one risk or trade-off",
-      ],
-    });
-  } else {
-    push({
-      key: "project",
-      title: `Mini project: ${clip(title)}`,
-      difficulty: "hard",
-      minutes: 18,
-      kind: "project",
-      scenario: `Build a complete interview-ready pack for "${title}" using ${toolList}.`,
-      task: `Produce polished references with structure, examples, and a recovery plan.`,
-      hints: [
-        bestPractices[0] || "Make structure explicit",
-        bestPractices[1] || "Add a worked example",
-        commonMistakes[0] || "Avoid vague ownership of the answer",
-      ],
-      takeaways: bestPractices.slice(0, 3),
-      referenceMarkdown: baseA,
-      referenceJson: baseB,
-      acceptanceCriteria: [
-        "Looks like a real interview sheet",
-        "Includes an example",
-        "Includes a recovery note",
-      ],
-    });
-  }
-
-  const unique = [];
-  const seen = new Set();
-  for (const spec of specs) {
-    if (seen.has(spec.key)) continue;
-    seen.add(spec.key);
-    unique.push(spec);
-  }
-  return pickBalancedSpecs(unique, challengeLimit(topic.challengeWeight));
+## Talk track
+${prep.talkTrack}
+`;
 }
 
-function pickBalancedSpecs(specs: Spec[], limit: number): Spec[] {
-  const byKey = new Map(specs.map((s) => [s.key, s]));
-  const prefer = (...keys: string[]) =>
-    keys.map((k) => byKey.get(k)).filter((s): s is Spec => Boolean(s));
-  const hardPreferred = [...prefer("project"), ...prefer("interview")];
-  let ladder: Spec[];
-  if (limit <= 3) {
-    ladder = hardPreferred.length
-      ? [...prefer("concept", "fix"), hardPreferred[0]!]
-      : prefer("concept", "build", "fix");
-  } else if (limit === 4) {
-    ladder = [
-      ...prefer("concept", "build", "fix"),
-      ...(hardPreferred[0] ? [hardPreferred[0]] : prefer("practice")),
-    ];
-  } else {
-    ladder = [
-      ...prefer("concept", "build", "fix", "practice"),
-      ...(hardPreferred[0] ? [hardPreferred[0]] : []),
-    ];
-  }
-  const seen = new Set<string>();
-  const out: Spec[] = [];
-  for (const spec of ladder) {
-    if (seen.has(spec.key)) continue;
-    seen.add(spec.key);
-    out.push(spec);
-    if (out.length >= limit) break;
-  }
-  return out.slice(0, limit);
+function patternsToJson(title: string, patterns: PrepPattern[], prep: PrepDrillGuide): string {
+  return `${JSON.stringify(
+    {
+      title,
+      patterns,
+      dos: prep.dos,
+      donts: prep.donts,
+      talkTrack: prep.talkTrack,
+    },
+    null,
+    2
+  )}\n`;
 }
 
-function buildChallenge(topicSlug: string, spec: Spec): SystemsChallenge {
+function specsForTopic(topic: SystemsTopicDef) {
+  const drills = buildSystemsPrepDrills(topic);
+  const keys = pickPrepDrillKeys(
+    topic.challengeWeight,
+    topic.challengeWeight >= 5
+  );
+  return keys.map((key) => {
+    const d = drills[key];
+    return {
+      key,
+      title: d.title,
+      difficulty: d.difficulty,
+      minutes: d.minutes,
+      kind: d.kind,
+      scenario: d.scenario,
+      task: d.task,
+      hints: d.hints,
+      takeaways: d.takeaways,
+      acceptanceCriteria: d.acceptanceCriteria,
+      referenceMarkdown: talkTrackToMarkdown(d.title, d.prep),
+      referenceJson: patternsToJson(d.title, d.prep.patterns, d.prep),
+      prep: d.prep,
+    };
+  });
+}
+
+function buildChallenge(
+  topicSlug: string,
+  spec: ReturnType<typeof specsForTopic>[number]
+): SystemsChallenge {
   const id = `systems-${topicSlug}-${spec.key}`;
-  const starterMarkdown = spec.starterMarkdown ?? spec.referenceMarkdown;
-  const starterJson = spec.starterJson ?? `{\n  "todo": true\n}\n`;
   const lesson = buildLesson(
     topicSlug,
     id,
@@ -364,11 +154,12 @@ function buildChallenge(topicSlug: string, spec: Spec): SystemsChallenge {
     task: spec.task,
     hints: spec.hints,
     takeaways: spec.takeaways,
-    starterMarkdown,
+    starterMarkdown: spec.referenceMarkdown,
     referenceMarkdown: spec.referenceMarkdown,
-    starterJson,
+    starterJson: spec.referenceJson,
     referenceJson: spec.referenceJson,
     acceptanceCriteria: spec.acceptanceCriteria,
+    prep: spec.prep,
     lesson,
     experience: "systems-lab",
     source: "synthetic",

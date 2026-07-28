@@ -3,6 +3,7 @@ import {
   flattenAuthTopics,
   type AuthTopicDef,
 } from "@/features/curriculum/lib/auth-academy-curriculum";
+import { hardAuthBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type AuthChallengeKind =
   | "build"
@@ -272,36 +273,26 @@ function specsForTopic(topic: AuthTopicDef): Spec[] {
 
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardAuthBundle(title, interviewQ);
     push({
       key: "interview",
       title: clip(
         interviewQ.endsWith("?") ? interviewQ : `Interview: ${interviewQ}`
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with HTTP auth examples and a fetch client. Add JS comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in the JS client",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Distinguish 401 (authn) from 403 (authz)",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ)],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
       referenceHttp: httpExchange(
         `Interview - ${title}`,
-        `GET /api/interview HTTP/1.1\nHost: api.example.com\nAuthorization: Bearer eyJhbGciOiJIUzI1NiJ9...\nAccept: application/json\n`,
-        `HTTP/1.1 200 OK\nContent-Type: application/json\n\n{"answer": ${JSON.stringify(clip(summary))}}\n`
+        `POST /auth/login HTTP/1.1\nHost: api.example.com\nContent-Type: application/json\nX-CSRF-Token: csrf_xyz\n\n{"email":"dev@acme.test","password":"••••••••"}\n`,
+        `HTTP/1.1 204 No Content\nSet-Cookie: sessionId=sess_abc; HttpOnly; Secure; SameSite=Lax; Path=/\n`
       ),
-      referenceJs: defaultJs(
-        title,
-        `// Answering: ${interviewQ}\n// JWT payload is signed, not encrypted\nasync function answer(token) {\n  const res = await fetch("https://api.example.com/interview", {\n    headers: {\n      Authorization: \`Bearer \${token}\`,\n      Accept: "application/json",\n    },\n  });\n  const data = await res.json();\n  console.log(data.answer);\n  return data.answer;\n}\n\nanswer("token").catch(console.error);\n`
-      ),
-      acceptanceCriteria: [
-        "JS comments explain the answer",
-        "Working HTTP + fetch client pair",
-        "Tied to the interview question",
-      ],
+      referenceJs: hard.referenceJs,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

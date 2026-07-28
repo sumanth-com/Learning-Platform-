@@ -32,6 +32,8 @@ import {
   formatCooldown,
   msUntilRetry,
 } from "@/features/certifications/lib/retry-cooldown";
+import { notifyCertificationPassed } from "@/lib/notifications";
+import { PORTAL_ROUTES } from "@/features/portal/types";
 import {
   draftKey,
   isEditorLanguage,
@@ -48,6 +50,8 @@ type CertSessionValue = {
   codeLanguages: Record<string, string>;
   codeDrafts: Record<string, string>;
   setQuestionLanguage: (questionId: string, language: string) => void;
+  completedQuestionIds: string[];
+  markQuestionComplete: (questionId: string) => void;
   remaining: number;
   confirmedName: string;
   setConfirmedName: (name: string) => void;
@@ -106,6 +110,9 @@ export function CertSessionProvider({
   const [codeDrafts, setCodeDrafts] = useState<Record<string, string>>(
     () => existing?.codeDrafts ?? {}
   );
+  const [completedQuestionIds, setCompletedQuestionIds] = useState<string[]>(
+    () => existing?.completedQuestionIds ?? []
+  );
   const [timerEndsAt, setTimerEndsAt] = useState<number | null>(
     () => existing?.timerEndsAt ?? null
   );
@@ -144,6 +151,7 @@ export function CertSessionProvider({
     agreeTerms,
     codeLanguages,
     codeDrafts,
+    completedQuestionIds,
   });
   snap.current = {
     answers,
@@ -154,6 +162,7 @@ export function CertSessionProvider({
     agreeTerms,
     codeLanguages,
     codeDrafts,
+    completedQuestionIds,
   };
 
   const saveAttemptRef = useRef(saveAttempt);
@@ -177,6 +186,7 @@ export function CertSessionProvider({
         agreeTerms: s.agreeTerms,
         codeLanguages: s.codeLanguages,
         codeDrafts: s.codeDrafts,
+        completedQuestionIds: s.completedQuestionIds,
         lastPath: current?.lastPath,
         score: current?.score,
         correctCount: current?.correctCount,
@@ -204,6 +214,7 @@ export function CertSessionProvider({
     setAgreeTermsState(attempt.agreeTerms ?? false);
     setCodeLanguages(attempt.codeLanguages ?? {});
     setCodeDrafts(attempt.codeDrafts ?? {});
+    setCompletedQuestionIds(attempt.completedQuestionIds ?? []);
     if (attempt.timerEndsAt) {
       setTimerEndsAt(attempt.timerEndsAt);
       setRemaining(
@@ -298,6 +309,19 @@ export function CertSessionProvider({
     [certification.questions, writeAttempt]
   );
 
+  const markQuestionComplete = useCallback(
+    (questionId: string) => {
+      setCompletedQuestionIds((prev) => {
+        if (prev.includes(questionId)) return prev;
+        const next = [...prev, questionId];
+        snap.current.completedQuestionIds = next;
+        writeAttempt({ completedQuestionIds: next });
+        return next;
+      });
+    },
+    [writeAttempt]
+  );
+
   const setConfirmedName = useCallback(
     (name: string) => {
       setConfirmedNameState(name);
@@ -379,10 +403,19 @@ export function CertSessionProvider({
     });
     toast[passed ? "success" : "message"](
       passed
-        ? "You passed the certification test"
-        : `Not this time — you can retest after ${CERT_RETRY_COOLDOWN_HOURS} hours`
+        ? `Passed · ${avg}% — marked Done on Certifications`
+        : `Scored ${avg}% — retest unlocks in ${CERT_RETRY_COOLDOWN_HOURS} hours`
     );
-    router.push(CERT_FLOW.results(certification.id));
+    if (passed) {
+      notifyCertificationPassed({
+        certificationId: certification.id,
+        title: certification.shortTitle,
+        score: avg,
+      });
+    }
+    router.push(
+      `${PORTAL_ROUTES.certifications}?done=${encodeURIComponent(certification.id)}`
+    );
   }, [certification, router, writeAttempt]);
 
   const beginRetest = useCallback(() => {
@@ -397,6 +430,7 @@ export function CertSessionProvider({
     setAnswers({});
     setCodeLanguages({});
     setCodeDrafts({});
+    setCompletedQuestionIds([]);
     setTimerEndsAt(null);
     setRemaining(certification.durationMinutes * 60);
     setResult(null);
@@ -405,12 +439,13 @@ export function CertSessionProvider({
     snap.current.answers = {};
     snap.current.codeLanguages = {};
     snap.current.codeDrafts = {};
+    snap.current.completedQuestionIds = [];
     snap.current.timerEndsAt = null;
     snap.current.remaining = certification.durationMinutes * 60;
     snap.current.agreeHonor = false;
     snap.current.agreeTerms = false;
-    toast.message("Retest unlocked — good luck");
-    router.push(CERT_FLOW.brief(certification.id));
+    toast.message("Ready when you are — Get Certified");
+    router.push(CERT_FLOW.root(certification.id));
   }, [certification.durationMinutes, certification.id, clearAttempt, router]);
 
   const finishTestRef = useRef(finishTest);
@@ -433,14 +468,25 @@ export function CertSessionProvider({
 
   const awardAndShowCertificate = useCallback(
     (name: string) => {
-      if (!result) return;
+      if (earned) {
+        router.push(CERT_FLOW.certificate(certification.id));
+        return;
+      }
+
+      const score =
+        result?.score ?? getAttemptRef.current(certification.id)?.score;
+      if (score == null) {
+        toast.message("Complete the assessment before generating a certificate");
+        return;
+      }
+
       const id = createCertificateId();
       const cert: EarnedCertificate = {
         id,
         certificationId: certification.id,
         recipientName: name,
         issuedAt: new Date().toISOString(),
-        score: result.score,
+        score,
         level: certification.level,
         technology: certification.categoryLabel,
         title: certification.title,
@@ -448,9 +494,19 @@ export function CertSessionProvider({
       };
       awardCertificate(cert, certification.xp, certification.shortTitle);
       setEarned(cert);
+      setConfirmedNameState(name);
+      snap.current.confirmedName = name;
+      writeAttempt({ confirmedName: name, status: "passed", score });
       router.push(CERT_FLOW.certificate(certification.id));
     },
-    [awardCertificate, certification, result, router]
+    [
+      awardCertificate,
+      certification,
+      earned,
+      result,
+      router,
+      writeAttempt,
+    ]
   );
 
   const value = useMemo<CertSessionValue>(
@@ -463,6 +519,8 @@ export function CertSessionProvider({
       codeLanguages,
       codeDrafts,
       setQuestionLanguage,
+      completedQuestionIds,
+      markQuestionComplete,
       remaining,
       confirmedName,
       setConfirmedName,
@@ -494,6 +552,7 @@ export function CertSessionProvider({
       certification,
       codeLanguages,
       codeDrafts,
+      completedQuestionIds,
       confirmedName,
       cooldownMs,
       earned,
@@ -501,6 +560,7 @@ export function CertSessionProvider({
       finishTest,
       locked,
       lockedReason,
+      markQuestionComplete,
       persistPath,
       profileName,
       ready,

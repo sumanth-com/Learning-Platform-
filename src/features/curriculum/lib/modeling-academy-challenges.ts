@@ -3,6 +3,7 @@ import {
   flattenModelingTopics,
   type ModelingTopicDef,
 } from "@/features/curriculum/lib/modeling-academy-curriculum";
+import { hardModelingBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type ModelingChallengeKind =
   | "build"
@@ -348,38 +349,22 @@ VALUES (${JSON.stringify(clip(practice))});`
 
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardModelingBundle(title, interviewQ);
     push({
       key: "interview",
       title: clip(
         interviewQ.endsWith("?") ? interviewQ : `Interview: ${interviewQ}`
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with ER notes and DDL. Add SQL comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in the DDL pane",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Show cardinality and keys that matter",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ)],
-      referenceSchema: baseEr,
-      referenceSql: ddlBlock(
-        `Interview - ${title}`,
-        `-- Answering: ${interviewQ}
-CREATE TABLE ${entityNameFromTopic(topic)} (
-  id SERIAL PRIMARY KEY,
-  label TEXT NOT NULL
-);
-
--- Model stays small but documents the core idea for ${clip(title)}.`
-      ),
-      acceptanceCriteria: [
-        "SQL comments explain the answer",
-        "Working ER notes and DDL pair",
-        "Tied to the interview question",
-      ],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
+      referenceSchema: hard.referenceSchema,
+      referenceSql: hard.referenceSql,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

@@ -3,6 +3,7 @@ import {
   flattenCssTopics,
   type CssTopicDef,
 } from "@/features/curriculum/lib/css-academy-curriculum";
+import { hardCssBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type CssChallengeKind =
   | "build"
@@ -137,6 +138,109 @@ ${props}
 `;
 }
 
+/** Map cheat-sheet CSS tags to real declarations for unique, valid demos. */
+function cssDeclsFromTags(tags: string[]): string {
+  const lines: string[] = [];
+  for (const raw of tags.slice(0, 5)) {
+    const tag = raw.replace(/[;{}]/g, "").trim().toLowerCase();
+    if (!tag) continue;
+    if (tag.includes("flex") && !tag.includes("grid")) {
+      lines.push("  display: flex;", "  gap: 0.75rem;", "  align-items: center;");
+      continue;
+    }
+    if (tag.includes("grid")) {
+      lines.push(
+        "  display: grid;",
+        "  grid-template-columns: repeat(2, minmax(0, 1fr));",
+        "  gap: 1rem;"
+      );
+      continue;
+    }
+    if (tag.startsWith(":") || tag.includes("pseudo")) {
+      lines.push("  /* use :hover / ::before on interactive elements */");
+      continue;
+    }
+    if (tag.includes("media") || tag.includes("@media")) {
+      lines.push("/* see @media block below */");
+      continue;
+    }
+    if (tag.includes("var(") || tag.includes("--") || tag.includes("variable")) {
+      lines.push("  color: var(--brand, #0f766e);");
+      continue;
+    }
+    if (tag.includes("color") || tag.includes("background")) {
+      lines.push("  color: #0f172a;", "  background-color: #f8fafc;");
+      continue;
+    }
+    if (tag.includes("font") || tag.includes("text") || tag.includes("line-height")) {
+      lines.push("  font-size: 1.125rem;", "  line-height: 1.6;", "  font-weight: 600;");
+      continue;
+    }
+    if (tag.includes("margin") || tag.includes("padding") || tag.includes("box")) {
+      lines.push("  margin: 0;", "  padding: 1rem;", "  box-sizing: border-box;");
+      continue;
+    }
+    if (tag.includes("border") || tag.includes("radius") || tag.includes("shadow")) {
+      lines.push(
+        "  border: 1px solid #e4e4e7;",
+        "  border-radius: 0.75rem;",
+        "  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);"
+      );
+      continue;
+    }
+    if (tag.includes("position") || tag.includes("z-index") || tag.includes("top")) {
+      lines.push("  position: relative;", "  z-index: 1;");
+      continue;
+    }
+    if (tag.includes("width") || tag.includes("height") || tag.includes("max-width") || tag.includes("%") || tag.includes("rem") || tag.includes("em") || tag.includes("vh")) {
+      lines.push("  max-width: 40rem;", "  width: 100%;");
+      continue;
+    }
+    if (tag.includes("overflow")) {
+      lines.push("  overflow: auto;");
+      continue;
+    }
+    if (tag.includes("transition") || tag.includes("transform")) {
+      lines.push("  transition: transform 160ms ease;", "  transform: translateY(0);");
+      continue;
+    }
+    if (tag.includes("display")) {
+      lines.push("  display: block;");
+      continue;
+    }
+    // Generic property:tag form like "color: red" already
+    if (tag.includes(":")) {
+      lines.push(`  ${raw.trim().replace(/;$/, "")};`);
+    } else {
+      lines.push(`  /* practice: ${raw.trim()} */`);
+    }
+  }
+
+  const unique = [...new Set(lines)];
+  if (unique.length === 0) {
+    return "  color: #0f172a;\n  padding: 1rem;";
+  }
+  return unique.join("\n");
+}
+
+function topicCssBlock(title: string, cheatSheet: Array<{ tag: string; desc: string }>, mode: string): string {
+  const tags = cheatSheet.map((c) => c.tag);
+  const decls = cssDeclsFromTags(tags);
+  const media =
+    tags.some((t) => /media|responsive/i.test(t)) || mode === "responsive"
+      ? `\n@media (min-width: 640px) {\n  .page {\n    padding: 2rem;\n  }\n}\n`
+      : "";
+  const vars =
+    tags.some((t) => /var|--|variable/i.test(t))
+      ? `:root {\n  --brand: #0f766e;\n  --ink: #0f172a;\n}\n\n`
+      : "";
+
+  return defaultCss(
+    title,
+    `${vars}.demo {\n${decls}\n}\n\n.title {\n  color: #0f172a;\n  font-size: 1.75rem;\n}\n\n.lead {\n  max-width: 36rem;\n}\n${media}`
+  );
+}
+
 function specsForTopic(topic: CssTopicDef): Spec[] {
   const specs: Spec[] = [];
   const push = (spec: Spec) => specs.push(spec);
@@ -178,10 +282,7 @@ function specsForTopic(topic: CssTopicDef): Spec[] {
       title,
       `<h1 class="title">${title}</h1>\n    <p class="lead">${clip(summary, 110)}</p>`
     ),
-    referenceCss: defaultCss(
-      title,
-      `.title {\n  color: #0f172a;\n  font-size: 1.75rem;\n}\n\n.lead {\n  max-width: 36rem;\n}\n`
-    ),
+    referenceCss: topicCssBlock(title, cheatSheet, "concept"),
     acceptanceCriteria: [
       "HTML remains semantic",
       "CSS demonstrates the topic idea",
@@ -213,10 +314,7 @@ function specsForTopic(topic: CssTopicDef): Spec[] {
       title,
       `<h1 class="title">${title}</h1>\n    <p class="lead">${clip(summary, 100)}</p>\n    <div class="demo">Demo surface</div>`
     ),
-    referenceCss: defaultCss(
-      title,
-      `.demo {\n  margin-top: 1rem;\n  padding: 1rem;\n  border-radius: 0.75rem;\n  background: #f4f4f5;\n  border: 1px solid #e4e4e7;\n}\n\n/* Focus: ${propsList} */\n`
-    ),
+    referenceCss: topicCssBlock(title, cheatSheet, "build"),
     acceptanceCriteria: [
       "Uses the topic’s key properties",
       "Selectors target classes cleanly",
@@ -246,12 +344,9 @@ function specsForTopic(topic: CssTopicDef): Spec[] {
       ],
       referenceHtml: htmlPage(
         `${title} — fixed`,
-        `<h1 class="title">${title}</h1>\n    <p class="lead">Correct approach: avoid “${clip(mistake, 70)}”.</p>`
+        `<h1 class="title">${title}</h1>\n    <p class="lead">Correct approach: avoid “${clip(mistake, 70)}”.</p>\n    <div class="demo">Fixed surface</div>`
       ),
-      referenceCss: defaultCss(
-        title,
-        `.title {\n  font-size: 1.5rem;\n  font-weight: 650;\n}\n\n.lead {\n  color: #3f3f46;\n}\n`
-      ),
+      referenceCss: topicCssBlock(title, cheatSheet, "fix"),
       acceptanceCriteria: [
         "Mistake addressed",
         "Class-based selectors",
@@ -295,9 +390,10 @@ function specsForTopic(topic: CssTopicDef): Spec[] {
     });
   }
 
-  // 5) Interview
+  // 5) Interview — industry depth
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardCssBundle(title, interviewQ);
     push({
       key: "interview",
       title: clip(
@@ -305,29 +401,15 @@ function specsForTopic(topic: CssTopicDef): Spec[] {
         64
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with a small HTML + CSS example. Add CSS comments that explain your reasoning.`,
-      hints: [
-        "Comment the why in CSS",
-        interviewQuestions[1] ?? "Keep the example tiny",
-        "Prefer modern layout primitives",
-      ],
-      takeaways: ["Explain why, not only what", clip(interviewQ, 80)],
-      referenceHtml: htmlPage(
-        `Interview — ${title}`,
-        `<h1 class="title">${title}</h1>\n    <p class="lead">${clip(summary, 100)}</p>`
-      ),
-      referenceCss: defaultCss(
-        title,
-        `/* Answering: ${interviewQ} */\n.title {\n  letter-spacing: -0.02em;\n}\n`
-      ),
-      acceptanceCriteria: [
-        "CSS comments explain the answer",
-        "Working HTML + CSS pair",
-        "Tied to the interview question",
-      ],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      takeaways: hard.takeaways,
+      referenceHtml: hard.referenceHtml,
+      referenceCss: hard.referenceCss,
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 

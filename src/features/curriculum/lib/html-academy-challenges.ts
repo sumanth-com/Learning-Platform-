@@ -3,6 +3,7 @@ import {
   flattenHtmlTopics,
   type HtmlTopicDef,
 } from "@/features/curriculum/lib/html-academy-curriculum";
+import { hardHtmlBundle } from "@/features/curriculum/lib/hard-challenge-blueprints";
 
 export type HtmlChallengeKind =
   | "build"
@@ -109,8 +110,171 @@ function shellWith(
   );
 }
 
-function clip(text: string, _max = 56): string {
-  return text.replace(/\s+/g, " ").trim();
+function tagName(tag: string): string {
+  return tag.replace(/[<>/]/g, "").trim().toLowerCase();
+}
+
+/** Real markup for a topic tag — never comments-only placeholders. */
+function snippetForTag(tag: string, title: string, summary: string): string | null {
+  const name = tagName(tag);
+  if (
+    !name ||
+    name === "!doctype html" ||
+    name === "doctype" ||
+    name === "html" ||
+    name === "head" ||
+    name === "body" ||
+    name === "meta" ||
+    name === "title" ||
+    name === "link" ||
+    name === "script" ||
+    name === "style"
+  ) {
+    return null;
+  }
+
+  switch (name) {
+    case "main":
+      return null;
+    case "header":
+      return `<header>\n      <p>${title}</p>\n    </header>`;
+    case "footer":
+      return `<footer>\n      <p>© SupraBase · ${title}</p>\n    </footer>`;
+    case "nav":
+      return `<nav aria-label="Primary">\n      <a href="/">Home</a>\n      <a href="/learn">${title}</a>\n    </nav>`;
+    case "section":
+      return `<section>\n      <h2>Overview</h2>\n      <p>${clip(summary, 100)}</p>\n    </section>`;
+    case "article":
+      return `<article>\n      <h2>${title}</h2>\n      <p>${clip(summary, 100)}</p>\n    </article>`;
+    case "aside":
+      return `<aside>\n      <h2>Tip</h2>\n      <p>Keep markup semantic for ${title}.</p>\n    </aside>`;
+    case "h1":
+      return `<h1>${title}</h1>`;
+    case "h2":
+      return `<h2>Key idea</h2>`;
+    case "h3":
+      return `<h3>Details</h3>`;
+    case "p":
+      return `<p>${clip(summary, 120)}</p>`;
+    case "a":
+      return `<p>Read the <a href="/docs/${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}">${title} guide</a>.</p>`;
+    case "img":
+      return `<img src="/images/demo.svg" alt="Illustration for ${title}" width="320" height="180" />`;
+    case "figure":
+      return `<figure>\n      <img src="/images/demo.svg" alt="Figure for ${title}" width="320" height="180" />\n      <figcaption>${title} example</figcaption>\n    </figure>`;
+    case "picture":
+      return `<picture>\n      <source srcset="/images/demo-wide.svg" media="(min-width: 640px)" />\n      <img src="/images/demo.svg" alt="${title} responsive image" />\n    </picture>`;
+    case "ul":
+      return `<ul>\n      <li>${title} basics</li>\n      <li>Clear structure</li>\n      <li>Accessible markup</li>\n    </ul>`;
+    case "ol":
+      return `<ol>\n      <li>Read the requirement</li>\n      <li>Write valid HTML</li>\n      <li>Check landmarks</li>\n    </ol>`;
+    case "li":
+      return `<ul>\n      <li>${clip(summary, 60)}</li>\n    </ul>`;
+    case "dl":
+      return `<dl>\n      <dt>${title}</dt>\n      <dd>${clip(summary, 90)}</dd>\n    </dl>`;
+    case "table":
+      return `<table>\n      <caption>${title}</caption>\n      <thead><tr><th scope="col">Item</th><th scope="col">Notes</th></tr></thead>\n      <tbody><tr><td>Example</td><td>${clip(summary, 40)}</td></tr></tbody>\n    </table>`;
+    case "form":
+      return `<form action="/submit" method="post">\n      <label for="q">Question</label>\n      <input id="q" name="q" type="text" required />\n      <button type="submit">Send</button>\n    </form>`;
+    case "label":
+      return `<label for="topic-note">Note about ${title}</label>\n    <input id="topic-note" name="note" type="text" />`;
+    case "input":
+      return `<label for="email">Email</label>\n    <input id="email" name="email" type="email" required />`;
+    case "button":
+      return `<button type="button">Continue with ${title}</button>`;
+    case "textarea":
+      return `<label for="bio">Bio</label>\n    <textarea id="bio" name="bio" rows="3"></textarea>`;
+    case "select":
+      return `<label for="level">Level</label>\n    <select id="level" name="level">\n      <option value="easy">Easy</option>\n      <option value="medium">Medium</option>\n    </select>`;
+    case "details":
+      return `<details>\n      <summary>${title}</summary>\n      <p>${clip(summary, 100)}</p>\n    </details>`;
+    case "blockquote":
+      return `<blockquote>\n      <p>${clip(summary, 100)}</p>\n    </blockquote>`;
+    case "pre":
+    case "code":
+      return `<pre><code>&lt;${title.split(" ")[0]?.toLowerCase() ?? "tag"}&gt;</code></pre>`;
+    case "video":
+      return `<video controls width="480">\n      <source src="/media/demo.mp4" type="video/mp4" />\n      Your browser does not support video.\n    </video>`;
+    case "audio":
+      return `<audio controls>\n      <source src="/media/demo.mp3" type="audio/mpeg" />\n    </audio>`;
+    case "iframe":
+      return `<iframe title="${title} embed" src="/embed/demo" width="480" height="270" loading="lazy"></iframe>`;
+    case "dialog":
+      return `<dialog open>\n      <p>${title}</p>\n      <form method="dialog"><button>Close</button></form>\n    </dialog>`;
+    default:
+      return `<p data-topic="${name}">${title}: ${clip(summary, 80)}</p>`;
+  }
+}
+
+function bodyFromTopicTags(
+  title: string,
+  summary: string,
+  tags: string[],
+  mode: "concept" | "build" | "fix" | "practice" | "a11y" | "seo" | "interview"
+): string {
+  const parts: string[] = [];
+  const used = new Set<string>();
+
+  const ensureH1 = () => {
+    if (!used.has("h1")) {
+      parts.push(`<h1>${title}</h1>`);
+      used.add("h1");
+    }
+  };
+
+  if (mode === "concept") {
+    ensureH1();
+    parts.push(`<p>${clip(summary, 140)}</p>`);
+    used.add("p");
+  }
+
+  for (const tag of tags.slice(0, mode === "build" ? 5 : 3)) {
+    const name = tagName(tag);
+    if (!name || used.has(name)) continue;
+    const snip = snippetForTag(tag, title, summary);
+    if (!snip) continue;
+    parts.push(snip);
+    used.add(name);
+  }
+
+  if (mode === "fix" || mode === "practice") {
+    ensureH1();
+    if (!used.has("p")) {
+      parts.push(`<p>${clip(summary, 120)}</p>`);
+    }
+  }
+
+  if (mode === "a11y") {
+    ensureH1();
+    parts.push(`<p>${clip(summary, 100)}</p>`);
+  }
+
+  if (mode === "seo") {
+    ensureH1();
+    parts.push(`<p>${clip(summary, 100)}</p>`);
+    parts.push(
+      `<p>Learn more in the <a href="/learn/${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}">${title} docs</a>.</p>`
+    );
+  }
+
+  if (mode === "interview") {
+    ensureH1();
+    parts.push(`<!-- Interview sketch for ${title} -->`);
+    parts.push(`<p>${clip(summary, 110)}</p>`);
+  }
+
+  if (parts.length === 0) {
+    ensureH1();
+    parts.push(`<p>${clip(summary, 120)}</p>`);
+  }
+
+  return `<main>\n    ${parts.join("\n    ")}\n  </main>`;
+}
+
+function clip(text: string, max = 56): string {
+  const cleaned = text.replace(/\s+/g, " ").trim();
+  if (cleaned.length <= max) return cleaned;
+  return `${cleaned.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
 }
 
 function challengeLimit(weight: number): number {
@@ -157,7 +321,7 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
     ],
     referenceSolution: shellWith(
       title,
-      `<main>\n    <h1>${title}</h1>\n    <p>${clip(summary, 120)}</p>\n  </main>`
+      bodyFromTopicTags(title, summary, primaryTags, "concept")
     ),
     takeaways: [summary, "HTML communicates meaning, not just layout."],
     validateIncludes: ["<!doctype html>", "<h1", "<p", "lang="],
@@ -185,10 +349,7 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
     ].slice(0, 4),
     referenceSolution: shellWith(
       title,
-      `<main>\n    <h1>${title}</h1>\n    <p>${clip(summary, 100)}</p>\n    ${cheatSheet
-        .slice(0, 2)
-        .map((c) => `<!-- ${c.tag}: ${c.desc} -->`)
-        .join("\n    ")}\n  </main>`
+      bodyFromTopicTags(title, summary, primaryTags, "build")
     ),
     takeaways:
       cheatSheet.length > 0
@@ -220,7 +381,12 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
       ],
       referenceSolution: shellWith(
         `${title} — fixed`,
-        `<main>\n    <h1>${title}</h1>\n    <p>Correct approach: avoid “${clip(mistake, 80)}”.</p>\n  </main>`
+        bodyFromTopicTags(
+          title,
+          `Correct approach: avoid “${clip(mistake, 80)}”. ${clip(summary, 60)}`,
+          primaryTags,
+          "fix"
+        )
     ),
     takeaways: [
         `Avoid: ${mistake}`,
@@ -253,7 +419,7 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
       ],
       referenceSolution: shellWith(
         title,
-        `<main>\n    <h1>${title}</h1>\n    <section>\n      <h2>Guideline</h2>\n      <p>${practice}</p>\n    </section>\n  </main>`
+        bodyFromTopicTags(title, practice, primaryTags, "practice")
       ),
       takeaways: [practice, bestPractices[1] ?? "Semantics beat div soup."].filter(
         Boolean
@@ -284,7 +450,7 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
       ],
       referenceSolution: shellWith(
         title,
-        `<main>\n    <h1>${title}</h1>\n    <p>${a11yNotes[0]}</p>\n  </main>`
+        bodyFromTopicTags(title, a11yNotes[0], primaryTags, "a11y")
       ),
       takeaways: [a11yNotes[0], "Accessibility starts with correct HTML"],
       validateIncludes: ["lang=", "<main", "<h1"],
@@ -309,7 +475,7 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
       ],
       referenceSolution: shellWith(
         `${title} | SupraBase`,
-        `<main>\n    <h1>${title}</h1>\n    <p>${seoNotes[0]}</p>\n    <p>Read the <a href="/docs/${slug}">${title} guide</a>.</p>\n  </main>`,
+        bodyFromTopicTags(title, seoNotes[0], primaryTags, "seo"),
         `\n  <meta name="description" content="${clip(summary, 140)}" />`
       ),
       takeaways: [seoNotes[0], "Unique titles + descriptions help discovery"],
@@ -325,6 +491,7 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
   // 7) Interview-style unique prompt
   const interviewQ = interviewQuestions[0];
   if (interviewQ) {
+    const hard = hardHtmlBundle(title, interviewQ, summary);
     push({
       key: "interview",
       title: clip(
@@ -334,29 +501,15 @@ function specsForTopic(topic: HtmlTopicDef): Spec[] {
         64
       ),
       difficulty: "hard",
-      minutes: 12,
+      minutes: hard.minutes,
       kind: "interview",
-      scenario: `Whiteboard warm-up for "${title}". Interviewer asks: ${interviewQ}`,
-      task: `Answer with a tiny HTML sketch plus HTML comments that explain your reasoning. Keep it under ~20 lines.`,
-      hints: [
-        "Comment the why, not only the what",
-        interviewQuestions[1] ?? "Prefer semantic tags",
-        "Stay concrete — one working example",
-      ],
-      referenceSolution: shellWith(
-        `Interview — ${title}`,
-        `<main>\n    <!-- Answering: ${interviewQ} -->\n    <h1>${title}</h1>\n    <p>${clip(summary, 110)}</p>\n  </main>`
-      ),
-      takeaways: [
-        "Explain why, not only what",
-        clip(interviewQ, 80),
-      ],
-      validateIncludes: ["<!--", "<h1", "<p"],
-      acceptanceCriteria: [
-        "Comments explain the answer",
-        "Working HTML example",
-        "Tied to the interview question",
-      ],
+      scenario: hard.scenario,
+      task: hard.task,
+      hints: hard.hints,
+      referenceSolution: hard.referenceSolution,
+      takeaways: hard.takeaways,
+      validateIncludes: ["<!doctype html", "<main", "<form", "lang="],
+      acceptanceCriteria: hard.acceptanceCriteria,
     });
   }
 
@@ -796,9 +949,9 @@ export function htmlAcademyTopicChallengeCount(topicSlug: string): number {
 }
 
 /**
- * Beginner theory lessons use a read-only code reference.
- * Medium / hard / project challenges keep the interactive playground.
+ * All HTML academy challenges use the read-only code reference layout
+ * (question left, code + Copy right). No Run / Show solution.
  */
-export function isHtmlTheoryChallenge(challenge: HtmlChallenge): boolean {
-  return challenge.difficulty === "easy" && challenge.kind !== "project";
+export function isHtmlTheoryChallenge(_challenge: HtmlChallenge): boolean {
+  return true;
 }

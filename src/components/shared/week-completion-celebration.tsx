@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useCelebrationStore } from "@/store/use-celebration-store";
 import { celebrateWeekComplete } from "@/lib/confetti";
 import { playUnlockSound } from "@/lib/game-sounds";
+import { areCelebrationsEnabled } from "@/lib/user-settings";
 import { hasWeekBeenCelebrated, markWeekCelebrated } from "@/lib/week-celebration-storage";
 import { Button } from "@/components/ui/button";
 import { MODULE_LABELS, UNIFIED_WEEK_MODULES } from "@/lib/module-progress";
@@ -186,6 +187,21 @@ export function fireWeekCelebration(payload: {
   if (hasWeekBeenCelebrated(payload.completedWeekId)) return;
 
   markWeekCelebrated(payload.completedWeekId);
+
+  if (!areCelebrationsEnabled()) {
+    if (payload.nextWeekId) {
+      try {
+        sessionStorage.setItem(
+          "module-unlock-celebrate",
+          JSON.stringify({ module: "practice", weekId: payload.nextWeekId })
+        );
+      } catch {
+        /* ignore */
+      }
+    }
+    return;
+  }
+
   celebrateWeekComplete(payload.completedWeekId);
   playUnlockSound();
   useCelebrationStore.getState().showWeekComplete(payload);
