@@ -72,8 +72,8 @@ function cleanText(value: string): string {
 }
 
 function difficultyLabel(d: LearnDifficulty): string {
-  if (d === "easy" || d === "beginner") return "Easy";
-  if (d === "medium" || d === "intermediate") return "Medium";
+  if (d === "easy") return "Easy";
+  if (d === "medium") return "Medium";
   return "Hard";
 }
 

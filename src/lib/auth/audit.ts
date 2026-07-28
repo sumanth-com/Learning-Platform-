@@ -9,6 +9,7 @@ export type AuthAuditEvent =
   | "signup_failed"
   | "password_reset_requested"
   | "password_reset_completed"
+  | "password_changed"
   | "verification_resent"
   | "email_sent"
   | "email_send_failed"

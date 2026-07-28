@@ -53,14 +53,14 @@ type KitSection = {
 };
 
 function difficultyLabel(d: LearnDifficulty): string {
-  if (d === "easy" || d === "beginner") return "Easy";
-  if (d === "medium" || d === "intermediate") return "Medium";
+  if (d === "easy") return "Easy";
+  if (d === "medium") return "Medium";
   return "Hard";
 }
 
 function difficultyTone(d: LearnDifficulty): string {
-  if (d === "easy" || d === "beginner") return "text-emerald-600";
-  if (d === "medium" || d === "intermediate") return "text-amber-600";
+  if (d === "easy") return "text-emerald-600";
+  if (d === "medium") return "text-amber-600";
   return "text-rose-600";
 }
 
