@@ -13,39 +13,15 @@ import { useCertifications } from "@/features/certifications/hooks/use-certifica
 import { CERT_FLOW } from "@/features/certifications/lib/paths";
 import { cn } from "@/lib/utils";
 
-/** Soft collectible-card palettes: playful, readable, and professional. */
+/** One restrained SupraBase credential palette across every certificate. */
 const CARD_TONES = [
   {
-    face: "linear-gradient(145deg, #f0fff9 0%, #dcfced 55%, #c7f3df 100%)",
-    accent: "#16865b",
-    accentSoft: "#b8ecd5",
-    border: "#b7e5d1",
-    orb: "color-mix(in srgb, var(--color-primary) 20%, transparent)",
-    tag: "bg-[#d7f7e8] text-[#126c49]",
-  },
-  {
-    face: "linear-gradient(145deg, #f5f3ff 0%, #e9e5ff 55%, #ddd7ff 100%)",
-    accent: "#6855c7",
-    accentSoft: "#d7d0ff",
-    border: "#d3cbf5",
-    orb: "rgba(124,105,220,0.18)",
-    tag: "bg-[#e5e0ff] text-[#5947b1]",
-  },
-  {
-    face: "linear-gradient(145deg, #fff9ed 0%, #ffefd0 55%, #ffe3b0 100%)",
-    accent: "#a96420",
-    accentSoft: "#f7d6a4",
-    border: "#efd4a8",
-    orb: "rgba(245,158,11,0.16)",
-    tag: "bg-[#ffebc9] text-[#955719]",
-  },
-  {
-    face: "linear-gradient(145deg, #effaff 0%, #dff4ff 55%, #cceaff 100%)",
-    accent: "#277aa5",
-    accentSoft: "#c0e4f6",
-    border: "#b9def0",
-    orb: "rgba(14,165,233,0.17)",
-    tag: "bg-[#d6f0fc] text-[#216b91]",
+    face: "linear-gradient(145deg, #f7f3f1 0%, #ece3df 58%, #dec9c4 100%)",
+    accent: "#7b3d39",
+    accentSoft: "#d8bbb5",
+    border: "#d5c0bb",
+    orb: "rgba(217,74,65,0.14)",
+    tag: "bg-[#e3cfca] text-[#56302e]",
   },
 ] as const;
 
