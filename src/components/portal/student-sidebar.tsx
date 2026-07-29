@@ -150,20 +150,20 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isCollapsed && "justify-center px-2",
                 active
-                  ? "bg-primary text-primary-foreground shadow-sm"
+                  ? "bg-[#5f3435] text-white shadow-sm"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               {active ? (
                 <motion.span
                   layoutId="portal-nav-indicator"
-                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-brand"
+                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[#a7423d]"
                 />
               ) : null}
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0",
-                  active ? "text-primary-foreground" : "text-muted-foreground"
+                  active ? "text-white" : "text-muted-foreground"
                 )}
               />
               {!isCollapsed ? (

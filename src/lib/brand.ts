@@ -1,20 +1,20 @@
-/** SupraBase brand colors resolved from the active theme. */
+/** SupraBase brand colors — same muted brick used on the profile ID card. */
 export const BRAND = {
   /** Deep accent for text, icons, borders */
-  deep: "var(--color-brand)",
+  deep: "#5f3435",
   /** Primary CTA / bright fills */
-  bright: "var(--color-brand)",
+  bright: "#a7423d",
   /** Hover lift on bright fills */
-  hover: "color-mix(in srgb, var(--color-brand) 88%, white)",
+  hover: "#b8504a",
   /** Dark end of brand gradients */
-  ink: "#242328",
+  ink: "#222328",
   /** Mid gradient stop */
-  mid: "color-mix(in srgb, var(--color-brand) 62%, #242328)",
+  mid: "#5f3435",
   /** Soft wash backgrounds */
-  soft: "color-mix(in srgb, var(--color-brand) 10%, transparent)",
+  soft: "rgba(167, 66, 61, 0.12)",
   /** Dark text on bright CTAs */
-  onBright: "var(--color-primary-foreground)",
+  onBright: "#fafafa",
 } as const;
 
 export const BRAND_GRADIENT =
-  "linear-gradient(135deg, #242328 0%, #37343a 55%, var(--color-brand) 100%)";
+  "linear-gradient(135deg, #222328 0%, #5f3435 55%, #a7423d 100%)";
