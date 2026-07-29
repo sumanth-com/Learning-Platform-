@@ -22,7 +22,7 @@ export function WeekRoadmapArt({ src, className }: WeekRoadmapArtProps) {
           aria-hidden
           fill
           draggable={false}
-          className="object-contain object-bottom mix-blend-lighten drop-shadow-[0_8px_24px_rgba(99,102,241,0.15)]"
+          className="object-contain object-bottom mix-blend-lighten drop-shadow-[0_8px_24px_color-mix(in_srgb,var(--color-primary)_15%,transparent)]"
           sizes="176px"
           priority={false}
         />

@@ -6,6 +6,18 @@ import {
 import { playSelectedNotificationSound } from "@/lib/game-sounds";
 import { CERT_FLOW } from "@/features/certifications/lib/paths";
 
+/** Template used to render the full message in the inbox reading pane. */
+export type NotificationKind = "cert-passed" | "cert-earned" | "generic";
+
+export type NotificationMeta = {
+  certificationId?: string;
+  certificateId?: string;
+  certTitle?: string;
+  recipientName?: string;
+  score?: number;
+  passingScore?: number;
+};
+
 export type AppNotification = {
   id: string;
   channel: NotificationChannel;
@@ -14,6 +26,8 @@ export type AppNotification = {
   href?: string;
   createdAt: string;
   read: boolean;
+  kind?: NotificationKind;
+  meta?: NotificationMeta;
 };
 
 const STORAGE_KEY = "SupraBase.notifications.v2";
@@ -25,6 +39,8 @@ type PushInput = {
   title: string;
   body: string;
   href?: string;
+  kind?: NotificationKind;
+  meta?: NotificationMeta;
   /** If true, refresh createdAt and mark unread when id already exists */
   bump?: boolean;
   playSound?: boolean;
@@ -32,6 +48,13 @@ type PushInput = {
 
 function canUseStorage() {
   return typeof window !== "undefined";
+}
+
+/** Older entries were saved before `kind` existed. */
+function kindFromId(id: string): NotificationKind {
+  if (id.startsWith("cert-passed-")) return "cert-passed";
+  if (id.startsWith("cert-earned-")) return "cert-earned";
+  return "generic";
 }
 
 function readAll(): AppNotification[] {
@@ -45,14 +68,16 @@ function readAll(): AppNotification[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw) as AppNotification[];
     if (!Array.isArray(parsed)) return [];
-    const cleaned = parsed.filter(
-      (n) =>
-        n &&
-        typeof n.id === "string" &&
-        !n.id.startsWith("n-learn-") &&
-        !n.id.startsWith("n-mentor-") &&
-        !n.id.startsWith("n-achieve-")
-    );
+    const cleaned = parsed
+      .filter(
+        (n) =>
+          n &&
+          typeof n.id === "string" &&
+          !n.id.startsWith("n-learn-") &&
+          !n.id.startsWith("n-mentor-") &&
+          !n.id.startsWith("n-achieve-")
+      )
+      .map((n) => (n.kind ? n : { ...n, kind: kindFromId(n.id) }));
     if (!fromV2) {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
     }
@@ -87,6 +112,8 @@ export function pushNotification(input: PushInput): AppNotification | null {
             title: input.title,
             body: input.body,
             href: input.href ?? n.href,
+            kind: input.kind ?? n.kind,
+            meta: { ...n.meta, ...input.meta },
             createdAt: now,
             read: false,
           }
@@ -103,6 +130,8 @@ export function pushNotification(input: PushInput): AppNotification | null {
     title: input.title,
     body: input.body,
     href: input.href,
+    kind: input.kind ?? kindFromId(input.id),
+    meta: input.meta,
     createdAt: now,
     read: false,
   };
@@ -116,13 +145,23 @@ export function notifyCertificationPassed(input: {
   certificationId: string;
   title: string;
   score: number;
+  passingScore?: number;
+  recipientName?: string;
 }) {
   return pushNotification({
     id: `cert-passed-${input.certificationId}`,
     channel: "achievements",
-    title: "Congratulations!",
-    body: `You successfully cleared the ${input.title} certification test with a score of ${input.score}%. Generate your certificate and download the PDF anytime.`,
+    kind: "cert-passed",
+    title: `You passed the ${input.title} certification test`,
+    body: `Congratulations! You cleared the ${input.title} Skills Certification Test with a score of ${input.score}%. Generate your certificate to download it as a PDF.`,
     href: CERT_FLOW.results(input.certificationId),
+    meta: {
+      certificationId: input.certificationId,
+      certTitle: input.title,
+      score: input.score,
+      passingScore: input.passingScore,
+      recipientName: input.recipientName,
+    },
     bump: true,
   });
 }
@@ -138,11 +177,17 @@ export function notifyCertificateEarned(input: {
   return pushNotification({
     id: `cert-earned-${input.certificateId}`,
     channel: "achievements",
-    title: "Your certificate is ready",
-    body: `${input.recipientName}, your ${input.title} certificate${
-      input.score != null ? ` (${input.score}%)` : ""
-    } is ready. Open it to download the PDF or share your verified credential.`,
+    kind: "cert-earned",
+    title: `Your ${input.title} certificate is ready`,
+    body: `${input.recipientName}, your verified ${input.title} certificate has been issued. Download the PDF or share your credential link anytime.`,
     href: CERT_FLOW.certificate(input.certificationId),
+    meta: {
+      certificationId: input.certificationId,
+      certificateId: input.certificateId,
+      certTitle: input.title,
+      recipientName: input.recipientName,
+      score: input.score,
+    },
     bump: true,
   });
 }
@@ -165,6 +210,7 @@ export function syncCertificateNotifications() {
         title: string;
         recipientName: string;
         issuedAt: string;
+        score?: number;
       }>;
     };
     const certs = parsed.certificates ?? [];
@@ -175,14 +221,46 @@ export function syncCertificateNotifications() {
 
     for (const cert of certs) {
       const id = `cert-earned-${cert.id}`;
-      if (items.some((n) => n.id === id)) continue;
+      const existing = items.find((n) => n.id === id);
+      if (existing) {
+        if (!existing.meta?.certTitle) {
+          items = items.map((n) =>
+            n.id === id
+              ? {
+                  ...n,
+                  kind: "cert-earned" as const,
+                  title: `Your ${cert.title} certificate is ready`,
+                  body: `${cert.recipientName}, your verified ${cert.title} certificate has been issued. Download the PDF or share your credential link anytime.`,
+                  href: n.href ?? CERT_FLOW.certificate(cert.certificationId),
+                  meta: {
+                    certificationId: cert.certificationId,
+                    certificateId: cert.id,
+                    certTitle: cert.title,
+                    recipientName: cert.recipientName,
+                    score: cert.score,
+                  },
+                }
+              : n
+          );
+          changed = true;
+        }
+        continue;
+      }
       items = [
         {
           id,
           channel: "achievements",
-          title: "Your certificate is ready",
-          body: `${cert.recipientName}, your ${cert.title} certificate is ready. Open it to download the PDF or share your verified credential.`,
+          kind: "cert-earned",
+          title: `Your ${cert.title} certificate is ready`,
+          body: `${cert.recipientName}, your verified ${cert.title} certificate has been issued. Download the PDF or share your credential link anytime.`,
           href: CERT_FLOW.certificate(cert.certificationId),
+          meta: {
+            certificationId: cert.certificationId,
+            certificateId: cert.id,
+            certTitle: cert.title,
+            recipientName: cert.recipientName,
+            score: cert.score,
+          },
           createdAt: cert.issuedAt || new Date().toISOString(),
           read: false,
         },
@@ -240,6 +318,40 @@ export function notificationChannelLabel(channel: NotificationChannel) {
   if (channel === "learning") return "Learning";
   if (channel === "mentor") return "Mentor";
   return "Certifications";
+}
+
+/** Sender identity shown in the inbox, mirroring a transactional email. */
+export function notificationSender(channel: NotificationChannel) {
+  if (channel === "learning") {
+    return {
+      name: "SupraBase Learning",
+      email: "learning@suprabase.dev",
+    };
+  }
+  if (channel === "mentor") {
+    return {
+      name: "SupraBase AI Mentor",
+      email: "mentor@suprabase.dev",
+    };
+  }
+  return {
+    name: "SupraBase Certifications",
+    email: "certifications@suprabase.dev",
+  };
+}
+
+/** Absolute timestamp for the reading pane header. */
+export function formatNotificationDate(iso: string) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString(undefined, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 export function formatNotificationTime(iso: string) {

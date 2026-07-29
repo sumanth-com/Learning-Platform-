@@ -24,7 +24,7 @@ function DigitCard({ value, label }: { value: string; label: string }) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -12, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute font-mono text-[1.35rem] font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-[#27d17c]"
+            className="absolute font-mono text-[1.35rem] font-semibold tabular-nums tracking-tight text-primary"
           >
             {value}
           </motion.span>
@@ -82,8 +82,8 @@ export function RetestCooldownCard({
 
       <div className="mt-4 rounded-xl border border-border/70 bg-background/90 px-4 py-3.5">
         <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#27d17c]/12">
-            <Shield className="h-3.5 w-3.5 text-[#27d17c]" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/12">
+            <Shield className="h-3.5 w-3.5 text-primary" />
           </span>
           <p className="text-[12px] font-semibold tracking-tight text-foreground">
             Cooldown policy
@@ -91,20 +91,20 @@ export function RetestCooldownCard({
         </div>
         <ul className="mt-2.5 space-y-1.5 text-[12px] leading-relaxed text-muted-foreground">
           <li className="flex gap-2">
-            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/70" />
             <span>
               A {CERT_RETRY_COOLDOWN_HOURS}-hour wait applies after an
               unsuccessful attempt.
             </span>
           </li>
           <li className="flex gap-2">
-            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/70" />
             <span>
               Use this time to review concepts and practice related problems.
             </span>
           </li>
           <li className="flex gap-2">
-            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/70" />
             <span>
               Cooldowns protect credential quality and keep passes meaningful
               for hiring.

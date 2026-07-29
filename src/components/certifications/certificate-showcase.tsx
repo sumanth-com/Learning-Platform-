@@ -28,7 +28,15 @@ import {
 import type { EarnedCertificate } from "@/features/certifications/types";
 import { PORTAL_ROUTES } from "@/features/portal/types";
 
-function CopyField({ label, value }: { label: string; value: string }) {
+function CopyField({
+  label,
+  value,
+  showFull = false,
+}: {
+  label: string;
+  value: string;
+  showFull?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   return (
@@ -36,13 +44,25 @@ function CopyField({ label, value }: { label: string; value: string }) {
       <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
         {label}
       </p>
-      <div className="mt-1.5 flex min-w-0 items-center gap-1 rounded-lg border border-[#ddd5c8] bg-[#f7f4ef] px-2 py-1.5 dark:border-border dark:bg-muted/40">
-        <input
-          readOnly
-          value={value}
-          className="min-w-0 flex-1 truncate bg-transparent text-[11px] text-foreground outline-none"
-          onFocus={(e) => e.currentTarget.select()}
-        />
+      <div className="mt-1.5 flex min-w-0 items-center gap-2 rounded-xl border border-[#ddd5c8] bg-white px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:border-border dark:bg-muted/40">
+        {showFull ? (
+          <a
+            href={value}
+            target="_blank"
+            rel="noreferrer"
+            title={value}
+            className="min-w-0 flex-1 break-all text-[10.5px] font-medium leading-relaxed text-foreground underline-offset-2 hover:underline"
+          >
+            {value.replace(/^https?:\/\//, "")}
+          </a>
+        ) : (
+          <input
+            readOnly
+            value={value}
+            className="min-w-0 flex-1 truncate bg-transparent text-[11px] text-foreground outline-none"
+            onFocus={(e) => e.currentTarget.select()}
+          />
+        )}
         <button
           type="button"
           title="Copy"
@@ -52,10 +72,10 @@ function CopyField({ label, value }: { label: string; value: string }) {
             toast.success("Copied");
             window.setTimeout(() => setCopied(false), 1500);
           }}
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition hover:bg-[#ebe4d8] hover:text-foreground dark:hover:bg-muted"
+          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-transparent text-muted-foreground transition hover:border-[#ddd5c8] hover:bg-[#f5f1ea] hover:text-foreground dark:hover:border-border dark:hover:bg-muted"
         >
           {copied ? (
-            <Check className="h-3.5 w-3.5 text-[#1f8f55]" />
+            <Check className="h-3.5 w-3.5 text-primary" />
           ) : (
             <Copy className="h-3.5 w-3.5" />
           )}
@@ -99,7 +119,7 @@ export function CertificateShowcase({
         <button
           type="button"
           onClick={() => router.push(PORTAL_ROUTES.profile)}
-          className="mt-5 text-[13px] font-medium text-[#1f8f55] underline underline-offset-4"
+          className="mt-5 text-[13px] font-medium text-primary underline underline-offset-4"
         >
           Back to profile
         </button>
@@ -109,7 +129,6 @@ export function CertificateShowcase({
 
   const catalog = getCertification(cert.certificationId);
   const verifyUrl = certificateVerifyUrl(cert.id);
-  const embedSnippet = `<iframe src="${verifyUrl}" width="100%" height="420" frameborder="0" allowfullscreen></iframe>`;
   const shortName = `${cert.technology} (${LEVEL_META[cert.level].label})`;
 
   const downloadPdf = async () => {
@@ -131,57 +150,58 @@ export function CertificateShowcase({
   };
 
   return (
-    <div className="w-full text-foreground">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-4 pb-6 sm:gap-5">
-        <header className="flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <Link
-              href={PORTAL_ROUTES.profile}
-              className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground transition hover:text-foreground"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Profile
-            </Link>
-            <h1 className="mt-1 truncate text-[18px] font-semibold tracking-tight text-foreground sm:text-[20px]">
-              {shortName}{" "}
-              <span className="font-medium text-muted-foreground">
-                Certificate
-              </span>
-            </h1>
-          </div>
-          <button
-            type="button"
-            onClick={() => void downloadPdf()}
-            className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-[#27d17c] px-3.5 py-2 text-[12px] font-bold text-zinc-950 transition hover:bg-[#3ee08d] sm:px-4 sm:text-[13px]"
-          >
-            <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            Download PDF
-          </button>
-        </header>
-
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_310px] xl:grid-cols-[minmax(0,1fr)_330px]">
+    <div className="h-full min-h-0 w-full overflow-y-auto p-3 text-foreground lg:overflow-hidden sm:p-4">
+      <div className="mx-auto flex h-full min-h-0 w-full max-w-[1440px] flex-col">
+        <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_350px] lg:items-stretch lg:overflow-hidden xl:grid-cols-[minmax(0,1fr)_380px]">
           {/* Certificate frame */}
-          <div className="cert-print-area min-w-0">
-            <div className="rounded-2xl border border-[#ddd5c8] bg-[#fdfbf7] p-3 sm:p-4 dark:border-border dark:bg-card">
-              <CertificateDocument
-                certificate={cert}
-                id="certificate-print"
-                className="!mx-auto !max-w-full !shadow-none"
-              />
+          <div className="cert-print-area flex h-full min-h-0 min-w-0 self-stretch">
+            <div className="flex h-full min-h-0 w-full items-center justify-center overflow-hidden rounded-[1.5rem] border border-[#d7cfc2] bg-[#fdfbf7] p-2.5 sm:p-3 dark:border-border dark:bg-card">
+              <div
+                className="w-full"
+                style={{
+                  maxWidth: "min(100%, calc((100dvh - 7.25rem) * 1.414))",
+                }}
+              >
+                <CertificateDocument
+                  certificate={cert}
+                  id="certificate-print"
+                  className="!mx-auto !max-w-full !rounded-[1.15rem] !shadow-none"
+                />
+              </div>
             </div>
           </div>
 
-          {/* One solid side panel — clean edges, no split backside */}
-          <aside className="cert-no-print min-w-0 lg:sticky lg:top-4">
-            <div className="overflow-hidden rounded-2xl border border-[#ddd5c8] bg-[#fdfbf7] dark:border-border dark:bg-card">
-              <div className="border-b border-[#ebe4d8] p-4 dark:border-border">
-                <h2 className="flex items-center gap-2 text-[13px] font-semibold text-foreground">
-                  <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
-                  Share this certificate
-                </h2>
+          {/* Side panel — same height, clearly rounded */}
+          <aside className="cert-no-print flex min-h-0 min-w-0 self-stretch">
+            <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[1.5rem] border border-[#d7cfc2] bg-[#fdfbf7] dark:border-border dark:bg-card">
+              <div className="shrink-0 border-b border-[#ebe4d8] p-3.5 dark:border-border">
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="flex items-center gap-2 text-[13px] font-semibold text-foreground">
+                    <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
+                    Share this certificate
+                  </h2>
+                  <Link
+                    href={PORTAL_ROUTES.profile}
+                    className="inline-flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground transition hover:text-foreground"
+                  >
+                    <ArrowLeft className="h-3 w-3" />
+                    Profile
+                  </Link>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void downloadPdf()}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-3 py-2.5 text-[12px] font-bold text-primary-foreground transition hover:bg-primary/90"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Download PDF
+                </button>
                 <div className="mt-3 space-y-2.5">
-                  <CopyField label="Public link" value={verifyUrl} />
-                  <CopyField label="Embed" value={embedSnippet} />
+                  <CopyField
+                    label="Public verification link"
+                    value={verifyUrl}
+                    showFull
+                  />
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {[
@@ -194,7 +214,7 @@ export function CertificateShowcase({
                       href={item.href}
                       target={item.label === "Email" ? undefined : "_blank"}
                       rel={item.label === "Email" ? undefined : "noreferrer"}
-                      className="rounded-md border border-[#ddd5c8] bg-white px-2.5 py-1.5 text-[11px] font-medium text-foreground transition hover:bg-[#f5f1ea] dark:border-border dark:bg-background dark:hover:bg-muted"
+                      className="rounded-lg border border-[#ddd5c8] bg-white px-2.5 py-1.5 text-[11px] font-medium text-foreground transition hover:bg-[#f5f1ea] dark:border-border dark:bg-background dark:hover:bg-muted"
                     >
                       {item.label}
                     </a>
@@ -202,7 +222,7 @@ export function CertificateShowcase({
                 </div>
               </div>
 
-              <div className="p-4">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-3.5">
                 <h3 className="text-[14px] font-semibold text-foreground">
                   {shortName}
                 </h3>
@@ -212,7 +232,7 @@ export function CertificateShowcase({
                 </p>
 
                 <dl className="mt-4 grid grid-cols-2 gap-2.5 text-[12px]">
-                  <div className="rounded-lg border border-[#ebe4d8] bg-[#f7f4ef] px-2.5 py-2 dark:border-border dark:bg-muted/40">
+                  <div className="rounded-xl border border-[#ebe4d8] bg-[#f7f4ef] px-2.5 py-2 dark:border-border dark:bg-muted/40">
                     <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">
                       Earned on
                     </dt>
@@ -224,7 +244,7 @@ export function CertificateShowcase({
                       })}
                     </dd>
                   </div>
-                  <div className="rounded-lg border border-[#ebe4d8] bg-[#f7f4ef] px-2.5 py-2 dark:border-border dark:bg-muted/40">
+                  <div className="rounded-xl border border-[#ebe4d8] bg-[#f7f4ef] px-2.5 py-2 dark:border-border dark:bg-muted/40">
                     <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">
                       Score
                     </dt>
@@ -232,7 +252,7 @@ export function CertificateShowcase({
                       {cert.score}%
                     </dd>
                   </div>
-                  <div className="col-span-2 rounded-lg border border-[#ebe4d8] bg-[#f7f4ef] px-2.5 py-2 dark:border-border dark:bg-muted/40">
+                  <div className="col-span-2 rounded-xl border border-[#ebe4d8] bg-[#f7f4ef] px-2.5 py-2 dark:border-border dark:bg-muted/40">
                     <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">
                       Certificate ID
                     </dt>
@@ -244,15 +264,15 @@ export function CertificateShowcase({
 
                 <Link
                   href={`/verify/${cert.id}`}
-                  className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-medium text-[#1f8f55] hover:underline"
+                  className="mt-4 inline-flex w-full items-center justify-between gap-2 rounded-xl border border-[#ebe4d8] bg-white px-3 py-2.5 text-[12px] font-medium text-foreground transition hover:bg-[#f7f4ef] dark:border-border dark:bg-background dark:hover:bg-muted"
                 >
-                  Open public verify page
-                  <ExternalLink className="h-3.5 w-3.5" />
+                  <span>Open public verify page</span>
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                 </Link>
 
                 <Link
                   href="/certifications"
-                  className="mt-4 flex w-full items-center justify-center rounded-lg bg-[#27d17c] px-3 py-2.5 text-[12px] font-bold text-zinc-950 hover:bg-[#3ee08d]"
+                  className="mt-auto flex w-full items-center justify-center rounded-xl bg-primary px-3 py-2.5 text-[12px] font-bold text-primary-foreground hover:bg-primary/90"
                 >
                   Browse more certifications
                 </Link>

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Theme is toggled by a class on <html>, not the OS preference */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Use @theme (not inline) so utilities reference CSS vars and html.light can theme them */
 @theme {
   --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
@@ -11,8 +14,9 @@
   --color-card-foreground: #fafafa;
   --color-popover: #0f0f12;
   --color-popover-foreground: #fafafa;
-  --color-primary: #6366f1;
-  --color-primary-foreground: #fafafa;
+  --color-primary: #f472b6;
+  --color-primary-foreground: #1a0510;
+  --color-brand: #f472b6;
   --color-secondary: #1e1e24;
   --color-secondary-foreground: #fafafa;
   --color-muted: #18181b;
@@ -22,62 +26,120 @@
   --color-destructive: #ef4444;
   --color-border: #27272a;
   --color-input: #27272a;
-  --color-ring: #6366f1;
+  --color-ring: #f472b6;
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
 }
 
-/* Full-app light mode: earthy palette + soft mesh (not flat white) */
+/* Full-app light mode: clean white surfaces */
 html.light {
   --font-sans: "Segoe UI", var(--font-plus-jakarta), ui-sans-serif, system-ui,
     sans-serif;
 
   /* Palette from design reference */
-  --palette-terracotta: #b06c49;
-  --palette-slate: #94a6ab;
-  --palette-sand: #eae0d1;
-  --palette-sage: #8f9d7e;
-  --palette-mint: #cbd4c2;
-  --palette-cream: #fdfbf7;
-  --palette-base: #f5f1ea;
+  --palette-terracotta: #fc5448;
+  --palette-slate: #34343e;
+  --palette-sand: #fce4dc;
+  --palette-sage: #f6b09d;
+  --palette-mint: #fff0e8;
+  --palette-cream: #fffaf7;
+  --palette-base: #ffffff;
 
-  --color-background: #f5f1ea;
-  --color-foreground: #1c1917;
-  --color-card: rgba(253, 251, 247, 0.78);
-  --color-card-foreground: #1c1917;
-  --color-popover: #fdfbf7;
-  --color-popover-foreground: #1c1917;
-  --color-primary: #8a5a3c;
-  --color-primary-foreground: #fdfbf7;
-  --color-secondary: #ebe4d8;
-  --color-secondary-foreground: #1c1917;
-  --color-muted: #ebe4d8;
-  --color-muted-foreground: #57534e;
-  --color-accent: #e4ecdf;
-  --color-accent-foreground: #1c1917;
-  --color-border: #ddd5c8;
-  --color-input: #ddd5c8;
-  --color-ring: #8a5a3c;
+  --color-background: #ffffff;
+  --color-foreground: #18181b;
+  --color-card: #ffffff;
+  --color-card-foreground: #18181b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #18181b;
+  --color-primary: #29282d;
+  --color-primary-foreground: #ffffff;
+  --color-brand: #d94a41;
+  --color-secondary: #fff3ed;
+  --color-secondary-foreground: #27272a;
+  --color-muted: #f8f3ef;
+  --color-muted-foreground: #625b57;
+  --color-accent: #fff0e8;
+  --color-accent-foreground: #27272a;
+  --color-border: #eadfd9;
+  --color-input: #e6d8d1;
+  --color-ring: #d94a41;
 
-  /* Warmer inverted zinc (cream paper, not pure white) */
+  /* Inverted zinc mapped onto a white canvas */
   --color-zinc-50: #1c1917;
   --color-zinc-100: #292524;
   --color-zinc-200: #44403c;
   --color-zinc-300: #57534e;
   --color-zinc-400: #78716c;
   --color-zinc-500: #8a847c;
-  --color-zinc-600: #b0a89e;
-  --color-zinc-700: #d5cdc0;
-  --color-zinc-800: #e4ddd2;
-  --color-zinc-900: #efe9df;
-  --color-zinc-950: #f5f1ea;
+  --color-zinc-600: #a1a1aa;
+  --color-zinc-700: #d4d4d8;
+  --color-zinc-800: #e4e4e7;
+  --color-zinc-900: #f4f4f5;
+  --color-zinc-950: #ffffff;
 
-  /* Keep accent text readable on warm paper */
-  --color-indigo-200: #4338ca;
-  --color-indigo-300: #3730a3;
-  --color-indigo-400: #312e81;
+  /* Legacy brand utility names resolve to the coral identity in light mode. */
+  --brand-coral-50: #fff7f4;
+  --brand-coral-100: #ffe9e2;
+  --brand-coral-200: #ffd0c5;
+  --brand-coral-300: #dca39a;
+  --brand-coral-400: #d96b61;
+  --brand-coral-500: #d94a41;
+  --brand-coral-600: #474146;
+  --brand-coral-700: #37343a;
+  --brand-coral-800: #29282d;
+  --brand-coral-900: #222126;
+  --brand-coral-950: #18181b;
+
+  --color-indigo-50: var(--brand-coral-50);
+  --color-indigo-100: var(--brand-coral-100);
+  --color-indigo-200: var(--brand-coral-200);
+  --color-indigo-300: var(--brand-coral-300);
+  --color-indigo-400: var(--brand-coral-400);
+  --color-indigo-500: var(--brand-coral-500);
+  --color-indigo-600: var(--brand-coral-600);
+  --color-indigo-700: var(--brand-coral-700);
+  --color-indigo-800: var(--brand-coral-800);
+  --color-indigo-900: var(--brand-coral-900);
+  --color-indigo-950: var(--brand-coral-950);
+
+  --color-blue-50: var(--brand-coral-50);
+  --color-blue-100: var(--brand-coral-100);
+  --color-blue-200: var(--brand-coral-200);
+  --color-blue-300: var(--brand-coral-300);
+  --color-blue-400: var(--brand-coral-400);
+  --color-blue-500: var(--brand-coral-500);
+  --color-blue-600: var(--brand-coral-600);
+  --color-blue-700: var(--brand-coral-700);
+  --color-blue-800: var(--brand-coral-800);
+  --color-blue-900: var(--brand-coral-900);
+  --color-blue-950: var(--brand-coral-950);
+
+  --color-violet-50: var(--brand-coral-50);
+  --color-violet-100: var(--brand-coral-100);
+  --color-violet-200: var(--brand-coral-200);
+  --color-violet-300: var(--brand-coral-300);
+  --color-violet-400: var(--brand-coral-400);
+  --color-violet-500: var(--brand-coral-500);
+  --color-violet-600: var(--brand-coral-600);
+  --color-violet-700: var(--brand-coral-700);
+  --color-violet-800: var(--brand-coral-800);
+  --color-violet-900: var(--brand-coral-900);
+  --color-violet-950: var(--brand-coral-950);
+
+  --color-purple-50: var(--brand-coral-50);
+  --color-purple-100: var(--brand-coral-100);
+  --color-purple-200: var(--brand-coral-200);
+  --color-purple-300: var(--brand-coral-300);
+  --color-purple-400: var(--brand-coral-400);
+  --color-purple-500: var(--brand-coral-500);
+  --color-purple-600: var(--brand-coral-600);
+  --color-purple-700: var(--brand-coral-700);
+  --color-purple-800: var(--brand-coral-800);
+  --color-purple-900: var(--brand-coral-900);
+  --color-purple-950: var(--brand-coral-950);
+
   --color-emerald-300: #3f6212;
   --color-emerald-400: #4d7c0f;
   --color-emerald-600: #047857;
@@ -88,10 +150,6 @@ html.light {
   --color-rose-400: #e11d48;
   --color-sky-200: #0e7490;
   --color-sky-300: #155e75;
-  --color-purple-300: #6b21a8;
-  --color-violet-200: #5b21b6;
-  --color-violet-300: #6d28d9;
-  --color-violet-400: #7c3aed;
   --color-red-300: #b91c1c;
 }
 
@@ -108,43 +166,14 @@ body {
 }
 
 html.light {
-  background-color: var(--palette-base);
-  background-image:
-    radial-gradient(
-      ellipse 100% 80% at 10% 0%,
-      rgba(176, 108, 73, 0.16),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 90% 70% at 100% 8%,
-      rgba(148, 166, 171, 0.18),
-      transparent 52%
-    ),
-    radial-gradient(
-      ellipse 85% 70% at 90% 100%,
-      rgba(143, 157, 126, 0.16),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 80% 60% at 0% 100%,
-      rgba(203, 212, 194, 0.28),
-      transparent 50%
-    ),
-    linear-gradient(
-      180deg,
-      #f7f4ef 0%,
-      #f3f0ea 45%,
-      #f0f2ed 100%
-    );
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-color: #ffffff;
+  background-image: none;
 }
 
 html.light body {
   letter-spacing: -0.014em;
   -webkit-font-smoothing: antialiased;
-  background: transparent;
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar {
@@ -325,10 +354,14 @@ html.light .glass {
 }
 
 html.light .gradient-text {
-  background: linear-gradient(135deg, #b06c49, #8f9d7e, #94a6ab);
+  background: linear-gradient(135deg, #29282d, #6f3b3b, #d96b61);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+html.light .gradient-border::before {
+  background: linear-gradient(135deg, #29282d, #6f3b3b, #d96b61);
 }
 
 .gradient-border {
@@ -361,7 +394,7 @@ html.light .gradient-text {
 }
 
 html.light .skeleton {
-  background: linear-gradient(90deg, #efe9df 25%, #e4ddd2 50%, #efe9df 75%);
+  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
   background-size: 200% 100%;
 }
 
@@ -418,7 +451,7 @@ html.light .portal-ambient {
 
 html.light .portal-shell,
 html.light .portal-shell-col {
-  background-color: transparent !important;
+  background-color: #ffffff !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -434,34 +467,31 @@ html.light .portal-shell-col {
 }
 
 [data-progress-indicator] {
-  background-color: #10b981 !important;
+  background-color: var(--color-brand) !important;
   background-image: none !important;
 }
 
 html.light [data-progress-root] {
-  background-color: #b7a994 !important;
-  box-shadow: inset 0 0 0 1px rgba(92, 58, 33, 0.28);
+  background-color: #f1e6e0 !important;
+  box-shadow: inset 0 0 0 1px rgb(217 74 65 / 0.1);
 }
 
 html.light [data-progress-indicator] {
-  background-color: #059669 !important;
+  background-color: var(--color-brand) !important;
 }
 
-/* Soft translucent panels so the mesh shows through every section */
 html.light .bg-background {
-  background-color: transparent !important;
+  background-color: #ffffff !important;
 }
 
 html.light .bg-zinc-950 {
-  background-color: rgb(245 241 234 / 0.55) !important;
-  backdrop-filter: blur(10px);
+  background-color: #ffffff !important;
 }
 
 html.light .bg-zinc-950\/90,
 html.light .bg-zinc-950\/95,
 html.light .bg-zinc-950\/80 {
-  background-color: rgb(245 241 234 / 0.72) !important;
-  backdrop-filter: blur(12px);
+  background-color: #ffffff !important;
 }
 
 /* Portal chrome defaults (dark) */
@@ -478,50 +508,39 @@ html.light .bg-zinc-900\/80,
 html.light .bg-zinc-900\/50,
 html.light .bg-zinc-900\/40,
 html.light .bg-zinc-900\/30 {
-  background-color: rgb(239 233 223 / 0.7) !important;
+  background-color: #f4f4f5 !important;
 }
 
-/* Hardcoded dark challenge/editor chrome → warm light surfaces */
+/* Hardcoded dark challenge/editor chrome → white light surfaces */
 html.light .bg-\[\#0a0a0b\],
 html.light .bg-\[\#0a0a0a\],
 html.light .bg-\[\#0d0d0d\],
 html.light .bg-\[\#0d1117\],
 html.light .bg-\[\#1a1a1a\],
 html.light .bg-\[\#1e1e1e\] {
-  background-color: #f5f1ea !important;
+  background-color: #ffffff !important;
   color: #1c1917;
 }
 
 html.light .hover\:bg-\[\#1a1a1a\]:hover,
 html.light .bg-\[\#1a1a1a\] {
-  background-color: #efe9df !important;
+  background-color: #f4f4f5 !important;
 }
 
-/* Top navbar + left rail — sand/mint, never flat white */
+/* Top navbar + left rail — clean white */
 html.light header.sticky,
 html.light .portal-topbar {
-  background:
-    linear-gradient(
-      105deg,
-      rgba(234, 224, 209, 0.96) 0%,
-      rgba(203, 212, 194, 0.88) 55%,
-      rgba(214, 222, 212, 0.94) 100%
-    ) !important;
-  border-bottom-color: rgba(143, 157, 126, 0.28) !important;
-  backdrop-filter: blur(18px) saturate(1.1);
-  box-shadow: 0 1px 0 rgba(253, 251, 247, 0.45) inset;
+  background: #ffffff !important;
+  border-bottom-color: #e4e4e7 !important;
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
 html.light aside.portal-rail,
 html.light aside:not(.surface-card-3d) {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(234, 224, 209, 0.94) 0%,
-      rgba(203, 212, 194, 0.78) 100%
-    ) !important;
-  border-color: rgba(143, 157, 126, 0.22) !important;
-  backdrop-filter: blur(16px);
+  background: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  backdrop-filter: none;
 }
 
 /* Soft 3D curved cards (challenge list, filter panel) */
@@ -581,7 +600,7 @@ html.light .surface-card-3d:hover {
 /* Ensure project lab never stays on a dark island in light mode */
 html.light [data-project-lab],
 html.light [data-assignment-lab] {
-  background-color: #f5f1ea !important;
+  background-color: #ffffff !important;
   color: #1c1917;
 }
 
@@ -591,7 +610,7 @@ html.light [data-project-lab] .margin,
 html.light [data-assignment-lab] .monaco-editor,
 html.light [data-assignment-lab] .monaco-editor-background,
 html.light [data-assignment-lab] .margin {
-  background-color: #fdfbf7 !important;
+  background-color: #ffffff !important;
 }
 
 html.light .shadow-black\/40,
@@ -667,40 +686,15 @@ html.light .mentor-scroll::-webkit-scrollbar-thumb {
 }
 
 html.light .mentor-aurora-mesh {
-  background: linear-gradient(
-    120deg,
-    rgba(176, 108, 73, 0.18),
-    rgba(148, 166, 171, 0.16),
-    rgba(143, 157, 126, 0.16),
-    rgba(234, 224, 209, 0.22),
-    rgba(203, 212, 194, 0.18),
-    rgba(176, 108, 73, 0.18)
-  );
-  background-size: 320% 320%;
-  animation: mentor-aurora-shift 22s ease-in-out infinite;
+  background: #ffffff;
+  animation: none;
 }
 
-/* Light-mode section wash — soft Framer-like panel surfaces */
+/* Light-mode section wash — clean white panels */
 html.light .light-section,
 html.light [data-light-section] {
-  background:
-    radial-gradient(
-      ellipse 80% 60% at 0% 0%,
-      rgba(176, 108, 73, 0.1),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 70% 50% at 100% 100%,
-      rgba(143, 157, 126, 0.12),
-      transparent 55%
-    ),
-    linear-gradient(
-      160deg,
-      rgba(253, 251, 247, 0.65),
-      rgba(234, 224, 209, 0.35) 50%,
-      rgba(203, 212, 194, 0.28)
-    );
-  border-color: rgba(176, 108, 73, 0.1);
+  background: #ffffff;
+  border-color: #e4e4e7;
 }
 
 .mentor-composer-glow {
@@ -715,6 +709,20 @@ html.light [data-light-section] {
   );
   background-size: 200% 100%;
   animation: mentor-glow-flow 4s linear infinite;
+}
+
+html.light .mentor-composer-glow {
+  background: linear-gradient(
+    90deg,
+    #18181b,
+    #3f393e,
+    #8f4643,
+    #d96b61,
+    #fff0e8,
+    #8f4643,
+    #18181b
+  );
+  background-size: 200% 100%;
 }
 
 /* Developer Hub - print / A4 */

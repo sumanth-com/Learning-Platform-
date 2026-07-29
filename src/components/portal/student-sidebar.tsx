@@ -52,8 +52,6 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
   const pathname = usePathname();
   const { collapsed, closeMobile, toggleCollapsed } = usePortalShell();
   const isCollapsed = mode === "desktop" && collapsed;
-  const markId = mode === "drawer" ? "portal-drawer" : "portal-desktop";
-
   useEffect(() => {
     closeMobile();
   }, [pathname, closeMobile]);
@@ -89,7 +87,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
             isCollapsed ? "justify-center p-1" : "gap-3 py-1"
           )}
         >
-          <SupraBaseMark className="h-9 w-9 shrink-0" id={markId} />
+          <SupraBaseMark className="h-9 w-9 shrink-0" />
           {!isCollapsed ? (
             <div className="min-w-0">
               <p className="truncate text-[15px] font-semibold leading-none tracking-tight text-foreground">
@@ -152,20 +150,20 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isCollapsed && "justify-center px-2",
                 active
-                  ? "bg-black text-white shadow-sm"
-                  : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               {active ? (
                 <motion.span
                   layoutId="portal-nav-indicator"
-                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-white/80"
+                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-brand"
                 />
               ) : null}
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0",
-                  active ? "text-white" : "text-zinc-500"
+                  active ? "text-primary-foreground" : "text-muted-foreground"
                 )}
               />
               {!isCollapsed ? (

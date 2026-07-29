@@ -469,7 +469,7 @@ export function NotesWorkspace() {
     <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-gradient-to-b from-muted/50 via-background to-background">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.12),_transparent_65%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-[radial-gradient(ellipse_at_top,_color-mix(in_srgb,var(--color-primary)_12%,transparent),_transparent_65%)]"
       />
 
       {/* Header */}

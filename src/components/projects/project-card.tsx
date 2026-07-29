@@ -68,7 +68,7 @@ export function ProjectCard({
           Module {project.moduleNumber}
         </span>
         {complete ? (
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-600">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
             Solved
           </span>
         ) : null}

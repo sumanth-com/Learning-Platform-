@@ -181,7 +181,7 @@ export function CertBriefScreen() {
             key={line}
             className="flex gap-3 rounded-xl border border-border bg-muted/50 px-4 py-2.5 text-[13px] leading-relaxed text-foreground"
           >
-            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#27d17c]" />
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
             {line}
           </li>
         ))}
@@ -315,7 +315,7 @@ export function CertHonorScreen() {
           type="checkbox"
           checked={agreeHonor}
           onChange={(e) => setAgreeHonor(e.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0 accent-[#27d17c]"
+          className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
         />
         <span>
           I will not copy code from others or AI tools, and I will not share
@@ -327,7 +327,7 @@ export function CertHonorScreen() {
           type="checkbox"
           checked={agreeTerms}
           onChange={(e) => setAgreeTerms(e.target.checked)}
-          className="mt-0.5 h-4 w-4 shrink-0 accent-[#27d17c]"
+          className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
         />
         <span>
           I agree to SupraBase&apos;s Terms of Service and Privacy Policy.
@@ -381,7 +381,7 @@ export function CertReadyScreen() {
                 className="flex items-center gap-3 rounded-xl border border-border bg-muted/50 px-4 py-3"
               >
                 {ready ? (
-                  <CheckCircle2 className="h-5 w-5 text-[#27d17c]" />
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
                 ) : (
                   <Circle className="h-5 w-5 animate-pulse text-muted-foreground" />
                 )}
@@ -445,7 +445,7 @@ export function CertLobbyScreen() {
           </p>
         </div>
         <p className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-[13px] font-medium text-foreground">
-          <Clock className="h-3.5 w-3.5 text-[#27d17c]" />
+          <Clock className="h-3.5 w-3.5 text-primary" />
           {mins}:{secs.toString().padStart(2, "0")}
         </p>
       </header>
@@ -465,7 +465,7 @@ export function CertLobbyScreen() {
                 className={cn(
                   "flex flex-col gap-3 rounded-2xl border bg-card p-4 sm:flex-row sm:items-center sm:justify-between",
                   done
-                    ? "border-[#27d17c]/35 bg-[#27d17c]/[0.04]"
+                    ? "border-primary/35 bg-primary/[0.04]"
                     : "border-border"
                 )}
               >
@@ -474,7 +474,7 @@ export function CertLobbyScreen() {
                     className={cn(
                       "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[13px] font-semibold",
                       done
-                        ? "bg-[#27d17c]/15 text-[#1f8f55]"
+                        ? "bg-primary/15 text-primary"
                         : "bg-muted text-muted-foreground"
                     )}
                   >
@@ -500,7 +500,7 @@ export function CertLobbyScreen() {
                     "inline-flex shrink-0 items-center justify-center rounded-xl px-5 py-2.5 text-[13px] font-bold transition",
                     done
                       ? "border border-border bg-background text-foreground hover:bg-muted"
-                      : "bg-[#27d17c] text-zinc-950 hover:bg-[#3ee08d]"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90"
                   )}
                 >
                   {done ? "Review" : draft ? "Continue" : "Solve"}
@@ -656,7 +656,7 @@ export function CertProblemScreen({
             <button
               type="button"
               onClick={() => setConfirmSubmit(true)}
-              className="rounded-md border border-[#27d17c]/50 px-3 py-1.5 font-medium text-[#27d17c]"
+              className="rounded-md border border-primary/50 px-3 py-1.5 font-medium text-primary"
             >
               Submit Test
             </button>
@@ -784,8 +784,8 @@ export function CertProblemScreen({
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-bold disabled:opacity-50",
                   isComplete
-                    ? "border border-[#27d17c]/50 bg-[#27d17c]/10 text-[#1f8f55]"
-                    : "bg-[#27d17c] text-zinc-950 hover:bg-[#3ee08d]"
+                    ? "border border-primary/50 bg-primary/10 text-primary"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90"
                 )}
               >
                 <CheckCircle2 className="h-3.5 w-3.5" />
@@ -968,7 +968,7 @@ export function CertResultsScreen() {
             earned ? (
               <Link
                 href={CERT_FLOW.certificate(certification.id)}
-                className="rounded-md bg-[#27d17c] px-5 py-2.5 text-[13px] font-bold text-zinc-950 hover:bg-[#3ee08d]"
+                className="rounded-md bg-primary px-5 py-2.5 text-[13px] font-bold text-primary-foreground hover:bg-primary/90"
               >
                 Download certificate
               </Link>
@@ -976,7 +976,7 @@ export function CertResultsScreen() {
               <button
                 type="button"
                 onClick={() => setNameModal(true)}
-                className="rounded-md bg-[#27d17c] px-5 py-2.5 text-[13px] font-bold text-zinc-950 hover:bg-[#3ee08d]"
+                className="rounded-md bg-primary px-5 py-2.5 text-[13px] font-bold text-primary-foreground hover:bg-primary/90"
               >
                 Generate certificate
               </button>
@@ -985,7 +985,7 @@ export function CertResultsScreen() {
             <button
               type="button"
               onClick={beginRetest}
-              className="rounded-md bg-[#27d17c] px-5 py-2.5 text-[13px] font-bold text-zinc-950 hover:bg-[#3ee08d]"
+              className="rounded-md bg-primary px-5 py-2.5 text-[13px] font-bold text-primary-foreground hover:bg-primary/90"
             >
               Get Certified
             </button>
@@ -1079,7 +1079,7 @@ export function CertCertificateScreen() {
           <button
             type="button"
             onClick={downloadPdf}
-            className="rounded-md bg-[#27d17c] px-4 py-2.5 text-[13px] font-bold text-zinc-950 hover:bg-[#3ee08d]"
+            className="rounded-md bg-primary px-4 py-2.5 text-[13px] font-bold text-primary-foreground hover:bg-primary/90"
           >
             Download PDF
           </button>

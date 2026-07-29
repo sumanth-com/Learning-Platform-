@@ -97,7 +97,7 @@ export function CertificationsWorkspace() {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse 70% 80% at 20% 0%, rgba(39,209,124,0.08), transparent 50%), radial-gradient(ellipse 50% 60% at 90% 20%, rgba(97,218,251,0.06), transparent 45%)",
+                "radial-gradient(ellipse 70% 80% at 20% 0%, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent 50%), radial-gradient(ellipse 50% 60% at 90% 20%, rgba(97,218,251,0.06), transparent 45%)",
             }}
           />
 
@@ -113,7 +113,7 @@ export function CertificationsWorkspace() {
                 <button
                   type="button"
                   onClick={() => setFocus(null)}
-                  className="text-[12px] text-[#27d17c] hover:underline"
+                  className="text-[12px] text-primary hover:underline"
                 >
                   Show all
                 </button>
@@ -139,7 +139,7 @@ export function CertificationsWorkspace() {
                     className={cn(
                       "group relative flex h-[92px] w-[108px] shrink-0 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border bg-card transition duration-300 sm:h-[100px] sm:w-[120px]",
                       active
-                        ? "border-[#27d17c]/60 shadow-[0_0_0_1px_rgba(39,209,124,0.25)]"
+                        ? "border-primary/60 shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-primary)_25%,transparent)]"
                         : "border-border hover:border-foreground/25 hover:-translate-y-1"
                     )}
                     title={cat.label}
@@ -188,10 +188,10 @@ export function CertificationsWorkspace() {
                   className={cn(
                     "relative overflow-hidden rounded-xl border bg-card p-5 transition",
                     passed
-                      ? "border-[#27d17c]/40"
+                      ? "border-primary/40"
                       : "border-border hover:border-foreground/20",
                     highlighted &&
-                      "ring-2 ring-[#27d17c]/45 ring-offset-2 ring-offset-background"
+                      "ring-2 ring-primary/45 ring-offset-2 ring-offset-background"
                   )}
                 >
                   <div
@@ -211,7 +211,7 @@ export function CertificationsWorkspace() {
                               {cert.shortTitle}
                             </h2>
                             {passed ? (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#27d17c]/12 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1f8f55]">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
                                 <CheckCircle2 className="h-3 w-3" />
                                 Done
                               </span>
@@ -264,7 +264,7 @@ export function CertificationsWorkspace() {
                     className={cn(
                       "relative mt-6 inline-flex rounded-md border px-3.5 py-1.5 text-[13px] font-medium transition",
                       passed
-                        ? "border-[#27d17c]/45 bg-[#27d17c]/10 text-[#1f8f55] hover:bg-[#27d17c]/16"
+                        ? "border-primary/45 bg-primary/10 text-primary hover:bg-primary/16"
                         : onCooldown
                           ? "border-border text-muted-foreground hover:border-foreground/30"
                           : "border-border text-foreground hover:border-foreground hover:bg-foreground/5"

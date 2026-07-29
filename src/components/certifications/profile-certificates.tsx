@@ -1,36 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Award, FilePlus2, Medal, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Award,
+  BadgeCheck,
+  FilePlus2,
+  Medal,
+  Sparkles,
+} from "lucide-react";
 import { useCertifications } from "@/features/certifications/hooks/use-certifications";
 import { CERT_FLOW } from "@/features/certifications/lib/paths";
 import { cn } from "@/lib/utils";
 
-/** Fresh skill-card palettes — clear greens / teals (not flat navy). */
+/** Soft collectible-card palettes: playful, readable, and professional. */
 const CARD_TONES = [
   {
-    face: "linear-gradient(135deg, #2dd4a0 0%, #12a56e 42%, #0b7a52 100%)",
-    fold: "#9af0c8",
-    ring: "rgba(255,255,255,0.28)",
-    tag: "bg-white text-[#0b7a52]",
+    face: "linear-gradient(145deg, #f0fff9 0%, #dcfced 55%, #c7f3df 100%)",
+    accent: "#16865b",
+    accentSoft: "#b8ecd5",
+    border: "#b7e5d1",
+    orb: "color-mix(in srgb, var(--color-primary) 20%, transparent)",
+    tag: "bg-[#d7f7e8] text-[#126c49]",
   },
   {
-    face: "linear-gradient(135deg, #3ecfcf 0%, #1aa3b5 45%, #0d7a8a 100%)",
-    fold: "#b8f3f3",
-    ring: "rgba(255,255,255,0.28)",
-    tag: "bg-white text-[#0d7a8a]",
+    face: "linear-gradient(145deg, #f5f3ff 0%, #e9e5ff 55%, #ddd7ff 100%)",
+    accent: "#6855c7",
+    accentSoft: "#d7d0ff",
+    border: "#d3cbf5",
+    orb: "rgba(124,105,220,0.18)",
+    tag: "bg-[#e5e0ff] text-[#5947b1]",
   },
   {
-    face: "linear-gradient(135deg, #5ee09a 0%, #27d17c 40%, #14965a 100%)",
-    fold: "#d4ffe6",
-    ring: "rgba(255,255,255,0.3)",
-    tag: "bg-white text-[#14965a]",
+    face: "linear-gradient(145deg, #fff9ed 0%, #ffefd0 55%, #ffe3b0 100%)",
+    accent: "#a96420",
+    accentSoft: "#f7d6a4",
+    border: "#efd4a8",
+    orb: "rgba(245,158,11,0.16)",
+    tag: "bg-[#ffebc9] text-[#955719]",
   },
   {
-    face: "linear-gradient(135deg, #7dd3c0 0%, #3ba89a 48%, #1f7a6e 100%)",
-    fold: "#d8f5ee",
-    ring: "rgba(255,255,255,0.28)",
-    tag: "bg-white text-[#1f7a6e]",
+    face: "linear-gradient(145deg, #effaff 0%, #dff4ff 55%, #cceaff 100%)",
+    accent: "#277aa5",
+    accentSoft: "#c0e4f6",
+    border: "#b9def0",
+    orb: "rgba(14,165,233,0.17)",
+    tag: "bg-[#d6f0fc] text-[#216b91]",
   },
 ] as const;
 
@@ -91,7 +106,7 @@ export function ProfileCertificates() {
           {pendingGenerate.map((a) => (
             <div
               key={a.certificationId}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#27d17c]/30 bg-[#27d17c]/[0.08] px-3.5 py-2.5"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/30 bg-primary/[0.08] px-3.5 py-2.5"
             >
               <p className="text-[13px] text-foreground">
                 Assessment passed
@@ -100,7 +115,7 @@ export function ProfileCertificates() {
               </p>
               <Link
                 href={CERT_FLOW.results(a.certificationId)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#27d17c] px-3 py-1.5 text-[12px] font-bold text-zinc-950 hover:bg-[#3ee08d]"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-[12px] font-bold text-primary-foreground hover:bg-primary/90"
               >
                 <FilePlus2 className="h-3.5 w-3.5" />
                 Generate
@@ -135,77 +150,87 @@ export function ProfileCertificates() {
             const tone = toneFor(c.id);
             const label = `${c.technology} (${levelLabel(c.level)})`;
             return (
-              <li key={c.id} className="w-[min(100%,14.25rem)] shrink-0">
+              <li key={c.id} className="w-[min(100%,15.25rem)] shrink-0">
                 <Link
                   href={`/profile/certificates/${c.id}`}
-                  className={cn(
-                    "group relative flex aspect-[5/3.4] w-full flex-col overflow-hidden rounded-2xl p-3.5 text-white outline-none transition duration-300",
-                    "shadow-[0_14px_32px_-14px_rgba(16,100,70,0.55)]",
-                    "hover:-translate-y-1 hover:shadow-[0_20px_40px_-12px_rgba(16,100,70,0.6)]",
-                    "focus-visible:ring-2 focus-visible:ring-[#27d17c]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-                  )}
-                  style={{ background: tone.face }}
+                  className="group relative flex aspect-[1.58/1] w-full flex-col overflow-hidden rounded-[1.35rem] border p-4 text-[#1f2925] outline-none transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-20px_rgba(31,41,37,0.35)] focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
+                  style={{
+                    background: tone.face,
+                    borderColor: tone.border,
+                    boxShadow:
+                      "0 10px 25px -20px rgba(31,41,37,0.38), inset 0 1px 0 rgba(255,255,255,0.75)",
+                  }}
                 >
-                  {/* Gloss */}
+                  {/* Subtle collectible-card decoration */}
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 opacity-80"
+                    className="pointer-events-none absolute -right-8 -top-9 h-28 w-28 rounded-full blur-2xl"
                     style={{
-                      background:
-                        "linear-gradient(125deg, rgba(255,255,255,0.28) 0%, transparent 42%, transparent 60%, rgba(255,255,255,0.08) 100%)",
+                      background: tone.orb,
                     }}
                   />
-
-                  {/* Soft orbs */}
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute -right-4 -top-6 h-20 w-20 rounded-full bg-white/20 blur-2xl transition duration-300 group-hover:bg-white/30"
+                    className="pointer-events-none absolute bottom-4 right-5 h-1.5 w-1.5 rounded-full opacity-50"
+                    style={{ backgroundColor: tone.accent }}
                   />
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute -bottom-8 -left-4 h-16 w-16 rounded-full bg-black/10 blur-xl"
-                  />
-
-                  {/* Dog-ear */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute right-0 top-0 h-5 w-5"
-                    style={{
-                      background: `linear-gradient(225deg, ${tone.fold} 49%, rgba(0,0,0,0.12) 51%)`,
-                      clipPath: "polygon(0 0, 100% 0, 100% 100%)",
-                    }}
+                    className="pointer-events-none absolute bottom-7 right-9 h-1 w-1 rounded-full opacity-30"
+                    style={{ backgroundColor: tone.accent }}
                   />
 
                   <div className="relative flex items-start justify-between gap-2">
                     <span
-                      className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 backdrop-blur-[2px]"
-                      style={{ boxShadow: `inset 0 0 0 1px ${tone.ring}` }}
+                      className="flex h-10 w-10 items-center justify-center rounded-2xl border bg-white/70"
+                      style={{
+                        color: tone.accent,
+                        borderColor: tone.accentSoft,
+                      }}
                     >
-                      <Medal className="h-4 w-4" strokeWidth={1.9} />
+                      <Medal className="h-[18px] w-[18px]" strokeWidth={1.8} />
                     </span>
                     {typeof c.score === "number" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-black/15 px-2 py-0.5 text-[10px] font-bold tabular-nums tracking-wide text-white ring-1 ring-white/20">
-                        <Sparkles className="h-3 w-3" />
+                      <span
+                        className="inline-flex items-center gap-1 rounded-full border bg-white/65 px-2.5 py-1 text-[10px] font-bold tabular-nums tracking-wide"
+                        style={{
+                          color: tone.accent,
+                          borderColor: tone.accentSoft,
+                        }}
+                      >
+                        <Sparkles className="h-3 w-3" strokeWidth={1.8} />
                         {c.score}%
                       </span>
                     ) : null}
                   </div>
 
-                  <div className="relative mt-auto space-y-2.5">
-                    <p className="line-clamp-2 text-[14px] font-semibold leading-snug tracking-tight drop-shadow-sm">
+                  <div className="relative mt-auto">
+                    <p
+                      className="text-[9px] font-bold uppercase tracking-[0.16em]"
+                      style={{ color: tone.accent }}
+                    >
+                      SupraBase credential
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-[14px] font-semibold leading-snug tracking-tight text-[#1f2925]">
                       {label}
                     </p>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-semibold tracking-[0.04em] text-white/95">
-                        Verified
+                    <div className="mt-3 flex items-center justify-between gap-2 border-t pt-2.5"
+                      style={{ borderColor: tone.accentSoft }}
+                    >
+                      <span
+                        className="inline-flex items-center gap-1 text-[10.5px] font-semibold"
+                        style={{ color: tone.accent }}
+                      >
+                        <BadgeCheck className="h-3.5 w-3.5" />
+                        Verified skill
                       </span>
                       <span
                         className={cn(
-                          "rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] shadow-sm",
+                          "rounded-full px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.13em]",
                           tone.tag
                         )}
                       >
-                        Skill
+                        {levelLabel(c.level)}
                       </span>
                     </div>
                   </div>

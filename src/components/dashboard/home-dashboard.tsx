@@ -497,7 +497,7 @@ export function HomeDashboard() {
                 <Bar
                   dataKey="hours"
                   radius={[4, 4, 0, 0]}
-                  fill="#6366f1"
+                  fill="var(--color-primary)"
                   animationDuration={500}
                   animationEasing="ease-out"
                   activeBar={{
@@ -521,7 +521,7 @@ export function HomeDashboard() {
             {chartsReady ? (
             <ResponsiveContainer width="100%" height="100%" minHeight={140}>
               <RadarChart data={skillData} cx="50%" cy="50%" outerRadius="72%">
-                <PolarGrid stroke="#6366f1" strokeOpacity={0.35} />
+                <PolarGrid stroke="var(--color-primary)" strokeOpacity={0.35} />
                 <PolarAngleAxis
                   dataKey="skill"
                   tick={{ fill: "#c4b5fd", fontSize: 9 }}
@@ -532,7 +532,7 @@ export function HomeDashboard() {
                   dataKey="value"
                   stroke="#a78bfa"
                   strokeWidth={2}
-                  fill="#8b5cf6"
+                  fill="color-mix(in srgb, var(--color-primary) 70%, white)"
                   fillOpacity={0.55}
                   dot={{ r: 3, fill: "#c4b5fd", stroke: "#a78bfa", strokeWidth: 1 }}
                   animationDuration={600}

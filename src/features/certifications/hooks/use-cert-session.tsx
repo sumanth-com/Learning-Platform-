@@ -77,10 +77,12 @@ const CertSessionContext = createContext<CertSessionValue | null>(null);
 export function CertSessionProvider({
   certification,
   profileName,
+  userId,
   children,
 }: {
   certification: Certification;
   profileName: string;
+  userId?: string;
   children: ReactNode;
 }) {
   const router = useRouter();
@@ -411,6 +413,8 @@ export function CertSessionProvider({
         certificationId: certification.id,
         title: certification.shortTitle,
         score: avg,
+        passingScore: certification.passingScore,
+        recipientName: s.confirmedName,
       });
     }
     router.push(
@@ -480,7 +484,12 @@ export function CertSessionProvider({
         return;
       }
 
-      const id = createCertificateId();
+      const id = createCertificateId({
+        userId,
+        recipientName: name,
+        certificationId: certification.id,
+        issuedAt: new Date().toISOString(),
+      });
       const cert: EarnedCertificate = {
         id,
         certificationId: certification.id,
@@ -505,6 +514,7 @@ export function CertSessionProvider({
       earned,
       result,
       router,
+      userId,
       writeAttempt,
     ]
   );

@@ -37,10 +37,10 @@ export function HubResourceCard({
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card",
         "shadow-[0_1px_0_rgba(0,0,0,0.03)]",
-        "transition-[border-color,box-shadow,transform] duration-200",
-        "hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_18px_40px_-28px_rgba(30,40,50,0.35)]"
+        "transition-[border-color,box-shadow] duration-150",
+        "hover:border-foreground/12 hover:shadow-[0_10px_24px_-22px_rgba(30,40,50,0.3)]"
       )}
-      style={{ contentVisibility: "auto", containIntrinsicSize: "0 420px" }}
+      style={{ contain: "layout paint" }}
     >
       <Link
         href={`/resources/${resource.slug}`}
@@ -110,8 +110,8 @@ export function HubResourceCard({
           className={cn(
             "mt-2 inline-flex h-10 items-center justify-center gap-2 rounded-xl",
             "bg-foreground text-[13px] font-semibold text-background",
-            "transition-all duration-200 ease-out",
-            "hover:-translate-y-0.5 hover:opacity-90"
+            "transition-opacity duration-150",
+            "hover:opacity-90"
           )}
         >
           Start Learning

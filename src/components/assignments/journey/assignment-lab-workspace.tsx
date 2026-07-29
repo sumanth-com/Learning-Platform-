@@ -62,7 +62,7 @@ export function AssignmentLabWorkspace({
             className={cn(
               "inline-flex h-9 min-w-[10.25rem] cursor-pointer items-center justify-center gap-1.5 overflow-hidden rounded-full border-2 px-4 text-xs font-bold shadow-sm transition-all duration-300",
               isComplete
-                ? "border-[#047857] bg-[#059669] text-white hover:bg-[#047857]"
+                ? "border-primary/80 bg-primary text-white hover:bg-primary/80"
                 : "border-[#111113] bg-[#111113] text-white hover:bg-[#27272a]"
             )}
           >

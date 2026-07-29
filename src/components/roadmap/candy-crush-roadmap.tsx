@@ -239,7 +239,7 @@ function WeekBadge({
         variant === "start" &&
           "border border-purple-500/40 bg-purple-500/10 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.15)]",
         variant === "current" &&
-          "border border-indigo-500/50 bg-indigo-600/80 text-white shadow-[0_0_16px_rgba(99,102,241,0.35)]",
+          "border border-indigo-500/50 bg-indigo-600/80 text-white shadow-[0_0_16px_color-mix(in_srgb,var(--color-primary)_35%,transparent)]",
         variant === "complete" && "border border-emerald-500/30 bg-emerald-500/15 text-emerald-300"
       )}
     >

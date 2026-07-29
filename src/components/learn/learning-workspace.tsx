@@ -167,7 +167,7 @@ export function LearningWorkspace({
       <main className="relative min-h-0 flex-1 overflow-y-auto">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.06),_transparent_50%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_color-mix(in_srgb,var(--color-primary)_6%,transparent),_transparent_50%)]"
         />
         <div className="relative">
           <LessonPanel

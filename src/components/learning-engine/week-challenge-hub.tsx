@@ -273,7 +273,7 @@ export function WeekChallengeHub({ week }: { week: LearnWeekBundle }) {
               className="h-2.5 flex-1 bg-[#b7a994] ring-1 ring-[#5C3A21]/30"
               indicatorClassName="bg-emerald-500"
             />
-            <span className="text-sm font-semibold tabular-nums text-emerald-600" suppressHydrationWarning>
+            <span className="text-sm font-semibold tabular-nums text-primary" suppressHydrationWarning>
               {hydrated ? `${displayProgress.percent}%` : "\u00a0"}
             </span>
           </div>

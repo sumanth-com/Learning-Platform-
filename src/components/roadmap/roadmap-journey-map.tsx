@@ -304,7 +304,7 @@ export function RoadmapJourneyMap({
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 50% 0%, rgba(99,102,241,0.14) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(168,85,247,0.08) 0%, transparent 40%)",
+            "radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 50%), radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, transparent 40%)",
         }}
       />
 

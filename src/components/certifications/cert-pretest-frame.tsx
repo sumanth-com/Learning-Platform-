@@ -68,8 +68,8 @@ export function CertPretestFrame({
                 <div
                   className={cn(
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold",
-                    active && "bg-[#27d17c] text-zinc-950",
-                    done && "bg-[#27d17c]/25 text-[#27d17c]",
+                    active && "bg-primary text-primary-foreground",
+                    done && "bg-primary/25 text-primary",
                     !active &&
                       !done &&
                       "bg-muted text-muted-foreground"
@@ -89,7 +89,7 @@ export function CertPretestFrame({
                   <div
                     className={cn(
                       "mx-1 hidden h-px w-8 sm:block sm:w-10",
-                      done ? "bg-[#27d17c]/40" : "bg-border"
+                      done ? "bg-primary/40" : "bg-border"
                     )}
                   />
                 ) : null}
@@ -161,8 +161,8 @@ export function PretestPrimaryButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "rounded-xl bg-[#27d17c] px-6 py-2.5 text-[14px] font-bold text-zinc-950 transition hover:bg-[#3ee08d]",
-        disabled && "cursor-not-allowed opacity-40 hover:bg-[#27d17c]"
+        "rounded-xl bg-primary px-6 py-2.5 text-[14px] font-bold text-primary-foreground transition hover:bg-primary/90",
+        disabled && "cursor-not-allowed opacity-40 hover:bg-primary"
       )}
     >
       {children}

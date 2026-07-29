@@ -217,7 +217,7 @@ export function JsPlaygroundSolve({
               {title}
             </h1>
             <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-zinc-300">
-              <span className="capitalize text-emerald-600">
+              <span className="capitalize text-primary">
                 {challenge.difficulty}
               </span>
               <span className="text-zinc-500">·</span>

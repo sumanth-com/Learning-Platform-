@@ -64,7 +64,7 @@ export function ProfileMenu({ name, role }: ProfileMenuProps) {
         <span
           className={cn(
             "flex h-9 w-9 items-center justify-center rounded-xl text-[14px] font-semibold",
-            "bg-gradient-to-br from-indigo-500 to-violet-600 text-white",
+            "bg-gradient-to-br from-[#242328] via-[#343136] to-brand text-white",
             "ring-1 ring-border shadow-sm"
           )}
         >
@@ -107,7 +107,7 @@ export function ProfileMenu({ name, role }: ProfileMenuProps) {
               {theme === "dark" ? (
                 <Sun className="h-4 w-4 text-amber-500" />
               ) : (
-                <Moon className="h-4 w-4 text-indigo-500" />
+                <Moon className="h-4 w-4 text-primary" />
               )}
               {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>

@@ -16,7 +16,6 @@ import {
   Loader2,
   Pencil,
   Trash2,
-  UserRound,
   Users,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -287,18 +286,14 @@ export function ProfileWorkspace({
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-stretch lg:gap-8">
         {/* Candidate Information */}
         <section className="flex h-full min-h-0 flex-col rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] sm:p-8">
-          <div className="flex items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 text-white shadow-md dark:bg-zinc-100 dark:text-zinc-900">
-              <UserRound className="h-5 w-5" />
-            </span>
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                Candidate Information
-              </h2>
-              <p className="mt-1 text-[13px] text-muted-foreground">
-                Edit your details anytime. Changes update your ID card live.
-              </p>
-            </div>
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
+              Candidate Information
+            </h2>
+            <p className="mt-1 text-[13px] text-muted-foreground">
+              Update your name and photo. Account details are managed by
+              SupraBase.
+            </p>
           </div>
 
           <div className="mt-7 flex flex-1 flex-col gap-5">
@@ -322,10 +317,13 @@ export function ProfileWorkspace({
               <Input
                 id="headline"
                 value={headline}
-                onChange={(e) => setHeadline(e.target.value)}
-                placeholder="Upcoming Developer"
-                className="h-11 rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
+                readOnly
+                aria-readonly="true"
+                className="h-11 cursor-default rounded-xl border-border bg-muted/40 text-foreground"
               />
+              <p className="text-[11px] text-muted-foreground">
+                Assigned from your learner profile.
+              </p>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
@@ -342,7 +340,8 @@ export function ProfileWorkspace({
                 <Input
                   value={role}
                   readOnly
-                  className="h-11 rounded-xl border-border bg-muted/40 capitalize text-foreground"
+                  aria-readonly="true"
+                  className="h-11 cursor-default rounded-xl border-border bg-muted/40 capitalize text-foreground"
                 />
               </div>
             </div>
@@ -437,15 +436,15 @@ export function ProfileWorkspace({
             className="relative z-10 flex h-full w-full flex-1 flex-col overflow-hidden rounded-[1.6rem]"
             style={{
               background:
-                "linear-gradient(180deg, rgba(226,232,240,0.95) 0%, rgba(148,163,184,0.5) 26%, rgba(37,99,235,0.9) 60%, rgba(29,78,216,1) 100%)",
+                "linear-gradient(180deg, #222328 0%, #29282d 58%, #5f3435 84%, #a7423d 100%)",
               boxShadow:
-                "0 0 0 1.5px rgba(96,165,250,0.85), 0 0 28px rgba(59,130,246,0.4), 0 22px 48px -22px rgba(15,23,42,0.45), inset 0 1px 0 rgba(255,255,255,0.35)",
+                "0 0 0 1px rgba(217,74,65,0.34), 0 0 18px rgba(217,74,65,0.12), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
             }}
             animate={{
               boxShadow: [
-                "0 0 0 1.5px rgba(96,165,250,0.7), 0 0 20px rgba(59,130,246,0.3), 0 22px 48px -22px rgba(15,23,42,0.45), inset 0 1px 0 rgba(255,255,255,0.35)",
-                "0 0 0 1.5px rgba(147,197,253,0.95), 0 0 36px rgba(59,130,246,0.55), 0 22px 48px -22px rgba(15,23,42,0.45), inset 0 1px 0 rgba(255,255,255,0.45)",
-                "0 0 0 1.5px rgba(96,165,250,0.7), 0 0 20px rgba(59,130,246,0.3), 0 22px 48px -22px rgba(15,23,42,0.45), inset 0 1px 0 rgba(255,255,255,0.35)",
+                "0 0 0 1px rgba(217,74,65,0.3), 0 0 14px rgba(217,74,65,0.1), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
+                "0 0 0 1px rgba(220,163,154,0.5), 0 0 22px rgba(217,74,65,0.18), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.26)",
+                "0 0 0 1px rgba(217,74,65,0.3), 0 0 14px rgba(217,74,65,0.1), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
               ],
             }}
             transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
@@ -461,14 +460,14 @@ export function ProfileWorkspace({
               aria-hidden
               className="pointer-events-none absolute inset-y-3 right-3 z-20 w-[3px] overflow-hidden rounded-full"
             >
-              <div className="absolute inset-0 bg-sky-300/20" />
+              <div className="absolute inset-0 bg-primary/20" />
               <motion.div
                 className="absolute left-0 right-0 h-[38%] rounded-full"
                 style={{
                   background:
-                    "linear-gradient(to bottom, transparent, rgba(186,230,253,0.95), rgba(56,189,248,1), rgba(37,99,235,0.85), transparent)",
+                    "linear-gradient(to bottom, transparent, rgba(220,163,154,0.72), rgba(217,74,65,0.72), rgba(95,52,53,0.6), transparent)",
                   boxShadow:
-                    "0 0 10px 2px rgba(56,189,248,0.9), 0 0 22px 4px rgba(37,99,235,0.45)",
+                    "0 0 8px 1px rgba(217,74,65,0.35), 0 0 16px 3px rgba(217,74,65,0.16)",
                 }}
                 animate={{ top: ["-40%", "105%"] }}
                 transition={{
@@ -478,7 +477,7 @@ export function ProfileWorkspace({
                 }}
               />
               <motion.div
-                className="absolute left-1/2 h-8 w-8 -translate-x-1/2 rounded-full bg-sky-300/50 blur-md"
+                className="absolute left-1/2 h-8 w-8 -translate-x-1/2 rounded-full bg-[#fcb49c]/50 blur-md"
                 animate={{ top: ["-10%", "110%"], opacity: [0.2, 0.85, 0.2] }}
                 transition={{
                   duration: 2.2,
@@ -504,7 +503,7 @@ export function ProfileWorkspace({
                 />
               ) : (
                 <div
-                  className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-slate-300 via-slate-400 to-blue-600 text-7xl font-semibold text-white/90"
+                  className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#24252a] via-[#2f2d32] to-[#74403f] text-7xl font-semibold text-white/90"
                   style={{
                     maskImage:
                       "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
@@ -517,7 +516,7 @@ export function ProfileWorkspace({
               )}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#1d4ed8] via-[#2563eb]/80 to-transparent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#3f292b] via-[#5f3435]/75 to-transparent"
               />
             </div>
 
@@ -526,7 +525,7 @@ export function ProfileWorkspace({
                 <h3 className="truncate text-[1.35rem] font-bold tracking-tight drop-shadow-sm">
                   {fullName.trim() || "Your name"}
                 </h3>
-                <BadgeCheck className="h-[18px] w-[18px] shrink-0 fill-white text-blue-700" />
+                <BadgeCheck className="h-[18px] w-[18px] shrink-0 fill-white text-[#d96b61]" />
               </div>
               <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-relaxed text-white/85">
                 {headline.trim() || "Upcoming Developer"} · SupraBase learner

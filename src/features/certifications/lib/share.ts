@@ -1,10 +1,21 @@
 import type { EarnedCertificate } from "@/features/certifications/types";
 
+const PRODUCTION_ORIGIN = "https://suprabase.vercel.app";
+
 export function certificateVerifyUrl(id: string) {
   if (typeof window !== "undefined") {
-    return `${window.location.origin}/verify/${id}`;
+    const configuredOrigin = process.env.NEXT_PUBLIC_APP_URL?.trim();
+    const configuredIsLocal =
+      configuredOrigin?.includes("localhost") ||
+      configuredOrigin?.includes("127.0.0.1");
+    const origin =
+      (configuredOrigin && !configuredIsLocal ? configuredOrigin : undefined) ||
+      (window.location.hostname === "localhost"
+        ? PRODUCTION_ORIGIN
+        : window.location.origin);
+    return `${origin.replace(/\/+$/, "")}/verify/${encodeURIComponent(id)}`;
   }
-  return `/verify/${id}`;
+  return `${PRODUCTION_ORIGIN}/verify/${encodeURIComponent(id)}`;
 }
 
 export function qrImageUrl(data: string) {

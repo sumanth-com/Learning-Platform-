@@ -93,7 +93,7 @@ export function SubmitTestConfirmModal({
             type="button"
             onClick={onConfirm}
             className={cn(
-              "rounded-xl bg-[#27d17c] px-5 py-2.5 text-[13px] font-bold text-zinc-950 transition hover:bg-[#3ee08d]"
+              "rounded-xl bg-primary px-5 py-2.5 text-[13px] font-bold text-primary-foreground transition hover:bg-primary/90"
             )}
           >
             Confirm submit

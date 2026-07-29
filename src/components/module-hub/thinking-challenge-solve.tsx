@@ -310,7 +310,7 @@ export function ThinkingChallengeSolve({
                 Submit answer
               </Button>
             ) : thinking.kind !== "multiple-choice" && submitted ? (
-              <span className="inline-flex h-9 items-center rounded-md border border-emerald-600/40 bg-emerald-500/10 px-3 text-xs font-semibold text-emerald-600">
+              <span className="inline-flex h-9 items-center rounded-md border border-emerald-600/40 bg-emerald-500/10 px-3 text-xs font-semibold text-primary">
                 Answer submitted
               </span>
             ) : null}
@@ -381,7 +381,7 @@ export function ThinkingChallengeSolve({
                 className={cn(
                   "inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-xs font-semibold",
                   mcqCorrect
-                    ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-600"
+                    ? "border-emerald-500/50 bg-emerald-500/15 text-primary"
                     : "border-amber-500/45 bg-amber-500/10 text-amber-600"
                 )}
               >

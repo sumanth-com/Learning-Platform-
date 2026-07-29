@@ -69,7 +69,7 @@ export function HeaderNotifications() {
       >
         <Bell className="h-4 w-4" strokeWidth={1.75} />
         {unread > 0 ? (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#27d17c] px-1 text-[9px] font-bold text-zinc-950">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
             {unread > 9 ? "9+" : unread}
           </span>
         ) : null}
@@ -112,7 +112,7 @@ export function HeaderNotifications() {
                     }}
                     className={cn(
                       "block px-3.5 py-3 transition hover:bg-muted/50",
-                      !item.read && "bg-[#27d17c]/[0.05]"
+                      !item.read && "bg-primary/[0.05]"
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -120,7 +120,7 @@ export function HeaderNotifications() {
                         {item.title}
                       </p>
                       {!item.read ? (
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#27d17c]" />
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                       ) : null}
                     </div>
                     <p className="mt-0.5 line-clamp-2 text-[12px] leading-relaxed text-muted-foreground">

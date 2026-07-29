@@ -101,7 +101,8 @@ export function DeveloperHubWorkspace() {
         <div
           ref={scrollerRef}
           data-developer-hub-scroll
-          className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-y-contain"
+          className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-y-contain [scrollbar-gutter:stable]"
+          style={{ WebkitOverflowScrolling: "touch" }}
         >
           <div className="w-full pb-16 sm:pb-20">
             <div className="px-4 pt-6 sm:px-6 sm:pt-8 lg:px-8">
@@ -189,7 +190,7 @@ export function DeveloperHubWorkspace() {
               </section>
             </div>
 
-            <div className="sticky top-0 z-20 mt-6 border-y border-border/50 bg-background/90 px-4 py-3.5 backdrop-blur-xl sm:px-6 lg:px-8">
+            <div className="sticky top-0 z-20 mt-6 border-y border-border/60 bg-background px-4 py-3.5 sm:px-6 lg:px-8">
               <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <button

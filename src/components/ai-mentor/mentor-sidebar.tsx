@@ -654,7 +654,7 @@ export function MentorSidebar({
               className={cn(
                 "relative rounded-xl border bg-muted/40 transition-[border-color,box-shadow,background-color] duration-200",
                 searchFocused
-                  ? "border-foreground/20 bg-background shadow-[0_0_0_3px_rgba(99,102,241,0.12)]"
+                  ? "border-foreground/20 bg-background shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_12%,transparent)]"
                   : "border-transparent hover:border-border"
               )}
             >

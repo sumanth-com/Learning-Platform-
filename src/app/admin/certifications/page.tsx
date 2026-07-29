@@ -69,7 +69,7 @@ export default function AdminCertificationsPage() {
                     {LEVEL_META.basic.passing}% –{" "}
                     {LEVEL_META.intermediate.passing}%
                   </td>
-                  <td className="py-2.5 text-emerald-600 dark:text-emerald-400">
+                  <td className="py-2.5 text-primary dark:text-emerald-400">
                     Published
                   </td>
                 </tr>

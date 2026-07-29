@@ -42,7 +42,7 @@ export function renderEmailLayout({
       <tr>
         <td style="padding:28px 0 8px;">
           <a href="${safeUrl}"
-             style="display:inline-block;background:#4f46e5;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;padding:14px 28px;border-radius:10px;box-shadow:0 8px 24px rgba(79,70,229,0.35);">
+             style="display:inline-block;background:#d83a32;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;padding:14px 28px;border-radius:10px;box-shadow:0 8px 24px rgba(216,58,50,0.28);">
             ${safeCta}
           </a>
         </td>
@@ -86,7 +86,7 @@ export function renderEmailLayout({
           <tr>
             <td style="padding:0 0 20px;text-align:center;">
               <span style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;">
-                <span style="display:inline-block;width:36px;height:36px;line-height:36px;text-align:center;border-radius:10px;background:#4f46e5;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-weight:700;font-size:14px;">${brand.logoText}</span>
+                <span style="display:inline-block;width:36px;height:36px;line-height:36px;text-align:center;border-radius:10px;background:#d83a32;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-weight:700;font-size:14px;">${brand.logoText}</span>
                 <span style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:18px;font-weight:650;color:#18181b;" class="email-title">${brand.name}</span>
               </span>
             </td>
@@ -117,7 +117,7 @@ export function renderEmailLayout({
           <tr>
             <td style="padding:24px 8px 0;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:12px;line-height:1.7;color:#71717a;">
               <strong style="color:#52525b;">${brand.name}</strong><br/>
-              Need help? <a href="mailto:${escapeHtml(brand.supportEmail)}" style="color:#6366f1;text-decoration:none;">${escapeHtml(brand.supportEmail)}</a><br/>
+              Need help? <a href="mailto:${escapeHtml(brand.supportEmail)}" style="color:#d83a32;text-decoration:none;">${escapeHtml(brand.supportEmail)}</a><br/>
               © ${year} ${brand.name}. All rights reserved.
             </td>
           </tr>

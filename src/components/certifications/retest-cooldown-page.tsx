@@ -42,7 +42,7 @@ function DigitCard({ value, label }: { value: string; label: string }) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -14, opacity: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="absolute font-mono text-[1.45rem] font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-[#27d17c]"
+            className="absolute font-mono text-[1.45rem] font-semibold tabular-nums tracking-tight text-primary"
           >
             {value}
           </motion.span>
@@ -117,7 +117,7 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
     <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-background">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(39,209,124,0.08),_transparent_55%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_color-mix(in_srgb,var(--color-primary)_8%,transparent),_transparent_55%)]"
       />
 
       <div className="relative mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 py-10">
@@ -136,8 +136,9 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
               className="absolute left-0 right-0 h-1/3 rounded-full"
               style={{
                 background:
-                  "linear-gradient(to bottom, transparent, rgba(39,209,124,0.85), transparent)",
-                boxShadow: "0 0 10px rgba(39,209,124,0.45)",
+                  "linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-primary) 85%, transparent), transparent)",
+                boxShadow:
+                  "0 0 10px color-mix(in srgb, var(--color-primary) 45%, transparent)",
               }}
               animate={{ top: ["-35%", "110%"] }}
               transition={{
@@ -169,7 +170,7 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
           <div className="mt-6 rounded-2xl border border-border/80 bg-muted/20 p-5">
             {unlocked ? (
               <div className="text-center">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-600">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
                   Ready to certify
                 </p>
                 <h2 className="mt-3 text-[18px] font-semibold tracking-tight text-foreground">
@@ -196,8 +197,8 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
 
                 <div className="mt-5 rounded-xl border border-border/70 bg-background/90 px-4 py-3.5">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#27d17c]/12">
-                      <Shield className="h-3.5 w-3.5 text-[#27d17c]" />
+                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/12">
+                      <Shield className="h-3.5 w-3.5 text-primary" />
                     </span>
                     <p className="text-[12px] font-semibold tracking-tight text-foreground">
                       Cooldown policy
@@ -205,21 +206,21 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
                   </div>
                   <ul className="mt-2.5 space-y-1.5 pl-0.5 text-[12px] leading-relaxed text-muted-foreground">
                     <li className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/70" />
                       <span>
                         A {CERT_RETRY_COOLDOWN_HOURS}-hour wait applies after an
                         unsuccessful attempt.
                       </span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/70" />
                       <span>
                         Use this time to review concepts and practice related
                         problems.
                       </span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#27d17c]/70" />
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/70" />
                       <span>
                         Cooldowns protect credential quality and keep passes
                         meaningful for hiring.
@@ -240,7 +241,7 @@ export function RetestCooldownPage({ meta }: { meta: CertMeta }) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   onClick={startRetest}
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-[#27d17c] px-4 py-2.5 text-[13px] font-bold text-zinc-950 transition hover:brightness-110"
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-[13px] font-bold text-primary-foreground transition hover:brightness-110"
                 >
                   Get Certified
                 </motion.button>

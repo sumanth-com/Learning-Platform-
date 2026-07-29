@@ -9,8 +9,9 @@ const PAPER = "#fdfbf7";
 const SIDEBAR = "#ece6dc";
 const INK = "#1c1917";
 const MUTED = "#57534e";
-const ACCENT = "#5b6cff";
-const ACCENT_SOFT = "#8b9bff";
+const ACCENT = "var(--color-brand)";
+const ACCENT_SOFT =
+  "color-mix(in srgb, var(--color-brand) 48%, white)";
 const SEAL_RING = "#3d3a36";
 
 export type CertificateSheetProps = {
@@ -21,6 +22,7 @@ export type CertificateSheetProps = {
   score?: number;
   issuedAt?: string;
   verifyUrl?: string;
+  certificateId?: string;
   id?: string;
   className?: string;
   compact?: boolean;
@@ -43,6 +45,7 @@ export function CertificateSheet({
   score,
   issuedAt,
   verifyUrl,
+  certificateId,
   id,
   className,
   compact,
@@ -54,13 +57,14 @@ export function CertificateSheet({
     <div
       id={id}
       className={cn(
-        "cert-sheet relative mx-auto aspect-[1.414/1] w-full overflow-hidden border border-[#d6cfc3] text-[#1c1917] shadow-[0_24px_60px_-28px_rgba(28,25,23,0.35)]",
-        compact ? "max-w-md" : "max-w-4xl",
+        "cert-sheet relative mx-auto aspect-[1.414/1] w-full overflow-hidden rounded-[1.15rem] border border-[#d6cfc3] text-[#1c1917] shadow-[0_24px_60px_-28px_rgba(28,25,23,0.35)]",
+        compact ? "max-w-md rounded-xl" : "max-w-4xl",
         className
       )}
       style={{
         fontFamily: "var(--font-plus-jakarta), system-ui, sans-serif",
         backgroundColor: PAPER,
+        containerType: "inline-size",
         WebkitPrintColorAdjust: "exact",
         printColorAdjust: "exact",
       }}
@@ -68,27 +72,27 @@ export function CertificateSheet({
       <div className="relative z-10 flex h-full min-h-0">
         {/* Left rail — date + brand */}
         <aside
-          className="relative flex w-[28%] shrink-0 flex-col justify-between overflow-hidden px-[4.5%] py-[6%]"
+          className="relative flex w-[26%] shrink-0 flex-col justify-between overflow-hidden px-[5%] py-[5.5%]"
           style={{ backgroundColor: SIDEBAR }}
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.35]"
+            className="pointer-events-none absolute inset-0 opacity-[0.3]"
             style={{
               backgroundImage:
-                "radial-gradient(circle at 20% 20%, rgba(91,108,255,0.12), transparent 45%), radial-gradient(circle at 80% 80%, rgba(176,108,73,0.1), transparent 50%)",
+                "radial-gradient(circle at 20% 20%, rgba(91,108,255,0.1), transparent 45%), radial-gradient(circle at 80% 80%, rgba(176,108,73,0.08), transparent 50%)",
             }}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-y-[10%] left-[42%] select-none overflow-hidden"
+            className="pointer-events-none absolute inset-y-[12%] left-1/2 select-none overflow-hidden"
             style={{
               writingMode: "vertical-rl",
-              transform: "rotate(180deg)",
-              fontSize: compact ? "2.2rem" : "clamp(2.4rem, 6.5vw, 4.2rem)",
+              transform: "translateX(-50%) rotate(180deg)",
+              fontSize: compact ? "2rem" : "clamp(2.2rem, 8cqw, 3.8rem)",
               fontWeight: 800,
-              letterSpacing: "0.2em",
-              color: "rgba(28,25,23,0.055)",
+              letterSpacing: "0.18em",
+              color: "rgba(28,25,23,0.05)",
               textTransform: "uppercase",
               whiteSpace: "nowrap",
             }}
@@ -96,29 +100,26 @@ export function CertificateSheet({
             SUPRABASE
           </div>
 
-          <div
-            className="relative rounded-md border px-[10%] py-[12%]"
-            style={{ borderColor: "rgba(28,25,23,0.22)" }}
-          >
+          <div className="relative z-10 flex flex-col gap-[10%]">
             <p
               className={cn(
                 "leading-snug",
-                compact ? "text-[7px]" : "text-[clamp(0.55rem,1.05vw,0.78rem)]"
+                compact ? "text-[7px]" : "text-[clamp(0.55rem,1.55cqw,0.76rem)]"
               )}
-              style={{ color: INK }}
+              style={{ color: MUTED }}
             >
               SupraBase grants and certifies this certificate on
             </p>
             <div
-              className="mt-[18%] rounded-sm border px-[8%] py-[10%] text-center"
-              style={{ borderColor: "rgba(28,25,23,0.18)" }}
+              className="rounded-lg border bg-white/55 px-[10%] py-[12%] text-center"
+              style={{ borderColor: "rgba(28,25,23,0.16)" }}
             >
               <p
                 className={cn(
-                  "font-semibold tracking-tight",
+                  "font-bold tracking-tight",
                   compact
-                    ? "text-[9px]"
-                    : "text-[clamp(0.7rem,1.35vw,0.95rem)]"
+                    ? "text-[10px]"
+                    : "text-[clamp(0.78rem,2.2cqw,1.05rem)]"
                 )}
                 style={{ color: INK }}
               >
@@ -127,12 +128,12 @@ export function CertificateSheet({
             </div>
           </div>
 
-          <div className="relative flex flex-col items-center gap-2">
-            <BrandMark size={compact ? 28 : 40} />
+          <div className="relative z-10 flex flex-col items-center gap-1.5 text-center">
+            <BrandMark size={compact ? 26 : 36} />
             <p
               className={cn(
                 "font-bold tracking-tight",
-                compact ? "text-[11px]" : "text-[clamp(0.85rem,1.6vw,1.15rem)]"
+                compact ? "text-[10px]" : "text-[clamp(0.8rem,2.2cqw,1.05rem)]"
               )}
               style={{ color: INK }}
             >
@@ -156,7 +157,7 @@ export function CertificateSheet({
                   "font-extrabold leading-[0.95] tracking-tight",
                   compact
                     ? "text-[22px]"
-                    : "text-[clamp(1.85rem,4.6vw,3.35rem)]"
+                    : "text-[clamp(1.8rem,6cqw,3.2rem)]"
                 )}
                 style={{ color: ACCENT }}
               >
@@ -164,10 +165,10 @@ export function CertificateSheet({
               </h1>
               <p
                 className={cn(
-                  "mt-1 font-extrabold leading-none tracking-tight",
+                  "mt-1 whitespace-nowrap font-extrabold leading-none tracking-tight",
                   compact
                     ? "text-[18px]"
-                    : "text-[clamp(1.45rem,3.6vw,2.65rem)]"
+                    : "text-[clamp(1.35rem,4.5cqw,2.4rem)]"
                 )}
                 style={{ color: INK }}
               >
@@ -191,10 +192,10 @@ export function CertificateSheet({
 
           <p
             className={cn(
-              "mt-[6%] font-medium",
+              "mt-[5%] font-medium",
               compact
                 ? "text-[9px]"
-                : "text-[clamp(0.7rem,1.25vw,0.95rem)]"
+                : "text-[clamp(0.7rem,1.9cqw,0.95rem)]"
             )}
             style={{ color: MUTED }}
           >
@@ -205,7 +206,7 @@ export function CertificateSheet({
               "mt-1 max-w-[92%] leading-[1.05]",
               compact
                 ? "text-[26px]"
-                : "text-[clamp(1.85rem,4.8vw,3.4rem)]"
+                : "text-[clamp(1.8rem,6.2cqw,3.2rem)]"
             )}
             style={{
               color: ACCENT,
@@ -220,7 +221,7 @@ export function CertificateSheet({
               "mt-[4%] max-w-[92%] leading-relaxed",
               compact
                 ? "text-[8px]"
-                : "text-[clamp(0.68rem,1.2vw,0.9rem)]"
+                : "text-[clamp(0.68rem,1.8cqw,0.9rem)]"
             )}
             style={{ color: MUTED }}
           >
@@ -241,14 +242,14 @@ export function CertificateSheet({
             , showcasing excellence and dedication.
           </p>
 
-          <div className="mt-auto flex items-end justify-between gap-4 pt-[6%]">
+          <div className="mt-auto flex items-end justify-between gap-4 pt-[4%]">
             <div className="min-w-0">
               <p
                 className={cn(
                   "leading-none",
                   compact
                     ? "text-[16px]"
-                    : "text-[clamp(1.1rem,2.4vw,1.75rem)]"
+                    : "text-[clamp(1.1rem,3.6cqw,1.75rem)]"
                 )}
                 style={{
                   color: INK,
@@ -262,7 +263,7 @@ export function CertificateSheet({
                   "mt-1.5 font-bold uppercase tracking-[0.08em]",
                   compact
                     ? "text-[7px]"
-                    : "text-[clamp(0.55rem,1vw,0.72rem)]"
+                    : "text-[clamp(0.55rem,1.5cqw,0.72rem)]"
                 )}
                 style={{ color: ACCENT }}
               >
@@ -271,12 +272,38 @@ export function CertificateSheet({
               <p
                 className={cn(
                   "mt-0.5",
-                  compact ? "text-[6px]" : "text-[clamp(0.5rem,0.9vw,0.65rem)]"
+                  compact ? "text-[6px]" : "text-[clamp(0.5rem,1.35cqw,0.65rem)]"
                 )}
                 style={{ color: MUTED }}
               >
                 Learning &amp; credentials
               </p>
+              {certificateId ? (
+                <div className="mt-[10%]">
+                  <p
+                    className={cn(
+                      "font-semibold uppercase tracking-[0.14em]",
+                      compact
+                        ? "text-[5px]"
+                        : "text-[clamp(0.42rem,1.05cqw,0.58rem)]"
+                    )}
+                    style={{ color: MUTED }}
+                  >
+                    Credential ID
+                  </p>
+                  <p
+                    className={cn(
+                      "mt-0.5 font-mono font-semibold tracking-wide",
+                      compact
+                        ? "text-[6px]"
+                        : "text-[clamp(0.48rem,1.2cqw,0.68rem)]"
+                    )}
+                    style={{ color: INK }}
+                  >
+                    {certificateId}
+                  </p>
+                </div>
+              ) : null}
             </div>
 
             <CertSeal
@@ -347,7 +374,7 @@ function CornerBadge({
       <p
         className={cn(
           "truncate font-semibold leading-tight",
-          compact ? "text-[7px]" : "text-[clamp(0.55rem,1vw,0.72rem)]"
+        compact ? "text-[7px]" : "text-[clamp(0.55rem,1.5cqw,0.72rem)]"
         )}
         style={{ color: INK }}
       >
@@ -356,7 +383,7 @@ function CornerBadge({
       <p
         className={cn(
           "mt-0.5 truncate uppercase tracking-[0.12em]",
-          compact ? "text-[5px]" : "text-[clamp(0.45rem,0.8vw,0.58rem)]"
+          compact ? "text-[5px]" : "text-[clamp(0.45rem,1.2cqw,0.58rem)]"
         )}
         style={{ color: MUTED }}
       >
@@ -373,7 +400,7 @@ function CertSeal({
   compact?: boolean;
   verifyUrl?: string;
 }) {
-  const size = compact ? 58 : 92;
+  const size = compact ? "56px" : "clamp(56px, 9cqw, 78px)";
   return (
     <div
       className="relative flex shrink-0 items-center justify-center"
@@ -455,6 +482,7 @@ export function CertificateDocument({
       level={certificate.level}
       score={certificate.score}
       issuedAt={certificate.issuedAt}
+      certificateId={certificate.id}
       verifyUrl={certificateVerifyUrl(certificate.id)}
     />
   );

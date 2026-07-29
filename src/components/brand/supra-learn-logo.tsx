@@ -1,3 +1,5 @@
+import Image from "next/image";
+import logoMark from "@/assets/Logo.png";
 import { cn } from "@/lib/utils";
 
 type LogoSize = "xs" | "sm" | "md" | "lg";
@@ -26,64 +28,28 @@ interface SupraBaseLogoProps {
   markOnly?: boolean;
 }
 
-export function SupraBaseMark({ className, id }: { className?: string; id?: string }) {
-  const uid = id ?? "default";
-  const ringId = `sl-ring-${uid}`;
-  const coreId = `sl-core-${uid}`;
-  const glowId = `sl-glow-${uid}`;
-
+/**
+ * Brand mark — uses Logo.png for both themes.
+ * The 30% radius clips the square corners baked into the source PNG.
+ */
+export function SupraBaseMark({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 44 44"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn("shrink-0", className)}
+    <span
+      className={cn(
+        "relative block shrink-0 overflow-hidden rounded-[30%]",
+        className
+      )}
       aria-hidden
     >
-      <defs>
-        <linearGradient id={ringId} x1="6" y1="38" x2="38" y2="6" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366f1" />
-          <stop offset="0.5" stopColor="#8b5cf6" />
-          <stop offset="1" stopColor="#22d3ee" />
-        </linearGradient>
-        <linearGradient id={coreId} x1="12" y1="32" x2="32" y2="12" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#312e81" />
-          <stop offset="1" stopColor="#1e1b4b" />
-        </linearGradient>
-        <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.2" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      <rect x="1" y="1" width="42" height="42" rx="13" stroke={`url(#${ringId})`} strokeWidth="1.5" fill="#09090b" />
-      <rect x="4" y="4" width="36" height="36" rx="10" fill={`url(#${coreId})`} />
-      <path
-        d="M12 28.5C15 26.5 18 26.5 22 28.5C26 26.5 29 26.5 32 28.5V31C29 29 26 29 22 31C18 29 15 29 12 31V28.5Z"
-        fill="white"
-        fillOpacity="0.9"
+      <Image
+        src={logoMark}
+        alt=""
+        fill
+        sizes="64px"
+        priority
+        className="object-cover"
       />
-      <path d="M22 28.5V31" stroke="#6366f1" strokeWidth="1.25" strokeLinecap="round" />
-      <path
-        d="M14 26L22 14L30 26"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        filter={`url(#${glowId})`}
-      />
-      <circle cx="22" cy="12.5" r="2.5" fill="#22d3ee" />
-      <circle cx="22" cy="12.5" r="5" stroke="#22d3ee" strokeWidth="1" opacity="0.35" />
-      <path
-        d="M22 8.5V10M19.5 9.25L20.5 10.75M24.5 9.25L23.5 10.75"
-        stroke="white"
-        strokeWidth="1"
-        strokeLinecap="round"
-        opacity="0.85"
-      />
-    </svg>
+    </span>
   );
 }
 
@@ -101,19 +67,19 @@ export function SupraBaseLogo({
 
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
-      <SupraBaseMark className={MARK_SIZES[size]} id={size} />
+      <SupraBaseMark className={MARK_SIZES[size]} />
       {showText && (
         <div className="flex min-w-0 flex-col justify-center gap-1">
           <span
             className={cn(
-              "font-semibold leading-none tracking-tight text-white",
+              "font-semibold leading-none tracking-tight text-foreground",
               TITLE_SIZES[size]
             )}
           >
             SupraBase
           </span>
           {showTagline && (
-            <span className="text-[10px] font-medium uppercase leading-none tracking-[0.14em] text-zinc-500">
+            <span className="text-[10px] font-medium uppercase leading-none tracking-[0.14em] text-muted-foreground">
               {tagline}
             </span>
           )}

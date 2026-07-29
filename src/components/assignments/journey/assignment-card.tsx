@@ -52,7 +52,7 @@ export function AssignmentCard({
           {locked ? (
             <Lock className="h-3 w-3" />
           ) : status === "completed" ? (
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+            <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
           ) : null}
           {STATUS_LABEL[status]}
         </span>

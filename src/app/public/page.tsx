@@ -14,7 +14,7 @@ export default function PublicPage() {
     <div className="relative min-h-screen overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(99,102,241,0.22),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_rgba(14,165,233,0.12),_transparent_45%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_color-mix(in_srgb,var(--color-primary)_22%,transparent),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_color-mix(in_srgb,var(--color-primary)_10%,transparent),_transparent_45%)]"
       />
 
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">

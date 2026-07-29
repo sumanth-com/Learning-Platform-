@@ -7,6 +7,8 @@ import type {
   EarnedCertificate,
 } from "@/features/certifications/types";
 import { notifyCertificateEarned } from "@/lib/notifications";
+import { createCertificateId as buildCertificateId } from "@/features/certifications/lib/certificate-id";
+import type { CertificateIdInput } from "@/features/certifications/lib/certificate-id";
 
 const STORAGE_KEY = "SupraBase.certifications.v1";
 const LEGACY_STORAGE_KEYS = ["supralearn.certifications.v1"];
@@ -127,10 +129,18 @@ export function useCertifications() {
   };
 }
 
-export function createCertificateId() {
-  const part = () =>
-    Math.random().toString(36).slice(2, 6).toUpperCase();
-  return `SL-${part()}-${part()}-${part()}`;
+export function createCertificateId(
+  input?: Partial<CertificateIdInput> & { recipientName?: string; certificationId?: string }
+) {
+  const current =
+    typeof window !== "undefined" ? readState().certificates.map((c) => c.id) : [];
+  return buildCertificateId({
+    recipientName: input?.recipientName?.trim() || "Learner",
+    certificationId: input?.certificationId || "general-basic",
+    userId: input?.userId,
+    issuedAt: input?.issuedAt,
+    takenIds: [...current, ...(input?.takenIds ?? [])],
+  });
 }
 
 /** Public lookup for verify page (localStorage on same browser; demo store). */

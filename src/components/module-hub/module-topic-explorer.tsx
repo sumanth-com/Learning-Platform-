@@ -747,7 +747,7 @@ function ModuleTopicExplorerInner({
               indicatorClassName="bg-emerald-500"
             />
             <span
-              className="min-w-[2.5rem] text-right text-sm font-semibold tabular-nums text-emerald-600"
+              className="min-w-[2.5rem] text-right text-sm font-semibold tabular-nums text-primary"
               suppressHydrationWarning
             >
               {hydrated ? `${displayProgress.percent}%` : "\u00a0"}

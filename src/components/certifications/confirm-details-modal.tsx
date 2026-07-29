@@ -15,7 +15,7 @@ function splitName(full: string) {
 }
 
 const fieldClass =
-  "mt-1.5 h-11 w-full rounded-xl border border-border bg-background px-3.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground/70 transition focus:border-[#27d17c]/60 focus:ring-2 focus:ring-[#27d17c]/20";
+  "mt-1.5 h-11 w-full rounded-xl border border-border bg-background px-3.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground/70 transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20";
 
 export function ConfirmDetailsModal({
   open,
@@ -122,7 +122,7 @@ export function ConfirmDetailsModal({
         </div>
 
         <div className="mt-4 flex gap-2.5 rounded-xl border border-border/80 bg-muted/40 px-3.5 py-3">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#1f8f55]" />
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-[12.5px] leading-relaxed text-muted-foreground">
             Find a quiet spot with a stable connection before you start. Good
             luck.
@@ -145,8 +145,8 @@ export function ConfirmDetailsModal({
               onStart(`${first} ${last}`);
             }}
             className={cn(
-              "rounded-xl bg-[#27d17c] px-5 py-2.5 text-[13px] font-bold text-zinc-950 transition hover:bg-[#3ee08d]",
-              !valid && "cursor-not-allowed opacity-40 hover:bg-[#27d17c]"
+              "rounded-xl bg-primary px-5 py-2.5 text-[13px] font-bold text-primary-foreground transition hover:bg-primary/90",
+              !valid && "cursor-not-allowed opacity-40 hover:bg-primary"
             )}
           >
             Start test

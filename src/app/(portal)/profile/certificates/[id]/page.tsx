@@ -14,7 +14,7 @@ export default async function ProfileCertificatePage({
 
   return (
     <>
-      <PortalChrome title="Certificate" />
+      <PortalChrome title="Certificate" fillViewport />
       <CertificateShowcase certificateId={id} />
     </>
   );

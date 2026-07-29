@@ -139,7 +139,7 @@ export function CertLandingPage({
           <button
             type="button"
             onClick={onStart}
-            className="relative mt-8 rounded-md bg-[#27d17c] px-9 py-3 text-[15px] font-bold text-zinc-950 transition hover:bg-[#3ee08d]"
+            className="relative mt-8 rounded-md bg-primary px-9 py-3 text-[15px] font-bold text-primary-foreground transition hover:bg-primary/90"
           >
             Get Certified
           </button>
@@ -252,7 +252,7 @@ export function CertLandingPage({
           <button
             type="button"
             onClick={onStart}
-            className="mt-6 rounded-md bg-[#27d17c] px-9 py-3 text-[15px] font-bold text-zinc-950 transition hover:bg-[#3ee08d]"
+            className="mt-6 rounded-md bg-primary px-9 py-3 text-[15px] font-bold text-primary-foreground transition hover:bg-primary/90"
           >
             Get Certified
           </button>
