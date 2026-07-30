@@ -1,98 +1,156 @@
-import Link from "next/link";
-import { ArrowRight, Brain, Route, Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { AUTH_ROUTES } from "@/features/auth/constants";
+import type { Metadata } from "next";
+import { getTotalWeeks } from "@/curriculum/registry";
+import { LandingCore } from "@/components/landing/landing-core";
+import { LandingCta } from "@/components/landing/landing-cta";
+import { FAQ_ITEMS, LandingFaq } from "@/components/landing/landing-faq";
+import { LandingFooter } from "@/components/landing/landing-footer";
+import { LandingHeader } from "@/components/landing/landing-header";
+import { LandingHero } from "@/components/landing/landing-hero";
+import { LandingJourney } from "@/components/landing/landing-journey";
+import { LandingManifesto } from "@/components/landing/landing-manifesto";
+import { LandingMentorShowcase } from "@/components/landing/landing-mentor-showcase";
+import { LandingStats, type LandingStat } from "@/components/landing/landing-stats";
+import { HUB_CATALOG } from "@/features/developer-hub/data/catalog";
+import { CERTIFICATIONS, CERT_CATEGORIES } from "@/features/certifications/data/catalog";
+import { SITE, absoluteUrl } from "@/lib/site";
+import styles from "@/components/landing/landing.module.css";
 
-export const metadata = {
-  title: "Learn Full Stack & AI",
-  description:
-    "SupraBase helps students become Full Stack and AI developers through structured paths, projects, and AI mentoring.",
+const TITLE = "Learn Full Stack & AI Development";
+
+export const metadata: Metadata = {
+  title: TITLE,
+  description: SITE.shortDescription,
+  alternates: { canonical: absoluteUrl("/public") },
+  openGraph: {
+    type: "website",
+    url: absoluteUrl("/public"),
+    title: `${TITLE} · ${SITE.name}`,
+    description: SITE.shortDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${TITLE} · ${SITE.name}`,
+    description: SITE.shortDescription,
+  },
 };
 
+/**
+ * Structured data is emitted from the same copy the page renders so answer
+ * engines and crawlers never see a different set of claims.
+ */
+function buildStructuredData(weeks: number, tracks: number) {
+  const organization = {
+    "@type": "EducationalOrganization",
+    "@id": absoluteUrl("/#organization"),
+    name: SITE.name,
+    url: SITE.url,
+    description: SITE.longDescription,
+    logo: absoluteUrl("/icons/icon-512.png"),
+    email: SITE.supportEmail,
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      organization,
+      {
+        "@type": "WebSite",
+        "@id": absoluteUrl("/#website"),
+        url: SITE.url,
+        name: SITE.name,
+        description: SITE.shortDescription,
+        publisher: { "@id": absoluteUrl("/#organization") },
+        inLanguage: "en",
+      },
+      {
+        "@type": "Course",
+        name: "Full Stack and AI Developer Path",
+        description: `A ${weeks}-week structured path covering web fundamentals, frontend, backend, databases and AI engineering, with in-browser coding challenges, portfolio projects and ${tracks} certification tracks.`,
+        provider: { "@id": absoluteUrl("/#organization") },
+        url: absoluteUrl("/public"),
+        educationalLevel: "Beginner to Intermediate",
+        teaches: CERT_CATEGORIES.map((category) => category.label),
+        hasCourseInstance: {
+          "@type": "CourseInstance",
+          courseMode: "online",
+          courseWorkload: `P${weeks}W`,
+        },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": absoluteUrl("/public#faq"),
+        mainEntity: FAQ_ITEMS.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      },
+    ],
+  };
+}
+
 export default function PublicPage() {
+  const weeks = getTotalWeeks();
+  const tracks = CERT_CATEGORIES.length;
+
+  const stats: LandingStat[] = [
+    {
+      value: weeks,
+      label: "Weeks of curriculum",
+      detail: "Sequenced so each week builds on the last",
+    },
+    {
+      value: tracks,
+      label: "Skill tracks",
+      detail: "From JavaScript to system design and AI engineering",
+    },
+    {
+      value: CERTIFICATIONS.length,
+      label: "Certification tests",
+      detail: "Basic and intermediate levels per track",
+    },
+    {
+      value: HUB_CATALOG.length,
+      suffix: "+",
+      label: "Dev Forge resources",
+      detail: "Curated references beside every module",
+    },
+  ];
+
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_color-mix(in_srgb,var(--color-primary)_22%,transparent),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_color-mix(in_srgb,var(--color-primary)_10%,transparent),_transparent_45%)]"
+    <div className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildStructuredData(weeks, tracks)),
+        }}
       />
 
-      <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
-        <Link
-          href={AUTH_ROUTES.public}
-          className="flex items-center gap-2 text-lg font-semibold tracking-tight"
-        >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
-            S
-          </span>
-          <span className="gradient-text">SupraBase</span>
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link href={AUTH_ROUTES.login}>
-            <Button variant="ghost">Sign in</Button>
-          </Link>
-          <Link href={AUTH_ROUTES.signup}>
-            <Button>Get started</Button>
-          </Link>
-        </div>
-      </header>
+      <div aria-hidden className={styles.backdrop}>
+        <div className={`${styles.aurora} ${styles.auroraOne}`} />
+        <div className={`${styles.aurora} ${styles.auroraTwo}`} />
+        <div className={`${styles.aurora} ${styles.auroraThree}`} />
+        <div className={styles.mesh} />
+        <div className={styles.vignette} />
+        <div className={styles.noise} />
+      </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-24 pt-16 sm:pt-24">
-        <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-indigo-300/80">
-          Enterprise learning platform
-        </p>
-        <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight text-zinc-50 sm:text-5xl lg:text-6xl">
-          Become a Full Stack &amp; AI developer with structure that scales.
-        </h1>
-        <p className="mt-6 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg">
-          SupraBase combines learning paths, assignments, projects, AI mentoring,
-          and progress tracking — built as a production SaaS, not a course site.
-        </p>
+      <LandingHeader />
 
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link href={AUTH_ROUTES.signup}>
-            <Button size="lg" className="gap-2">
-              Start learning
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-          <Link href={AUTH_ROUTES.login}>
-            <Button size="lg" variant="outline">
-              I already have an account
-            </Button>
-          </Link>
-        </div>
-
-        <section className="mt-24 grid gap-8 sm:grid-cols-3">
-          {[
-            {
-              icon: Route,
-              title: "Structured paths",
-              body: "Guided curricula from fundamentals to production systems.",
-            },
-            {
-              icon: Brain,
-              title: "AI mentoring",
-              body: "On-demand guidance that adapts to how you learn.",
-            },
-            {
-              icon: Shield,
-              title: "Enterprise-ready",
-              body: "Auth, roles, and progress designed for real teams.",
-            },
-          ].map((item) => (
-            <div key={item.title} className="space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900/60 text-indigo-400">
-                <item.icon className="h-5 w-5" />
-              </div>
-              <h2 className="text-base font-semibold text-zinc-100">
-                {item.title}
-              </h2>
-              <p className="text-sm leading-relaxed text-zinc-500">{item.body}</p>
-            </div>
-          ))}
-        </section>
+      <main className="relative z-10">
+        <LandingHero />
+        <LandingMentorShowcase />
+        <LandingCore />
+        <LandingManifesto />
+        <LandingStats stats={stats} />
+        <LandingJourney />
+        <LandingFaq />
+        <LandingCta />
       </main>
+
+      <div className="relative z-10">
+        <LandingFooter />
+      </div>
     </div>
   );
 }

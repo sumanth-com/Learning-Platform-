@@ -20,6 +20,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { cn } from "@/lib/utils";
 import { ADMIN_ROUTES } from "@/features/admin/types";
 import { useAdminShell } from "@/components/admin/admin-shell-context";
@@ -92,17 +93,18 @@ export function AdminSidebar({ userName, userRole }: AdminSidebarProps) {
             )}
           >
             {collapsed ? (
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
-                S
-              </span>
+              <SupraBaseMark className="h-9 w-9" />
             ) : (
-              <div>
-                <p className="font-display text-lg leading-tight text-zinc-50">
-                  SupraBase
-                </p>
-                <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
-                  Admin Portal
-                </p>
+              <div className="flex items-center gap-2.5">
+                <SupraBaseMark className="h-9 w-9" />
+                <div>
+                  <p className="font-display text-lg leading-tight text-zinc-50">
+                    Suprabase
+                  </p>
+                  <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+                    Admin Portal
+                  </p>
+                </div>
               </div>
             )}
           </Link>

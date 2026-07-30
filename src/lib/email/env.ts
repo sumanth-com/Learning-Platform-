@@ -33,11 +33,14 @@ export function isCustomEmailEnabled() {
 }
 
 export function getBrand() {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(
+    /\/+$/,
+    ""
+  );
   return {
-    name: "SupraBase",
+    name: "Suprabase",
     appUrl,
     supportEmail: getEmailEnv().support,
-    logoText: "S",
+    logoUrl: `${appUrl}/icons/icon-192.png`,
   } as const;
 }

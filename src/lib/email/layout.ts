@@ -34,6 +34,7 @@ export function renderEmailLayout({
   const safePreview = escapeHtml(preview);
   const safeCta = ctaLabel ? escapeHtml(ctaLabel) : "";
   const safeUrl = ctaUrl ? escapeHtml(ctaUrl) : "";
+  const safeLogoUrl = escapeHtml(brand.logoUrl);
   const year = new Date().getFullYear();
 
   const ctaBlock =
@@ -86,7 +87,7 @@ export function renderEmailLayout({
           <tr>
             <td style="padding:0 0 20px;text-align:center;">
               <span style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;">
-                <span style="display:inline-block;width:36px;height:36px;line-height:36px;text-align:center;border-radius:10px;background:#d83a32;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-weight:700;font-size:14px;">${brand.logoText}</span>
+                <img src="${safeLogoUrl}" width="36" height="36" alt="${brand.name}" style="display:block;width:36px;height:36px;border:0;border-radius:10px;object-fit:cover;" />
                 <span style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:18px;font-weight:650;color:#18181b;" class="email-title">${brand.name}</span>
               </span>
             </td>

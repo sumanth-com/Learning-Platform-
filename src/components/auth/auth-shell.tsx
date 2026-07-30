@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 
 interface AuthShellProps {
@@ -46,10 +47,8 @@ export function AuthShell({
             href={AUTH_ROUTES.public}
             className="inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-zinc-50 transition hover:opacity-90"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-sm font-bold text-white shadow-lg shadow-indigo-500/30">
-              S
-            </span>
-            <span className="gradient-text">SupraBase</span>
+            <SupraBaseMark className="h-10 w-10 shadow-lg shadow-primary/20" />
+            <span className="gradient-text">Suprabase</span>
           </Link>
         </div>
 

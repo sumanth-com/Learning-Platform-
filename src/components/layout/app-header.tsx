@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BookOpen, LayoutDashboard, UserRound } from "lucide-react";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { Button } from "@/components/ui/button";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
@@ -20,10 +21,8 @@ export function AppHeader({ active }: AppHeaderProps) {
           href={AUTH_ROUTES.dashboard}
           className="flex items-center gap-2 font-semibold tracking-tight"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
-            S
-          </span>
-          <span className="gradient-text">SupraBase</span>
+          <SupraBaseMark className="h-8 w-8" />
+          <span className="gradient-text">Suprabase</span>
         </Link>
 
         <nav className="flex items-center gap-1 sm:gap-2">

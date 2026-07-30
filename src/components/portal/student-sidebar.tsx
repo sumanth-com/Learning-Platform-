@@ -91,7 +91,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
           {!isCollapsed ? (
             <div className="min-w-0">
               <p className="truncate text-[15px] font-semibold leading-none tracking-tight text-foreground">
-                SupraBase
+                Suprabase
               </p>
               <p className="mt-1.5 truncate text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-muted-foreground">
                 Learn · Build · Ship

@@ -76,7 +76,7 @@ export function SupraBaseLogo({
               TITLE_SIZES[size]
             )}
           >
-            SupraBase
+            Suprabase
           </span>
           {showTagline && (
             <span className="text-[10px] font-medium uppercase leading-none tracking-[0.14em] text-muted-foreground">
