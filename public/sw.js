@@ -1,5 +1,5 @@
-const CACHE_NAME = "supracodez-v7";
-const STATIC_ASSETS = ["/manifest.json", "/supra-learn-icon.svg"];
+const CACHE_NAME = "suprabase-v8";
+const STATIC_ASSETS = ["/manifest.json", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("message", (event) => {
   if (event.data?.type === "SKIP_WAITING") {

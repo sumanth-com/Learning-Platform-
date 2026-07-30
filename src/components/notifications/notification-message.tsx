@@ -113,49 +113,41 @@ function NextSteps({ items }: { items: string[] }) {
 }
 
 function Attachment({
-  label,
+  fileName,
   onDownload,
-  className,
 }: {
-  label: string;
+  fileName: string;
   onDownload?: () => void;
-  className?: string;
 }) {
   const content = (
     <>
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted/60 text-muted-foreground">
-        <FileText className="h-4 w-4" />
-      </span>
-      <div className="min-w-0 flex-1 text-left">
-        <p className="truncate text-[13px] font-medium text-foreground">
-          {label}
-        </p>
-        <p className="mt-0.5 text-[12px] text-muted-foreground">
-          PDF · generated on download
-        </p>
-      </div>
-      <Download className="h-4 w-4 shrink-0 text-muted-foreground" />
+      <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+      Download PDF
+      <Download className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
     </>
   );
 
-  const base = cn(
-    "flex items-center gap-3 rounded-xl border border-border bg-background px-3.5 py-2.5",
-    className
-  );
+  const base =
+    "inline-flex shrink-0 items-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-[13px] font-medium text-foreground";
 
   if (onDownload) {
     return (
       <button
         type="button"
+        title={fileName}
         onClick={onDownload}
-        className={cn(base, "transition hover:border-foreground/25 hover:bg-muted/40")}
+        className={cn(base, "transition hover:bg-muted")}
       >
         {content}
       </button>
     );
   }
 
-  return <div className={base}>{content}</div>;
+  return (
+    <div title={fileName} className={base}>
+      {content}
+    </div>
+  );
 }
 
 function Signature() {
@@ -359,9 +351,8 @@ function CertEarnedBody({
 
       <div className="flex flex-wrap items-center gap-2.5">
         <Attachment
-          className="min-w-[16rem] flex-1"
           onDownload={() => void downloadCertificate()}
-          label={
+          fileName={
             hasSpecificTitle
               ? `SupraBase-${title.replace(/[^\w]+/g, "-")}-Certificate.pdf`
               : "SupraBase-Certificate.pdf"
