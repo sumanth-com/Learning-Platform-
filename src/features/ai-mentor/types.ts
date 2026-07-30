@@ -10,6 +10,13 @@ export type LearningContext = {
   progressSummary?: string;
 };
 
+export type MentorResponseMode =
+  | "suggested"
+  | "explain"
+  | "debug"
+  | "build"
+  | "review";
+
 export type ChatMessageInput = {
   role: "user" | "assistant" | "system";
   content: string;

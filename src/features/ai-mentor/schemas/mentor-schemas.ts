@@ -17,6 +17,9 @@ export const chatRequestSchema = z.object({
   content: z.string().trim().min(1).max(32000),
   learningContext: learningContextSchema,
   mode: z.enum(["send", "regenerate", "continue", "edit"]).default("send"),
+  responseMode: z
+    .enum(["suggested", "explain", "debug", "build", "review"])
+    .default("suggested"),
   messageId: z.string().uuid().optional(),
   attachmentIds: z.array(z.string().uuid()).max(8).optional(),
 });

@@ -3,7 +3,6 @@ import type {
   CertLevel,
   Certification,
 } from "../types";
-import { technicalBank } from "./questions";
 import { codingChallenges } from "./coding-challenges";
 
 export const CERT_LEVELS: CertLevel[] = ["basic", "intermediate"];
@@ -60,8 +59,11 @@ function buildCertification(
   level: CertLevel
 ): Certification {
   const meta = LEVEL_META[level];
-  // Both levels are coding certifications (HackerRank style); Intermediate is harder/longer
-  const questions = codingChallenges(level, `${categoryId}-${level}`).slice(
+  const questions = codingChallenges(
+    categoryId,
+    level,
+    `${categoryId}-${level}`
+  ).slice(
     0,
     meta.questions
   );
@@ -88,6 +90,22 @@ function buildCertification(
 export const CERTIFICATIONS: Certification[] = CERT_CATEGORIES.flatMap((cat) =>
   CERT_LEVELS.map((level) => buildCertification(cat.id, cat.label, level))
 );
+
+const questionSignatures = new Set<string>();
+for (const certification of CERTIFICATIONS) {
+  for (const question of certification.questions) {
+    const signature = `${question.title ?? ""}\n${question.prompt}`
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+    if (questionSignatures.has(signature)) {
+      throw new Error(
+        `Duplicate certification question detected: ${question.title ?? question.id}`
+      );
+    }
+    questionSignatures.add(signature);
+  }
+}
 
 export function getCertification(id: string) {
   return CERTIFICATIONS.find((c) => c.id === id) ?? null;
@@ -124,6 +142,3 @@ export function getCertificationsByCategory(categoryId: CertCategoryId) {
 export function categoryMeta(id: CertCategoryId) {
   return CERT_CATEGORIES.find((c) => c.id === id)!;
 }
-
-// Keep technicalBank import used for potential future Basic MCQ mix
-void technicalBank;

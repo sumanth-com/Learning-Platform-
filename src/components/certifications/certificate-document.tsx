@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import logoMark from "@/assets/Logo.png";
 import { qrImageUrl, certificateVerifyUrl } from "@/features/certifications/lib/share";
 import { LEVEL_META } from "@/features/certifications/data/catalog";
 import type { CertLevel, EarnedCertificate } from "@/features/certifications/types";
@@ -10,8 +12,6 @@ const SIDEBAR = "#ece6dc";
 const INK = "#1c1917";
 const MUTED = "#57534e";
 const ACCENT = "var(--color-brand)";
-const ACCENT_SOFT =
-  "color-mix(in srgb, var(--color-brand) 48%, white)";
 const SEAL_RING = "#3d3a36";
 
 export type CertificateSheetProps = {
@@ -70,9 +70,9 @@ export function CertificateSheet({
       }}
     >
       <div className="relative z-10 flex h-full min-h-0">
-        {/* Left rail — date + brand */}
+        {/* Left rail — one quiet brand anchor, date and verification mark */}
         <aside
-          className="relative flex w-[26%] shrink-0 flex-col justify-between overflow-hidden px-[5%] py-[5.5%]"
+          className="relative flex w-[24%] shrink-0 flex-col justify-between overflow-hidden px-[5%] py-[5.5%]"
           style={{ backgroundColor: SIDEBAR }}
         >
           <div
@@ -85,19 +85,19 @@ export function CertificateSheet({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-y-[12%] left-1/2 select-none overflow-hidden"
+            className="pointer-events-none absolute inset-y-[14%] left-1/2 select-none"
             style={{
               writingMode: "vertical-rl",
               transform: "translateX(-50%) rotate(180deg)",
-              fontSize: compact ? "2rem" : "clamp(2.2rem, 8cqw, 3.8rem)",
+              fontSize: compact ? "1.65rem" : "clamp(1.9rem, 6.5cqw, 3rem)",
               fontWeight: 800,
-              letterSpacing: "0.18em",
-              color: "rgba(28,25,23,0.05)",
+              letterSpacing: "0.14em",
+              color: "rgba(28,25,23,0.055)",
               textTransform: "uppercase",
               whiteSpace: "nowrap",
             }}
           >
-            SUPRABASE
+            VERIFIED
           </div>
 
           <div className="relative z-10 flex flex-col gap-[10%]">
@@ -108,7 +108,7 @@ export function CertificateSheet({
               )}
               style={{ color: MUTED }}
             >
-              SupraBase grants and certifies this certificate on
+              Issued and verified on
             </p>
             <div
               className="rounded-lg border bg-white/55 px-[10%] py-[12%] text-center"
@@ -229,7 +229,7 @@ export function CertificateSheet({
             <span className="font-semibold" style={{ color: INK }}>
               {title}
             </span>{" "}
-            skill certification on SupraBase
+            skill certification
             {typeof score === "number" ? (
               <>
                 {" "}
@@ -242,68 +242,62 @@ export function CertificateSheet({
             , showcasing excellence and dedication.
           </p>
 
+          <div
+            className="mt-[5%] grid grid-cols-3 divide-x rounded-lg border bg-white/45"
+            style={{ borderColor: "rgba(28,25,23,0.1)" }}
+          >
+            <CredentialFact
+              compact={compact}
+              label="Credential"
+              value="Verified"
+            />
+            <CredentialFact
+              compact={compact}
+              label="Skill"
+              value={technology}
+            />
+            <CredentialFact
+              compact={compact}
+              label="Result"
+              value={typeof score === "number" ? `${score}%` : "Passed"}
+            />
+          </div>
+
           <div className="mt-auto flex items-end justify-between gap-4 pt-[4%]">
             <div className="min-w-0">
               <p
                 className={cn(
-                  "leading-none",
+                  "font-semibold uppercase tracking-[0.14em]",
                   compact
-                    ? "text-[16px]"
-                    : "text-[clamp(1.1rem,3.6cqw,1.75rem)]"
-                )}
-                style={{
-                  color: INK,
-                  fontFamily: "var(--font-cert-script), cursive",
-                }}
-              >
-                SupraBase
-              </p>
-              <p
-                className={cn(
-                  "mt-1.5 font-bold uppercase tracking-[0.08em]",
-                  compact
-                    ? "text-[7px]"
-                    : "text-[clamp(0.55rem,1.5cqw,0.72rem)]"
-                )}
-                style={{ color: ACCENT }}
-              >
-                SupraBase Platform
-              </p>
-              <p
-                className={cn(
-                  "mt-0.5",
-                  compact ? "text-[6px]" : "text-[clamp(0.5rem,1.35cqw,0.65rem)]"
+                    ? "text-[5px]"
+                    : "text-[clamp(0.42rem,1.05cqw,0.58rem)]"
                 )}
                 style={{ color: MUTED }}
               >
-                Learning &amp; credentials
+                Credential ID
               </p>
-              {certificateId ? (
-                <div className="mt-[10%]">
-                  <p
-                    className={cn(
-                      "font-semibold uppercase tracking-[0.14em]",
-                      compact
-                        ? "text-[5px]"
-                        : "text-[clamp(0.42rem,1.05cqw,0.58rem)]"
-                    )}
-                    style={{ color: MUTED }}
-                  >
-                    Credential ID
-                  </p>
-                  <p
-                    className={cn(
-                      "mt-0.5 font-mono font-semibold tracking-wide",
-                      compact
-                        ? "text-[6px]"
-                        : "text-[clamp(0.48rem,1.2cqw,0.68rem)]"
-                    )}
-                    style={{ color: INK }}
-                  >
-                    {certificateId}
-                  </p>
-                </div>
-              ) : null}
+              <p
+                className={cn(
+                  "mt-1 font-mono font-semibold tracking-wide",
+                  compact
+                    ? "text-[6px]"
+                    : "text-[clamp(0.48rem,1.2cqw,0.68rem)]"
+                )}
+                style={{ color: INK }}
+              >
+                {certificateId ?? "Pending issuance"}
+              </p>
+              <p
+                className={cn(
+                  "mt-1.5",
+                  compact
+                    ? "text-[5px]"
+                    : "text-[clamp(0.45rem,1.15cqw,0.6rem)]"
+                )}
+                style={{ color: MUTED }}
+              >
+                Scan the seal to verify this credential.
+              </p>
             </div>
 
             <CertSeal
@@ -317,40 +311,60 @@ export function CertificateSheet({
   );
 }
 
-function BrandMark({ size }: { size: number }) {
-  const gradId = `sb-mark-${Math.round(size)}`;
+function CredentialFact({
+  label,
+  value,
+  compact,
+}: {
+  label: string;
+  value: string;
+  compact?: boolean;
+}) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 40 40"
+    <div className="min-w-0 px-[8%] py-[7%] text-center">
+      <p
+        className={cn(
+          "uppercase tracking-[0.12em]",
+          compact ? "text-[5px]" : "text-[clamp(0.42rem,1cqw,0.56rem)]"
+        )}
+        style={{ color: MUTED }}
+      >
+        {label}
+      </p>
+      <p
+        className={cn(
+          "mt-1 truncate font-semibold",
+          compact ? "text-[7px]" : "text-[clamp(0.6rem,1.45cqw,0.76rem)]"
+        )}
+        style={{ color: INK }}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function BrandMark({ size }: { size: number }) {
+  return (
+    <span
       aria-hidden
-      className="shrink-0"
+      className="relative block shrink-0 overflow-hidden rounded-[28%]"
       style={{
+        width: size,
+        height: size,
         WebkitPrintColorAdjust: "exact",
         printColorAdjust: "exact",
       }}
     >
-      <defs>
-        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor={ACCENT} />
-          <stop offset="100%" stopColor={ACCENT_SOFT} />
-        </linearGradient>
-      </defs>
-      <circle
-        cx="20"
-        cy="20"
-        r="18"
-        fill="#fff"
-        stroke="rgba(28,25,23,0.12)"
-        strokeWidth="1.2"
+      <Image
+        src={logoMark}
+        alt=""
+        fill
+        sizes={`${size}px`}
+        className="object-cover"
+        priority
       />
-      <path
-        d="M12 26 L20 10 L23.5 17 L15.5 28 Z"
-        fill={`url(#${gradId})`}
-      />
-      <path d="M17 24 L25 12 L28.5 19 L20.5 30 Z" fill={INK} opacity="0.85" />
-    </svg>
+    </span>
   );
 }
 
@@ -367,13 +381,15 @@ function CornerBadge({
     <div
       className={cn(
         "rounded-md border bg-white/80 text-center shadow-sm",
-        compact ? "min-w-[3.2rem] px-1.5 py-1" : "min-w-[4.25rem] px-2.5 py-1.5"
+        compact
+          ? "min-w-[3.2rem] px-1.5 py-1"
+          : "min-w-[4.5rem] px-3 py-1.5"
       )}
       style={{ borderColor: "rgba(28,25,23,0.12)" }}
     >
       <p
         className={cn(
-          "truncate font-semibold leading-tight",
+          "whitespace-nowrap font-semibold leading-tight",
         compact ? "text-[7px]" : "text-[clamp(0.55rem,1.5cqw,0.72rem)]"
         )}
         style={{ color: INK }}

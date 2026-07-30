@@ -213,7 +213,7 @@ export function CertificationsWorkspace() {
                             {passed ? (
                               <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
                                 <CheckCircle2 className="h-3 w-3" />
-                                Done
+                                {hasCertificate ? "Certified" : "Passed"}
                               </span>
                             ) : null}
                             {onCooldown && !passed ? (
@@ -272,8 +272,8 @@ export function CertificationsWorkspace() {
                   >
                     {passed
                       ? hasCertificate
-                        ? "Download PDF"
-                        : "Generate certificate"
+                        ? "View certificate"
+                        : "Create certificate"
                       : inProgress
                         ? "Continue"
                         : onCooldown

@@ -1,4 +1,8 @@
-import type { ChatMessageInput, LearningContext } from "@/features/ai-mentor/types";
+import type {
+  ChatMessageInput,
+  LearningContext,
+  MentorResponseMode,
+} from "@/features/ai-mentor/types";
 
 export type StreamChatInput = {
   messages: ChatMessageInput[];
@@ -18,7 +22,8 @@ export interface LlmProvider {
 
 export function buildMentorSystemPrompt(
   learningContext?: LearningContext | null,
-  systemExtra?: string
+  systemExtra?: string,
+  responseMode: MentorResponseMode = "suggested"
 ): string {
   const base = `You are SupraBase AI Mentor — a premium software engineering mentor comparable to ChatGPT, Claude, Gemini, and Copilot.
 
@@ -39,6 +44,20 @@ Style:
 - For simple greetings (hi/hello/hey), reply in at most two short lines like: "Hi! 👋" then "How can I help you today?" Do not list capabilities unless the user asks what you can do.`;
 
   const parts = [base];
+
+  const modeInstructions: Record<MentorResponseMode, string> = {
+    suggested:
+      "Choose the response structure that best fits the user's request.",
+    explain:
+      "Explain mode: teach progressively in plain language, define unfamiliar terms, use a practical example, and end with a concise takeaway.",
+    debug:
+      "Debug mode: diagnose before prescribing. State the likely root cause, show focused checks, provide a concrete fix, and include a verification step.",
+    build:
+      "Build mode: produce an implementation-oriented answer with a clear plan, sensible architecture, production-ready code where useful, and next steps.",
+    review:
+      "Review mode: assess the work critically. Prioritize actionable findings by impact, explain the risk, and recommend specific improvements.",
+  };
+  parts.push(modeInstructions[responseMode]);
 
   if (learningContext) {
     const lines = [

@@ -33,7 +33,7 @@ function CoverDots({ className }: { className?: string }) {
   );
 }
 
-/** Floating brand mark with soft 3D depth (shadow stack + glow). */
+/** Brand mark with soft depth. Static by design so grids never jitter on scroll. */
 function BrandMark3D({
   src,
   alt,
@@ -44,22 +44,14 @@ function BrandMark3D({
   glow: string;
 }) {
   return (
-    <div className="relative flex h-[5.5rem] w-[5.5rem] items-center justify-center sm:h-24 sm:w-24">
+    <div className="relative flex h-[4.75rem] w-[4.75rem] items-center justify-center sm:h-20 sm:w-20">
       <div
         aria-hidden
-        className={cn(
-          "absolute h-[90%] w-[90%] rounded-full blur-2xl",
-          glow
-        )}
-      />
-      {/* Depth plate */}
-      <div
-        aria-hidden
-        className="absolute inset-[10%] rounded-[1.35rem] bg-white/55 shadow-[0_18px_40px_-12px_rgba(20,30,40,0.45),0_2px_0_rgba(255,255,255,0.8)_inset] ring-1 ring-black/[0.04] backdrop-blur-[2px]"
+        className={cn("absolute h-[85%] w-[85%] rounded-full blur-xl", glow)}
       />
       <div
         aria-hidden
-        className="absolute inset-[18%] translate-y-1 rounded-[1.1rem] bg-black/[0.06] blur-[1px]"
+        className="absolute inset-[10%] rounded-[1.25rem] bg-white/60 shadow-[0_12px_26px_-14px_rgba(20,30,40,0.4),0_1px_0_rgba(255,255,255,0.85)_inset] ring-1 ring-black/[0.04]"
       />
       <Image
         src={src}
@@ -67,9 +59,8 @@ function BrandMark3D({
         width={72}
         height={72}
         className={cn(
-          "relative z-[1] h-12 w-12 object-contain drop-shadow-[0_10px_18px_rgba(20,30,40,0.28)]",
-          "sm:h-14 sm:w-14",
-          "transition-transform duration-300 ease-out group-hover:scale-105 group-hover:-translate-y-0.5"
+          "relative z-[1] h-11 w-11 object-contain drop-shadow-[0_8px_14px_rgba(20,30,40,0.24)]",
+          "sm:h-12 sm:w-12"
         )}
         unoptimized
       />
@@ -94,34 +85,40 @@ export function HubResourceCover({
         className
       )}
     >
-      <CoverDots className={cn(style.tone.line, "opacity-45")} />
+      <CoverDots className={cn(style.tone.line, "opacity-40")} />
 
       <div
         aria-hidden
         className={cn(
-          "absolute -left-14 -top-16 h-48 w-48 rounded-full blur-3xl",
+          "absolute -left-12 -top-14 h-40 w-40 rounded-full blur-2xl",
           style.tone.glowA
         )}
       />
       <div
         aria-hidden
         className={cn(
-          "absolute -bottom-16 -right-12 h-52 w-52 rounded-full blur-3xl",
+          "absolute -bottom-14 -right-10 h-44 w-44 rounded-full blur-2xl",
           style.tone.glowB
         )}
       />
       <div
         aria-hidden
-        className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white/30 to-transparent"
+        className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white/25 to-transparent"
       />
 
-      <div className="relative flex h-full min-h-[10.75rem] items-center gap-4 px-5 py-5">
-        <div className="min-w-0 flex-1">
+      <div className="relative flex h-full min-h-[10.75rem] items-center gap-3 px-5 py-5">
+        <div className="flex min-w-0 flex-1 flex-col justify-center">
           <div className="mb-2 flex items-center gap-2">
-            <span className={cn("h-1.5 w-6 rounded-full", style.tone.accent)} />
             <span
               className={cn(
-                "truncate text-[10px] font-semibold uppercase tracking-[0.14em]",
+                "h-1.5 w-5 shrink-0 rounded-full",
+                style.tone.accent
+              )}
+            />
+            <span
+              title={style.eyebrow}
+              className={cn(
+                "min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.1em]",
                 style.tone.muted
               )}
             >
@@ -130,7 +127,7 @@ export function HubResourceCover({
           </div>
           <h3
             className={cn(
-              "truncate whitespace-nowrap text-[1.45rem] font-semibold tracking-[-0.04em] sm:text-[1.6rem]",
+              "text-[1.25rem] font-semibold leading-[1.15] tracking-[-0.035em] [text-wrap:balance] sm:text-[1.4rem]",
               style.tone.ink
             )}
           >
@@ -138,7 +135,7 @@ export function HubResourceCover({
           </h3>
         </div>
 
-        <div className="relative shrink-0 pr-0.5">
+        <div className="relative shrink-0">
           <BrandMark3D
             src={asset.src}
             alt={`${style.label} logo`}

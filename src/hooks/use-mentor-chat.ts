@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AiMessageRow } from "@/types/database";
-import type { LearningContext } from "@/features/ai-mentor/types";
+import type {
+  LearningContext,
+  MentorResponseMode,
+} from "@/features/ai-mentor/types";
 import { AI_MENTOR_ROUTES } from "@/features/ai-mentor/types";
 import { listMessagesAction } from "@/features/ai-mentor/actions/mentor-actions";
 import { friendlyLlmError } from "@/features/ai-mentor/providers/types";
@@ -121,7 +124,8 @@ export function useMentorChat(conversationId: string | null) {
       content: string,
       learningContext?: LearningContext | null,
       messageId?: string,
-      attachmentIds?: string[]
+      attachmentIds?: string[],
+      responseMode: MentorResponseMode = "suggested"
     ): Promise<StreamMeta | null> => {
       if (!conversationId) return null;
       const streamForId = conversationId;
@@ -241,6 +245,7 @@ export function useMentorChat(conversationId: string | null) {
             content,
             learningContext: learningContext ?? undefined,
             mode,
+            responseMode,
             messageId,
             attachmentIds,
           }),
@@ -466,8 +471,17 @@ export function useMentorChat(conversationId: string | null) {
     (
       content: string,
       learningContext?: LearningContext | null,
-      attachmentIds?: string[]
-    ) => runStream("send", content, learningContext, undefined, attachmentIds),
+      attachmentIds?: string[],
+      responseMode: MentorResponseMode = "suggested"
+    ) =>
+      runStream(
+        "send",
+        content,
+        learningContext,
+        undefined,
+        attachmentIds,
+        responseMode
+      ),
     [runStream]
   );
 

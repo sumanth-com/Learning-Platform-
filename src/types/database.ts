@@ -338,6 +338,45 @@ export type AiMentorSettingsInsert = Partial<AiMentorSettingsRow> &
   Pick<AiMentorSettingsRow, "profile_id">;
 export type AiMentorSettingsUpdate = Partial<AiMentorSettingsRow>;
 
+export type CertificateRow = {
+  id: string;
+  profile_id: string;
+  certification_id: string;
+  recipient_name: string;
+  title: string;
+  technology: string;
+  level: "basic" | "intermediate";
+  score: number;
+  issued_at: string;
+  revoked_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CertificateInsert = Omit<
+  CertificateRow,
+  "issued_at" | "revoked_at" | "created_at" | "updated_at"
+> &
+  Partial<
+    Pick<
+      CertificateRow,
+      "issued_at" | "revoked_at" | "created_at" | "updated_at"
+    >
+  >;
+export type CertificateUpdate = Partial<CertificateInsert>;
+
+export type PublicCertificateRow = Pick<
+  CertificateRow,
+  | "id"
+  | "certification_id"
+  | "recipient_name"
+  | "title"
+  | "technology"
+  | "level"
+  | "score"
+  | "issued_at"
+>;
+
 export type Database = {
   public: {
     Tables: {
@@ -443,9 +482,20 @@ export type Database = {
         Update: AiMentorSettingsUpdate;
         Relationships: [];
       };
+      certificates: {
+        Row: CertificateRow;
+        Insert: CertificateInsert;
+        Update: CertificateUpdate;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
-    Functions: { [_ in never]: never };
+    Functions: {
+      verify_certificate: {
+        Args: { cert_id: string };
+        Returns: PublicCertificateRow[];
+      };
+    };
     Enums: { [_ in never]: never };
     CompositeTypes: { [_ in never]: never };
   };

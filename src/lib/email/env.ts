@@ -20,7 +20,7 @@ export function getEmailEnv() {
     stripQuotes(process.env.EMAIL_FROM || "") ||
     "SupraBase <onboarding@resend.dev>";
   const support =
-    process.env.EMAIL_SUPPORT?.trim() || "support@suprabas.com";
+    process.env.EMAIL_SUPPORT?.trim() || "support.suprabase@gmail.com";
   const replyTo = process.env.EMAIL_REPLY_TO?.trim() || support;
 
   return { apiKey, from, support, replyTo } as const;

@@ -26,9 +26,11 @@ async function sendHtmlEmail(input: {
   subject: string;
   html: string;
   tags?: { name: string; value: string }[];
+  replyTo?: string;
 }): Promise<SendEmailResult> {
   const resend = getResend();
-  const { from, replyTo } = getEmailEnv();
+  const { from, replyTo: defaultReplyTo } = getEmailEnv();
+  const replyTo = input.replyTo || defaultReplyTo;
 
   if (!resend) {
     return {
@@ -193,6 +195,44 @@ export async function sendAssessmentPassedEmail(input: {
     subject: `You passed ${input.assessmentTitle}`,
     html: assessmentPassedEmailHtml(input),
     tags: [{ name: "category", value: "assessment_passed" }],
+  });
+}
+
+export async function sendHelpReportEmail(input: {
+  reporterEmail: string;
+  reporterName?: string | null;
+  category: string;
+  subject: string;
+  message: string;
+}) {
+  const brand = getBrand();
+  const { support } = getEmailEnv();
+  const name = input.reporterName?.trim() || "Learner";
+  const category = input.category.trim() || "General";
+  const subject = input.subject.trim();
+  const message = input.message.trim();
+  const safe = (value: string) =>
+    value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+
+  return sendHtmlEmail({
+    to: support,
+    replyTo: input.reporterEmail,
+    subject: `[Help Report] ${category}: ${subject}`,
+    html: `
+      <div style="font-family:Segoe UI,Arial,sans-serif;line-height:1.6;color:#18181b;">
+        <h2 style="margin:0 0 12px;font-size:18px;">New help report</h2>
+        <p style="margin:0 0 8px;"><strong>From:</strong> ${safe(name)} &lt;${safe(input.reporterEmail)}&gt;</p>
+        <p style="margin:0 0 8px;"><strong>Category:</strong> ${safe(category)}</p>
+        <p style="margin:0 0 16px;"><strong>Subject:</strong> ${safe(subject)}</p>
+        <div style="padding:14px 16px;border:1px solid #e4e4e7;border-radius:12px;background:#fafafa;white-space:pre-wrap;">${safe(message)}</div>
+        <p style="margin:16px 0 0;font-size:12px;color:#71717a;">Sent from ${brand.name} Help</p>
+      </div>
+    `,
+    tags: [{ name: "category", value: "help_report" }],
   });
 }
 

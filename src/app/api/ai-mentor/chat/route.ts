@@ -83,6 +83,7 @@ export async function POST(request: Request) {
     content,
     learningContext,
     mode,
+    responseMode,
     messageId,
     attachmentIds,
   } = parsed.data;
@@ -217,7 +218,8 @@ export async function POST(request: Request) {
 
   const system = buildMentorSystemPrompt(
     (learningContext as LearningContext | undefined) ?? null,
-    settings?.system_extra ?? ""
+    settings?.system_extra ?? "",
+    responseMode
   );
 
   const encoder = new TextEncoder();

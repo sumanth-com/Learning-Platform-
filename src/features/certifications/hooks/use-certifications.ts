@@ -6,6 +6,7 @@ import type {
   CertProgressState,
   EarnedCertificate,
 } from "@/features/certifications/types";
+import { issueCertificateAction } from "@/features/certifications/actions/certificate-actions";
 import { notifyCertificateEarned } from "@/lib/notifications";
 import { createCertificateId as buildCertificateId } from "@/features/certifications/lib/certificate-id";
 import type { CertificateIdInput } from "@/features/certifications/lib/certificate-id";
@@ -50,8 +51,42 @@ export function useCertifications() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setState(readState());
+    const local = readState();
+    setState(local);
     setReady(true);
+
+    // Publish legacy browser-only credentials and replace them with the
+    // canonical server-issued records used by QR verification.
+    if (local.certificates.length > 0) {
+      void Promise.all(
+        local.certificates.map((certificate) =>
+          issueCertificateAction({
+            certificationId: certificate.certificationId,
+            recipientName: certificate.recipientName,
+            score: certificate.score,
+          })
+        )
+      ).then((results) => {
+        const issued = results.flatMap((result) =>
+          result.success ? [result.certificate] : []
+        );
+        if (issued.length === 0) return;
+        const current = readState();
+        const byCertification = new Map(
+          issued.map((certificate) => [
+            certificate.certificationId,
+            certificate,
+          ])
+        );
+        const certificates = current.certificates.map(
+          (certificate) =>
+            byCertification.get(certificate.certificationId) ?? certificate
+        );
+        const next = { ...current, certificates };
+        writeState(next);
+        setState(next);
+      });
+    }
   }, []);
 
   const persist = useCallback((next: CertProgressState) => {
@@ -73,12 +108,29 @@ export function useCertifications() {
   const awardCertificate = useCallback(
     (cert: EarnedCertificate, xpGain: number, badge: string) => {
       const current = readState();
-      const exists = current.certificates.some((c) => c.id === cert.id);
-      if (exists) return;
+      const attempt = current.attempts[cert.certificationId];
+      if (
+        attempt?.status !== "passed" ||
+        attempt.score == null ||
+        attempt.score !== cert.score
+      ) {
+        return false;
+      }
+      const existing = current.certificates.find(
+        (c) => c.certificationId === cert.certificationId
+      );
+      if (existing?.id === cert.id) return true;
+      const certificates = existing
+        ? current.certificates.map((currentCert) =>
+            currentCert.certificationId === cert.certificationId
+              ? cert
+              : currentCert
+          )
+        : [cert, ...current.certificates];
       persist({
         ...current,
-        certificates: [cert, ...current.certificates],
-        xp: current.xp + xpGain,
+        certificates,
+        xp: existing ? current.xp : current.xp + xpGain,
         badges: current.badges.includes(badge)
           ? current.badges
           : [...current.badges, badge],
@@ -90,6 +142,7 @@ export function useCertifications() {
         recipientName: cert.recipientName,
         score: cert.score,
       });
+      return true;
     },
     [persist]
   );
@@ -108,8 +161,7 @@ export function useCertifications() {
 
   const isPassed = useCallback(
     (certificationId: string) =>
-      state.attempts[certificationId]?.status === "passed" ||
-      state.certificates.some((c) => c.certificationId === certificationId),
+      state.attempts[certificationId]?.status === "passed",
     [state]
   );
 
@@ -151,6 +203,23 @@ export function findCertificateById(id: string): EarnedCertificate | null {
   } catch {
     return null;
   }
+}
+
+/** Replace a legacy local credential with its canonical server-issued record. */
+export function cacheIssuedCertificate(certificate: EarnedCertificate) {
+  if (typeof window === "undefined") return;
+  const current = readState();
+  const existing = current.certificates.find(
+    (item) => item.certificationId === certificate.certificationId
+  );
+  const certificates = existing
+    ? current.certificates.map((item) =>
+        item.certificationId === certificate.certificationId
+          ? certificate
+          : item
+      )
+    : [certificate, ...current.certificates];
+  writeState({ ...current, certificates });
 }
 
 export function listPublicCertificates(): EarnedCertificate[] {

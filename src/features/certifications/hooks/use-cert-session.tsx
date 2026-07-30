@@ -12,10 +12,8 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  createCertificateId,
-  useCertifications,
-} from "@/features/certifications/hooks/use-certifications";
+import { useCertifications } from "@/features/certifications/hooks/use-certifications";
+import { issueCertificateAction } from "@/features/certifications/actions/certificate-actions";
 import {
   runCodeTests,
   scoreFromTestResults,
@@ -208,7 +206,15 @@ export function CertSessionProvider({
     const cert = state.certificates.find(
       (c) => c.certificationId === certification.id
     );
-    if (cert) setEarned(cert);
+    if (
+      cert &&
+      attempt?.status === "passed" &&
+      (attempt.score ?? 0) >= certification.passingScore
+    ) {
+      setEarned(cert);
+    } else {
+      setEarned(null);
+    }
     if (!attempt) return;
     setAnswers(attempt.answers ?? {});
     if (attempt.confirmedName) setConfirmedNameState(attempt.confirmedName);
@@ -247,7 +253,9 @@ export function CertSessionProvider({
     existing?.status === "failed"
       ? msUntilRetry(existing.finishedAt, now)
       : 0;
-  const lockedByPass = existing?.status === "passed" || Boolean(existingCert);
+  const lockedByPass =
+    existing?.status === "passed" &&
+    (existing.score ?? 0) >= certification.passingScore;
   const lockedByCooldown =
     existing?.status === "failed" && cooldownMs > 0;
   const locked = lockedByPass || lockedByCooldown;
@@ -471,37 +479,60 @@ export function CertSessionProvider({
   }, [timerEndsAt, existing?.status]);
 
   const awardAndShowCertificate = useCallback(
-    (name: string) => {
+    async (name: string) => {
       if (earned) {
+        const issued = await issueCertificateAction({
+          certificationId: certification.id,
+          recipientName: earned.recipientName || name,
+          score: earned.score,
+        });
+        if (!issued.success) {
+          toast.error(issued.error);
+          return;
+        }
+        awardCertificate(
+          issued.certificate,
+          certification.xp,
+          certification.shortTitle
+        );
+        setEarned(issued.certificate);
         router.push(CERT_FLOW.certificate(certification.id));
         return;
       }
 
-      const score =
-        result?.score ?? getAttemptRef.current(certification.id)?.score;
-      if (score == null) {
-        toast.message("Complete the assessment before generating a certificate");
+      const attempt = getAttemptRef.current(certification.id);
+      const score = result?.score ?? attempt?.score;
+      const passed =
+        attempt?.status === "passed" &&
+        score != null &&
+        score >= certification.passingScore &&
+        result?.passed !== false;
+      if (!passed || score == null) {
+        toast.error(
+          `Pass the assessment with at least ${certification.passingScore}% before generating a certificate`
+        );
         return;
       }
 
-      const id = createCertificateId({
-        userId,
-        recipientName: name,
-        certificationId: certification.id,
-        issuedAt: new Date().toISOString(),
-      });
-      const cert: EarnedCertificate = {
-        id,
+      const issued = await issueCertificateAction({
         certificationId: certification.id,
         recipientName: name,
-        issuedAt: new Date().toISOString(),
         score,
-        level: certification.level,
-        technology: certification.categoryLabel,
-        title: certification.title,
-        verifyPath: `/verify/${id}`,
-      };
-      awardCertificate(cert, certification.xp, certification.shortTitle);
+      });
+      if (!issued.success) {
+        toast.error(issued.error);
+        return;
+      }
+      const cert: EarnedCertificate = issued.certificate;
+      const awarded = awardCertificate(
+        cert,
+        certification.xp,
+        certification.shortTitle
+      );
+      if (!awarded) {
+        toast.error("Certificate eligibility could not be verified");
+        return;
+      }
       setEarned(cert);
       setConfirmedNameState(name);
       snap.current.confirmedName = name;
@@ -514,7 +545,6 @@ export function CertSessionProvider({
       earned,
       result,
       router,
-      userId,
       writeAttempt,
     ]
   );

@@ -109,28 +109,6 @@ function deepEqual(a: unknown, b: unknown): boolean {
   if (typeof a !== typeof b) return false;
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
-    // Order-insensitive for flat primitive arrays (e.g. two-sum indices)
-    if (
-      a.length <= 4 &&
-      a.every((v) => typeof v === "number" || typeof v === "string") &&
-      b.every((v) => typeof v === "number" || typeof v === "string")
-    ) {
-      const as = [...a].map(String).sort();
-      const bs = [...b].map(String).sort();
-      return as.every((v, i) => v === bs[i]);
-    }
-    // Order-insensitive nested string groups (e.g. group anagrams)
-    if (
-      a.every((g) => Array.isArray(g) && g.every((x) => typeof x === "string")) &&
-      b.every((g) => Array.isArray(g) && g.every((x) => typeof x === "string"))
-    ) {
-      const norm = (groups: unknown[]) =>
-        groups
-          .map((g) => [...(g as string[])].sort().join("\0"))
-          .sort()
-          .join("|");
-      return norm(a) === norm(b);
-    }
     return a.every((v, i) => deepEqual(v, b[i]));
   }
   if (a && b && typeof a === "object" && typeof b === "object") {
@@ -157,8 +135,6 @@ function stringify(v: unknown) {
 
 export function scoreFromTestResults(results: TestRunResult[]) {
   if (!results.length) return 0;
-  const visible = results.filter((r) => !r.hidden);
-  const set = visible.length ? visible : results;
-  const passed = set.filter((r) => r.passed).length;
-  return Math.round((passed / set.length) * 100);
+  const passed = results.filter((r) => r.passed).length;
+  return Math.round((passed / results.length) * 100);
 }

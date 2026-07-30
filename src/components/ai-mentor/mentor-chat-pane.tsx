@@ -14,29 +14,40 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUp,
+  Blocks,
   Bookmark,
+  Bug,
   Check,
   ChevronDown,
+  ClipboardCheck,
   Code2,
   Copy,
   CornerDownLeft,
-  FileArchive,
-  FileCode2,
+  Database,
+  Eye,
   FileText,
+  FolderTree,
+  Gauge,
   GitBranch,
   ImageIcon,
+  Lightbulb,
   Loader2,
+  LockKeyhole,
+  Network,
   NotebookPen,
   Pencil,
   Plus,
   RefreshCw,
+  ScanSearch,
   Share2,
+  ShieldCheck,
   Sparkles,
   Square,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { AiMessageRow } from "@/types/database";
+import type { MentorResponseMode } from "@/features/ai-mentor/types";
 import { MentorMarkdown } from "@/components/ai-mentor/mentor-markdown";
 import { bookmarkMessageAction } from "@/features/ai-mentor/actions/mentor-actions";
 import { AI_MENTOR_ROUTES } from "@/features/ai-mentor/types";
@@ -75,7 +86,11 @@ type MentorChatPaneProps = {
   isLoading: boolean;
   isStreaming: boolean;
   error: string | null;
-  onSend: (content: string, attachmentIds?: string[]) => void;
+  onSend: (
+    content: string,
+    attachmentIds?: string[],
+    responseMode?: MentorResponseMode
+  ) => void;
   onEditMessage: (messageId: string, content: string) => void;
   onStop: () => void;
   onRegenerate: (messageId?: string) => void;
@@ -104,7 +119,7 @@ function MentorAuroraBackground({ vivid = false }: { vivid?: boolean }) {
         )}
         style={{
           background:
-            "radial-gradient(circle, rgba(91,108,255,0.55) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(167,66,61,0.32) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, 40, -20, 0],
@@ -120,7 +135,7 @@ function MentorAuroraBackground({ vivid = false }: { vivid?: boolean }) {
         )}
         style={{
           background:
-            "radial-gradient(circle, rgba(56,189,248,0.5) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(220,163,154,0.3) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, -35, 25, 0],
@@ -136,7 +151,7 @@ function MentorAuroraBackground({ vivid = false }: { vivid?: boolean }) {
         )}
         style={{
           background:
-            "radial-gradient(circle, rgba(52,211,153,0.45) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(95,52,53,0.22) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, 30, -40, 0],
@@ -152,7 +167,7 @@ function MentorAuroraBackground({ vivid = false }: { vivid?: boolean }) {
         )}
         style={{
           background:
-            "radial-gradient(circle, rgba(251,191,36,0.35) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(233,221,216,0.4) 0%, transparent 70%)",
         }}
         animate={{
           x: [0, -20, 15, 0],
@@ -174,7 +189,7 @@ const PLACEHOLDERS = [
   "Help me debug this…",
 ];
 
-function ModelPicker() {
+function ModelPicker({ openAbove = false }: { openAbove?: boolean }) {
   const [open, setOpen] = useState(false);
   const [modelId, setModelId] = useState<(typeof MODEL_OPTIONS)[number]["id"]>(
     "supra"
@@ -227,11 +242,14 @@ function ModelPicker() {
           <motion.div
             role="listbox"
             aria-label="Model"
-            initial={{ opacity: 0, y: -4, scale: 0.98 }}
+            initial={{ opacity: 0, y: openAbove ? 4 : -4, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -2, scale: 0.98 }}
+            exit={{ opacity: 0, y: openAbove ? 2 : -2, scale: 0.98 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-10 z-40 min-w-[180px] overflow-hidden rounded-xl border border-border/80 bg-card p-1 shadow-[0_10px_32px_-10px_rgba(0,0,0,0.28)]"
+            className={cn(
+              "absolute right-0 z-50 min-w-[180px] overflow-hidden rounded-xl border border-border/80 bg-card p-1 shadow-[0_14px_38px_-12px_rgba(0,0,0,0.32)]",
+              openAbove ? "bottom-10" : "top-10"
+            )}
           >
             {MODEL_OPTIONS.map((opt) => (
               <button
@@ -271,14 +289,107 @@ function ModelPicker() {
   );
 }
 
-const SUGGESTIONS = [
-  "Explain React Server Components simply",
-  "Review this SQL schema for N+1 risks",
-  "Walk me through a clean Next.js app structure",
-  "Help me debug a Next.js hydration error",
-];
+const PROMPT_GROUPS = {
+  Explore: [
+    { text: "Explain React Server Components simply", icon: Sparkles },
+    { text: "Design a production-ready learning dashboard", icon: Code2 },
+    { text: "Help me debug a Next.js hydration error", icon: GitBranch },
+  ],
+  Explain: [
+    { text: "Explain authentication like I’m a beginner", icon: Lightbulb },
+    { text: "Compare REST and GraphQL with real examples", icon: Network },
+    { text: "Teach me database indexing step by step", icon: Database },
+  ],
+  Debug: [
+    { text: "Review this SQL schema for N+1 risks", icon: ScanSearch },
+    { text: "Find the bug in my React component", icon: Bug },
+    { text: "Help me diagnose a slow API endpoint", icon: Gauge },
+  ],
+  Build: [
+    { text: "Plan a modern SaaS application architecture", icon: Blocks },
+    { text: "Create a clean Next.js project structure", icon: FolderTree },
+    { text: "Design a secure authentication flow", icon: ShieldCheck },
+  ],
+  Review: [
+    { text: "Review my code for production risks", icon: ClipboardCheck },
+    { text: "Improve the accessibility of my interface", icon: Eye },
+    { text: "Check my API design for security issues", icon: LockKeyhole },
+  ],
+} as const;
 
-const PLACEHOLDERS_HERO = "Ask anything";
+type PromptGroup = keyof typeof PROMPT_GROUPS;
+
+const PROMPT_GROUP_ICONS = {
+  Explore: Sparkles,
+  Explain: Lightbulb,
+  Debug: Bug,
+  Build: Blocks,
+  Review: ClipboardCheck,
+} as const;
+
+const PROMPT_RESPONSE_MODES: Record<PromptGroup, MentorResponseMode> = {
+  Explore: "suggested",
+  Explain: "explain",
+  Debug: "debug",
+  Build: "build",
+  Review: "review",
+};
+
+const PLACEHOLDERS_HERO = "Ask Supra anything…";
+
+function SupraMascot() {
+  return (
+    <motion.div
+      aria-hidden
+      className="pointer-events-none relative mx-auto h-[5.75rem] w-[5.75rem] shrink-0"
+      animate={{ y: [0, -6, 0] }}
+      transition={{ duration: 4.4, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <motion.span
+        className="absolute inset-[-18%] rounded-full bg-[radial-gradient(circle,rgba(220,163,154,0.28)_0%,transparent_68%)]"
+        animate={{ opacity: [0.55, 0.9, 0.55], scale: [0.96, 1.04, 0.96] }}
+        transition={{ duration: 4.4, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.span
+        className="absolute bottom-0 left-1/2 h-2.5 w-[48%] -translate-x-1/2 rounded-full bg-[#5f3435]/18 blur-[5px]"
+        animate={{ scaleX: [1, 0.88, 1], opacity: [0.5, 0.28, 0.5] }}
+        transition={{ duration: 4.4, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      <motion.div
+        className="absolute inset-[8%] rounded-[46%] border border-white/90 bg-gradient-to-br from-white via-[#f8f3ef] to-[#e8d5cf] shadow-[0_14px_28px_-14px_rgba(24,24,27,0.45),inset_0_1px_0_rgba(255,255,255,0.95)]"
+        animate={{ rotate: [-1.4, 1.4, -1.4] }}
+        transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <span className="absolute -top-2.5 left-1/2 h-2.5 w-[2.5px] -translate-x-1/2 rounded-full bg-[#5f3435]/75" />
+        <span className="absolute -top-[15px] left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-[#a7423d] shadow-[0_0_10px_rgba(167,66,61,0.5)]" />
+
+        <span className="absolute left-1/2 top-[20%] h-[40%] w-[68%] -translate-x-1/2 rounded-[38%] bg-[#1f2024] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+          <motion.span
+            className="absolute left-[22%] top-1/2 h-2 w-1.5 -translate-y-1/2 rounded-full bg-[#72f3c2] shadow-[0_0_10px_rgba(114,243,194,0.8)]"
+            animate={{ scaleY: [1, 1, 0.12, 1, 1] }}
+            transition={{
+              duration: 4.8,
+              repeat: Infinity,
+              times: [0, 0.48, 0.52, 0.56, 1],
+            }}
+          />
+          <motion.span
+            className="absolute right-[22%] top-1/2 h-2 w-1.5 -translate-y-1/2 rounded-full bg-[#72f3c2] shadow-[0_0_10px_rgba(114,243,194,0.8)]"
+            animate={{ scaleY: [1, 1, 0.12, 1, 1] }}
+            transition={{
+              duration: 4.8,
+              repeat: Infinity,
+              times: [0, 0.48, 0.52, 0.56, 1],
+            }}
+          />
+        </span>
+
+        <span className="absolute bottom-[16%] left-1/2 h-[18%] w-[38%] -translate-x-1/2 rounded-full bg-white/50 blur-[0.5px]" />
+      </motion.div>
+    </motion.div>
+  );
+}
 
 const ATTACH_OPTIONS: {
   id: string;
@@ -288,46 +399,23 @@ const ATTACH_OPTIONS: {
   future?: boolean;
 }[] = [
   {
+    id: "document",
+    label: "Upload Document",
+    accept:
+      ".pdf,.docx,.txt,.csv,.json,.js,.ts,.tsx,.jsx,.py,.java,.cpp,.c,.h,.zip,application/pdf,application/zip,text/plain",
+    icon: <FileText className="h-4 w-4" />,
+  },
+  {
     id: "image",
     label: "Upload Image",
     accept: "image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp",
     icon: <ImageIcon className="h-4 w-4" />,
   },
   {
-    id: "pdf",
-    label: "Upload PDF",
-    accept: "application/pdf,.pdf",
-    icon: <FileText className="h-4 w-4" />,
-  },
-  {
-    id: "doc",
-    label: "Upload Document",
-    accept: ".docx,.txt,.md,.csv",
-    icon: <NotebookPen className="h-4 w-4" />,
-  },
-  {
-    id: "code",
-    label: "Upload Code File",
-    accept: ".js,.ts,.tsx,.jsx,.py,.java,.cpp,.c,.h,.json",
-    icon: <FileCode2 className="h-4 w-4" />,
-  },
-  {
-    id: "zip",
-    label: "Upload ZIP",
-    accept: ".zip,application/zip",
-    icon: <FileArchive className="h-4 w-4" />,
-  },
-  {
-    id: "text",
-    label: "Upload Text File",
-    accept: ".txt,text/plain",
-    icon: <FileText className="h-4 w-4" />,
-  },
-  {
-    id: "md",
-    label: "Upload Markdown",
+    id: "markdown",
+    label: "Markdown",
     accept: ".md,text/markdown",
-    icon: <Code2 className="h-4 w-4" />,
+    icon: <NotebookPen className="h-4 w-4" />,
   },
   {
     id: "github",
@@ -652,6 +740,10 @@ export function MentorChatPane({
 }: MentorChatPaneProps) {
   const [draft, setDraft] = useState("");
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [promptGroup, setPromptGroup] = useState<PromptGroup>("Explore");
+  const [pendingLocalMessage, setPendingLocalMessage] = useState<string | null>(
+    null
+  );
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedIds, setEditedIds] = useState<Set<string>>(() => new Set());
   const [attachOpen, setAttachOpen] = useState(false);
@@ -698,6 +790,10 @@ export function MentorChatPane({
     if (!stickToBottomRef.current) return;
     bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   }, [messages, isStreaming]);
+
+  useEffect(() => {
+    if (messages.length > 0) setPendingLocalMessage(null);
+  }, [messages.length]);
 
   useEffect(() => {
     if (draft || isStreaming || messages.length > 0) return;
@@ -897,7 +993,13 @@ export function MentorChatPane({
       for (const p of prev) if (p.previewUrl) URL.revokeObjectURL(p.previewUrl);
       return [];
     });
-    onSend(value || "Please review the attached files.", ids);
+    const content = value || "Please review the attached files.";
+    setPendingLocalMessage(content);
+    onSend(
+      content,
+      ids,
+      PROMPT_RESPONSE_MODES[promptGroup]
+    );
     requestAnimationFrame(() => textareaRef.current?.focus());
   };
 
@@ -932,17 +1034,37 @@ export function MentorChatPane({
     if (e.dataTransfer?.files?.length) void queueFiles(e.dataTransfer.files);
   };
 
-  const displayMessages = useMemo(
-    () =>
-      messages.map((m) =>
+  const displayMessages = useMemo(() => {
+    const source =
+      messages.length > 0 || !pendingLocalMessage
+        ? messages
+        : [
+            {
+              id: "pending-local-user",
+              conversation_id: conversationId ?? "",
+              profile_id: "",
+              role: "user" as const,
+              content: pendingLocalMessage,
+              status: "complete" as const,
+              model: null,
+              error: null,
+              token_input: null,
+              token_output: null,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            },
+          ];
+
+    return source.map((m) =>
         editedIds.has(m.id)
           ? ({ ...m, __edited: true } as AiMessageRow & { __edited?: boolean })
           : m
-      ),
-    [messages, editedIds]
-  );
+      );
+  }, [messages, pendingLocalMessage, conversationId, editedIds]);
 
-  const isEmptyChat = !isLoading && messages.length === 0;
+  const isEmptyChat =
+    !isLoading && messages.length === 0 && !pendingLocalMessage;
+  const ActivePromptIcon = PROMPT_GROUP_ICONS[promptGroup];
   const canSend =
     !uploading &&
     !isStreaming &&
@@ -955,13 +1077,13 @@ export function MentorChatPane({
   const renderComposer = () => (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[28px] border border-border/50",
-        "bg-muted/45 dark:bg-muted/30",
-        "shadow-[0_12px_40px_-18px_rgba(40,60,120,0.28),0_0_0_1px_rgba(0,0,0,0.03)]",
+        "relative rounded-[28px] border border-border/70",
+        "bg-card/90 backdrop-blur-xl",
+        "shadow-[0_18px_50px_-28px_rgba(24,24,27,0.38),0_0_0_1px_rgba(255,255,255,0.35)_inset]",
         "transition-[box-shadow,border-color,transform] duration-200",
-        "focus-within:border-border focus-within:shadow-[0_16px_48px_-16px_rgba(60,90,180,0.32),0_0_0_1px_rgba(0,0,0,0.04)]",
-        dragOver && "border-foreground/25 ring-2 ring-sky-500/15",
-        isEmptyChat && "rounded-[32px]"
+        "focus-within:border-brand/40 focus-within:shadow-[0_22px_55px_-30px_rgba(95,52,53,0.5),0_0_0_1px_rgba(255,255,255,0.45)_inset]",
+        dragOver && "border-brand/50 ring-2 ring-brand/15",
+        isEmptyChat && "rounded-[26px]"
       )}
     >
       {pendingFiles.length > 0 ? (
@@ -1083,6 +1205,15 @@ export function MentorChatPane({
             >
               <ImageIcon className="h-4 w-4" strokeWidth={1.75} />
             </button>
+            {isEmptyChat ? (
+              <>
+                <span className="mx-1 h-5 w-px bg-border" />
+                <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#ece3df] px-3 text-[12px] font-medium text-[#5f3435] dark:bg-[#5f3435]/35 dark:text-[#dca39a]">
+                  <ActivePromptIcon className="h-3.5 w-3.5" />
+                  {promptGroup}
+                </span>
+              </>
+            ) : null}
             <AnimatePresence>
               {attachOpen ? (
                 <motion.div
@@ -1135,36 +1266,39 @@ export function MentorChatPane({
             />
           </div>
 
-          {isStreaming ? (
-            <button
-              type="button"
-              onClick={onStop}
-              aria-label="Stop generating"
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-            >
-              <Square className="h-3.5 w-3.5 fill-current" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={submit}
-              disabled={!canSend}
-              aria-label="Send message"
-              className={cn(
-                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-150",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40",
-                canSend
-                  ? "bg-[#5B6CFF] text-white shadow-[0_6px_16px_-6px_rgba(91,108,255,0.7)] hover:bg-[#4F60F0] hover:shadow-[0_8px_20px_-6px_rgba(91,108,255,0.85)]"
-                  : "bg-muted-foreground/20 text-muted-foreground/50"
-              )}
-            >
-              {uploading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
-              )}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {isEmptyChat ? <ModelPicker openAbove /> : null}
+            {isStreaming ? (
+              <button
+                type="button"
+                onClick={onStop}
+                aria-label="Stop generating"
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              >
+                <Square className="h-3.5 w-3.5 fill-current" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={submit}
+                disabled={!canSend}
+                aria-label="Send message"
+                className={cn(
+                  "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-150",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+                  canSend
+                    ? "bg-[#242328] text-white shadow-[0_6px_16px_-8px_rgba(24,24,27,0.7)] hover:bg-[#3b363b]"
+                    : "bg-muted-foreground/20 text-muted-foreground/50"
+                )}
+              >
+                {uploading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
+                )}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -1205,28 +1339,30 @@ export function MentorChatPane({
         ) : null}
       </AnimatePresence>
 
-      <header className="relative z-10 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/40 px-4 backdrop-blur-md sm:px-6">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 shrink-0 text-foreground/70" />
-            <p className="text-[13px] font-semibold tracking-tight text-foreground">
-              AI Mentor
+      {!isEmptyChat ? (
+        <header className="relative z-10 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/40 px-4 backdrop-blur-md sm:px-6">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 shrink-0 text-foreground/70" />
+              <p className="text-[13px] font-semibold tracking-tight text-foreground">
+                AI Mentor
+              </p>
+            </div>
+            <p className="mt-0.5 truncate pl-5 text-[11px] text-muted-foreground">
+              {title && title !== "AI Mentor" ? title : "New conversation"}
             </p>
           </div>
-          <p className="mt-0.5 truncate pl-5 text-[11px] text-muted-foreground">
-            {title && title !== "AI Mentor" ? title : "New conversation"}
-          </p>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          {isStreaming ? (
-            <span className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-              Generating
-            </span>
-          ) : null}
-          <ModelPicker />
-        </div>
-      </header>
+          <div className="flex shrink-0 items-center gap-2">
+            {isStreaming ? (
+              <span className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                Generating
+              </span>
+            ) : null}
+            <ModelPicker />
+          </div>
+        </header>
+      ) : null}
 
       <div
         ref={scrollRef}
@@ -1240,7 +1376,7 @@ export function MentorChatPane({
           stickToBottomRef.current = distanceFromBottom < 160;
         }}
       >
-        {isLoading ? (
+        {isLoading && !pendingLocalMessage ? (
           <div className="mx-auto max-w-[760px] space-y-4 px-4 py-8">
             {[0, 1, 2].map((i) => (
               <div
@@ -1253,62 +1389,90 @@ export function MentorChatPane({
             ))}
           </div>
         ) : isEmptyChat ? (
-          <div className="mx-auto flex min-h-full w-full max-w-[640px] flex-col items-center justify-center px-4 py-10 sm:py-14">
+          <div className="mx-auto flex min-h-full w-full max-w-[720px] flex-col justify-center gap-4 px-4 py-5 sm:px-6 sm:py-6">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full text-center"
+              initial={{ opacity: 0, y: 10, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="relative flex flex-col items-center"
             >
-              <h1 className="text-[32px] font-semibold tracking-[-0.035em] text-foreground sm:text-[40px]">
-                <motion.span
-                  className="inline-block bg-gradient-to-r from-foreground via-sky-600 to-emerald-600 bg-clip-text text-transparent dark:via-sky-300 dark:to-emerald-300"
-                  style={{ backgroundSize: "200% 100%" }}
-                  animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  Meet Supra
-                </motion.span>
-              </h1>
-              <p className="mt-2 text-[15px] text-muted-foreground sm:text-[16px]">
-                Ask detailed questions for better responses
+              <SupraMascot />
+              <p className="mt-1 text-[12px] font-medium tracking-[0.08em] text-muted-foreground/80">
+                SUPRA
               </p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.06, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-8 w-full"
+              transition={{ delay: 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-20 w-full"
             >
               {renderComposer()}
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.12, duration: 0.3 }}
-              className="mt-6 w-full space-y-1"
+              transition={{ delay: 0.12, duration: 0.4 }}
+              className="w-full space-y-3"
             >
-              {SUGGESTIONS.map((hint) => (
-                <button
-                  key={hint}
-                  type="button"
-                  onClick={() => {
-                    stickToBottomRef.current = true;
-                    onSend(hint);
-                  }}
-                  className={cn(
-                    "group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left",
-                    "text-[13px] text-muted-foreground transition-colors duration-150",
-                    "hover:bg-muted/60 hover:text-foreground",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-                  )}
-                >
-                  <Sparkles className="h-3.5 w-3.5 shrink-0 opacity-50 transition-opacity group-hover:opacity-80" />
-                  <span className="truncate">{hint}</span>
-                </button>
-              ))}
+              <div className="flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {(Object.keys(PROMPT_GROUPS) as PromptGroup[]).map((group) => (
+                  <button
+                    key={group}
+                    type="button"
+                    onClick={() => setPromptGroup(group)}
+                    className={cn(
+                      "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-[12px] font-medium transition-all",
+                      group === promptGroup
+                        ? "border-[#5f3435]/25 bg-[#5f3435] text-white shadow-sm"
+                        : "border-border/70 bg-card/70 text-muted-foreground hover:bg-card hover:text-foreground"
+                    )}
+                  >
+                    {group === "Explore" ? (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    ) : null}
+                    {group}
+                  </button>
+                ))}
+              </div>
+
+              <div className="overflow-hidden rounded-[22px] border border-border/60 bg-card/70 p-1.5 backdrop-blur-lg">
+                {PROMPT_GROUPS[promptGroup].map((prompt, index) => {
+                  const PromptIcon = prompt.icon;
+                  return (
+                    <motion.button
+                      key={`${promptGroup}-${prompt.text}`}
+                      type="button"
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.045 }}
+                      onClick={() => {
+                        stickToBottomRef.current = true;
+                        setPendingLocalMessage(prompt.text);
+                        onSend(
+                          prompt.text,
+                          undefined,
+                          PROMPT_RESPONSE_MODES[promptGroup]
+                        );
+                      }}
+                      className={cn(
+                        "group flex w-full items-center gap-3 rounded-[16px] px-3 py-2.5 text-left transition-colors",
+                        "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                      )}
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-background/80 text-[#5f3435] dark:text-[#dca39a]">
+                        <PromptIcon className="h-4 w-4" />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-[13px] font-medium">
+                        {prompt.text}
+                      </span>
+                      <ArrowUp className="h-3.5 w-3.5 rotate-90 opacity-30 transition-transform group-hover:translate-x-0.5 group-hover:opacity-70" />
+                    </motion.button>
+                  );
+                })}
+              </div>
             </motion.div>
           </div>
         ) : (

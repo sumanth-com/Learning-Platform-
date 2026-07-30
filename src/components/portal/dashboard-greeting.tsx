@@ -3,13 +3,17 @@
 import { useEffect, useState } from "react";
 
 /** Time-aware greeting. Resolves after mount so SSR and client agree. */
-export function DashboardGreeting({ firstName }: { firstName: string }) {
+export function DashboardGreeting({
+  firstName,
+  message,
+}: {
+  firstName: string;
+  message: string;
+}) {
   const [greeting, setGreeting] = useState("Welcome back");
-  const [today, setToday] = useState("");
 
   useEffect(() => {
-    const now = new Date();
-    const hour = now.getHours();
+    const hour = new Date().getHours();
     setGreeting(
       hour < 12
         ? "Good morning"
@@ -17,25 +21,18 @@ export function DashboardGreeting({ firstName }: { firstName: string }) {
           ? "Good afternoon"
           : hour < 21
             ? "Good evening"
-            : "Burning the midnight oil"
-    );
-    setToday(
-      now.toLocaleDateString(undefined, {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-      })
+            : "Working late"
     );
   }, []);
 
   return (
     <div className="min-w-0">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-        {today || "\u00A0"}
-      </p>
-      <h1 className="mt-1 truncate text-[22px] font-semibold tracking-tight text-foreground sm:text-[26px]">
+      <h1 className="truncate text-[23px] font-semibold tracking-tight text-foreground sm:text-[27px]">
         {greeting}, {firstName}
       </h1>
+      <p className="mt-1.5 max-w-[52ch] text-[13px] leading-relaxed text-muted-foreground">
+        {message}
+      </p>
     </div>
   );
 }

@@ -20,6 +20,7 @@ export const PORTAL_ROUTES = {
   notifications: "/notifications",
   profile: AUTH_ROUTES.profile,
   settings: "/settings",
+  help: "/help",
 } as const;
 
 export type PortalNavId =

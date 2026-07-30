@@ -7,6 +7,7 @@ export {
   sendTeamInviteEmail,
   sendCertificateEarnedEmail,
   sendAssessmentPassedEmail,
+  sendHelpReportEmail,
 } from "@/lib/email/send";
 export {
   passwordResetEmailHtml,

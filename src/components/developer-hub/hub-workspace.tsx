@@ -10,6 +10,9 @@ import {
   Target,
   TrendingUp,
 } from "lucide-react";
+import Image from "next/image";
+import devForgeArt from "@/assets/Devforge.png";
+import devForgeDarkArt from "@/assets/DevforgeDark.png";
 import { PortalChrome } from "@/components/portal/portal-chrome";
 import { HubAuroraBackground } from "@/components/developer-hub/hub-aurora-background";
 import { HubResourceCard } from "@/components/developer-hub/hub-resource-card";
@@ -132,19 +135,23 @@ export function DeveloperHubWorkspace() {
 
                     <div
                       aria-hidden
-                      className="relative mx-auto flex h-[11.5rem] w-full max-w-[18rem] items-center justify-center lg:mx-0 lg:ml-auto lg:h-[13rem] lg:max-w-[20rem]"
+                      className="relative mx-auto w-full max-w-[22rem] lg:mx-0 lg:ml-auto lg:max-w-[25rem]"
                     >
-                      <div className="absolute inset-0 rounded-[2rem] bg-[linear-gradient(145deg,#f4f5f3_0%,#e7ebe8_48%,#d8e0db_100%)] ring-1 ring-black/[0.04]" />
-                      <div className="absolute -right-2 -top-2 h-24 w-24 rounded-full bg-emerald-500/15 blur-2xl" />
-                      <div className="absolute -bottom-3 -left-2 h-28 w-28 rounded-full bg-sky-500/15 blur-2xl" />
-                      <div className="relative flex h-[7.5rem] w-[7.5rem] items-center justify-center rounded-[1.75rem] bg-white/80 shadow-[0_22px_48px_-20px_rgba(20,30,40,0.45),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-black/[0.05] backdrop-blur-sm">
-                        <Library
-                          className="h-14 w-14 text-foreground/85"
-                          strokeWidth={1.35}
-                        />
-                      </div>
-                      <div className="absolute bottom-5 left-5 h-10 w-10 rounded-2xl bg-white/70 shadow-md ring-1 ring-black/[0.04]" />
-                      <div className="absolute right-6 top-6 h-8 w-8 rounded-xl bg-foreground/90 shadow-sm" />
+                      <div className="absolute -inset-4 rounded-[3rem] bg-[radial-gradient(60%_60%_at_50%_45%,rgba(233,150,143,0.2),transparent_72%)] blur-xl dark:bg-[radial-gradient(60%_60%_at_50%_45%,rgba(236,72,153,0.16),transparent_72%)]" />
+                      <Image
+                        src={devForgeArt}
+                        alt=""
+                        priority
+                        sizes="(min-width: 1024px) 25rem, 22rem"
+                        className="relative h-[12rem] w-full rounded-[2.25rem] object-cover drop-shadow-[0_26px_45px_rgba(167,66,61,0.2)] dark:hidden lg:h-[14.5rem]"
+                      />
+                      <Image
+                        src={devForgeDarkArt}
+                        alt=""
+                        priority
+                        sizes="(min-width: 1024px) 25rem, 22rem"
+                        className="relative hidden h-[12rem] w-full rounded-[2.25rem] object-cover drop-shadow-[0_26px_48px_rgba(236,72,153,0.18)] dark:block lg:h-[14.5rem]"
+                      />
                     </div>
                   </div>
 

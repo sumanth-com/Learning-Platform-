@@ -1,75 +1,52 @@
 import Link from "next/link";
 import {
-  ArrowRight,
-  Award,
-  BookOpen,
+  BarChart3,
   CheckCircle2,
-  ClipboardList,
   Clock,
-  FolderKanban,
-  GraduationCap,
   Layers,
-  Sparkles,
-  Target,
+  PieChart,
   Timer,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { DashboardGreeting } from "@/components/portal/dashboard-greeting";
+import { DashboardDateTime } from "@/components/portal/dashboard-datetime";
+import {
+  PhaseCompletionChart,
+  TimeSplitChart,
+  type PhasePoint,
+} from "@/components/portal/dashboard-charts";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 import type {
   ContinueLearningState,
   CourseJourney,
-  LessonSummary,
 } from "@/features/curriculum/types";
 import { cn } from "@/lib/utils";
-
-type DashboardAssignment = {
-  id: string;
-  title: string;
-  difficulty: string;
-  dueDays: number | null;
-  lessonTitle: string | null;
-};
 
 type DashboardHomeProps = {
   displayName: string;
   continueState: ContinueLearningState | null;
   journey: CourseJourney | null;
-  assignments?: DashboardAssignment[];
+  assignments?: unknown[];
 };
 
 export function DashboardHome({
   displayName,
   continueState,
   journey,
-  assignments = [],
 }: DashboardHomeProps) {
   const firstName = displayName.split(" ")[0] || displayName;
-  const resumeHref =
-    continueState?.lesson && continueState.moduleSlug
-      ? CURRICULUM_ROUTES.moduleTopic(
-          continueState.moduleSlug,
-          continueState.lesson.slug
-        )
-      : continueState?.moduleSlug
-        ? CURRICULUM_ROUTES.module(continueState.moduleSlug)
-        : CURRICULUM_ROUTES.roadmap;
 
   const stats = buildStats(journey, continueState);
-  const upcomingLessons = getUpcomingLessons(journey, 5);
-  const recentCompleted = getRecentCompleted(journey, 3);
-  const phaseProgress = getPhaseProgress(journey, 5);
-  const nextMilestone = getNextMilestone(journey);
-  const dueAssignments = assignments.slice(0, 3);
+  const phasePoints = getPhasePoints(journey, 6);
 
   const courseTitle =
     continueState?.courseTitle ??
     journey?.course.title ??
     "Full Stack + AI Engineering";
+  const heroMessage = buildHeroMessage(stats, courseTitle);
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1500px] flex-col gap-3 overflow-y-auto lg:overflow-hidden">
-      {/* ── Greeting + live stats ─────────────────────── */}
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1500px] flex-col gap-3 overflow-hidden">
+      {/* ── Welcome ───────────────────────────────────── */}
       <section className="relative shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card">
         <div
           aria-hidden
@@ -80,317 +57,92 @@ export function DashboardHome({
           }}
         />
 
-        <div className="relative flex flex-col gap-4 p-4 xl:flex-row xl:items-center xl:gap-6">
-          <div className="flex min-w-0 flex-1 items-center gap-4">
-            <ProgressRing
-              percent={stats.progress}
-              caption={`${stats.completedModules}/${stats.totalModules} modules`}
-            />
-            <div className="min-w-0">
-              <DashboardGreeting firstName={firstName} />
-              <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12.5px] text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5">
-                  <GraduationCap className="h-3.5 w-3.5" />
-                  {courseTitle}
-                </span>
-                <span className="text-border">•</span>
-                <span>
-                  {stats.completedLessons} of {stats.totalLessons} lessons done
-                </span>
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Button asChild size="sm" className="h-8 gap-1.5">
-                  <Link href={resumeHref}>
-                    {continueState?.hasStarted ? "Resume" : "Start learning"}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
-                <Button asChild size="sm" variant="outline" className="h-8">
-                  <Link href={CURRICULUM_ROUTES.roadmap}>Roadmap</Link>
-                </Button>
-              </div>
-            </div>
+        <div className="relative flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
+          <div className="min-w-0">
+            <DashboardGreeting firstName={firstName} message={heroMessage} />
           </div>
 
-          <div className="grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-4 xl:w-[560px]">
-            <StatCard
-              icon={CheckCircle2}
-              label="Lessons done"
-              value={`${stats.completedLessons}`}
-              hint={`${stats.remainingLessons} left`}
-              accent="emerald"
-            />
-            <StatCard
-              icon={Layers}
-              label="Modules done"
-              value={`${stats.completedModules}`}
-              hint={`of ${stats.totalModules}`}
-              accent="violet"
-            />
-            <StatCard
-              icon={Clock}
-              label="Time invested"
-              value={formatMinutes(stats.investedMinutes)}
-              hint="completed work"
-              accent="sky"
-            />
-            <StatCard
-              icon={Timer}
-              label="Time to finish"
-              value={formatMinutes(stats.remainingMinutes)}
-              hint="remaining"
-              accent="amber"
-            />
-          </div>
+          <DashboardDateTime />
         </div>
       </section>
 
-      {/* ── Working area — fills the rest of the screen ── */}
-      <div className="grid gap-3 lg:min-h-0 lg:flex-1 lg:grid-cols-12">
-        {/* Continue learning + phase tracking */}
-        <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card lg:col-span-5">
-          <div className="shrink-0 p-4 pb-3">
+      {/* ── Key numbers ───────────────────────────────── */}
+      <div className="grid shrink-0 grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard
+          icon={CheckCircle2}
+          label="Lessons done"
+          value={`${stats.completedLessons}`}
+          hint={`${stats.remainingLessons} left`}
+          accent="emerald"
+        />
+        <StatCard
+          icon={Layers}
+          label="Modules done"
+          value={`${stats.completedModules}`}
+          hint={`of ${stats.totalModules}`}
+          accent="violet"
+        />
+        <StatCard
+          icon={Clock}
+          label="Time invested"
+          value={formatMinutes(stats.investedMinutes)}
+          hint="completed work"
+          accent="sky"
+        />
+        <StatCard
+          icon={Timer}
+          label="Time to finish"
+          value={formatMinutes(stats.remainingMinutes)}
+          hint="remaining"
+          accent="amber"
+        />
+      </div>
+
+      {/* ── Charts ────────────────────────────────────── */}
+      <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-12">
+        <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4 lg:col-span-8">
+          <div className="flex shrink-0 items-center justify-between">
             <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              <BookOpen className="h-3.5 w-3.5" />
-              Continue learning
+              <BarChart3 className="h-3.5 w-3.5" />
+              Completion by phase
             </div>
-            <h2 className="mt-2 line-clamp-1 text-[16px] font-semibold tracking-tight text-foreground">
-              {continueState?.lesson?.title ?? "Pick your next lesson"}
-            </h2>
-            <p className="mt-1 line-clamp-1 text-[12.5px] text-muted-foreground">
-              {continueState?.phaseTitle && continueState?.moduleTitle
-                ? `${continueState.phaseTitle} · ${continueState.moduleTitle}`
-                : "Open your roadmap to choose where to begin."}
-            </p>
-            <div className="mt-2.5 flex flex-wrap items-center gap-3 text-[11.5px] text-muted-foreground">
-              {continueState?.lesson ? (
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5" />
-                  {continueState.lesson.durationMinutes} min
-                </span>
-              ) : null}
-              <span className="inline-flex items-center gap-1.5">
-                <Target className="h-3.5 w-3.5" />
-                {stats.progress}% complete
-              </span>
-            </div>
-            <Bar value={stats.progress} className="mt-3" />
+            <Link
+              href={CURRICULUM_ROUTES.roadmap}
+              className="text-[11.5px] font-medium text-primary hover:underline"
+            >
+              All phases
+            </Link>
           </div>
-
-          <div className="min-h-0 flex-1 overflow-y-auto border-t border-border/60 px-4 py-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-[12.5px] font-semibold text-foreground">
-                Phase progress
-              </h3>
-              <Link
-                href={CURRICULUM_ROUTES.roadmap}
-                className="text-[11.5px] font-medium text-primary hover:underline"
-              >
-                All phases
-              </Link>
-            </div>
-
-            {phaseProgress.length === 0 ? (
-              <p className="mt-2 text-[12.5px] text-muted-foreground">
-                Your phases appear here once the roadmap loads.
-              </p>
-            ) : (
-              <ul className="mt-3 space-y-2.5">
-                {phaseProgress.map((phase) => (
-                  <li key={phase.id}>
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="truncate text-[12px] text-foreground">
-                        {phase.title}
-                      </span>
-                      <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
-                        {phase.completed}/{phase.total}
-                      </span>
-                    </div>
-                    <Bar value={phase.percent} className="mt-1.5" thin />
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className="mt-3 min-h-0 flex-1">
+            <PhaseCompletionChart data={phasePoints} />
           </div>
         </section>
 
-        {/* Milestone + assignments */}
-        <div className="flex min-h-0 flex-col gap-3 lg:col-span-4">
-          <section className="shrink-0 rounded-2xl border border-border/70 bg-card p-4">
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              <Sparkles className="h-3.5 w-3.5" />
-              Next milestone
-            </div>
-
-            {nextMilestone ? (
-              <>
-                <h2 className="mt-2 line-clamp-1 text-[14px] font-semibold text-foreground">
-                  Finish {nextMilestone.title}
-                </h2>
-                <p className="mt-1 text-[12px] text-muted-foreground">
-                  {nextMilestone.remaining}{" "}
-                  {nextMilestone.remaining === 1 ? "lesson" : "lessons"} left ·
-                  about {formatMinutes(nextMilestone.minutes)}
-                </p>
-                <Bar value={nextMilestone.percent} className="mt-2.5" />
-                <Link
-                  href={CURRICULUM_ROUTES.module(nextMilestone.slug)}
-                  className="mt-2.5 inline-flex items-center gap-1.5 text-[12px] font-medium text-primary hover:underline"
-                >
-                  Open module
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </>
-            ) : (
-              <>
-                <h2 className="mt-2 text-[14px] font-semibold text-foreground">
-                  {stats.totalLessons > 0 &&
-                  stats.completedLessons === stats.totalLessons
-                    ? "Course complete"
-                    : "Start your first module"}
-                </h2>
-                <p className="mt-1 text-[12px] text-muted-foreground">
-                  {stats.totalLessons > 0 &&
-                  stats.completedLessons === stats.totalLessons
-                    ? "Every module is done. Try a certification next."
-                    : "Choose a module from the roadmap to set a milestone."}
-                </p>
-              </>
-            )}
-          </section>
-
-          <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4">
-            <div className="flex shrink-0 items-center justify-between">
-              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-                <ClipboardList className="h-3.5 w-3.5" />
-                Assignments due
-              </div>
-              <Link
-                href="/assignments"
-                className="text-[11.5px] font-medium text-primary hover:underline"
-              >
-                View all
-              </Link>
-            </div>
-
-            {dueAssignments.length === 0 ? (
-              <p className="mt-3 text-[12.5px] text-muted-foreground">
-                Nothing due right now. Nice work staying ahead.
-              </p>
-            ) : (
-              <ul className="mt-3 min-h-0 flex-1 space-y-2 overflow-y-auto">
-                {dueAssignments.map((a) => (
-                  <li key={a.id}>
-                    <Link
-                      href={`/assignment/${a.id}`}
-                      className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-muted/30 px-3 py-2 transition hover:border-border hover:bg-muted/60"
-                    >
-                      <span className="min-w-0">
-                        <span className="block truncate text-[12.5px] text-foreground">
-                          {a.title}
-                        </span>
-                        <span className="text-[11px] capitalize text-muted-foreground">
-                          {a.lessonTitle ?? a.difficulty}
-                          {a.dueDays != null ? ` · due in ${a.dueDays}d` : ""}
-                        </span>
-                      </span>
-                      <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        </div>
-
-        {/* Up next + activity + shortcuts */}
-        <div className="flex min-h-0 flex-col gap-3 lg:col-span-3">
-          <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4">
-            <div className="flex shrink-0 items-center justify-between">
-              <h2 className="text-[12.5px] font-semibold text-foreground">
-                Up next
-              </h2>
-              <Link
-                href={resumeHref}
-                className="text-[11.5px] font-medium text-primary hover:underline"
-              >
-                Path
-              </Link>
-            </div>
-
-            {upcomingLessons.length === 0 ? (
-              <p className="mt-3 text-[12.5px] text-muted-foreground">
-                All caught up — every lesson is complete.
-              </p>
-            ) : (
-              <ul className="mt-2 min-h-0 flex-1 space-y-0.5 overflow-y-auto">
-                {upcomingLessons.map((lesson, index) => {
-                  const moduleSlug = findLessonModuleSlug(journey, lesson.id);
-                  return (
-                    <li key={lesson.id}>
-                      <Link
-                        href={
-                          moduleSlug
-                            ? CURRICULUM_ROUTES.moduleTopic(
-                                moduleSlug,
-                                lesson.slug
-                              )
-                            : CURRICULUM_ROUTES.roadmap
-                        }
-                        className="flex items-center gap-2.5 rounded-lg px-1.5 py-1.5 transition hover:bg-muted/50"
-                      >
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-border bg-muted/40 text-[9.5px] font-semibold tabular-nums text-muted-foreground">
-                          {index + 1}
-                        </span>
-                        <span className="min-w-0 flex-1 truncate text-[12px] text-foreground">
-                          {lesson.title}
-                        </span>
-                        <span className="shrink-0 text-[10.5px] tabular-nums text-muted-foreground">
-                          {lesson.durationMinutes}m
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </section>
-
-          <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4">
-            <h2 className="shrink-0 text-[12.5px] font-semibold text-foreground">
-              Recent activity
-            </h2>
-
-            {recentCompleted.length === 0 ? (
-              <p className="mt-3 text-[12.5px] text-muted-foreground">
-                Complete a lesson and it shows up here.
-              </p>
-            ) : (
-              <ul className="mt-2 min-h-0 flex-1 space-y-0.5 overflow-y-auto">
-                {recentCompleted.map((lesson) => (
-                  <li
-                    key={lesson.id}
-                    className="flex items-center gap-2 rounded-lg px-1.5 py-1.5"
-                  >
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
-                    <span className="min-w-0 flex-1 truncate text-[12px] text-foreground">
-                      {lesson.title}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
-          <div className="grid shrink-0 grid-cols-2 gap-3">
-            <QuickCard href="/projects" icon={FolderKanban} title="Projects" />
-            <QuickCard
-              href="/certifications"
-              icon={Award}
-              title="Certifications"
+        <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4 lg:col-span-4">
+          <div className="flex shrink-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+            <PieChart className="h-3.5 w-3.5" />
+            Time split
+          </div>
+          <div className="mt-3 min-h-0 flex-1">
+            <TimeSplitChart
+              investedMinutes={stats.investedMinutes}
+              remainingMinutes={stats.remainingMinutes}
+              percent={stats.progress}
             />
           </div>
-        </div>
+          <div className="mt-3 flex shrink-0 items-center justify-between gap-3 text-[11.5px]">
+            <LegendItem
+              swatch="bg-brand"
+              label="Invested"
+              value={formatMinutes(stats.investedMinutes)}
+            />
+            <LegendItem
+              swatch="bg-border"
+              label="Remaining"
+              value={formatMinutes(stats.remainingMinutes)}
+            />
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -449,7 +201,28 @@ function buildStats(
   };
 }
 
-function getPhaseProgress(journey: CourseJourney | null, limit: number) {
+type DashboardStats = ReturnType<typeof buildStats>;
+
+function buildHeroMessage(stats: DashboardStats, courseTitle: string) {
+  if (stats.totalLessons === 0) {
+    return "Your learning path is getting ready — check back in a moment.";
+  }
+  if (stats.completedLessons === 0) {
+    return `${courseTitle} is ready when you are. One short lesson is enough to start the streak.`;
+  }
+  if (stats.completedLessons >= stats.totalLessons) {
+    return "Every lesson is finished. A certification is the natural next step.";
+  }
+  const left = stats.remainingLessons;
+  return `You're ${stats.progress}% through ${courseTitle} — ${left} ${
+    left === 1 ? "lesson" : "lessons"
+  } to go. Keep the momentum.`;
+}
+
+function getPhasePoints(
+  journey: CourseJourney | null,
+  limit: number
+): PhasePoint[] {
   if (!journey) return [];
   return journey.phases
     .map((phase) => {
@@ -460,7 +233,8 @@ function getPhaseProgress(journey: CourseJourney | null, limit: number) {
       );
       return {
         id: phase.id,
-        title: phase.title,
+        label: phase.title,
+        short: shortPhaseLabel(phase.title),
         completed,
         total,
         percent: total > 0 ? Math.round((completed / total) * 100) : 0,
@@ -470,72 +244,10 @@ function getPhaseProgress(journey: CourseJourney | null, limit: number) {
     .slice(0, limit);
 }
 
-/** First module that is started or next in line — the nearest real goal. */
-function getNextMilestone(journey: CourseJourney | null) {
-  if (!journey) return null;
-  for (const phase of journey.phases) {
-    for (const module of phase.modules) {
-      if (module.totalCount === 0) continue;
-      if (module.completedCount >= module.totalCount) continue;
-      const remainingLessons = module.lessons.filter((l) => !l.isCompleted);
-      return {
-        title: module.title,
-        slug: module.slug,
-        remaining: remainingLessons.length,
-        minutes: remainingLessons.reduce(
-          (sum, l) => sum + l.durationMinutes,
-          0
-        ),
-        percent: module.progressPercent,
-      };
-    }
-  }
-  return null;
-}
-
-function getUpcomingLessons(
-  journey: CourseJourney | null,
-  limit: number
-): LessonSummary[] {
-  if (!journey) return [];
-  const flat: LessonSummary[] = [];
-  for (const phase of journey.phases) {
-    for (const module of phase.modules) {
-      for (const lesson of module.lessons) {
-        if (!lesson.isCompleted) flat.push(lesson);
-      }
-    }
-  }
-  return flat.slice(0, limit);
-}
-
-function findLessonModuleSlug(
-  journey: CourseJourney | null,
-  lessonId: string
-): string | null {
-  if (!journey) return null;
-  for (const phase of journey.phases) {
-    for (const module of phase.modules) {
-      if (module.lessons.some((l) => l.id === lessonId)) return module.slug;
-    }
-  }
-  return null;
-}
-
-function getRecentCompleted(
-  journey: CourseJourney | null,
-  limit: number
-): LessonSummary[] {
-  if (!journey) return [];
-  const flat: LessonSummary[] = [];
-  for (const phase of journey.phases) {
-    for (const module of phase.modules) {
-      for (const lesson of module.lessons) {
-        if (lesson.isCompleted) flat.push(lesson);
-      }
-    }
-  }
-  return flat.slice(-limit).reverse();
+/** Axis labels stay on one line, so keep them to a single short word. */
+function shortPhaseLabel(title: string) {
+  const first = title.split(/[\s·—-]+/)[0] ?? title;
+  return first.length > 11 ? `${first.slice(0, 10)}…` : first;
 }
 
 function formatMinutes(total: number) {
@@ -548,55 +260,6 @@ function formatMinutes(total: number) {
 }
 
 /* ─────────────────── ui pieces ─────────────────── */
-
-function ProgressRing({
-  percent,
-  caption,
-}: {
-  percent: number;
-  caption: string;
-}) {
-  const size = 104;
-  const stroke = 8;
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const clamped = Math.max(0, Math.min(100, percent));
-  const offset = circumference - (clamped / 100) * circumference;
-
-  return (
-    <div className="relative hidden shrink-0 items-center justify-center sm:flex">
-      <svg width={size} height={size} className="-rotate-90">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          strokeWidth={stroke}
-          className="stroke-border"
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          className="stroke-primary transition-[stroke-dashoffset] duration-700"
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[21px] font-semibold tabular-nums leading-none text-foreground">
-          {clamped}%
-        </span>
-        <span className="mt-1 text-[9.5px] text-muted-foreground">
-          {caption}
-        </span>
-      </div>
-    </div>
-  );
-}
 
 const ACCENTS = {
   emerald: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
@@ -619,7 +282,7 @@ function StatCard({
   accent: keyof typeof ACCENTS;
 }) {
   return (
-    <div className="rounded-xl border border-border/70 bg-background/50 p-3">
+    <div className="rounded-2xl border border-border/70 bg-card p-3.5">
       <span
         className={cn(
           "flex h-7 w-7 items-center justify-center rounded-lg border",
@@ -628,7 +291,7 @@ function StatCard({
       >
         <Icon className="h-3.5 w-3.5" />
       </span>
-      <p className="mt-2 text-[17px] font-semibold tabular-nums leading-none text-foreground">
+      <p className="mt-2.5 text-[18px] font-semibold tabular-nums leading-none text-foreground">
         {value}
       </p>
       <p className="mt-1.5 text-[11px] font-medium leading-none text-foreground">
@@ -641,50 +304,22 @@ function StatCard({
   );
 }
 
-function Bar({
+function LegendItem({
+  swatch,
+  label,
   value,
-  className,
-  thin,
 }: {
-  value: number;
-  className?: string;
-  thin?: boolean;
-}) {
-  const clamped = Math.max(0, Math.min(100, value));
-  return (
-    <div
-      className={cn(
-        "w-full overflow-hidden rounded-full bg-muted",
-        thin ? "h-1" : "h-1.5",
-        className
-      )}
-    >
-      <div
-        className="h-full rounded-full bg-primary transition-[width] duration-700"
-        style={{ width: `${clamped}%` }}
-      />
-    </div>
-  );
-}
-
-function QuickCard({
-  href,
-  icon: Icon,
-  title,
-}: {
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
+  swatch: string;
+  label: string;
+  value: string;
 }) {
   return (
-    <Link
-      href={href}
-      className="flex flex-col items-start gap-2 rounded-2xl border border-border/70 bg-card p-3 transition hover:border-primary/40 hover:bg-muted/40"
-    >
-      <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-muted/40 text-foreground">
-        <Icon className="h-3.5 w-3.5" />
+    <span className="inline-flex min-w-0 items-center gap-1.5">
+      <span className={cn("h-2 w-2 shrink-0 rounded-full", swatch)} />
+      <span className="truncate text-muted-foreground">{label}</span>
+      <span className="shrink-0 font-medium tabular-nums text-foreground">
+        {value}
       </span>
-      <p className="text-[12px] font-semibold text-foreground">{title}</p>
-    </Link>
+    </span>
   );
 }

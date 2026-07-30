@@ -54,7 +54,7 @@ export function HubResourceCard({
         <div className="flex items-start gap-2">
           <Link
             href={`/resources/${resource.slug}`}
-            className="min-w-0 flex-1 text-[15px] font-semibold tracking-tight text-foreground transition hover:opacity-80"
+            className="line-clamp-2 min-w-0 flex-1 text-[15px] font-semibold leading-snug tracking-tight text-foreground transition-opacity hover:opacity-80"
           >
             {resource.title}
           </Link>

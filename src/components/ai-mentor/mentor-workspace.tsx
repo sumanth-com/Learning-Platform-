@@ -11,7 +11,10 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import type { AiConversationRow } from "@/types/database";
-import type { LearningContext } from "@/features/ai-mentor/types";
+import type {
+  LearningContext,
+  MentorResponseMode,
+} from "@/features/ai-mentor/types";
 import {
   createConversationAction,
   listConversationsAction,
@@ -62,6 +65,7 @@ export function MentorWorkspace() {
   const [pending, startTransition] = useTransition();
   const learningContext = useLearningContextFromStore();
   const pendingPromptRef = useRef<string | null>(null);
+  const pendingResponseModeRef = useRef<MentorResponseMode>("suggested");
   const bootAskHandled = useRef(false);
 
   useEffect(() => {
@@ -177,9 +181,11 @@ export function MentorWorkspace() {
     if (!activeId || !pendingPromptRef.current) return;
     const prompt = pendingPromptRef.current;
     const attachmentIds = pendingAttachmentsRef.current;
+    const responseMode = pendingResponseModeRef.current;
     pendingPromptRef.current = null;
     pendingAttachmentsRef.current = undefined;
-    void send(prompt, learningContext, attachmentIds).then((meta) => {
+    pendingResponseModeRef.current = "suggested";
+    void send(prompt, learningContext, attachmentIds, responseMode).then((meta) => {
       if (meta?.title) {
         setConversations((prev) =>
           prev.map((c) =>
@@ -241,9 +247,13 @@ export function MentorWorkspace() {
     return conversation.id;
   }, [activeId, learningContext, selectConversation]);
 
-  const handleSend = (content: string, attachmentIds?: string[]) => {
+  const handleSend = (
+    content: string,
+    attachmentIds?: string[],
+    responseMode: MentorResponseMode = "suggested"
+  ) => {
     if (activeId) {
-      void send(content, learningContext, attachmentIds).then((meta) => {
+      void send(content, learningContext, attachmentIds, responseMode).then((meta) => {
         if (meta?.title) {
           setConversations((prev) =>
             prev.map((c) =>
@@ -259,11 +269,13 @@ export function MentorWorkspace() {
 
     pendingPromptRef.current = content;
     pendingAttachmentsRef.current = attachmentIds;
+    pendingResponseModeRef.current = responseMode;
     startTransition(async () => {
       const result = await createConversationAction(learningContext);
       if (!result.success) {
         pendingPromptRef.current = null;
         pendingAttachmentsRef.current = undefined;
+        pendingResponseModeRef.current = "suggested";
         toast.error(result.error);
         return;
       }
@@ -271,6 +283,7 @@ export function MentorWorkspace() {
       if (!conversation) {
         pendingPromptRef.current = null;
         pendingAttachmentsRef.current = undefined;
+        pendingResponseModeRef.current = "suggested";
         return;
       }
       setConversations((prev) => [conversation, ...prev]);
