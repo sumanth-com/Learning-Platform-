@@ -16,7 +16,7 @@ export function SitePageShell({
     <div className="min-h-screen bg-[#0b0b0d] text-white">
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,107,104,0.12),transparent_42%),radial-gradient(ellipse_at_bottom_right,rgba(120,108,172,0.1),transparent_40%)]"
+      className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,107,104,0.1),transparent_42%),radial-gradient(ellipse_at_bottom_right,rgba(120,108,172,0.08),transparent_40%)]"
       />
 
       <LandingHeader showNav={false} />

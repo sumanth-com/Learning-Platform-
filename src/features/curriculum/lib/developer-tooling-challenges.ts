@@ -81,7 +81,7 @@ function trio(
   extra?: Spec[] | Spec
 ): Spec[] {
   const extras = Array.isArray(extra) ? extra : extra ? [extra] : [];
-  return [
+    return [
     { ...easy, key: "e1", difficulty: "easy" },
     { ...medium, key: "m1", difficulty: "medium" },
     { ...hard, key: "h1", difficulty: "hard" },
@@ -1635,74 +1635,74 @@ const TOPIC_SPECS: Record<string, Spec[]> = {
   ),
 
   "final-workflow-project": [
-    {
-      key: "e1",
-      title: "Final project — Bootstrap repo",
-      difficulty: "easy",
-      minutes: 12,
-      kind: "terminal",
-      scenario:
-        "You are starting the acme-app final project from an empty workspace.",
-      task: "1) Create a folder named acme-app with mkdir.\n2) cd into acme-app.\n3) Run git init.",
-      hints: [
-        "mkdir creates the folder; cd moves into it.",
-        "git init only works inside the project folder.",
-        "Confirm with pwd and ls after each step.",
-      ],
-      referenceSolution: "mkdir acme-app\ncd acme-app\ngit init\npwd",
-      takeaways: ["Clean bootstrap is the foundation of every repo."],
-      validateIncludes: ["git init"],
-    },
-    {
-      key: "m1",
-      title: "Final project — Feature branch and commit",
-      difficulty: "medium",
-      minutes: 18,
-      kind: "git",
-      scenario: "Ship a small feature branch the way a company team would.",
-      task: "1) Create branch feature/home.\n2) Add a file.\n3) Stage and commit with a clear message.",
-      hints: [
-        "git checkout -b feature/home creates and switches in one step.",
-        "touch README.md then git add . then git commit -m \"message\".",
-      ],
-      referenceSolution:
+      {
+        key: "e1",
+        title: "Final project — Bootstrap repo",
+        difficulty: "easy",
+        minutes: 12,
+        kind: "terminal",
+        scenario:
+          "You are starting the acme-app final project from an empty workspace.",
+        task: "1) Create a folder named acme-app with mkdir.\n2) cd into acme-app.\n3) Run git init.",
+        hints: [
+          "mkdir creates the folder; cd moves into it.",
+          "git init only works inside the project folder.",
+          "Confirm with pwd and ls after each step.",
+        ],
+        referenceSolution: "mkdir acme-app\ncd acme-app\ngit init\npwd",
+        takeaways: ["Clean bootstrap is the foundation of every repo."],
+        validateIncludes: ["git init"],
+      },
+      {
+        key: "m1",
+        title: "Final project — Feature branch and commit",
+        difficulty: "medium",
+        minutes: 18,
+        kind: "git",
+        scenario: "Ship a small feature branch the way a company team would.",
+        task: "1) Create branch feature/home.\n2) Add a file.\n3) Stage and commit with a clear message.",
+        hints: [
+          "git checkout -b feature/home creates and switches in one step.",
+          "touch README.md then git add . then git commit -m \"message\".",
+        ],
+        referenceSolution:
         'git checkout -b feature/home\ntouch home.txt\ngit add .\ngit commit -m "Add home scaffold"',
-      takeaways: ["Feature branches keep main safe."],
-      validateIncludes: ["git commit"],
-    },
-    {
-      key: "h1",
-      title: "Final project — Remote, push, and tag",
-      difficulty: "hard",
-      minutes: 25,
-      kind: "scenario",
-      scenario: "Publish your work and mark a release point.",
-      task: "1) Add an origin remote.\n2) Push.\n3) Tag v1.0.0.",
-      hints: [
-        "git remote add origin https://github.com/you/acme-app.git",
-        "Then git push and git tag v1.0.0",
-      ],
-      referenceSolution:
-        "git remote add origin https://github.com/you/acme-app.git\ngit push\ngit tag v1.0.0",
-      takeaways: ["Publish and release marking close the delivery loop."],
-      validateIncludes: ["git push"],
-    },
-    {
-      key: "h2",
-      title: "Final project — Merge and prove history",
-      difficulty: "hard",
-      minutes: 25,
-      kind: "scenario",
-      scenario: "Integrate feature work and prove it with history.",
-      task: "1) Merge a feature branch into your current branch.\n2) Run git log to show the result.",
-      hints: [
-        "Switch to main first if needed.",
-        "git merge feature/home then git log",
-      ],
-      referenceSolution: "git checkout main\ngit merge feature/home\ngit log",
-      takeaways: ["Log is proof for reviewers and for future you."],
-      validateIncludes: ["git log"],
-    },
+        takeaways: ["Feature branches keep main safe."],
+        validateIncludes: ["git commit"],
+      },
+      {
+        key: "h1",
+        title: "Final project — Remote, push, and tag",
+        difficulty: "hard",
+        minutes: 25,
+        kind: "scenario",
+        scenario: "Publish your work and mark a release point.",
+        task: "1) Add an origin remote.\n2) Push.\n3) Tag v1.0.0.",
+        hints: [
+          "git remote add origin https://github.com/you/acme-app.git",
+          "Then git push and git tag v1.0.0",
+        ],
+        referenceSolution:
+          "git remote add origin https://github.com/you/acme-app.git\ngit push\ngit tag v1.0.0",
+        takeaways: ["Publish and release marking close the delivery loop."],
+        validateIncludes: ["git push"],
+      },
+      {
+        key: "h2",
+        title: "Final project — Merge and prove history",
+        difficulty: "hard",
+        minutes: 25,
+        kind: "scenario",
+        scenario: "Integrate feature work and prove it with history.",
+        task: "1) Merge a feature branch into your current branch.\n2) Run git log to show the result.",
+        hints: [
+          "Switch to main first if needed.",
+          "git merge feature/home then git log",
+        ],
+        referenceSolution: "git checkout main\ngit merge feature/home\ngit log",
+        takeaways: ["Log is proof for reviewers and for future you."],
+        validateIncludes: ["git log"],
+      },
   ],
 };
 

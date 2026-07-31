@@ -356,7 +356,8 @@
   position: absolute;
   border-radius: 999px;
   filter: blur(110px);
-  will-change: transform;
+  transform: translateZ(0);
+  contain: strict;
 }
 
 .auroraOne {
@@ -756,7 +757,7 @@
   position: absolute;
   border-radius: 999px;
   filter: blur(90px);
-  will-change: transform;
+  transform: translateZ(0);
 }
 
 .mentorOrbA {
@@ -1155,20 +1156,21 @@
   position: relative;
   overflow: hidden;
   background: transparent;
-  padding: 0 1.25rem 2.5rem;
+  padding: 0 1.25rem 2rem;
 }
 
 @media (min-width: 640px) {
   .footerBand {
     padding-left: 2rem;
     padding-right: 2rem;
-    padding-bottom: 3rem;
+    padding-bottom: 2.75rem;
   }
 }
 
 .footerShell {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: 80rem;
   margin: 0 auto;
 }
@@ -1687,4 +1689,64 @@
   .coreRingA { transform: scaleY(0.32); }
   .coreRingB { transform: scaleY(0.5); }
   .coreRingC { transform: scaleY(0.78); }
+}
+
+/* Keep mobile smooth: pause heavy continuous effects, lighter filters. */
+@media (max-width: 767px) {
+  .aurora,
+  .mentorOrbA,
+  .mentorOrbB,
+  .mentorOrbC,
+  .mentorWash,
+  .techOrbitA,
+  .techOrbitB,
+  .techPulse,
+  .techCardWrap,
+  .coreHalo,
+  .coreRing,
+  .circuitTracePulse,
+  .channelSupply,
+  .prismSpread,
+  .prismRing,
+  .prismRingComposer,
+  .heroInviteAura,
+  .heroInviteRing {
+    animation: none !important;
+  }
+
+  .aurora {
+    filter: blur(70px);
+    opacity: 0.55;
+    will-change: auto;
+  }
+
+  .mentorOrbA,
+  .mentorOrbB,
+  .mentorOrbC,
+  .mentorWash,
+  .techPulse,
+  .prismSpread,
+  .prismRing,
+  .prismRingComposer,
+  .heroInviteAura,
+  .heroInviteRing,
+  .coreHalo {
+    filter: none;
+    opacity: 0.35;
+  }
+
+  .heroInviteRing {
+    background: linear-gradient(
+      90deg,
+      rgba(229, 107, 104, 0.55),
+      rgba(244, 160, 121, 0.45),
+      rgba(167, 139, 250, 0.4)
+    );
+  }
+
+  .promptComposer,
+  .premiumCard,
+  .statusBadge {
+    backdrop-filter: blur(10px);
+  }
 }

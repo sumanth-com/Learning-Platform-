@@ -36,7 +36,7 @@ const SUGGESTIONS = [
 
 const TABS = ["Explore", "Explain", "Debug", "Build", "Review"] as const;
 
-const HOLD_MS = 2400;
+const HOLD_MS = 3200;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function LandingMentorShowcase() {

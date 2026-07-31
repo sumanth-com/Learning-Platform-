@@ -55,7 +55,7 @@ export function Reveal({
       variants={variants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.12, margin: "0px 0px -8% 0px" }}
     >
       {children}
     </motion.div>
