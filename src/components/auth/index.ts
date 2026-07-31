@@ -3,6 +3,7 @@
  */
 export { AuthShell } from "@/components/auth/auth-shell";
 export { AuthFormField } from "@/components/auth/auth-form-field";
+export { AuthSocialButtons } from "@/components/auth/auth-social-buttons";
 export { AuthLoadingSkeleton } from "@/components/auth/auth-loading-skeleton";
 export { LoginForm } from "@/components/auth/login-form";
 export { SignupForm } from "@/components/auth/signup-form";

@@ -9,6 +9,8 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
+import { AuthSocialButtons } from "@/components/auth/auth-social-buttons";
+import { authPrimaryBtnClass, authSecondaryBtnClass } from "@/components/auth/auth-shell";
 import {
   loginAction,
   resendConfirmationAction,
@@ -68,12 +70,14 @@ export function LoginForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4" noValidate>
+    <form onSubmit={onSubmit} className="space-y-2.5" noValidate>
+      <AuthSocialButtons mode="signin" />
+
       <AuthFormField
         label="Email"
         type="email"
         autoComplete="email"
-        placeholder="you@company.com"
+        placeholder="Enter email"
         error={errors.email}
         {...register("email")}
       />
@@ -81,7 +85,7 @@ export function LoginForm() {
         label="Password"
         type="password"
         autoComplete="current-password"
-        placeholder="••••••••"
+        placeholder="Enter password"
         error={errors.password}
         {...register("password")}
       />
@@ -89,13 +93,17 @@ export function LoginForm() {
       <div className="flex justify-end">
         <Link
           href={AUTH_ROUTES.forgotPassword}
-          className="text-xs font-medium text-indigo-400 transition hover:text-indigo-300"
+          className="text-[12.5px] font-medium text-[#5f3435] transition hover:text-[#3f2223] hover:underline hover:underline-offset-2"
         >
           Forgot password?
         </Link>
       </div>
 
-      <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+      <Button
+        type="submit"
+        className={`w-full ${authPrimaryBtnClass}`}
+        disabled={isPending}
+      >
         {isPending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -111,7 +119,7 @@ export function LoginForm() {
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className={`w-full ${authSecondaryBtnClass}`}
             disabled={isResending || cooldown > 0}
             onClick={() => {
               const email = getValues("email");
@@ -141,7 +149,7 @@ export function LoginForm() {
             )}
           </Button>
           {cooldown > 0 ? (
-            <p className="text-center text-[11px] text-zinc-500">
+            <p className="text-center text-[11px] text-[#8b93a3]">
               Email sent successfully. You can request another in {cooldown}s.
             </p>
           ) : null}

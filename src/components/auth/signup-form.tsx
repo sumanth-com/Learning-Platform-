@@ -8,7 +8,9 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
+import { AuthSocialButtons } from "@/components/auth/auth-social-buttons";
 import { PasswordField } from "@/components/auth/password-field";
+import { authPrimaryBtnClass } from "@/components/auth/auth-shell";
 import { signupAction } from "@/features/auth/actions/auth-actions";
 import {
   signupSchema,
@@ -60,7 +62,9 @@ export function SignupForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4" noValidate>
+    <form onSubmit={onSubmit} className="space-y-2.5" noValidate>
+      <AuthSocialButtons mode="signup" />
+
       <AuthFormField
         label="Full name"
         type="text"
@@ -107,7 +111,11 @@ export function SignupForm() {
         )}
       />
 
-      <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+      <Button
+        type="submit"
+        className={`w-full ${authPrimaryBtnClass}`}
+        disabled={isPending}
+      >
         {isPending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />

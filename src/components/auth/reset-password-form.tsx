@@ -9,6 +9,7 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { PasswordField } from "@/components/auth/password-field";
+import { authPrimaryBtnClass } from "@/components/auth/auth-shell";
 import { resetPasswordAction } from "@/features/auth/actions/auth-actions";
 import {
   resetPasswordSchema,
@@ -66,14 +67,14 @@ export function ResetPasswordForm() {
               initial={{ scale: 0.6, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 260, damping: 18 }}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400"
+              className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600"
             >
               <CheckCircle2 className="h-8 w-8" />
             </motion.div>
-            <h2 className="text-lg font-semibold text-zinc-50">
+            <h2 className="text-lg font-semibold text-[#14151a]">
               Password updated
             </h2>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-[#6b7285]">
               Redirecting you to sign in…
             </p>
           </motion.div>
@@ -81,7 +82,7 @@ export function ResetPasswordForm() {
       </AnimatePresence>
 
       {!succeeded ? (
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
+        <form onSubmit={onSubmit} className="space-y-2.5" noValidate>
           <Controller
             name="password"
             control={control}
@@ -115,8 +116,7 @@ export function ResetPasswordForm() {
 
           <Button
             type="submit"
-            className="w-full"
-            size="lg"
+            className={`w-full ${authPrimaryBtnClass}`}
             disabled={isPending || !password}
           >
             {isPending ? (

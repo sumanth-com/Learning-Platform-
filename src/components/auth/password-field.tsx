@@ -45,8 +45,8 @@ export function PasswordField({
             : "bg-emerald-500";
 
   return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium text-zinc-200">
+    <div className="space-y-1">
+      <label htmlFor={id} className="text-[12.5px] font-medium text-[#3a3f4b]">
         {label}
       </label>
       <div className="relative">
@@ -59,51 +59,56 @@ export function PasswordField({
           placeholder={placeholder}
           aria-invalid={Boolean(error)}
           className={cn(
-            "flex h-10 w-full rounded-lg border border-zinc-700 bg-zinc-900/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
-            error && "border-red-500/70 focus-visible:ring-red-500"
+            "flex h-10 w-full rounded-xl border border-[#e2e7ef] bg-[#f4f6fa] px-3 py-2 pr-10 text-[13.5px] text-[#14151a] placeholder:text-[#9aa3b2] shadow-none transition focus-visible:border-[#c9d2e0] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3435]/25",
+            error &&
+              "border-red-400/80 focus-visible:border-red-400 focus-visible:ring-red-400/30"
           )}
         />
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-zinc-500 transition hover:text-zinc-200"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-[#8b93a3] transition hover:bg-white hover:text-[#3a3f4b]"
           aria-label={visible ? "Hide password" : "Show password"}
         >
-          {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {visible ? (
+            <EyeOff className="h-4 w-4" />
+          ) : (
+            <Eye className="h-4 w-4" />
+          )}
         </button>
       </div>
 
       {showStrength && value ? (
-        <div className="space-y-2 pt-1">
+        <div className="space-y-1.5 pt-0.5">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex h-1.5 flex-1 gap-1">
+            <div className="flex h-1 flex-1 gap-1">
               {Array.from({ length: 5 }).map((_, i) => (
                 <span
                   key={i}
                   className={cn(
-                    "h-full flex-1 rounded-full bg-zinc-800",
+                    "h-full flex-1 rounded-full bg-[#e8ecf3]",
                     i < score && meterColor
                   )}
                 />
               ))}
             </div>
-            <span className="text-[11px] font-medium text-zinc-400">
+            <span className="text-[10.5px] font-medium text-[#8b93a3]">
               {labelStrength}
             </span>
           </div>
-          <ul className="grid gap-1.5 sm:grid-cols-2">
+          <ul className="grid grid-cols-2 gap-x-2 gap-y-0.5">
             {checks.map((rule) => (
               <li
                 key={rule.id}
                 className={cn(
-                  "flex items-center gap-1.5 text-[11px]",
-                  rule.passed ? "text-emerald-400" : "text-zinc-500"
+                  "flex items-center gap-1 text-[10.5px]",
+                  rule.passed ? "text-emerald-600" : "text-[#9aa3b2]"
                 )}
               >
                 {rule.passed ? (
-                  <Check className="h-3 w-3" />
+                  <Check className="h-2.5 w-2.5 shrink-0" />
                 ) : (
-                  <X className="h-3 w-3" />
+                  <X className="h-2.5 w-2.5 shrink-0" />
                 )}
                 {rule.label}
               </li>
@@ -113,7 +118,7 @@ export function PasswordField({
       ) : null}
 
       {error ? (
-        <p className="text-xs text-red-400" role="alert">
+        <p className="text-[11px] text-red-500" role="alert">
           {error}
         </p>
       ) : null}

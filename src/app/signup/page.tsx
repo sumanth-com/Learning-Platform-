@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AuthShell } from "@/components/auth/auth-shell";
+import { AuthShell, authLinkClass } from "@/components/auth/auth-shell";
 import { SignupForm } from "@/components/auth/signup-form";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 
@@ -11,14 +11,11 @@ export default function SignupPage() {
   return (
     <AuthShell
       title="Create your account"
-      description="Join SupraBase and start building with structure."
+      description="Join Suprabase and start shipping with structure."
       footer={
         <>
           Already have an account?{" "}
-          <Link
-            href={AUTH_ROUTES.login}
-            className="font-medium text-indigo-400 hover:text-indigo-300"
-          >
+          <Link href={AUTH_ROUTES.login} className={authLinkClass}>
             Sign in
           </Link>
         </>

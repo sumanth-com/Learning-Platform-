@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
+import { authPrimaryBtnClass } from "@/components/auth/auth-shell";
 import { forgotPasswordAction } from "@/features/auth/actions/auth-actions";
 import {
   forgotPasswordSchema,
@@ -40,7 +41,7 @@ export function ForgotPasswordForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4" noValidate>
+    <form onSubmit={onSubmit} className="space-y-2.5" noValidate>
       <AuthFormField
         label="Email"
         type="email"
@@ -51,7 +52,11 @@ export function ForgotPasswordForm() {
         {...register("email")}
       />
 
-      <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+      <Button
+        type="submit"
+        className={`w-full ${authPrimaryBtnClass}`}
+        disabled={isPending}
+      >
         {isPending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
