@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTotalWeeks } from "@/curriculum/registry";
+import { LandingCertifications } from "@/components/landing/landing-certifications";
 import { LandingCore } from "@/components/landing/landing-core";
 import { LandingCta } from "@/components/landing/landing-cta";
 import { FAQ_ITEMS, LandingFaq } from "@/components/landing/landing-faq";
@@ -9,13 +10,13 @@ import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingJourney } from "@/components/landing/landing-journey";
 import { LandingManifesto } from "@/components/landing/landing-manifesto";
 import { LandingMentorShowcase } from "@/components/landing/landing-mentor-showcase";
-import { LandingStats, type LandingStat } from "@/components/landing/landing-stats";
-import { HUB_CATALOG } from "@/features/developer-hub/data/catalog";
-import { CERTIFICATIONS, CERT_CATEGORIES } from "@/features/certifications/data/catalog";
+import type { LandingStat } from "@/components/landing/landing-stats";
+import { LandingTechnologies } from "@/components/landing/landing-technologies";
+import { CERT_CATEGORIES } from "@/features/certifications/data/catalog";
 import { SITE, absoluteUrl } from "@/lib/site";
 import styles from "@/components/landing/landing.module.css";
 
-const TITLE = "Learn Full Stack & AI Development";
+const TITLE = "Full Stack Development & AI Engineering";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
  * Structured data is emitted from the same copy the page renders so answer
  * engines and crawlers never see a different set of claims.
  */
-function buildStructuredData(weeks: number, tracks: number) {
+function buildStructuredData(weeks: number) {
   const organization = {
     "@type": "EducationalOrganization",
     "@id": absoluteUrl("/#organization"),
@@ -64,12 +65,19 @@ function buildStructuredData(weeks: number, tracks: number) {
       },
       {
         "@type": "Course",
-        name: "Full Stack and AI Developer Path",
-        description: `A ${weeks}-week structured path covering web fundamentals, frontend, backend, databases and AI engineering, with in-browser coding challenges, portfolio projects and ${tracks} certification tracks.`,
+        name: "Full Stack Development and AI Engineering Path",
+        description: SITE.longDescription,
         provider: { "@id": absoluteUrl("/#organization") },
         url: absoluteUrl("/public"),
         educationalLevel: "Beginner to Intermediate",
-        teaches: CERT_CATEGORIES.map((category) => category.label),
+        teaches: [
+          ...CERT_CATEGORIES.map((category) => category.label),
+          "Full Stack Development",
+          "AI Engineering",
+          "System Design",
+          "Software Engineering",
+          "DevOps",
+        ],
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "online",
@@ -91,29 +99,29 @@ function buildStructuredData(weeks: number, tracks: number) {
 
 export default function PublicPage() {
   const weeks = getTotalWeeks();
-  const tracks = CERT_CATEGORIES.length;
 
   const stats: LandingStat[] = [
     {
       value: weeks,
-      label: "Weeks of curriculum",
-      detail: "Sequenced so each week builds on the last",
-    },
-    {
-      value: tracks,
-      label: "Skill tracks",
-      detail: "From JavaScript to system design and AI engineering",
-    },
-    {
-      value: CERTIFICATIONS.length,
-      label: "Certification tests",
-      detail: "Basic and intermediate levels per track",
-    },
-    {
-      value: HUB_CATALOG.length,
       suffix: "+",
-      label: "Dev Forge resources",
-      detail: "Curated references beside every module",
+      label: "Learning Modules",
+      detail: "Production-focused roadmap",
+    },
+    {
+      value: 50,
+      suffix: "+",
+      label: "Projects & Challenges",
+      detail: "Portfolio-ready work",
+    },
+    {
+      display: "AI Mentor",
+      label: "Available 24/7",
+      detail: "Context-aware assistance",
+    },
+    {
+      display: "Verifiable",
+      label: "Certifications",
+      detail: "Employer-friendly credentials",
     },
   ];
 
@@ -122,7 +130,7 @@ export default function PublicPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildStructuredData(weeks, tracks)),
+          __html: JSON.stringify(buildStructuredData(weeks)),
         }}
       />
 
@@ -141,14 +149,15 @@ export default function PublicPage() {
         <LandingHero />
         <LandingMentorShowcase />
         <LandingCore />
-        <LandingManifesto />
-        <LandingStats stats={stats} />
+        <LandingCertifications />
+        <LandingManifesto stats={stats} />
         <LandingJourney />
+        <LandingTechnologies />
         <LandingFaq />
-        <LandingCta />
       </main>
 
       <div className="relative z-10">
+        <LandingCta />
         <LandingFooter />
       </div>
     </div>

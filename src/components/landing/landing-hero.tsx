@@ -1,24 +1,64 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import styles from "./landing.module.css";
 
-const HEADLINE = "Explore what you can become";
+const HEADLINE = "Become the developer companies actually hire";
+const SUBHEAD =
+  "Full Stack, AI Engineering, System Design, and DevOps — built through real projects, AI mentoring, and verifiable certifications.";
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const TRACES = [
-  { d: "M 0 18 H 42 V 8 H 92", startY: 18, endX: 92, endY: 8, delay: "0s" },
-  { d: "M 0 42 H 28 V 58 H 78", startY: 42, endX: 78, endY: 58, delay: "-1.2s" },
-  { d: "M 0 86 H 52 V 72 H 110", startY: 86, endX: 110, endY: 72, delay: "-2.4s" },
-  { d: "M 0 118 H 34 V 132 H 86", startY: 118, endX: 86, endY: 132, delay: "-0.6s" },
-  { d: "M 0 156 H 48 V 146 H 102", startY: 156, endX: 102, endY: 146, delay: "-3.1s" },
-  { d: "M 0 188 H 22 V 204 H 70", startY: 188, endX: 70, endY: 204, delay: "-1.8s" },
+const STATUS_LINES = [
+  "Production-ready engineering paths",
+  "AI mentor on every module",
+  "Verifiable skill certifications",
+];
+
+/**
+ * Image-2 layout:
+ *  - top pair: two parallels that jog down at 45°
+ *  - middle: two arms converge into one stem (Y junction)
+ *  - bottom pair: two parallels that jog up at 45°
+ */
+const CHANNELS = [
+  // Upside pair — jog down
+  { d: "M 0 48 H 60 L 88 76 H 148", delay: "0s" },
+  { d: "M 0 62 H 60 L 88 90 H 148", delay: "-0.7s" },
+  // Middle Y — arms converge into one stem going right
+  { d: "M 0 130 H 50 L 86 168 H 148", delay: "-1.5s" },
+  { d: "M 0 206 H 50 L 86 168 H 148", delay: "-2.2s" },
+  // Downside pair — jog up
+  { d: "M 0 246 H 60 L 88 218 H 148", delay: "-3s" },
+  { d: "M 0 260 H 60 L 88 232 H 148", delay: "-3.7s" },
 ] as const;
 
+function EngravedPath({ d }: { d: string }) {
+  return (
+    <>
+      <path
+        d={d}
+        className={styles.channelShadow}
+        transform="translate(0 -0.75)"
+      />
+      <path d={d} className={styles.channelGroove} />
+      <path
+        d={d}
+        className={styles.channelHighlight}
+        transform="translate(0 0.9)"
+      />
+    </>
+  );
+}
+
 function CircuitWall({ side }: { side: "left" | "right" }) {
+  const fadeId = `circuitFade-${side}`;
+  const maskId = `circuitMask-${side}`;
+
   return (
     <div
       aria-hidden
@@ -26,22 +66,98 @@ function CircuitWall({ side }: { side: "left" | "right" }) {
         side === "left" ? styles.circuitLeft : styles.circuitRight
       }`}
     >
-      <svg viewBox="0 0 120 220" className={styles.circuitBoard} fill="none">
-        {TRACES.map((trace, index) => (
-          <g key={index} style={{ ["--delay" as string]: trace.delay }}>
-            <path d={trace.d} className={styles.boardTrace} />
-            <path d={trace.d} className={styles.boardPulse} pathLength={1} />
-            <circle cx={0} cy={trace.startY} r={2} className={styles.boardVia} />
-            <circle
-              cx={trace.endX}
-              cy={trace.endY}
-              r={2.4}
-              className={styles.boardPad}
+      <svg
+        viewBox="0 0 150 330"
+        className={styles.circuitBoard}
+        fill="none"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <linearGradient id={fadeId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+            <stop offset="68%" stopColor="#fff" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+          <mask id={maskId}>
+            <rect width="150" height="330" fill={`url(#${fadeId})`} />
+          </mask>
+        </defs>
+
+        <g mask={`url(#${maskId})`}>
+          {CHANNELS.map((channel, index) => (
+            <g
+              key={index}
+              className={styles.channel}
+              style={{ ["--delay" as string]: channel.delay }}
+            >
+              <EngravedPath d={channel.d} />
+              <path
+                d={channel.d}
+                className={styles.channelSupply}
+                pathLength={1}
+              />
+            </g>
+          ))}
+
+          <g className={styles.channelNode}>
+            <rect
+              x="82"
+              y="164"
+              width="8"
+              height="8"
+              rx="1.2"
+              className={styles.channelNodeBody}
+            />
+            <rect
+              x="83.2"
+              y="165.2"
+              width="5.6"
+              height="5.6"
+              rx="0.8"
+              className={styles.channelNodeCore}
             />
           </g>
-        ))}
+        </g>
       </svg>
     </div>
+  );
+}
+
+function StatusBadge({ reduceMotion }: { reduceMotion: boolean | null }) {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = setInterval(
+      () => setActive((current) => (current + 1) % STATUS_LINES.length),
+      2800
+    );
+    return () => clearInterval(timer);
+  }, [reduceMotion]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: EASE }}
+      className={styles.statusBadge}
+    >
+      <span className={styles.statusPulse} aria-hidden />
+      <span className="relative min-w-[11.5rem] overflow-hidden text-left sm:min-w-[13.5rem]">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={STATUS_LINES[active]}
+            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: EASE }}
+            className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-white/78"
+          >
+            {STATUS_LINES[active]}
+          </motion.span>
+        </AnimatePresence>
+      </span>
+    </motion.div>
   );
 }
 
@@ -54,94 +170,70 @@ export function LandingHero() {
       <CircuitWall side="left" />
       <CircuitWall side="right" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[720px] flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE }}
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70 backdrop-blur-xl"
-        >
-          <Sparkles className="h-3.5 w-3.5 text-[#f3aaa0]" />
-          Learn · Build · Ship
-        </motion.div>
+      <div className="relative z-10 mx-auto flex w-full max-w-[760px] flex-col items-center">
+        <StatusBadge reduceMotion={reduceMotion} />
 
-        <h1 className="mt-7 w-full text-[2.55rem] font-medium leading-[1.08] tracking-[-0.05em] text-white sm:text-[3.35rem] lg:text-[3.85rem]">
-          <span className="sr-only">
-            {HEADLINE} with learning that moves.
-          </span>
+        <h1 className="mt-7 w-full text-[2.45rem] font-medium leading-[1.12] tracking-[-0.045em] text-white sm:text-[3.2rem] lg:text-[3.65rem]">
+          <span className="sr-only">{HEADLINE}.</span>
           <span
             aria-hidden
-            className="flex flex-wrap justify-center gap-x-[0.28em]"
+            className="flex flex-wrap justify-center gap-x-[0.28em] gap-y-1"
           >
             {words.map((word, index) => (
               <motion.span
-                key={word}
-                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 22 }}
+                key={`${word}-${index}`}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  duration: 0.65,
-                  delay: 0.1 + index * 0.06,
+                  duration: 0.6,
+                  delay: 0.08 + index * 0.05,
                   ease: EASE,
                 }}
-                className="inline-block"
+                className="inline-block text-white"
               >
                 {word}
               </motion.span>
             ))}
           </span>
-          <motion.span
-            aria-hidden
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.42, ease: EASE }}
-            className="mt-1 block bg-gradient-to-b from-white/70 via-[#f3b7ac] to-white/45 bg-clip-text text-transparent"
-          >
-            with learning that moves.
-          </motion.span>
         </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.55, ease: EASE }}
-          className="mt-5 max-w-[34rem] text-pretty text-[13.5px] leading-6 text-white/55 sm:text-[14.5px] sm:leading-7"
+          transition={{ duration: 0.65, delay: 0.45, ease: EASE }}
+          className="mt-5 max-w-[32rem] text-pretty text-[13.5px] leading-6 text-white/55 sm:text-[15px] sm:leading-7"
         >
-          Follow structured paths, build production-ready projects, and learn
-          with an AI mentor that understands where you are and what comes next.
+          {SUBHEAD}
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.68, ease: EASE }}
-          className="mt-9 flex w-full max-w-[26rem] items-center rounded-full border border-white/10 bg-white/[0.08] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_55px_rgba(0,0,0,0.3)] backdrop-blur-2xl"
+          initial={{ opacity: 0, y: 16, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.58, ease: EASE }}
+          className={styles.heroInvite}
         >
-          <div className="min-w-0 flex-1 px-4 text-left">
-            <p className="truncate text-[12px] font-medium text-white/88">
-              Your next skill starts here
-            </p>
-            <p className="mt-0.5 text-[10px] text-white/38">
-              Full Stack · AI · Real projects
-            </p>
-          </div>
-          <Link
-            href={AUTH_ROUTES.signup}
-            className={`${styles.shine} inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-white px-5 text-[12px] font-semibold text-[#1b181a] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#fff8f4]`}
-          >
-            Start learning
-            <ArrowRight className="h-3.5 w-3.5" />
+          <span aria-hidden className={styles.heroInviteAura} />
+          <span aria-hidden className={styles.heroInviteRing} />
+          <Link href={AUTH_ROUTES.signup} className={styles.heroInviteBtn}>
+            <span className={styles.heroInviteLive} aria-hidden />
+            <span className={styles.heroInviteLabel}>Enter Suprabase</span>
+            <span className={styles.heroInviteArrow} aria-hidden>
+              <ArrowRight className="h-4 w-4" strokeWidth={2.25} />
+            </span>
           </Link>
         </motion.div>
       </div>
 
-      <motion.div
+      <motion.a
+        href="/mentor"
+        aria-label="Explore AI Mentor"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1 }}
-        className={`${styles.scrollCue} absolute bottom-8 left-1/2 z-10 flex h-9 w-5 -translate-x-1/2 items-start justify-center rounded-full border border-white/15 pt-1.5`}
+        transition={{ duration: 0.8, delay: 0.9 }}
+        className={`${styles.scrollCue} absolute bottom-8 left-1/2 z-10 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full text-white/45 transition hover:bg-white/[0.04] hover:text-white/75`}
       >
-        <span />
-      </motion.div>
+        <ChevronDown className="h-5 w-5" strokeWidth={1.75} />
+      </motion.a>
     </section>
   );
 }

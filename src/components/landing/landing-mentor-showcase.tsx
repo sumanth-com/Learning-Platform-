@@ -3,12 +3,19 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUp, Plus } from "lucide-react";
+import {
+  ArrowUp,
+  Code2,
+  GitBranch,
+  ImageIcon,
+  Plus,
+  Sparkles,
+} from "lucide-react";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { Reveal } from "./reveal";
 import styles from "./landing.module.css";
 
-const PROMPTS = [
+const ROTATING_PROMPTS = [
   "Explain why my useEffect runs twice on mount",
   "Debug this TypeScript generic that won't compile",
   "Review my Next.js route handler for security holes",
@@ -21,6 +28,14 @@ const PROMPTS = [
   "Help me pass the TypeScript intermediate certification",
 ];
 
+const SUGGESTIONS = [
+  { text: "Explain React Server Components simply", icon: Sparkles },
+  { text: "Design a production-ready learning dashboard", icon: Code2 },
+  { text: "Help me debug a Next.js hydration error", icon: GitBranch },
+] as const;
+
+const TABS = ["Explore", "Explain", "Debug", "Build", "Review"] as const;
+
 const HOLD_MS = 2400;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -31,7 +46,7 @@ export function LandingMentorShowcase() {
   useEffect(() => {
     if (reduceMotion) return;
     const timer = setInterval(
-      () => setActive((current) => (current + 1) % PROMPTS.length),
+      () => setActive((current) => (current + 1) % ROTATING_PROMPTS.length),
       HOLD_MS
     );
     return () => clearInterval(timer);
@@ -51,54 +66,115 @@ export function LandingMentorShowcase() {
 
       <div className="relative z-10 mx-auto w-full max-w-5xl px-5 text-center sm:px-8">
         <Reveal>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#f3aaa0]">
-            Ask Supra · AI Mentor
-          </p>
-          <h2 className="mt-3 whitespace-normal text-[2.25rem] font-medium leading-[1.08] tracking-[-0.045em] text-white sm:text-[3rem] lg:whitespace-nowrap lg:text-[3.35rem]">
-            Ask Supra anything.
+          <span className={styles.sectionPill}>Ask Supra · AI Mentor</span>
+          <h2 className={`${styles.sectionHeading} sm:whitespace-nowrap`}>
+            Your AI software engineering mentor.
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-balance text-[13.5px] leading-6 text-white/50">
-            It already understands your module, code and progress — so every
-            answer starts with the context that matters.
+          <p className="mx-auto mt-3 max-w-2xl text-balance text-[13.5px] leading-6 text-white/50">
+            Get instant help with debugging, architecture, React, Next.js,
+            Python, Java, databases, AI, DevOps, interviews, system design, and
+            production engineering—powered by your learning progress.
           </p>
         </Reveal>
 
-        <Reveal delay={0.12} className="relative mx-auto mt-2 max-w-[38rem]">
+        <Reveal
+          delay={0.08}
+          className="relative mx-auto mt-7 w-full max-w-[720px] text-left"
+        >
           <span aria-hidden className={styles.prismLayer}>
             <span className={styles.prismSpread} />
             <span className={styles.prismCore} />
           </span>
 
           <div className={styles.promptStage}>
-            <div className={styles.promptViewport}>
-              <div className={styles.promptDock}>
-                <span aria-hidden className={styles.prismRing} />
+            <div className={styles.promptDock}>
+              <span aria-hidden className={styles.prismRingComposer} />
 
-                <Link
-                  href={AUTH_ROUTES.signup}
-                  aria-label={`Ask Supra: ${PROMPTS[active]}`}
-                  className={styles.promptFocus}
-                >
-                  <span className={styles.promptPlus} aria-hidden>
-                    <Plus className="h-4 w-4" strokeWidth={2.25} />
-                  </span>
+              <Link
+                href={AUTH_ROUTES.signup}
+                aria-label={`Ask Supra: ${ROTATING_PROMPTS[active]}`}
+                className={styles.promptComposer}
+              >
+                <span className="relative block min-h-[52px] overflow-hidden px-1 pt-0.5">
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.span
-                      key={PROMPTS[active]}
-                      initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                      key={ROTATING_PROMPTS[active]}
+                      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={reduceMotion ? undefined : { opacity: 0, y: -14 }}
-                      transition={{ duration: 0.4, ease: EASE }}
-                      className="min-w-0 flex-1 truncate text-left text-[13.5px] font-medium text-[#f3b7ac] sm:text-[14.5px]"
+                      exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
+                      transition={{ duration: 0.35, ease: EASE }}
+                      className="absolute inset-x-1 top-0.5 block text-[15px] leading-6 text-[#f3b7ac]/80"
                     >
-                      {PROMPTS[active]}
+                      {ROTATING_PROMPTS[active]}
                     </motion.span>
                   </AnimatePresence>
-                  <span className={styles.promptSend} aria-hidden>
-                    <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
+                  <span
+                    className="invisible block text-[15px] leading-6"
+                    aria-hidden
+                  >
+                    {ROTATING_PROMPTS[0]}
                   </span>
-                </Link>
-              </div>
+                </span>
+
+                <span className="mt-3 flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-0.5">
+                    <span className={styles.promptTool} aria-hidden>
+                      <Plus className="h-5 w-5" strokeWidth={1.75} />
+                    </span>
+                    <span className={styles.promptTool} aria-hidden>
+                      <ImageIcon className="h-4 w-4" strokeWidth={1.75} />
+                    </span>
+                    <span className={styles.promptExplore} aria-hidden>
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Explore
+                    </span>
+                  </span>
+
+                  <span className="flex items-center gap-2">
+                    <span className="text-[12px] font-medium text-white/40">
+                      Supra
+                    </span>
+                    <span className={styles.promptSend} aria-hidden>
+                      <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
+                    </span>
+                  </span>
+                </span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative z-10 mt-4 space-y-3" aria-hidden>
+            <div className="pointer-events-none flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {TABS.map((tab) => (
+                <span
+                  key={tab}
+                  className={
+                    tab === "Explore" ? styles.promptTabActive : styles.promptTab
+                  }
+                >
+                  {tab === "Explore" ? (
+                    <Sparkles className="h-3.5 w-3.5" />
+                  ) : null}
+                  {tab}
+                </span>
+              ))}
+            </div>
+
+            <div className={`${styles.promptSuggestions} pointer-events-none`}>
+              {SUGGESTIONS.map((prompt) => {
+                const PromptIcon = prompt.icon;
+                return (
+                  <div key={prompt.text} className={styles.promptSuggestion}>
+                    <span className={styles.promptSuggestionIcon}>
+                      <PromptIcon className="h-4 w-4" />
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-[13px] font-medium">
+                      {prompt.text}
+                    </span>
+                    <ArrowUp className="h-3.5 w-3.5 rotate-90 opacity-30" />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </Reveal>

@@ -15,6 +15,333 @@
   color: #fafafa;
 }
 
+/* ----------------------------------------------------------- section chrome */
+
+.sectionPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f3aaa0;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(229, 107, 104, 0.18);
+}
+
+.sectionHeading {
+  margin-top: 1rem;
+  font-size: 1.9rem;
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+@media (min-width: 640px) {
+  .sectionHeading {
+    font-size: 2.4rem;
+  }
+}
+
+.statCard {
+  border-radius: 1.25rem;
+  padding: 1.15rem 1.1rem 1.2rem;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(229, 107, 104, 0.12), transparent 48%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015));
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+@media (min-width: 640px) {
+  .statCard {
+    padding: 1.35rem 1.25rem 1.4rem;
+  }
+}
+
+.usefulRow {
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(229, 107, 104, 0.1), transparent 42%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.usefulRow:hover {
+  transform: translateX(4px);
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+/* ----------------------------------------------------------- tech stack */
+
+.techSection {
+  overflow: hidden;
+}
+
+.techAura {
+  position: absolute;
+  inset: 8% 10%;
+  pointer-events: none;
+}
+
+.techOrbitA,
+.techOrbitB {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  border-radius: 999px;
+  border: 1px dashed rgba(243, 170, 160, 0.14);
+  transform: translate(-50%, -50%);
+}
+
+.techOrbitA {
+  width: min(92%, 42rem);
+  aspect-ratio: 1;
+  animation: techOrbit 36s linear infinite;
+}
+
+.techOrbitB {
+  width: min(72%, 30rem);
+  aspect-ratio: 1;
+  border-color: rgba(229, 107, 104, 0.12);
+  animation: techOrbit 28s linear infinite reverse;
+}
+
+.techPulse {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(229, 107, 104, 0.22),
+    transparent 68%
+  );
+  transform: translate(-50%, -50%);
+  filter: blur(28px);
+  animation: techPulse 5.5s ease-in-out infinite;
+}
+
+.techCardWrap {
+  height: 100%;
+  animation: techFloat 5.8s ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+}
+
+.techCardWrap:hover {
+  animation-play-state: paused;
+  z-index: 2;
+}
+
+.techCard {
+  position: relative;
+  display: flex;
+  height: 100%;
+  min-height: 5.4rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  padding: 0.7rem 0.4rem 0.65rem;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(229, 107, 104, 0.1), transparent 55%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(14px);
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.techCard:hover {
+  transform: translateY(-3px);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(229, 107, 104, 0.16), transparent 58%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.techCardGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 18%,
+    rgba(243, 170, 160, 0.14),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.techCard:hover .techCardGlow {
+  opacity: 1;
+}
+
+.techCardSoon {
+  opacity: 0.82;
+}
+
+.techSoon {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  z-index: 2;
+  border-radius: 999px;
+  padding: 0.15rem 0.4rem;
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f3aaa0;
+  background: rgba(229, 107, 104, 0.16);
+  box-shadow: 0 0 0 1px rgba(229, 107, 104, 0.2);
+  animation: techSoonPulse 2.4s ease-in-out infinite;
+}
+
+.techLogo {
+  position: relative;
+  z-index: 1;
+  width: 1.85rem;
+  height: 1.85rem;
+  object-fit: contain;
+  opacity: 0.9;
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease,
+    filter 0.3s ease;
+}
+
+.techCard:hover .techLogo {
+  transform: scale(1.08);
+  opacity: 1;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
+}
+
+.techLogoSoon {
+  opacity: 0.55;
+  filter: grayscale(1);
+}
+
+.techCard:hover .techLogoSoon {
+  filter: grayscale(0.35);
+  opacity: 0.85;
+}
+
+.techName {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 0.2rem;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.68);
+  transition: color 0.3s ease;
+}
+
+.techCard:hover .techName {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+@media (min-width: 640px) {
+  .techCard {
+    min-height: 5.9rem;
+    padding: 0.85rem 0.5rem 0.75rem;
+    gap: 0.55rem;
+  }
+
+  .techLogo {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .techName {
+    font-size: 11.5px;
+  }
+}
+
+@keyframes techOrbit {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes techPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes techFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes techSoonPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(229, 107, 104, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(229, 107, 104, 0.35),
+      0 0 14px rgba(229, 107, 104, 0.3);
+  }
+}
+
 /* ---------------------------------------------------------------- backdrop */
 
 .backdrop {
@@ -92,20 +419,34 @@
 .circuit {
   position: absolute;
   top: 50%;
-  width: clamp(5.5rem, 14vw, 10.5rem);
-  height: clamp(14rem, 38vh, 20rem);
-  transform: translateY(-52%);
-  opacity: 0.78;
+  width: clamp(7.5rem, 18vw, 14rem);
+  height: clamp(22rem, 62vh, 34rem);
+  transform: translateY(-50%);
+  opacity: 1;
   pointer-events: none;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 10%,
+    #000 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 10%,
+    #000 90%,
+    transparent 100%
+  );
 }
 
 .circuitLeft {
-  left: max(0.25rem, 1.5vw);
+  left: 0;
 }
 
 .circuitRight {
-  right: max(0.25rem, 1.5vw);
-  transform: translateY(-52%) scaleX(-1);
+  right: 0;
+  transform: translateY(-50%) scaleX(-1);
 }
 
 .circuitBoard {
@@ -115,44 +456,221 @@
   overflow: visible;
 }
 
-.boardTrace {
+.channel {
+  opacity: 0.95;
+}
+
+/* Top-edge shadow — the recessed cut falls away from light. */
+.channelShadow {
   fill: none;
-  stroke: rgba(229, 107, 104, 0.28);
-  stroke-width: 1.4;
+  stroke: rgba(0, 0, 0, 0.92);
+  stroke-width: 4.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.boardPulse {
+/* Groove floor — deep carved channel like the reference. */
+.channelGroove {
   fill: none;
-  stroke: #ffb089;
-  stroke-width: 1.8;
+  stroke: rgba(0, 0, 0, 0.78);
+  stroke-width: 2.7;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 0.18 0.82;
+}
+
+/* Bottom-edge catch light — sells the carved-in depth. */
+.channelHighlight {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1.05;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Soft power pulse travelling along each engraved channel. */
+.channelSupply {
+  fill: none;
+  stroke: rgba(255, 196, 168, 0.95);
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 0.14 0.86;
   stroke-dashoffset: 1;
-  animation: boardSignal 4.6s linear infinite;
+  animation: boardSignal 3.8s linear infinite;
   animation-delay: var(--delay, 0s);
-  filter: drop-shadow(0 0 4px rgba(255, 154, 114, 0.75));
+  filter: drop-shadow(0 0 7px rgba(229, 107, 104, 0.85));
+  opacity: 0.95;
 }
 
-.boardVia,
-.boardPad {
-  fill: rgba(243, 183, 172, 0.55);
-  stroke: rgba(229, 107, 104, 0.45);
+.channelNodeBody {
+  fill: rgba(14, 14, 16, 0.95);
+  stroke: rgba(255, 255, 255, 0.14);
   stroke-width: 0.8;
 }
 
-.boardPad {
-  fill: rgba(255, 176, 137, 0.35);
+.channelNodeCore {
+  fill: rgba(229, 107, 104, 0.35);
+  stroke: rgba(243, 183, 172, 0.45);
+  stroke-width: 0.6;
+  animation: nodeGlow 2.8s ease-in-out infinite;
 }
 
-.scrollCue span {
-  display: block;
-  width: 2px;
-  height: 0.6rem;
+.statusBadge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 1rem 0.55rem 0.75rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(
+    135deg,
+    rgba(229, 107, 104, 0.14),
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(120, 108, 172, 0.08)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 36px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+}
+
+.statusPulse {
+  position: relative;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #f3aaa0;
+  box-shadow: 0 0 10px rgba(229, 107, 104, 0.8);
+  flex-shrink: 0;
+}
+
+.statusPulse::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 1px solid rgba(243, 170, 160, 0.55);
+  animation: statusRing 2.2s ease-out infinite;
+}
+
+.heroInvite {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2.35rem;
+  padding: 0.7rem;
+}
+
+.heroInviteAura {
+  position: absolute;
+  inset: -0.35rem;
+  z-index: 0;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(229, 107, 104, 0.35) 0%,
+    rgba(241, 163, 121, 0.14) 40%,
+    transparent 70%
+  );
+  filter: blur(16px);
+  pointer-events: none;
+  animation: heroInvitePulse 4.2s ease-in-out infinite;
+}
+
+.heroInviteRing {
+  position: absolute;
+  inset: 0.15rem;
+  z-index: 0;
+  border-radius: 999px;
+  background: conic-gradient(
+    from var(--prismAngle, 0deg),
+    #e56b68,
+    #f4a06f,
+    #ffece7,
+    #a78bfa,
+    #786cac,
+    #e56b68
+  );
+  filter: blur(10px);
+  opacity: 0.85;
+  animation: prismSpin 9s linear infinite;
+  pointer-events: none;
+}
+
+.heroInviteBtn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  height: 3.35rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.55rem 0 1.15rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(36, 32, 33, 0.96),
+    rgba(14, 14, 16, 0.94)
+  );
+  color: #fff;
+  text-decoration: none;
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.heroInviteBtn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 22px 56px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.heroInviteLive {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #72f3c2;
+  box-shadow: 0 0 12px rgba(114, 243, 194, 0.75);
+  animation: heroInvitePulse 2.4s ease-in-out infinite;
+}
+
+.heroInviteLabel {
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.heroInviteArrow {
+  display: inline-flex;
+  height: 2.35rem;
+  width: 2.35rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e56b68, #f1a379);
+  color: #1b181a;
+  box-shadow: 0 8px 22px rgba(229, 107, 104, 0.35);
+}
+
+@keyframes heroInvitePulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+.scrollCue svg {
+  display: block;
   animation: cue 1.9s ease-in-out infinite;
 }
 
@@ -288,21 +806,9 @@
   position: relative;
 }
 
-.promptViewport {
-  position: relative;
-  display: flex;
-  height: 5.5rem;
-  align-items: center;
-  justify-content: center;
-}
-
 .promptDock {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
+  position: relative;
   z-index: 3;
-  transform: translateY(-50%);
 }
 
 /* Sits outside .promptStage so the stage's fade mask cannot clip the light. */
@@ -313,13 +819,13 @@
   pointer-events: none;
 }
 
-/* Wide horizontal light spill behind the pill, bleeding past the column. */
+/* Wide horizontal light spill behind the composer. */
 .prismSpread {
   position: absolute;
-  top: 50%;
+  top: 4.25rem;
   left: 50%;
-  width: 142%;
-  height: 2.75rem;
+  width: 118%;
+  height: 3.25rem;
   transform: translate3d(-50%, -50%, 0);
   background: linear-gradient(
     90deg,
@@ -332,16 +838,16 @@
     transparent 100%
   );
   filter: blur(16px);
-  opacity: 0.72;
+  opacity: 0.55;
   animation: prismBreathe 7s ease-in-out infinite;
 }
 
 /* The hard, laser-thin core of that spill. */
 .prismCore {
   position: absolute;
-  top: 50%;
+  top: 4.25rem;
   left: 50%;
-  width: 128%;
+  width: 108%;
   height: 2px;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 999px;
@@ -356,18 +862,18 @@
     transparent 100%
   );
   filter: blur(1.5px);
-  opacity: 0.72;
+  opacity: 0.55;
 }
 
-/* The hue travels around the pill by animating the gradient angle — rotating
-   the element itself would sweep its bounding box across the section. */
+/* The hue travels around the composer by animating the gradient angle. */
 @property --prismAngle {
   syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
 
-.prismRing {
+.prismRing,
+.prismRingComposer {
   position: absolute;
   inset: -3px;
   border-radius: 999px;
@@ -385,27 +891,80 @@
   animation: prismSpin 9s linear infinite;
 }
 
-.promptFocus {
+.prismRingComposer {
+  border-radius: 28px;
+  filter: blur(12px);
+  opacity: 0.85;
+}
+
+.promptFocus,
+.promptComposer {
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
   width: 100%;
-  min-height: 3.5rem;
-  padding: 0.65rem 0.7rem 0.65rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
   background: linear-gradient(
     180deg,
-    rgba(36, 32, 33, 0.92),
-    rgba(18, 18, 19, 0.88)
+    rgba(36, 32, 33, 0.94),
+    rgba(18, 18, 19, 0.9)
   );
   box-shadow:
     0 0 0 1px rgba(229, 107, 104, 0.12),
     0 22px 60px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(18px);
+}
+
+.promptFocus {
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding: 0.65rem 0.7rem 0.65rem 0.75rem;
+  border-radius: 999px;
+}
+
+.promptComposer {
+  flex-direction: column;
+  min-height: 8.25rem;
+  padding: 1rem 1rem 0.75rem;
+  border-radius: 26px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.promptComposer:hover {
+  border-color: rgba(229, 107, 104, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(229, 107, 104, 0.18),
+    0 26px 70px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.promptTool {
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.promptExplore {
+  display: inline-flex;
+  height: 2rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 0.15rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: rgba(236, 227, 223, 0.92);
+  color: #5f3435;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .promptPlus {
@@ -432,6 +991,77 @@
   background: linear-gradient(135deg, #e56b68, #f1a379);
   color: #1b181a;
   box-shadow: 0 8px 24px rgba(229, 107, 104, 0.35);
+}
+
+.promptTab,
+.promptTabActive {
+  display: inline-flex;
+  height: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.promptTab {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.promptTab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.promptTabActive {
+  border-color: rgba(95, 52, 53, 0.35);
+  background: #5f3435;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(95, 52, 53, 0.35);
+}
+
+.promptSuggestions {
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.375rem;
+  backdrop-filter: blur(16px);
+}
+
+.promptSuggestion {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 16px;
+  padding: 0.625rem 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.promptSuggestion:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.promptSuggestionIcon {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #dca39a;
 }
 
 /* ----------------------------------------------------------- core hub */
@@ -462,6 +1092,132 @@
     transparent 24%,
     transparent 72%,
     rgba(229, 107, 104, 0.035)
+  );
+}
+
+.ctaPanel {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(229, 107, 104, 0.16), transparent 58%),
+    linear-gradient(155deg, rgba(35, 28, 30, 0.96), rgba(16, 16, 17, 0.92) 55%, rgba(12, 12, 13, 0.94));
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(22px);
+}
+
+.ctaPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.04),
+    transparent 28%,
+    transparent 70%,
+    rgba(229, 107, 104, 0.04)
+  );
+}
+
+/* ----------------------------------------------------------- closing band */
+
+.closeBand {
+  position: relative;
+  margin-top: 2rem;
+  padding: 0 1.25rem;
+  background: transparent;
+}
+
+@media (min-width: 640px) {
+  .closeBand {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.closeCta {
+  position: relative;
+  z-index: 2;
+  max-width: 80rem;
+  margin: 0 auto;
+  border-radius: 2rem;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(229, 107, 104, 0.18), transparent 58%),
+    linear-gradient(160deg, #1a1618 0%, #121113 55%, #0e0e0f 100%);
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.footerBand {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  padding: 0 1.25rem 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .footerBand {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.footerShell {
+  position: relative;
+  z-index: 1;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.footerDivider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.06) 20%,
+    rgba(255, 255, 255, 0.06) 80%,
+    transparent
+  );
+}
+
+.footerWatermark {
+  display: none;
+}
+
+.footerCard {
+  position: relative;
+  z-index: 1;
+}
+
+.certFrame {
+  position: relative;
+  border-radius: 1.35rem;
+  padding: 0.85rem;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(229, 107, 104, 0.14), transparent 42%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.certFrame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.05),
+    transparent 35%,
+    transparent 70%,
+    rgba(229, 107, 104, 0.04)
   );
 }
 
@@ -601,8 +1357,18 @@
   to { stroke-dashoffset: 0; }
 }
 
+@keyframes nodeGlow {
+  0%, 100% { fill: rgba(229, 107, 104, 0.28); }
+  50% { fill: rgba(255, 186, 158, 0.55); }
+}
+
+@keyframes statusRing {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
 @keyframes cue {
-  0%, 100% { opacity: 0.2; transform: translateY(-0.25rem); }
+  0%, 100% { opacity: 0.45; transform: translateY(0); }
   50% { opacity: 1; transform: translateY(0.35rem); }
 }
 
@@ -659,6 +1425,174 @@
   50% { transform: translate3d(8%, 0, 0); opacity: 1; }
 }
 
+/* ----------------------------------------------------------- mentor robot */
+
+.mentorRobot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  animation: mentorRobotBob 3.6s ease-in-out infinite;
+}
+
+.mentorRobotStill {
+  animation: none;
+}
+
+.mentorRobotStill .mentorRobotAntenna,
+.mentorRobotStill .mentorRobotEye,
+.mentorRobotStill .mentorRobotMouthBar,
+.mentorRobotStill .mentorRobotCore,
+.mentorRobotStill .mentorRobotWave,
+.mentorRobotStill .mentorRobotAura {
+  animation: none !important;
+}
+
+.mentorRobotAura {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(229, 107, 104, 0.28),
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  filter: blur(16px);
+  animation: mentorRobotAura 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.mentorRobotSvg {
+  position: relative;
+  z-index: 1;
+  width: 5.75rem;
+  height: auto;
+  filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.35));
+}
+
+.mentorRobotAntenna {
+  fill: #e56b68;
+  animation: mentorRobotAntenna 1.8s ease-in-out infinite;
+}
+
+.mentorRobotEye {
+  transform-origin: center;
+  animation: mentorRobotBlink 4.8s ease-in-out infinite;
+}
+
+.mentorRobotMouthBar {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mentorRobotTalk 0.55s ease-in-out infinite;
+}
+
+.mentorRobotCore {
+  animation: mentorRobotCore 2.2s ease-in-out infinite;
+}
+
+.mentorRobotWave {
+  opacity: 0;
+  animation: mentorRobotWave 1.4s ease-in-out infinite;
+}
+
+.mentorRobotWaveB {
+  animation-delay: 0.2s;
+}
+
+.mentorRobotCaption {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(243, 170, 160, 0.7);
+}
+
+@keyframes mentorRobotBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes mentorRobotAura {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes mentorRobotAntenna {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes mentorRobotBlink {
+  0%,
+  42%,
+  48%,
+  100% {
+    transform: scaleY(1);
+  }
+  45% {
+    transform: scaleY(0.12);
+  }
+}
+
+@keyframes mentorRobotTalk {
+  0%,
+  100% {
+    transform: scaleX(1) scaleY(1);
+  }
+  25% {
+    transform: scaleX(1.35) scaleY(0.55);
+  }
+  50% {
+    transform: scaleX(0.85) scaleY(1.45);
+  }
+  75% {
+    transform: scaleX(1.2) scaleY(0.7);
+  }
+}
+
+@keyframes mentorRobotCore {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes mentorRobotWave {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  40%,
+  60% {
+    opacity: 1;
+  }
+}
+
 @keyframes prismSpin {
   to { --prismAngle: 360deg; }
 }
@@ -692,9 +1626,9 @@
 
 @media (max-width: 767px) {
   .circuit {
-    width: 3.25rem;
-    height: 12rem;
-    opacity: 0.35;
+    width: 4.25rem;
+    height: 16rem;
+    opacity: 0.7;
   }
 }
 
@@ -710,7 +1644,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .aurora,
-  .boardPulse,
+  .statusPulse::after,
   .orbit,
   .orbitReverse,
   .pulse,
@@ -719,16 +1653,34 @@
   .bar,
   .shine::after,
   .railFlow,
-  .scrollCue span,
+  .scrollCue svg,
+  .channelSupply,
+  .channelNodeCore,
   .mentorOrbA,
   .mentorOrbB,
   .mentorOrbC,
   .mentorWash,
   .prismSpread,
   .prismRing,
+  .prismRingComposer,
+  .heroInviteAura,
+  .heroInviteRing,
+  .heroInviteLive,
   .coreHalo,
   .coreRing,
-  .circuitTracePulse {
+  .circuitTracePulse,
+  .techOrbitA,
+  .techOrbitB,
+  .techPulse,
+  .techCardWrap,
+  .techSoon,
+  .mentorRobot,
+  .mentorRobotAntenna,
+  .mentorRobotEye,
+  .mentorRobotMouthBar,
+  .mentorRobotCore,
+  .mentorRobotWave,
+  .mentorRobotAura {
     animation: none;
   }
 

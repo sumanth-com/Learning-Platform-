@@ -125,15 +125,14 @@ export function LandingCore() {
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#f3aaa0]">
-            One connected system
-          </p>
-          <h2 className="mx-auto mt-4 max-w-2xl text-balance text-[1.75rem] font-medium leading-[1.1] tracking-[-0.04em] text-white sm:text-[2.25rem]">
-            Everything you do feeds the same engine
+          <span className={styles.sectionPill}>One connected system</span>
+          <h2 className={`${styles.sectionHeading} mx-auto max-w-3xl`}>
+            One profile. Every skill. Every project. Every certification.
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-balance text-[13px] leading-6 text-white/45">
-            Roadmap, practice, projects and certifications all read from one
-            profile — so Supra always answers with your real progress in mind.
+          <p className="mx-auto mt-4 max-w-2xl text-balance text-[13px] leading-6 text-white/45">
+            Your roadmap, coding practice, AI mentor, projects, certifications,
+            notes, and progress stay connected—creating a personalized software
+            engineering experience from beginner to production-ready developer.
           </p>
         </Reveal>
 

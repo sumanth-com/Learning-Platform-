@@ -1,7 +1,7 @@
 {
   "name": "Suprabase",
   "short_name": "Suprabase",
-  "description": "Learn Full Stack and AI development through structured paths, projects, and AI mentoring.",
+  "description": "Full Stack and AI developer path with structured curriculum, browser practice, AI mentoring, and verifiable certifications.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#18181b",
