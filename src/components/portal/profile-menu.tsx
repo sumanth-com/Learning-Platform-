@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ChevronDown,
   CircleHelp,
@@ -17,6 +16,8 @@ import { AUTH_MESSAGES, AUTH_ROUTES } from "@/features/auth/constants";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { useTheme } from "@/components/theme/theme-provider";
 import { PORTAL_ROUTES } from "@/features/portal/types";
+import { createClient } from "@/lib/supabase/client";
+import { hardNavigate } from "@/features/auth/lib/browser-password-login";
 import { cn } from "@/lib/utils";
 
 type ProfileMenuProps = {
@@ -32,7 +33,6 @@ export function ProfileMenu({
   helpHref = PORTAL_ROUTES.help,
   helpLabel = "Help",
 }: ProfileMenuProps) {
-  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -61,14 +61,19 @@ export function ProfileMenu({
   const handleLogout = () => {
     setConfirmLogout(false);
     startTransition(async () => {
-      const result = await logoutAction();
-      if (!result.success) {
-        toast.error(result.error);
-        return;
+      try {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+      } catch {
+        /* continue */
       }
-      toast.success(result.message ?? AUTH_MESSAGES.logoutSuccess);
-      router.replace(result.data?.redirectTo ?? AUTH_ROUTES.login);
-      router.refresh();
+      const result = await logoutAction();
+      toast.success(
+        result.success
+          ? (result.message ?? AUTH_MESSAGES.logoutSuccess)
+          : AUTH_MESSAGES.logoutSuccess
+      );
+      hardNavigate(result.data?.redirectTo ?? AUTH_ROUTES.login);
     });
   };
 

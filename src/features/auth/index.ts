@@ -1,5 +1,7 @@
 export {
   loginAction,
+  prepareLoginAction,
+  recordLoginSuccessAction,
   signupAction,
   forgotPasswordAction,
   resetPasswordAction,

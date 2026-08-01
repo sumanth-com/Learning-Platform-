@@ -24,7 +24,7 @@ import {
 } from "@/lib/auth/links";
 import { AUTH_RATE_LIMITS, checkRateLimit } from "@/lib/auth/rate-limit";
 import { logAuthEvent } from "@/lib/auth/audit";
-import { safeInternalPath } from "@/lib/auth/session-response";
+import { resolvePostLoginPath } from "@/features/auth/lib/post-login-path";
 
 function mapAuthError(
   error: { message: string; code?: string; status?: number } | null
@@ -67,32 +67,12 @@ function mapAuthError(
   return "Something went wrong. Please try again.";
 }
 
-function resolvePostLoginPath(
-  role: string | undefined,
-  nextPath: string | null | undefined
-): string {
-  const next = safeInternalPath(nextPath ?? null);
-  if (role === "super_admin") {
-    if (next?.startsWith("/admin")) return next;
-    return AUTH_ROUTES.admin;
-  }
-  if (next) return next;
-  return AUTH_ROUTES.dashboard;
-}
-
 /**
- * Password sign-in.
- *
- * IMPORTANT: Do NOT call redirect() after signInWithPassword.
- * On Vercel, Set-Cookie from a Server Action often does not attach to the
- * NEXT_REDIRECT response, so the next document request has no session and
- * proxy sends the user back to /login. Return the destination and let the
- * client navigate after cookies are committed on the action response.
+ * Pre-login gate (rate limit only). Session is established in the browser.
  */
-export async function loginAction(
-  input: unknown,
-  options?: { next?: string | null }
-): Promise<AuthActionResult<{ redirectTo: string }>> {
+export async function prepareLoginAction(
+  input: unknown
+): Promise<AuthActionResult> {
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) {
     return {
@@ -111,6 +91,44 @@ export async function loginAction(
     };
   }
 
+  return { success: true };
+}
+
+/** Audit-only — call after browser sign-in succeeds. */
+export async function recordLoginSuccessAction(meta: {
+  email: string;
+  userId: string;
+  redirectTo: string;
+}): Promise<void> {
+  await logAuthEvent("login_success", {
+    email: meta.email,
+    userId: meta.userId,
+    redirectTo: meta.redirectTo,
+    mode: "browser_password",
+  });
+  revalidatePath("/", "layout");
+}
+
+/**
+ * @deprecated Prefer browserPasswordLogin + prepareLoginAction.
+ * Kept for compatibility; does not establish a reliable production session alone.
+ */
+export async function loginAction(
+  input: unknown,
+  options?: { next?: string | null }
+): Promise<AuthActionResult<{ redirectTo: string }>> {
+  const gate = await prepareLoginAction(input);
+  if (!gate.success) return gate;
+
+  const parsed = loginSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.issues[0]?.message ?? "Invalid input.",
+    };
+  }
+
+  const email = parsed.data.email.trim().toLowerCase();
   const supabase = await createClient();
   const { data: signInData, error } = await supabase.auth.signInWithPassword({
     email,
@@ -137,15 +155,11 @@ export async function loginAction(
   }
 
   const redirectTo = resolvePostLoginPath(role, options?.next);
-
-  await logAuthEvent("login_success", {
+  await recordLoginSuccessAction({
     email,
-    userId: user?.id ?? null,
-    role: role ?? null,
+    userId: user?.id ?? "",
     redirectTo,
-    hasSession: Boolean(signInData.session),
   });
-  revalidatePath("/", "layout");
 
   return {
     success: true,
@@ -406,8 +420,8 @@ export async function changePasswordAction(
 }
 
 /**
- * Sign out and clear session cookies on the action response.
- * Client must navigate after this returns so cleared cookies are applied.
+ * Sign out — clears server cookies. Client should also browser-signOut
+ * and hard-navigate so the UI leaves the portal immediately.
  */
 export async function logoutAction(): Promise<
   AuthActionResult<{ redirectTo: string }>

@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,10 @@ import {
   completeInviteAccountAction,
   getInvitePreviewAction,
 } from "@/features/auth/actions/seat-actions";
+import {
+  browserPasswordLogin,
+  hardNavigate,
+} from "@/features/auth/lib/browser-password-login";
 import { createAccountSchema } from "@/features/auth/schemas/auth-schemas";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { SITE_ROUTES } from "@/lib/site-routes";
@@ -22,7 +26,6 @@ import { z } from "zod";
 type FormValues = z.infer<typeof createAccountSchema>;
 
 export function CreateAccountForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
   const [isPending, startTransition] = useTransition();
@@ -82,16 +85,27 @@ export function CreateAccountForm() {
         toast.error(result.error);
         return;
       }
-      toast.success(result.message ?? "Account created.");
-      const redirectTo =
-        result.data &&
-        typeof result.data === "object" &&
-        "redirectTo" in result.data &&
-        typeof result.data.redirectTo === "string"
-          ? result.data.redirectTo
-          : AUTH_ROUTES.login;
-      router.replace(redirectTo);
-      router.refresh();
+
+      const email = result.data?.email ?? preview?.email;
+      if (!email) {
+        toast.success(result.message ?? "Account created. Please sign in.");
+        hardNavigate(AUTH_ROUTES.login);
+        return;
+      }
+
+      const login = await browserPasswordLogin({
+        email,
+        password: values.password,
+      });
+
+      if (!login.success) {
+        toast.success("Account ready. Please sign in with your new password.");
+        hardNavigate(AUTH_ROUTES.login);
+        return;
+      }
+
+      toast.success(result.message ?? "Welcome to Suprabase.");
+      hardNavigate(login.redirectTo);
     });
   });
 
@@ -112,7 +126,7 @@ export function CreateAccountForm() {
         <Button
           type="button"
           className={authPrimaryBtnClass}
-          onClick={() => router.push(AUTH_ROUTES.login)}
+          onClick={() => hardNavigate(AUTH_ROUTES.login)}
         >
           Go to sign in
         </Button>

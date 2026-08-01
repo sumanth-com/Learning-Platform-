@@ -507,7 +507,7 @@ export async function getInvitePreviewAction(token: string): Promise<
 
 export async function completeInviteAccountAction(
   input: unknown
-): Promise<AuthActionResult<{ redirectTo: string }>> {
+): Promise<AuthActionResult<{ redirectTo: string; email: string }>> {
   const parsed = createAccountSchema.safeParse(input);
   if (!parsed.success) {
     return {
@@ -586,34 +586,23 @@ export async function completeInviteAccountAction(
       );
     }
 
-    // Sign them in so they land in the portal immediately
-    const supabase = await createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: invite.email,
-      password: parsed.data.password,
-    });
-
+    // Password is set — browser will sign the user in so cookies stick on Vercel.
     await logAuthEvent("invite_account_activated", {
       email: invite.email,
       userId: invite.user_id,
-      autoSignedIn: !signInError,
+      autoSignedIn: false,
     });
 
     revalidatePath(ADMIN_ROUTES.accessRequests);
     revalidatePath("/", "layout");
 
-    if (signInError) {
-      return {
-        success: true,
-        message: "Account ready. Please sign in with your new password.",
-        data: { redirectTo: AUTH_ROUTES.login },
-      };
-    }
-
     return {
       success: true,
       message: "Welcome to Suprabase — your account is ready.",
-      data: { redirectTo: AUTH_ROUTES.dashboard },
+      data: {
+        redirectTo: AUTH_ROUTES.dashboard,
+        email: invite.email,
+      },
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Activation failed.";

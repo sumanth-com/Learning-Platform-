@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { logoutAction } from "@/features/auth/actions/auth-actions";
 import { AUTH_MESSAGES, AUTH_ROUTES } from "@/features/auth/constants";
+import { createClient } from "@/lib/supabase/client";
+import { hardNavigate } from "@/features/auth/lib/browser-password-login";
 import type { VariantProps } from "class-variance-authority";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -24,7 +25,6 @@ export function LogoutButton({
   className,
   ...props
 }: LogoutButtonProps) {
-  const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -57,14 +57,19 @@ export function LogoutButton({
         onConfirm={() => {
           setConfirmOpen(false);
           startTransition(async () => {
-            const result = await logoutAction();
-            if (!result.success) {
-              toast.error(result.error);
-              return;
+            try {
+              const supabase = createClient();
+              await supabase.auth.signOut();
+            } catch {
+              /* continue with server clear */
             }
-            toast.success(result.message ?? AUTH_MESSAGES.logoutSuccess);
-            router.replace(result.data?.redirectTo ?? AUTH_ROUTES.login);
-            router.refresh();
+            const result = await logoutAction();
+            toast.success(
+              result.success
+                ? (result.message ?? AUTH_MESSAGES.logoutSuccess)
+                : AUTH_MESSAGES.logoutSuccess
+            );
+            hardNavigate(result.data?.redirectTo ?? AUTH_ROUTES.login);
           });
         }}
         onCancel={() => setConfirmOpen(false)}

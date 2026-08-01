@@ -7,7 +7,7 @@ import { sendWelcomeEmail } from "@/lib/email/send";
 import { firstNameFrom } from "@/lib/email/layout";
 import { logAuthEvent } from "@/lib/auth/audit";
 import { getSupabaseEnv } from "@/lib/supabase/env";
-import { safeInternalPath } from "@/lib/auth/session-response";
+import { safeInternalPath } from "@/lib/auth/safe-path";
 
 const OTP_TYPES = new Set<EmailOtpType>([
   "signup",

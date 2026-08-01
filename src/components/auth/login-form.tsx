@@ -4,16 +4,21 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
 import { authPrimaryBtnClass, authSecondaryBtnClass } from "@/components/auth/auth-shell";
 import {
-  loginAction,
+  prepareLoginAction,
+  recordLoginSuccessAction,
   resendConfirmationAction,
 } from "@/features/auth/actions/auth-actions";
+import {
+  browserPasswordLogin,
+  hardNavigate,
+} from "@/features/auth/lib/browser-password-login";
 import {
   loginSchema,
   type LoginInput,
@@ -21,7 +26,6 @@ import {
 import { AUTH_ROUTES } from "@/features/auth/constants";
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [isResending, startResend] = useTransition();
@@ -54,7 +58,16 @@ export function LoginForm() {
 
   const onSubmit = handleSubmit((values) => {
     startTransition(async () => {
-      const result = await loginAction(values, {
+      const gate = await prepareLoginAction(values);
+      if (!gate.success) {
+        toast.error(gate.error);
+        return;
+      }
+
+      // Browser sign-in writes sb-* cookies in the browser (reliable on Vercel).
+      const result = await browserPasswordLogin({
+        email: values.email,
+        password: values.password,
         next: searchParams.get("next"),
       });
 
@@ -71,11 +84,14 @@ export function LoginForm() {
         return;
       }
 
-      // Cookies are on the Server Action response. Navigate only after that
-      // settles, then refresh the RSC tree so server components see the session.
-      const redirectTo = result.data?.redirectTo ?? AUTH_ROUTES.dashboard;
-      router.replace(redirectTo);
-      router.refresh();
+      void recordLoginSuccessAction({
+        email: result.email,
+        userId: result.userId,
+        redirectTo: result.redirectTo,
+      });
+
+      // Hard navigation so proxy sees cookies on the first portal request.
+      hardNavigate(result.redirectTo);
     });
   });
 
