@@ -16,6 +16,7 @@ import {
   contactSeatRequestAction,
   deleteSeatRequestAction,
   rejectSeatRequestAction,
+  resendSeatInviteAction,
   updateSeatRequestNotesAction,
 } from "@/features/auth/actions/seat-actions";
 import type { SeatRequestRow, SeatRequestStatus } from "@/types/database";
@@ -42,11 +43,11 @@ function initials(name: string) {
 }
 
 const STATUS_STYLES: Record<SeatRequestStatus, string> = {
-  pending: "bg-amber-500/15 text-amber-200",
-  approved: "bg-emerald-500/15 text-emerald-300",
-  rejected: "bg-rose-500/15 text-rose-300",
-  contacted: "bg-sky-500/15 text-sky-300",
-  joined: "bg-violet-500/15 text-violet-300",
+  pending: "bg-amber-500/15 text-amber-700 dark:text-amber-200",
+  approved: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+  rejected: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
+  contacted: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+  joined: "bg-violet-500/15 text-violet-700 dark:text-violet-300",
   inactive: "bg-zinc-500/15 text-zinc-400",
 };
 
@@ -54,20 +55,13 @@ function StatusPill({ status }: { status: SeatRequestStatus }) {
   return (
     <span
       className={cn(
-        "inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em]",
+        "inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.06em]",
         STATUS_STYLES[status]
       )}
     >
       {status}
     </span>
   );
-}
-
-function applicantLabel(value: SeatRequestRow["applicant_status"]) {
-  if (!value) return "—";
-  if (value === "working_professional") return "Working Professional";
-  if (value === "career_switcher") return "Career Switcher";
-  return "Student";
 }
 
 async function copyText(label: string, value: string | null | undefined) {
@@ -85,7 +79,7 @@ async function copyText(label: string, value: string | null | undefined) {
 
 export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
   const [isPending, startTransition] = useTransition();
-  const [filter, setFilter] = useState<"all" | SeatRequestStatus>("all");
+  const [filter, setFilter] = useState<"all" | SeatRequestStatus>("pending");
   const [detailId, setDetailId] = useState<string | null>(null);
   const [notesDraft, setNotesDraft] = useState("");
 
@@ -116,7 +110,7 @@ export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
 
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-6 py-12 text-center text-sm text-white/45">
+      <div className="rounded-2xl border border-zinc-800 bg-zinc-950 px-6 py-12 text-center text-sm font-medium text-zinc-400">
         No access requests yet.
       </div>
     );
@@ -133,172 +127,203 @@ export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-wrap gap-2">
-        {filters.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            onClick={() => setFilter(f.id)}
-            className={cn(
-              "rounded-full px-3 py-1.5 text-xs font-medium transition",
-              filter === f.id
-                ? "bg-white/10 text-white"
-                : "text-zinc-500 hover:bg-white/5 hover:text-zinc-300"
-            )}
-          >
-            {f.label}
-            {f.id !== "all" ? (
-              <span className="ml-1.5 text-zinc-600">
-                {items.filter((r) => r.status === f.id).length}
+        {filters.map((f) => {
+          const count =
+            f.id === "all"
+              ? items.length
+              : items.filter((r) => r.status === f.id).length;
+          const active = filter === f.id;
+          return (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => setFilter(f.id)}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition",
+                active
+                  ? "bg-zinc-50 text-zinc-950 shadow-sm"
+                  : "bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+              )}
+            >
+              {f.label}
+              <span
+                className={cn(
+                  "tabular-nums text-[12px] font-semibold",
+                  active ? "text-zinc-700" : "text-zinc-500"
+                )}
+              >
+                {count}
               </span>
-            ) : null}
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/[0.02]">
+      <div className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-sm">
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-white/8 bg-white/[0.03] text-[11px] uppercase tracking-[0.12em] text-white/40">
-              <tr>
-                <th className="px-4 py-3 font-semibold">Applicant</th>
-                <th className="px-4 py-3 font-semibold">Contact</th>
-                <th className="px-4 py-3 font-semibold">Requested</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold">Source</th>
-                <th className="px-4 py-3 font-semibold">Notes</th>
-                <th className="px-4 py-3 font-semibold">Actions</th>
+          <table className="min-w-full text-left">
+            <thead className="border-b border-zinc-800 bg-zinc-900/80">
+              <tr className="text-[12px] font-semibold uppercase tracking-[0.08em] text-zinc-400">
+                <th className="px-4 py-3.5 sm:px-5">Applicant</th>
+                <th className="px-4 py-3.5 sm:px-5">Contact</th>
+                <th className="hidden px-4 py-3.5 sm:table-cell sm:px-5">
+                  Requested
+                </th>
+                <th className="px-4 py-3.5 sm:px-5">Status</th>
+                <th className="px-4 py-3.5 text-right sm:px-5">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b border-white/5 last:border-0"
-                >
-                  <td className="px-4 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#e56b68]/40 to-[#5f3435]/60 text-[11px] font-semibold text-white">
-                        {initials(row.name) || "?"}
+              {filtered.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-5 py-10 text-center text-sm font-medium text-zinc-400"
+                  >
+                    No requests in this filter.
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="border-b border-zinc-800/80 last:border-0"
+                  >
+                    <td className="px-4 py-4 sm:px-5">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#e56b68]/50 to-[#5f3435] text-[12px] font-semibold text-white">
+                          {initials(row.name) || "?"}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-[14px] font-semibold text-zinc-50">
+                            {row.name}
+                          </p>
+                          <p className="mt-0.5 truncate text-[12.5px] font-medium text-zinc-400">
+                            {row.country || "—"}
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="truncate font-medium text-white/90">
-                          {row.name}
-                        </p>
-                        <p className="truncate text-xs text-white/40">
-                          {applicantLabel(row.applicant_status)}
-                          {row.country ? ` · ${row.country}` : ""}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <p className="text-white/70">{row.email}</p>
-                    <p className="text-xs text-white/40">{row.phone || "—"}</p>
-                  </td>
-                  <td className="px-4 py-3.5 text-white/50">
-                    {formatDate(row.created_at)}
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <StatusPill status={row.status} />
-                  </td>
-                  <td className="px-4 py-3.5 text-xs capitalize text-white/45">
-                    {(row.source ?? "reserve_access").replaceAll("_", " ")}
-                  </td>
-                  <td className="max-w-[160px] truncate px-4 py-3.5 text-xs text-white/40">
-                    {row.notes || row.message || "—"}
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <div className="flex flex-wrap gap-1.5">
-                      {row.status === "pending" || row.status === "contacted" ? (
-                        <>
+                    </td>
+                    <td className="px-4 py-4 sm:px-5">
+                      <p className="truncate text-[13.5px] font-medium text-zinc-100">
+                        {row.email}
+                      </p>
+                      <p className="mt-0.5 truncate text-[12.5px] font-medium tabular-nums text-zinc-400">
+                        {row.phone || "—"}
+                      </p>
+                    </td>
+                    <td className="hidden px-4 py-4 text-[13px] font-medium text-zinc-300 sm:table-cell sm:px-5">
+                      {formatDate(row.created_at)}
+                    </td>
+                    <td className="px-4 py-4 sm:px-5">
+                      <StatusPill status={row.status} />
+                    </td>
+                    <td className="px-4 py-4 sm:px-5">
+                      <div className="flex flex-nowrap items-center justify-end gap-1.5">
+                        {row.status === "pending" ||
+                        row.status === "contacted" ? (
+                          <>
+                            <Button
+                              size="sm"
+                              disabled={isPending}
+                              className="h-8 rounded-full bg-emerald-600 px-3 text-[12px] font-semibold text-white hover:bg-emerald-500"
+                              onClick={() =>
+                                run(() => approveSeatRequestAction(row.id))
+                              }
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={isPending}
+                              className="h-8 rounded-full border-zinc-700 bg-transparent px-3 text-[12px] font-semibold text-zinc-200 hover:bg-zinc-900"
+                              onClick={() =>
+                                run(() => rejectSeatRequestAction(row.id))
+                              }
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        ) : null}
+                        {row.status === "approved" ? (
                           <Button
                             size="sm"
                             disabled={isPending}
-                            className="h-8 rounded-full bg-emerald-500/90 px-3 text-xs text-black hover:bg-emerald-400"
+                            className="h-8 rounded-full bg-zinc-50 px-3 text-[12px] font-semibold text-zinc-950 hover:bg-zinc-100"
                             onClick={() =>
-                              run(() => approveSeatRequestAction(row.id))
+                              run(() => resendSeatInviteAction(row.id))
                             }
                           >
-                            Approve
+                            Resend
                           </Button>
+                        ) : null}
+                        {row.status === "pending" ? (
                           <Button
                             size="sm"
                             variant="outline"
                             disabled={isPending}
-                            className="h-8 rounded-full border-white/15 bg-transparent px-3 text-xs text-white/75"
+                            className="h-8 rounded-full border-sky-500/40 bg-transparent px-3 text-[12px] font-semibold text-sky-700 hover:bg-sky-500/10 dark:text-sky-200"
                             onClick={() =>
-                              run(() => rejectSeatRequestAction(row.id))
+                              run(() => contactSeatRequestAction(row.id))
                             }
                           >
-                            Reject
+                            Contact
                           </Button>
-                        </>
-                      ) : null}
-                      {row.status === "pending" ? (
+                        ) : null}
                         <Button
                           size="sm"
-                          variant="outline"
-                          disabled={isPending}
-                          className="h-8 rounded-full border-white/15 bg-transparent px-3 text-xs text-sky-200"
-                          onClick={() =>
-                            run(() => contactSeatRequestAction(row.id))
-                          }
+                          variant="ghost"
+                          className="h-8 w-8 rounded-full p-0 text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+                          title="Copy email"
+                          onClick={() => copyText("Email", row.email)}
                         >
-                          Contact
+                          <Mail className="h-3.5 w-3.5" />
                         </Button>
-                      ) : null}
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-full p-0 text-white/50"
-                        title="Copy email"
-                        onClick={() => copyText("Email", row.email)}
-                      >
-                        <Mail className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-full p-0 text-white/50"
-                        title="Copy phone"
-                        onClick={() => copyText("Phone", row.phone)}
-                      >
-                        <Phone className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-full p-0 text-white/50"
-                        title="View details"
-                        onClick={() => openDetails(row)}
-                      >
-                        <MoreHorizontal className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        disabled={isPending}
-                        className="h-8 w-8 rounded-full p-0 text-rose-300/80 hover:bg-rose-500/10 hover:text-rose-200"
-                        title="Delete"
-                        onClick={() => {
-                          if (
-                            !confirm(
-                              `Delete access request for ${row.email}? This cannot be undone.`
-                            )
-                          ) {
-                            return;
-                          }
-                          run(() => deleteSeatRequestAction(row.id));
-                        }}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 w-8 rounded-full p-0 text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+                          title="Copy phone"
+                          onClick={() => copyText("Phone", row.phone)}
+                        >
+                          <Phone className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 w-8 rounded-full p-0 text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
+                          title="View details"
+                          onClick={() => openDetails(row)}
+                        >
+                          <MoreHorizontal className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          disabled={isPending}
+                          className="h-8 w-8 rounded-full p-0 text-rose-600 hover:bg-rose-500/10 hover:text-rose-500 dark:text-rose-300"
+                          title="Delete"
+                          onClick={() => {
+                            if (
+                              !confirm(
+                                `Delete access request for ${row.email}? This cannot be undone.`
+                              )
+                            ) {
+                              return;
+                            }
+                            run(() => deleteSeatRequestAction(row.id));
+                          }}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -306,23 +331,25 @@ export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
 
       {detail ? (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 backdrop-blur-sm sm:items-center"
           onClick={() => setDetailId(null)}
         >
           <div
-            className="w-full max-w-lg rounded-2xl border border-white/10 bg-zinc-950 p-5 shadow-2xl"
+            className="w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950 p-5 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#e56b68]/40 to-[#5f3435]/60 text-sm font-semibold text-white">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#e56b68]/50 to-[#5f3435] text-sm font-semibold text-white">
                   {initials(detail.name)}
                 </div>
                 <div>
-                  <h3 className="font-display text-lg text-white">
+                  <h3 className="text-lg font-semibold text-zinc-50">
                     {detail.name}
                   </h3>
-                  <p className="text-sm text-white/50">{detail.email}</p>
+                  <p className="text-sm font-medium text-zinc-400">
+                    {detail.email}
+                  </p>
                 </div>
               </div>
               <StatusPill status={detail.status} />
@@ -330,41 +357,36 @@ export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
 
             <dl className="grid gap-3 text-sm sm:grid-cols-2">
               <div>
-                <dt className="text-xs text-white/40">Phone</dt>
-                <dd className="mt-0.5 text-white/80">{detail.phone || "—"}</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-white/40">Country</dt>
-                <dd className="mt-0.5 text-white/80">{detail.country || "—"}</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-white/40">Current status</dt>
-                <dd className="mt-0.5 text-white/80">
-                  {applicantLabel(detail.applicant_status)}
+                <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
+                  Phone
+                </dt>
+                <dd className="mt-1 font-medium text-zinc-100">
+                  {detail.phone || "—"}
                 </dd>
               </div>
               <div>
-                <dt className="text-xs text-white/40">College</dt>
-                <dd className="mt-0.5 text-white/80">
-                  {detail.college_name || "—"}
+                <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
+                  Country
+                </dt>
+                <dd className="mt-1 font-medium text-zinc-100">
+                  {detail.country || "—"}
                 </dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="text-xs text-white/40">Message</dt>
-                <dd className="mt-0.5 text-white/70">
-                  {detail.message || "—"}
-                </dd>
-              </div>
-              <div className="sm:col-span-2">
-                <dt className="text-xs text-white/40">Requested</dt>
-                <dd className="mt-0.5 text-white/70">
+                <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">
+                  Requested
+                </dt>
+                <dd className="mt-1 font-medium text-zinc-200">
                   {formatDate(detail.created_at)}
                 </dd>
               </div>
             </dl>
 
             <div className="mt-4 space-y-2">
-              <label className="text-xs text-white/40" htmlFor="admin-notes">
+              <label
+                className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500"
+                htmlFor="admin-notes"
+              >
                 Internal notes
               </label>
               <textarea
@@ -372,14 +394,14 @@ export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
                 rows={3}
                 value={notesDraft}
                 onChange={(e) => setNotesDraft(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white/80 outline-none focus:border-white/20"
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm font-medium text-zinc-100 outline-none placeholder:text-zinc-500 focus:border-zinc-600"
                 placeholder="Add CRM notes…"
               />
               <div className="flex flex-wrap gap-2">
                 <Button
                   size="sm"
                   disabled={isPending}
-                  className="rounded-full"
+                  className="rounded-full font-semibold"
                   onClick={() =>
                     run(async () => {
                       const result = await updateSeatRequestNotesAction(
@@ -396,7 +418,7 @@ export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="rounded-full border-white/15 bg-transparent"
+                  className="rounded-full border-zinc-700 bg-transparent font-semibold"
                   onClick={() => copyText("Email", detail.email)}
                 >
                   <Copy className="mr-1.5 h-3.5 w-3.5" />
@@ -405,7 +427,7 @@ export function AccessRequestsTable({ items }: { items: SeatRequestRow[] }) {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="rounded-full"
+                  className="rounded-full font-semibold"
                   onClick={() => setDetailId(null)}
                 >
                   Close

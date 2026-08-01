@@ -139,20 +139,21 @@ export function AuthShell({
 
                 <div
                   className={cn(
-                    "flex w-full flex-col rounded-[1.35rem] bg-white/95 px-5 py-5 shadow-[0_28px_70px_-30px_rgba(40,30,40,0.4)] backdrop-blur-sm sm:px-6 sm:py-6",
-                    "lg:max-h-full lg:overflow-y-auto"
+                    "relative z-10 flex w-full flex-col overflow-visible rounded-[1.35rem] bg-white/95 px-5 py-5 shadow-[0_28px_70px_-30px_rgba(40,30,40,0.4)] backdrop-blur-sm sm:px-6 sm:py-6"
                   )}
                 >
-                  <div className="mb-4 shrink-0 text-center">
+                  <div className="mb-5 shrink-0 space-y-2 pt-1 text-center sm:mb-6 sm:pt-1.5">
                     <h1 className="text-[1.45rem] font-semibold tracking-[-0.03em] text-[#14151a] sm:text-[1.6rem]">
                       {title}
                     </h1>
-                    <p className="mt-1.5 text-[13px] leading-5 text-[#4b5160]">
+                    <p className="text-[13px] leading-5 text-[#4b5160]">
                       {description}
                     </p>
                   </div>
 
-                  <div className="min-w-0">{children}</div>
+                  <div className="relative z-20 min-w-0 overflow-visible">
+                    {children}
+                  </div>
 
                   {footer ? (
                     <p className="mt-4 shrink-0 text-center text-[13px] font-normal text-[#14151a]">

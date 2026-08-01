@@ -2,11 +2,13 @@
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { ProgressBootstrap, ModuleCompletionWatcher } from "@/components/shared/progress-bootstrap";
-import { WeekCompletionCelebration } from "@/components/shared/week-completion-celebration";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { getQueryClient } from "@/lib/get-query-client";
 
+/**
+ * Root providers — keep light for marketing pages.
+ * Portal progress/celebration mounts only in the student shell.
+ */
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => getQueryClient());
 
@@ -59,12 +61,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <ProgressBootstrap />
-        <ModuleCompletionWatcher />
-        <WeekCompletionCelebration />
-        {children}
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ThemeProvider>
   );
 }

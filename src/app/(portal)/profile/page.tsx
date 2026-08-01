@@ -25,7 +25,7 @@ export default async function ProfilePage() {
         subtitle="Candidate details and your SupraBase identity card."
         fillViewport
       />
-      <div className="flex h-full min-h-0 flex-col max-md:overflow-hidden md:overflow-y-auto">
+      <div className="flex h-full min-h-0 flex-col max-md:overflow-hidden md:overflow-x-hidden md:overflow-y-auto">
         <ProfileWorkspace
           userId={user.id}
           email={user.email || profile?.email || ""}

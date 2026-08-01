@@ -127,8 +127,13 @@ export class CurriculumService {
 
     const phases = await this.phases.listByCourseId(course.id);
     const modules = await this.modules.listByPhaseIds(phases.map((p) => p.id));
-    const lessons = await this.lessons.listByModuleIds(modules.map((m) => m.id));
-    const completedIds = await this.progress.listCompletedLessonIds(profileId);
+    const moduleIds = modules.map((m) => m.id);
+
+    // Lessons + progress in parallel — biggest portal TTFB win
+    const [lessons, completedIds] = await Promise.all([
+      this.lessons.listByModuleIds(moduleIds),
+      this.progress.listCompletedLessonIds(profileId),
+    ]);
 
     const lessonsByModule = groupBy(lessons, (l) => l.module_id);
     const modulesByPhase = groupBy(modules, (m) => m.phase_id);
@@ -586,8 +591,11 @@ export class CurriculumService {
     courseSlug: string = DEFAULT_COURSE_SLUG
   ): Promise<ContinueLearningState | null> {
     const journey = await this.getCourseJourney(profileId, courseSlug);
-    if (!journey) return null;
+    return journey ? this.continueFromJourney(journey) : null;
+  }
 
+  /** Derive continue state from an already-loaded journey (no extra DB). */
+  continueFromJourney(journey: CourseJourney): ContinueLearningState {
     const ordered = journey.phases.flatMap((phase) =>
       phase.modules.flatMap((module) =>
         module.lessons.map((lesson) => ({

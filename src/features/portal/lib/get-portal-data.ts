@@ -8,6 +8,7 @@ import type { PortalData } from "@/features/portal/types";
 
 /**
  * Shared student portal data — cached per request so layout + pages share one fetch.
+ * Journey is loaded once; continue state is derived (no second DB waterfall).
  */
 export const getPortalData = cache(async (): Promise<PortalData> => {
   const session = await getCurrentUser();
@@ -29,16 +30,9 @@ export const getPortalData = cache(async (): Promise<PortalData> => {
       session.user.id,
       DEFAULT_COURSE_SLUG
     );
+    continueState = journey ? curriculum.continueFromJourney(journey) : null;
   } catch {
     journey = null;
-  }
-
-  try {
-    continueState = await curriculum.getContinueLearning(
-      session.user.id,
-      DEFAULT_COURSE_SLUG
-    );
-  } catch {
     continueState = null;
   }
 

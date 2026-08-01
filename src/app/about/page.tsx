@@ -1,19 +1,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { JsonLd } from "@/components/seo/json-ld";
 import {
   SiteCard,
   SitePageShell,
 } from "@/components/site/site-page-shell";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { SITE_ROUTES } from "@/lib/site-routes";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+} from "@/lib/seo-schema";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: `About ${SITE.name} — production-ready software engineering through projects, AI mentoring, and verifiable certifications.`,
-  alternates: { canonical: absoluteUrl(SITE_ROUTES.about) },
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "About — Building Production-Ready Software Engineers",
+  description: `About ${SITE.name}: an AI learning platform for full stack development, AI engineering, system design, and DevOps—with real projects, mentoring, and verifiable certifications.`,
+  path: SITE_ROUTES.about,
+  keywords: [
+    "software engineering learning platform",
+    "developer career platform",
+    "AI learning platform",
+    "software engineer training",
+  ],
+});
 
 const PILLARS = [
   {
@@ -39,6 +52,15 @@ const PILLARS = [
 export default function AboutPage() {
   return (
     <SitePageShell wide>
+      <JsonLd
+        data={graphSchema([
+          organizationSchema(),
+          breadcrumbSchema([
+            { name: "Home", path: SITE_ROUTES.home },
+            { name: "About", path: SITE_ROUTES.about },
+          ]),
+        ])}
+      />
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
         <div className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-white/[0.08] via-white/[0.035] to-transparent px-5 py-10 text-center shadow-[0_28px_80px_rgba(0,0,0,0.35)] sm:px-12 sm:py-16 sm:text-left">
           <div

@@ -50,7 +50,10 @@ export function LandingFaq() {
               <h3 className="flex-1 text-[14px] font-medium text-white/85 transition group-hover:text-white">
                 {item.question}
               </h3>
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.05] text-white/45 shadow-inner shadow-white/[0.03] transition duration-300 group-open:rotate-45 group-open:bg-[#e56b68]/15 group-open:text-[#f3aaa0]">
+              <span
+                aria-hidden
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.05] text-white/45 shadow-inner shadow-white/[0.03] transition duration-300 group-open:rotate-45 group-open:bg-[#e56b68]/15 group-open:text-[#f3aaa0]"
+              >
                 <Plus className="h-3.5 w-3.5" />
               </span>
             </summary>

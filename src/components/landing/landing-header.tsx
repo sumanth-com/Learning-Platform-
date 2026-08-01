@@ -97,7 +97,7 @@ export function LandingHeader({ showNav = true }: { showNav?: boolean }) {
               href={AUTH_ROUTES.reserveSeat}
               className="inline-flex h-9 items-center rounded-full bg-white px-3.5 text-[12px] font-semibold text-[#181719] shadow-[0_12px_30px_rgba(0,0,0,0.28)] transition hover:-translate-y-0.5 hover:bg-[#fff8f4] sm:h-10 sm:px-5 sm:text-[12.5px]"
             >
-              Reserve your seat
+              Get started
             </Link>
           </div>
         </div>

@@ -7,6 +7,10 @@ import {
   collectCommunicationIds,
 } from "@/curriculum/communication-skills";
 import { getWeekProjectIds } from "@/lib/progress-storage";
+import {
+  getRoadmapModuleByIndex,
+  roadmapModuleLabel,
+} from "@/lib/roadmap-modules";
 
 export type ResetSectionId =
   | "roadmap"
@@ -18,6 +22,7 @@ export type ResetSectionId =
   | "notes"
   | "study-stats";
 
+/** `"all"` or 1-based roadmap module index (1–20). */
 export type ResetScope = number | "all";
 
 export interface ResetSectionMeta {
@@ -52,7 +57,11 @@ export const RESET_SECTIONS: ResetSectionMeta[] = [
   },
 ];
 
-const ROADMAP_TYPES = new Set(["learning-lesson", "day-item", "programming-question"]);
+const ROADMAP_TYPES = new Set([
+  "learning-lesson",
+  "day-item",
+  "programming-question",
+]);
 const AI_TYPES = new Set(["ai-topic", "ai-exercise", "ai-prompt"]);
 const INTERVIEW_TYPES = new Set(["interview-question"]);
 const PROJECT_TYPES = new Set(["project-feature", "project-complete"]);
@@ -61,18 +70,25 @@ const GITHUB_TYPES = new Set(["github-file"]);
 function weeksInScope(scope: ResetScope): CurriculumWeekDefinition[] {
   const weeks = getCurriculumWeeks();
   if (scope === "all") return weeks;
+  // Early module indexes may still align with legacy week ids.
   const week = weeks.find((w) => w.id === scope);
   return week ? [week] : [];
 }
 
-function idsForTypes(weeks: CurriculumWeekDefinition[], types: Set<string>): string[] {
+function idsForTypes(
+  weeks: CurriculumWeekDefinition[],
+  types: Set<string>
+): string[] {
   return weeks
     .flatMap(collectTrackableEntities)
     .filter((e) => types.has(e.type))
     .map((e) => e.id);
 }
 
-export function getResetEntityIds(section: ResetSectionId, scope: ResetScope): Set<string> {
+export function getResetEntityIds(
+  section: ResetSectionId,
+  scope: ResetScope
+): Set<string> {
   const ids = new Set<string>();
 
   if (section === "communication") {
@@ -80,7 +96,9 @@ export function getResetEntityIds(section: ResetSectionId, scope: ResetScope): S
       scope === "all"
         ? COMMUNICATION_WEEKS
         : COMMUNICATION_WEEKS.filter((w) => w.weekId === scope);
-    weeks.forEach((w) => collectCommunicationIds(w.skill).forEach((id) => ids.add(id)));
+    weeks.forEach((w) =>
+      collectCommunicationIds(w.skill).forEach((id) => ids.add(id))
+    );
     return ids;
   }
 
@@ -120,18 +138,37 @@ export function getResetEntityIds(section: ResetSectionId, scope: ResetScope): S
   return ids;
 }
 
-export function getResetProjectIds(section: ResetSectionId, scope: ResetScope): string[] {
+export function getResetProjectIds(
+  section: ResetSectionId,
+  scope: ResetScope
+): string[] {
   if (section !== "projects") return [];
   const weeks = weeksInScope(scope);
   return weeks.flatMap(getWeekProjectIds);
 }
 
-export function getResetGitHubWeekIds(section: ResetSectionId, scope: ResetScope): number[] {
+export function getResetGitHubWeekIds(
+  section: ResetSectionId,
+  scope: ResetScope
+): number[] {
   if (section !== "github") return [];
   if (scope === "all") return getCurriculumWeeks().map((w) => w.id);
   return [scope];
 }
 
+/** Match local progress keys that belong to a roadmap module slug. */
+export function entityMatchesRoadmapModule(
+  entityId: string,
+  moduleIndex: number
+): boolean {
+  const mod = getRoadmapModuleByIndex(moduleIndex);
+  if (!mod) return false;
+  const id = entityId.toLowerCase();
+  const slug = mod.slug.toLowerCase();
+  const compact = slug.replace(/-/g, "");
+  return id.includes(slug) || id.includes(compact);
+}
+
 export function resetScopeLabel(scope: ResetScope): string {
-  return scope === "all" ? "all weeks" : `Week ${scope}`;
+  return scope === "all" ? "all modules" : roadmapModuleLabel(scope);
 }

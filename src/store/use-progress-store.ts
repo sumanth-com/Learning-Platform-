@@ -9,6 +9,7 @@ import { getSeededCompletedAssignmentIds } from "@/curriculum/assignment-catalog
 import type { AssignmentSubmissionStatus } from "@/curriculum/assignment-catalog/types";
 import { getCurriculumWeeks, getTotalWeeks } from "@/curriculum/registry";
 import {
+  entityMatchesRoadmapModule,
   getResetEntityIds,
   getResetGitHubWeekIds,
   getResetProjectIds,
@@ -553,14 +554,33 @@ export const useProgressStore = create<ProgressStore>()(
         const ids = getResetEntityIds(section, scope);
         const projectIds = getResetProjectIds(section, scope);
         const githubWeekIds = getResetGitHubWeekIds(section, scope);
+        const moduleIndex = typeof scope === "number" ? scope : null;
 
         set((state) => {
+          const stripModuleKeys = <T,>(
+            record: Record<string, T>
+          ): Record<string, T> => {
+            if (moduleIndex == null) return record;
+            if (section !== "roadmap" && section !== "projects") return record;
+            return Object.fromEntries(
+              Object.entries(record).filter(
+                ([id]) => !entityMatchesRoadmapModule(id, moduleIndex)
+              )
+            );
+          };
+
           const base = {
             ...state.progress,
-            completed: stripEntityKeys(state.progress.completed, ids),
-            notes: stripEntityKeys(state.progress.notes, ids),
-            bookmarks: stripEntityKeys(state.progress.bookmarks, ids),
-            completionDates: stripEntityKeys(state.progress.completionDates, ids),
+            completed: stripModuleKeys(
+              stripEntityKeys(state.progress.completed, ids)
+            ),
+            notes: stripModuleKeys(stripEntityKeys(state.progress.notes, ids)),
+            bookmarks: stripModuleKeys(
+              stripEntityKeys(state.progress.bookmarks, ids)
+            ),
+            completionDates: stripModuleKeys(
+              stripEntityKeys(state.progress.completionDates, ids)
+            ),
             projectMeta:
               projectIds.length > 0
                 ? Object.fromEntries(

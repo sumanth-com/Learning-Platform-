@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { RotateCcw, CheckCircle2 } from "lucide-react";
 import { useProgressStore } from "@/store/use-progress-store";
-import { useTotalWeeks } from "@/hooks/use-curriculum";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/components/shared/filter-pills";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -14,11 +13,11 @@ import {
   type ResetScope,
   type ResetSectionId,
 } from "@/lib/reset-sections";
+import { ROADMAP_MODULES } from "@/lib/roadmap-modules";
 
 type PendingReset = { section: ResetSectionId; scope: ResetScope } | null;
 
 export function ProgressSettings() {
-  const totalWeeks = useTotalWeeks();
   const resetSectionProgress = useProgressStore((s) => s.resetSectionProgress);
 
   const [sectionScopes, setSectionScopes] = useState<
@@ -32,18 +31,22 @@ export function ProgressSettings() {
   const [pending, setPending] = useState<PendingReset>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const weekOptions = useMemo(
+  const moduleOptions = useMemo(
     () =>
-      Array.from({ length: totalWeeks }, (_, i) => ({
-        value: i + 1,
-        label: `Week ${i + 1}`,
+      ROADMAP_MODULES.map((mod) => ({
+        value: mod.index as ResetScope,
+        label: `Module ${mod.index} · ${mod.title}`,
       })),
-    [totalWeeks]
+    []
   );
 
   const scopeOptions = useMemo(
-    () => [{ value: "all" as const, label: "All weeks" }, ...weekOptions],
-    [weekOptions]
+    () =>
+      [
+        { value: "all" as ResetScope, label: "All modules" },
+        ...moduleOptions,
+      ] as { value: ResetScope; label: string }[],
+    [moduleOptions]
   );
 
   const showSuccess = (text: string) => {
@@ -111,7 +114,7 @@ export function ProgressSettings() {
               <div className="mt-auto flex items-center gap-2">
                 {section.supportsWeekScope ? (
                   <FilterSelect
-                    label="Scope"
+                    label="Module"
                     value={sectionScopes[section.id]}
                     onChange={(scope) =>
                       setSectionScopes((prev) => ({

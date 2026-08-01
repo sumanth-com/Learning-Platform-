@@ -66,7 +66,7 @@ export function LandingFooter() {
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="text-[11.5px] leading-5 text-white/42 transition-colors hover:text-white sm:text-[12.5px]"
+                        className="text-[11.5px] leading-5 text-white/42 transition-colors hover:text-white focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40 sm:text-[12.5px]"
                       >
                         {link.label}
                       </Link>

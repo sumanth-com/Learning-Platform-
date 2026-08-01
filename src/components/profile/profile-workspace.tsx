@@ -290,9 +290,9 @@ export function ProfileWorkspace({
   }, [hasPhoto, userId]);
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-col px-3.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2.5 sm:px-1 sm:pb-14 sm:pt-0 max-md:overflow-hidden md:space-y-8 md:overflow-visible md:px-1">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-col px-3.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-4 sm:px-4 sm:pb-14 sm:pt-5 max-md:overflow-hidden md:h-auto md:min-h-full md:space-y-8 md:overflow-visible md:px-6 md:pb-20 md:pt-6 lg:px-8">
       {/* ── Mobile: tall ID card + slim edit strip — one screen ── */}
-      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden md:hidden">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden md:hidden">
         {/* Vertical identity card — proper length */}
         <motion.div
           className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.5rem]"
@@ -453,20 +453,20 @@ export function ProfileWorkspace({
       </div>
 
       {/* ── Desktop / tablet ── */}
-      <div className="hidden min-h-0 flex-1 flex-col md:flex md:space-y-8">
+      <div className="hidden min-h-0 flex-1 flex-col md:flex md:flex-none md:space-y-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-stretch lg:gap-8">
-          <section className="flex h-full min-h-0 flex-col rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] sm:p-8">
-            <div>
+          <section className="flex h-full min-h-0 flex-col rounded-[1.75rem] border border-border/70 bg-card px-6 pb-6 pt-7 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] sm:px-8 sm:pb-8 sm:pt-8">
+            <div className="space-y-1.5">
               <h2 className="text-lg font-semibold tracking-tight text-foreground">
                 Candidate Information
               </h2>
-              <p className="mt-1 text-[13px] text-muted-foreground">
+              <p className="text-[13px] leading-relaxed text-muted-foreground">
                 Update your name and photo. Account details are managed by
                 SupraBase.
               </p>
             </div>
 
-            <div className="mt-7 flex flex-1 flex-col gap-5">
+            <div className="mt-8 flex flex-1 flex-col gap-5">
               <div className="space-y-2">
                 <Label htmlFor="fullName" className="text-foreground">
                   Full name
@@ -728,7 +728,7 @@ export function ProfileWorkspace({
           </div>
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden shrink-0 pb-8 md:block lg:pb-12">
           <ProfileCertificates />
         </div>
       </div>

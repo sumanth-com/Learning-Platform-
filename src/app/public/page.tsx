@@ -1,104 +1,127 @@
 import type { Metadata } from "next";
-import { getTotalWeeks } from "@/curriculum/registry";
-import { LandingCertifications } from "@/components/landing/landing-certifications";
+import dynamic from "next/dynamic";
 import { LandingCore } from "@/components/landing/landing-core";
 import { LandingCta } from "@/components/landing/landing-cta";
-import { FAQ_ITEMS, LandingFaq } from "@/components/landing/landing-faq";
+import { FAQ_ITEMS } from "@/components/landing/landing-faq";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { LandingHeader } from "@/components/landing/landing-header";
 import { LandingHero } from "@/components/landing/landing-hero";
-import { LandingJourney } from "@/components/landing/landing-journey";
-import { LandingManifesto } from "@/components/landing/landing-manifesto";
-import { LandingMentorShowcase } from "@/components/landing/landing-mentor-showcase";
 import type { LandingStat } from "@/components/landing/landing-stats";
-import { LandingTechnologies } from "@/components/landing/landing-technologies";
-import { CERT_CATEGORIES } from "@/features/certifications/data/catalog";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { JsonLd } from "@/components/seo/json-ld";
+import { SITE } from "@/lib/site";
+import { SITE_ROUTES } from "@/lib/site-routes";
+import { ROADMAP_MODULE_COUNT } from "@/lib/roadmap-modules";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  courseSchema,
+  faqPageSchema,
+  graphSchema,
+  organizationSchema,
+  softwareApplicationSchema,
+  websiteSchema,
+} from "@/lib/seo-schema";
 import styles from "@/components/landing/landing.module.css";
 
-const TITLE = "Full Stack Development & AI Engineering";
+/** Below-fold sections — code-split so hero paints first. */
+const LandingMentorShowcase = dynamic(
+  () =>
+    import("@/components/landing/landing-mentor-showcase").then((m) => ({
+      default: m.LandingMentorShowcase,
+    })),
+  { ssr: true }
+);
+const LandingCertifications = dynamic(
+  () =>
+    import("@/components/landing/landing-certifications").then((m) => ({
+      default: m.LandingCertifications,
+    })),
+  { ssr: true }
+);
+const LandingManifesto = dynamic(
+  () =>
+    import("@/components/landing/landing-manifesto").then((m) => ({
+      default: m.LandingManifesto,
+    })),
+  { ssr: true }
+);
+const LandingJourney = dynamic(
+  () =>
+    import("@/components/landing/landing-journey").then((m) => ({
+      default: m.LandingJourney,
+    })),
+  { ssr: true }
+);
+const LandingTechnologies = dynamic(
+  () =>
+    import("@/components/landing/landing-technologies").then((m) => ({
+      default: m.LandingTechnologies,
+    })),
+  { ssr: true }
+);
+const LandingFaq = dynamic(
+  () =>
+    import("@/components/landing/landing-faq").then((m) => ({
+      default: m.LandingFaq,
+    })),
+  { ssr: true }
+);
 
-export const metadata: Metadata = {
-  title: TITLE,
+/** Lightweight labels for schema — avoids pulling coding-challenge catalog. */
+const CERT_TEACHES = [
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Node.js",
+  "Python",
+  "SQL",
+  "Docker",
+  "Full Stack Development",
+  "AI Engineering",
+  "System Design",
+  "Software Engineering",
+  "DevOps",
+] as const;
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Full Stack Development & AI Engineering Learning Platform",
   description: SITE.shortDescription,
-  alternates: { canonical: absoluteUrl("/public") },
-  openGraph: {
-    type: "website",
-    url: absoluteUrl("/public"),
-    title: `${TITLE} · ${SITE.name}`,
-    description: SITE.shortDescription,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${TITLE} · ${SITE.name}`,
-    description: SITE.shortDescription,
-  },
-};
+  path: SITE_ROUTES.home,
+  keywords: [
+    "AI learning platform",
+    "full stack learning platform",
+    "AI developer course",
+    "software engineering learning platform",
+    "developer roadmap",
+    "learn full stack development",
+    "learn AI development",
+    "developer certification",
+    "interview preparation",
+    "real world projects",
+  ],
+});
 
-/**
- * Structured data is emitted from the same copy the page renders so answer
- * engines and crawlers never see a different set of claims.
- */
 function buildStructuredData(weeks: number) {
-  const organization = {
-    "@type": "EducationalOrganization",
-    "@id": absoluteUrl("/#organization"),
-    name: SITE.name,
-    url: SITE.url,
-    description: SITE.longDescription,
-    logo: absoluteUrl("/icons/icon-512.png"),
-    email: SITE.supportEmail,
-  };
-
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      organization,
-      {
-        "@type": "WebSite",
-        "@id": absoluteUrl("/#website"),
-        url: SITE.url,
-        name: SITE.name,
-        description: SITE.shortDescription,
-        publisher: { "@id": absoluteUrl("/#organization") },
-        inLanguage: "en",
-      },
-      {
-        "@type": "Course",
-        name: "Full Stack Development and AI Engineering Path",
-        description: SITE.longDescription,
-        provider: { "@id": absoluteUrl("/#organization") },
-        url: absoluteUrl("/public"),
-        educationalLevel: "Beginner to Intermediate",
-        teaches: [
-          ...CERT_CATEGORIES.map((category) => category.label),
-          "Full Stack Development",
-          "AI Engineering",
-          "System Design",
-          "Software Engineering",
-          "DevOps",
-        ],
-        hasCourseInstance: {
-          "@type": "CourseInstance",
-          courseMode: "online",
-          courseWorkload: `P${weeks}W`,
-        },
-      },
-      {
-        "@type": "FAQPage",
-        "@id": absoluteUrl("/public#faq"),
-        mainEntity: FAQ_ITEMS.map((item) => ({
-          "@type": "Question",
-          name: item.question,
-          acceptedAnswer: { "@type": "Answer", text: item.answer },
-        })),
-      },
-    ],
-  };
+  return graphSchema([
+    organizationSchema(),
+    websiteSchema(),
+    softwareApplicationSchema(),
+    courseSchema({
+      name: "Full Stack Development and AI Engineering Path",
+      description: SITE.longDescription,
+      url: SITE_ROUTES.home,
+      workload: `P${weeks}W`,
+      teaches: [...CERT_TEACHES],
+    }),
+    {
+      ...faqPageSchema(FAQ_ITEMS),
+      "@id": `${SITE.url}${SITE_ROUTES.home}#faq`,
+    },
+  ]);
 }
 
 export default function PublicPage() {
-  const weeks = getTotalWeeks();
+  const weeks = ROADMAP_MODULE_COUNT;
 
   const stats: LandingStat[] = [
     {
@@ -127,12 +150,7 @@ export default function PublicPage() {
 
   return (
     <div className={styles.page}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildStructuredData(weeks)),
-        }}
-      />
+      <JsonLd data={buildStructuredData(weeks)} />
 
       <div aria-hidden className={styles.backdrop}>
         <div className={`${styles.aurora} ${styles.auroraOne}`} />

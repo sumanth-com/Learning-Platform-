@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ import {
 } from "@/features/auth/actions/seat-actions";
 import { createAccountSchema } from "@/features/auth/schemas/auth-schemas";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { SITE_ROUTES } from "@/lib/site-routes";
 import { z } from "zod";
 
 type FormValues = z.infer<typeof createAccountSchema>;
@@ -58,9 +60,7 @@ export function CreateAccountForm() {
       if (cancelled) return;
       if (!result.success || !result.data) {
         setPreviewError(
-          !result.success
-            ? result.error
-            : "Invalid invitation."
+          !result.success ? result.error : "Invalid invitation."
         );
         setPreview(null);
       } else {
@@ -83,7 +83,15 @@ export function CreateAccountForm() {
         return;
       }
       toast.success(result.message ?? "Account created.");
-      router.push(AUTH_ROUTES.login);
+      const redirectTo =
+        result.data &&
+        typeof result.data === "object" &&
+        "redirectTo" in result.data &&
+        typeof result.data.redirectTo === "string"
+          ? result.data.redirectTo
+          : AUTH_ROUTES.login;
+      router.push(redirectTo);
+      router.refresh();
     });
   });
 
@@ -153,7 +161,23 @@ export function CreateAccountForm() {
           {...register("acceptTerms")}
         />
         <span>
-          I accept the Terms of Service and Privacy Policy.
+          I accept the{" "}
+          <Link
+            href={SITE_ROUTES.terms}
+            target="_blank"
+            className="text-[#f3b7ac] underline underline-offset-2 hover:text-white"
+          >
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link
+            href={SITE_ROUTES.privacy}
+            target="_blank"
+            className="text-[#f3b7ac] underline underline-offset-2 hover:text-white"
+          >
+            Privacy Policy
+          </Link>
+          .
           {errors.acceptTerms ? (
             <span className="mt-1 block text-[12px] text-[#f3aaa0]">
               {errors.acceptTerms.message}
@@ -169,10 +193,10 @@ export function CreateAccountForm() {
         {isPending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Creating…
+            Activating…
           </>
         ) : (
-          "Create Account"
+          "Set password & continue"
         )}
       </Button>
     </form>

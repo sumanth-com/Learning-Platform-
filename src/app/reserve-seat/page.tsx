@@ -1,28 +1,20 @@
-import Link from "next/link";
-import { AuthShell, authLinkClass } from "@/components/auth/auth-shell";
-import { ReserveSeatForm } from "@/components/auth/reserve-seat-form";
-import { AUTH_ROUTES } from "@/features/auth/constants";
+import type { Metadata } from "next";
+import { ReserveSeatView } from "@/components/auth/reserve-seat-view";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Request Access",
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Request Access — Join the AI Learning Platform",
+  description:
+    "Suprabase is invite-only. Request access to learn full stack development, AI engineering, system design, and earn verifiable developer certifications.",
+  path: "/reserve-seat",
+  keywords: [
+    "AI learning platform",
+    "software engineer training",
+    "developer career platform",
+    "learn full stack development",
+  ],
+});
 
 export default function ReserveSeatPage() {
-  return (
-    <AuthShell
-      title="Request access."
-      description="Suprabase is invite-only. Share your details and our team will review your request."
-      panelVariant="reserve"
-      footer={
-        <>
-          Already have an account?{" "}
-          <Link href={AUTH_ROUTES.login} className={authLinkClass}>
-            Sign in
-          </Link>
-        </>
-      }
-    >
-      <ReserveSeatForm />
-    </AuthShell>
-  );
+  return <ReserveSeatView />;
 }

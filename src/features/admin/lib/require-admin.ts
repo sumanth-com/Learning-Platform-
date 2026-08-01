@@ -1,8 +1,10 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { UserRole } from "@/types/database";
 import { isAdminRole } from "@/features/admin/types";
 
-export async function getAdminContext() {
+/** Per-request cached admin gate — layout + page share one auth/profile fetch. */
+export const getAdminContext = cache(async () => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -45,4 +47,4 @@ export async function getAdminContext() {
     profile,
     ok: true as const,
   };
-}
+});

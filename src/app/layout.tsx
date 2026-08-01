@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Great_Vibes, Plus_Jakarta_Sans, Source_Serif_4 } from "next/font/google";
+import { AnalyticsScripts } from "@/components/analytics/analytics-scripts";
 import { Providers } from "@/components/providers";
 import { AppToaster } from "@/components/theme/app-toaster";
 import { SITE } from "@/lib/site";
+import { SEO_KEYWORDS } from "@/lib/seo";
 import "./globals.css";
 
 const sans = Plus_Jakarta_Sans({
@@ -22,56 +24,83 @@ const certScript = Great_Vibes({
   subsets: ["latin"],
   variable: "--font-cert-script",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: "Suprabase",
+    default:
+      "Suprabase — AI Learning Platform for Full Stack & Software Engineering",
     template: "%s · Suprabase",
   },
   description: SITE.shortDescription,
   applicationName: SITE.name,
-  keywords: [
-    "full stack developer course",
-    "AI engineering learning path",
-    "in-browser coding practice",
-    "AI mentor for developers",
-    "verifiable developer certification",
-    "Next.js and TypeScript course",
-    "system design skills",
-    "portfolio projects for developers",
-  ],
+  authors: [{ name: SITE.name }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  category: "education",
+  keywords: [...SEO_KEYWORDS],
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: ["/favicon.ico"],
+  },
   appleWebApp: {
     title: "Suprabase",
     capable: true,
     statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
   },
   openGraph: {
     type: "website",
     siteName: SITE.name,
     locale: SITE.locale,
     url: SITE.url,
-    title: SITE.name,
+    title:
+      "Suprabase — AI Learning Platform for Full Stack & Software Engineering",
     description: SITE.shortDescription,
-    images: [{ url: "/icons/icon-512.png", width: 512, height: 512, alt: SITE.name }],
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE.name,
+    title:
+      "Suprabase — AI Learning Platform for Full Stack & Software Engineering",
     description: SITE.shortDescription,
-    images: ["/icons/icon-512.png"],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  alternates: {
+    canonical: SITE.url,
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#18181b",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#18181b" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -86,6 +115,7 @@ export default function RootLayout({
       className={`${sans.variable} ${display.variable} ${certScript.variable} dark`}
     >
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+        <AnalyticsScripts />
         <Providers>
           {children}
           <AppToaster />

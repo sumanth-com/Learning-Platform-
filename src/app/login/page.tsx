@@ -1,12 +1,18 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { AuthShell, authLinkClass } from "@/components/auth/auth-shell";
 import { LoginForm } from "@/components/auth/login-form";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Sign in",
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Sign In",
+  description:
+    "Sign in to Suprabase to continue your full stack and AI engineering learning path, projects, and certifications.",
+  path: "/login",
+  noIndex: true,
+});
 
 export default function LoginPage() {
   return (
@@ -17,7 +23,7 @@ export default function LoginPage() {
       footer={
         <>
           Want to join?{" "}
-          <Link href={AUTH_ROUTES.reserveSeat} className={authLinkClass}>
+          <Link href={AUTH_ROUTES.signup} className={authLinkClass}>
             Reserve your seat
           </Link>
         </>

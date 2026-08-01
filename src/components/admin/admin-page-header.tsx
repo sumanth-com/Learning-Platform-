@@ -18,19 +18,19 @@ export function AdminPageHeader({
   actionLabel,
 }: AdminPageHeaderProps) {
   return (
-    <div className="mb-6 flex flex-col gap-3 border-b border-zinc-800/80 pb-5 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-6 flex flex-col gap-3 border-b border-zinc-800 pb-5 sm:mb-7 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-50 sm:text-[1.75rem]">
+        <h1 className="font-sans text-[1.65rem] font-semibold leading-tight tracking-[-0.03em] text-zinc-50 sm:text-[1.85rem]">
           {title}
         </h1>
         {description ? (
-          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-zinc-500">
+          <p className="mt-2 max-w-2xl text-[14px] font-medium leading-relaxed text-zinc-400">
             {description}
           </p>
         ) : null}
       </div>
       {actionHref && actionLabel ? (
-        <Button asChild size="sm" className="shrink-0">
+        <Button asChild size="sm" className="shrink-0 font-semibold">
           <Link href={actionHref}>{actionLabel}</Link>
         </Button>
       ) : null}

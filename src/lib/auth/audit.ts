@@ -20,6 +20,8 @@ export type AuthAuditEvent =
   | "seat_approved"
   | "seat_approve_failed"
   | "seat_approve_email_failed"
+  | "seat_invite_resent"
+  | "seat_invite_resend_failed"
   | "seat_rejected"
   | "seat_contacted"
   | "seat_deleted"

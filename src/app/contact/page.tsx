@@ -1,23 +1,39 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail, MessageSquare } from "lucide-react";
+import { JsonLd } from "@/components/seo/json-ld";
 import {
   SiteCard,
   SitePageHero,
   SitePageShell,
 } from "@/components/site/site-page-shell";
 import { SITE_ROUTES } from "@/lib/site-routes";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+} from "@/lib/seo-schema";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: `Contact ${SITE.name} support.`,
-  alternates: { canonical: absoluteUrl(SITE_ROUTES.contact) },
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Contact — Support & Partnerships",
+  description: `Contact the ${SITE.name} team for product questions, account help, access requests, or partnership inquiries.`,
+  path: SITE_ROUTES.contact,
+});
 
 export default function ContactPage() {
   return (
     <SitePageShell wide>
+      <JsonLd
+        data={graphSchema([
+          organizationSchema(),
+          breadcrumbSchema([
+            { name: "Home", path: SITE_ROUTES.home },
+            { name: "Contact", path: SITE_ROUTES.contact },
+          ]),
+        ])}
+      />
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
         <SitePageHero
           eyebrow="Support"

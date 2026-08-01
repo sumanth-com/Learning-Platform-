@@ -1,16 +1,22 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { CreateAccountForm } from "@/components/auth/create-account-form";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Activate account",
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Activate Account",
+  description:
+    "Activate your invite to join Suprabase — set your password and open the learning portal.",
+  path: "/auth/create-account",
+  noIndex: true,
+});
 
 export default function CreateAccountPage() {
   return (
     <AuthShell
-      title="Activate your account."
-      description="Set your name and password to join Suprabase."
+      title="Set your password."
+      description="Create a password for your invited account, then continue into the portal."
       panelVariant="signup"
     >
       <Suspense

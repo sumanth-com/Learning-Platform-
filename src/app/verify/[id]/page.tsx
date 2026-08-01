@@ -1,21 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { CheckCircle2, ShieldCheck } from "lucide-react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import logoMark from "@/assets/Logo.png";
 import { CertificateDocument } from "@/components/certifications/certificate-document";
+import { JsonLd } from "@/components/seo/json-ld";
 import type { EarnedCertificate } from "@/features/certifications/types";
 import { createClient } from "@/lib/supabase/server";
 import type { PublicCertificateRow } from "@/types/database";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  educationalCredentialSchema,
+  graphSchema,
+  organizationSchema,
+} from "@/lib/seo-schema";
+import { SITE_ROUTES } from "@/lib/site-routes";
 
 export const dynamic = "force-dynamic";
 
-export default async function VerifyCertificatePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+async function loadCertificate(id: string) {
   const supabase = await createClient();
   const { data, error } = await (
     supabase as unknown as SupabaseClient
@@ -23,19 +27,57 @@ export default async function VerifyCertificatePage({
     cert_id: decodeURIComponent(id),
   });
   const row = !error ? (data?.[0] as PublicCertificateRow | undefined) : null;
-  const cert: EarnedCertificate | null = row
-    ? {
-        id: row.id,
-        certificationId: row.certification_id,
-        recipientName: row.recipient_name,
-        issuedAt: row.issued_at,
-        score: row.score,
-        level: row.level,
-        technology: row.technology,
-        title: row.title,
-        verifyPath: `/verify/${encodeURIComponent(row.id)}`,
-      }
-    : null;
+  if (!row) return null;
+  return {
+    id: row.id,
+    certificationId: row.certification_id,
+    recipientName: row.recipient_name,
+    issuedAt: row.issued_at,
+    score: row.score,
+    level: row.level,
+    technology: row.technology,
+    title: row.title,
+    verifyPath: `/verify/${encodeURIComponent(row.id)}`,
+  } satisfies EarnedCertificate;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const cert = await loadCertificate(id);
+  if (!cert) {
+    return buildPageMetadata({
+      title: "Credential Not Found",
+      description:
+        "This Suprabase credential could not be verified. It may be invalid, revoked, or not yet published.",
+      path: `/verify/${encodeURIComponent(id)}`,
+      noIndex: true,
+    });
+  }
+
+  return buildPageMetadata({
+    title: `${cert.title} — Verified Credential`,
+    description: `Verified ${cert.title} credential for ${cert.recipientName}. Issued by Suprabase — confirm authenticity without an account.`,
+    path: cert.verifyPath,
+    keywords: [
+      "developer certification",
+      "programming certification",
+      "verifiable credential",
+      cert.technology,
+    ],
+  });
+}
+
+export default async function VerifyCertificatePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const cert = await loadCertificate(id);
 
   if (!cert) {
     return (
@@ -43,13 +85,13 @@ export default async function VerifyCertificatePage({
         <div className="w-full max-w-md rounded-[1.75rem] border border-[#ded6ca] bg-[#fdfbf7] p-7 text-center shadow-[0_20px_70px_-45px_rgba(28,25,23,0.45)] sm:p-9">
           <Image
             src={logoMark}
-            alt="SupraBase"
+            alt="Suprabase"
             width={48}
             height={48}
             className="mx-auto rounded-xl"
             priority
           />
-          <ShieldCheck className="mx-auto mt-6 h-9 w-9 text-[#78716c]" />
+          <ShieldCheck className="mx-auto mt-6 h-9 w-9 text-[#78716c]" aria-hidden />
           <h1 className="mt-4 text-xl font-semibold">Credential not found</h1>
           <p className="mx-auto mt-2 max-w-sm text-[13px] leading-relaxed text-[#57534e]">
             We could not verify this credential. It may be invalid, revoked, or
@@ -64,10 +106,10 @@ export default async function VerifyCertificatePage({
             </p>
           </div>
           <Link
-            href="/"
+            href={SITE_ROUTES.home}
             className="mt-6 inline-flex text-[13px] font-semibold underline underline-offset-4"
           >
-            Visit SupraBase
+            Visit Suprabase
           </Link>
         </div>
       </div>
@@ -76,26 +118,39 @@ export default async function VerifyCertificatePage({
 
   return (
     <div className="min-h-[100dvh] bg-[#f7f4ef] text-[#1c1917]">
+      <JsonLd
+        data={graphSchema([
+          organizationSchema(),
+          educationalCredentialSchema({
+            name: cert.title,
+            description: `Verified ${cert.title} credential for ${cert.recipientName}.`,
+            credentialId: cert.id,
+            recipientName: cert.recipientName,
+            dateIssued: cert.issuedAt,
+            url: cert.verifyPath,
+          }),
+        ])}
+      />
       <header className="border-b border-[#e4ddd2] bg-[#fdfbf7]/95">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2.5">
             <Image
               src={logoMark}
-              alt=""
+              alt="Suprabase"
               width={34}
               height={34}
               className="rounded-lg"
               priority
             />
             <div>
-              <p className="text-[13px] font-semibold leading-none">SupraBase</p>
+              <p className="text-[13px] font-semibold leading-none">Suprabase</p>
               <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#78716c]">
                 Credential verification
               </p>
             </div>
           </div>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold text-emerald-800">
-            <CheckCircle2 className="h-3.5 w-3.5" />
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
             Verified
           </span>
         </div>
@@ -105,7 +160,7 @@ export default async function VerifyCertificatePage({
         <section className="overflow-hidden rounded-[1.5rem] border border-[#d7cfc2] bg-white shadow-[0_20px_70px_-50px_rgba(28,25,23,0.45)]">
           <div className="border-b border-[#ebe4d8] bg-[#fdfbf7] px-5 py-5 sm:px-7">
             <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-700">
-              <ShieldCheck className="h-4 w-4" />
+              <ShieldCheck className="h-4 w-4" aria-hidden />
               Authentic credential
             </p>
             <h1 className="mt-2 text-[22px] font-semibold tracking-tight sm:text-[27px]">
@@ -145,7 +200,7 @@ export default async function VerifyCertificatePage({
         </section>
         <p className="px-3 py-5 text-center text-[11px] leading-relaxed text-[#78716c]">
           This page confirms that the credential ID above is valid and was
-          issued by SupraBase to the named recipient.
+          issued by Suprabase to the named recipient.
         </p>
       </main>
     </div>

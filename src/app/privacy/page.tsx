@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalDocumentPage } from "@/components/site/legal-document-page";
 import { SITE_ROUTES } from "@/lib/site-routes";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
-  description: `Privacy Policy for ${SITE.name}.`,
-  alternates: { canonical: absoluteUrl(SITE_ROUTES.privacy) },
-};
+  description: `How ${SITE.name} collects, uses, and protects your information when you use the AI learning platform.`,
+  path: SITE_ROUTES.privacy,
+  keywords: ["privacy policy", "data protection", SITE.name],
+});
 
 export default function PrivacyPage() {
   return (

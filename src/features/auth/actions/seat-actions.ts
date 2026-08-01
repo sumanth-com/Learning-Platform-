@@ -16,6 +16,10 @@ import { ADMIN_ROUTES, isAdminRole } from "@/features/admin/types";
 import { sendSeatApprovedEmail } from "@/lib/email/send";
 import { firstNameFrom } from "@/lib/email/layout";
 import {
+  formatInternationalPhone,
+  getPhoneCountry,
+} from "@/lib/phone-countries";
+import {
   authAdminApi,
   generateInviteToken,
   generateTempPassword,
@@ -38,11 +42,13 @@ export async function submitSeatRequestAction(
 
   const name = parsed.data.name.trim();
   const email = parsed.data.email.trim().toLowerCase();
-  const phone = parsed.data.phone.trim();
-  const country = parsed.data.country.trim();
-  const applicantStatus = parsed.data.applicantStatus;
-  const collegeName = parsed.data.collegeName?.trim() || null;
-  const message = parsed.data.message?.trim() || null;
+  const countryMeta = getPhoneCountry(parsed.data.countryCode);
+  const phone = formatInternationalPhone(
+    parsed.data.countryCode,
+    parsed.data.phone
+  );
+  const country = countryMeta?.name ?? parsed.data.countryCode;
+
 
   const limit = checkRateLimit(
     `seat:${email}`,
@@ -103,9 +109,9 @@ export async function submitSeatRequestAction(
         email,
         phone,
         country,
-        applicant_status: applicantStatus,
-        college_name: collegeName,
-        message,
+        applicant_status: null,
+        college_name: null,
+        message: null,
         source: "reserve_access",
         status: "pending",
       }),
@@ -270,9 +276,12 @@ export async function approveSeatRequestAction(
         email,
         error: send.error,
       });
+      await logAuthEvent("seat_approved", { email, requestId, userId });
+      revalidatePath(ADMIN_ROUTES.accessRequests);
+      revalidatePath(ADMIN_ROUTES.root);
       return {
-        success: false,
-        error: `User created but email failed: ${send.error}`,
+        success: true,
+        message: `Approved, but the email failed (${send.error}). Use “Resend invite”.`,
       };
     }
 
@@ -283,7 +292,7 @@ export async function approveSeatRequestAction(
       success: true,
       message:
         !send.ok && send.skipped
-          ? "Approved. Configure Resend to send the activation email."
+          ? "Approved. Configure Resend, then use “Resend invite”."
           : "Approved. Invitation email sent.",
     };
   } catch (err) {
@@ -298,6 +307,86 @@ export async function approveSeatRequestAction(
         error: "An account already exists for this email.",
       };
     }
+    return { success: false, error: message };
+  }
+}
+
+/**
+ * Resend activation email for an already-approved request
+ * (new token, 24h TTL). Use when Resend failed or the link expired.
+ */
+export async function resendSeatInviteAction(
+  requestId: string
+): Promise<AuthActionResult> {
+  const ctx = await requireSuperAdmin();
+  if (!ctx.ok) return { success: false, error: ctx.error };
+
+  const rows = await serviceRest<SeatRequestRow[]>(
+    `/seat_requests?id=eq.${encodeURIComponent(requestId)}&select=*&limit=1`
+  );
+  const request = rows?.[0];
+  if (!request) return { success: false, error: "Seat request not found." };
+  if (request.status !== "approved" || !request.user_id) {
+    return {
+      success: false,
+      error: "Only approved (not yet joined) requests can resend an invite.",
+    };
+  }
+
+  const email = request.email.toLowerCase();
+  const name = request.name;
+  const userId = request.user_id;
+
+  try {
+    const token = generateInviteToken();
+    const tokenHash = hashInviteToken(token);
+    const expiresAt = new Date(Date.now() + INVITE_TTL_MS).toISOString();
+
+    await serviceRest(
+      `/seat_invitations?seat_request_id=eq.${encodeURIComponent(requestId)}`,
+      { method: "DELETE", prefer: "return=minimal" }
+    );
+
+    await serviceRest("/seat_invitations", {
+      method: "POST",
+      prefer: "return=minimal",
+      body: JSON.stringify({
+        seat_request_id: requestId,
+        user_id: userId,
+        email,
+        token_hash: tokenHash,
+        expires_at: expiresAt,
+      }),
+    });
+
+    const activateUrl = `${getAppUrl()}${AUTH_ROUTES.createAccount}?token=${encodeURIComponent(token)}`;
+    const send = await sendSeatApprovedEmail({
+      to: email,
+      activateUrl,
+      fullName: name,
+      firstName: firstNameFrom(name, email),
+    });
+
+    if (!send.ok) {
+      await logAuthEvent("seat_invite_resend_failed", {
+        email,
+        error: send.error,
+        skipped: send.skipped,
+      });
+      return {
+        success: false,
+        error: send.skipped
+          ? "Configure Resend (RESEND_API_KEY) to send invitation emails."
+          : `Could not send email: ${send.error}`,
+      };
+    }
+
+    await logAuthEvent("seat_invite_resent", { email, requestId, userId });
+    revalidatePath(ADMIN_ROUTES.accessRequests);
+    return { success: true, message: "Invitation email resent." };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Resend failed.";
+    await logAuthEvent("seat_invite_resend_failed", { email, error: message });
     return { success: false, error: message };
   }
 }
@@ -418,7 +507,7 @@ export async function getInvitePreviewAction(token: string): Promise<
 
 export async function completeInviteAccountAction(
   input: unknown
-): Promise<AuthActionResult> {
+): Promise<AuthActionResult<{ redirectTo: string }>> {
   const parsed = createAccountSchema.safeParse(input);
   if (!parsed.success) {
     return {
@@ -497,14 +586,34 @@ export async function completeInviteAccountAction(
       );
     }
 
+    // Sign them in so they land in the portal immediately
+    const supabase = await createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: invite.email,
+      password: parsed.data.password,
+    });
+
     await logAuthEvent("invite_account_activated", {
       email: invite.email,
       userId: invite.user_id,
+      autoSignedIn: !signInError,
     });
+
+    revalidatePath(ADMIN_ROUTES.accessRequests);
+    revalidatePath("/", "layout");
+
+    if (signInError) {
+      return {
+        success: true,
+        message: "Account ready. Please sign in with your new password.",
+        data: { redirectTo: AUTH_ROUTES.login },
+      };
+    }
 
     return {
       success: true,
-      message: "Account created. You can sign in now.",
+      message: "Welcome to Suprabase — your account is ready.",
+      data: { redirectTo: AUTH_ROUTES.dashboard },
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Activation failed.";

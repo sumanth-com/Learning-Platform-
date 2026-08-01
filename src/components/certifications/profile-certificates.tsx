@@ -52,7 +52,7 @@ export function ProfileCertificates() {
   );
 
   return (
-    <section className="w-full">
+    <section className="w-full pb-2">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-border/70 bg-card/90 text-foreground shadow-sm">
@@ -121,15 +121,15 @@ export function ProfileCertificates() {
       ) : null}
 
       {state.certificates.length > 0 ? (
-        <ul className="flex flex-wrap gap-4">
+        <ul className="flex flex-wrap gap-4 pb-1">
           {state.certificates.map((c) => {
             const tone = toneFor(c.id);
             const label = `${c.technology} (${levelLabel(c.level)})`;
             return (
-              <li key={c.id} className="w-[min(100%,15.25rem)] shrink-0">
+              <li key={c.id} className="w-[min(100%,16.5rem)] shrink-0">
                 <Link
                   href={`/profile/certificates/${c.id}`}
-                  className="group relative flex aspect-[1.58/1] w-full flex-col overflow-hidden rounded-[1.35rem] border p-4 text-[#1f2925] outline-none transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-20px_rgba(31,41,37,0.35)] focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
+                  className="group relative flex min-h-[12.5rem] w-full flex-col rounded-[1.35rem] border p-4 text-[#1f2925] outline-none transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-20px_rgba(31,41,37,0.35)] focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
                   style={{
                     background: tone.face,
                     borderColor: tone.border,
@@ -180,17 +180,18 @@ export function ProfileCertificates() {
                     ) : null}
                   </div>
 
-                  <div className="relative mt-auto">
+                  <div className="relative mt-5 flex flex-1 flex-col justify-end">
                     <p
                       className="text-[9px] font-bold uppercase tracking-[0.16em]"
                       style={{ color: tone.accent }}
                     >
                       SupraBase credential
                     </p>
-                    <p className="mt-1 line-clamp-2 text-[14px] font-semibold leading-snug tracking-tight text-[#1f2925]">
+                    <p className="mt-1.5 text-[14px] font-semibold leading-snug tracking-tight text-[#1f2925]">
                       {label}
                     </p>
-                    <div className="mt-3 flex items-center justify-between gap-2 border-t pt-2.5"
+                    <div
+                      className="mt-4 flex items-center justify-between gap-2 border-t pt-3"
                       style={{ borderColor: tone.accentSoft }}
                     >
                       <span

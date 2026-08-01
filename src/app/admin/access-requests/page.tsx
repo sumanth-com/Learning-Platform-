@@ -44,7 +44,7 @@ export default async function AdminAccessRequestsPage() {
     <div>
       <AdminPageHeader
         title="Access Requests"
-        description={`${pending} pending · Approve to create auth, send invite email, and log activity.`}
+        description={`${pending} pending · Approve to create the account, send the invite email, and track activity.`}
       />
       <AccessRequestsTable items={(data ?? []) as SeatRequestRow[]} />
     </div>

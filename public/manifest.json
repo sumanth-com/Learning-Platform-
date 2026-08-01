@@ -2,10 +2,12 @@
   "name": "Suprabase",
   "short_name": "Suprabase",
   "description": "Full Stack and AI developer path with structured curriculum, browser practice, AI mentoring, and verifiable certifications.",
-  "start_url": "/",
+  "start_url": "/public",
   "display": "standalone",
   "background_color": "#18181b",
   "theme_color": "#18181b",
+  "lang": "en",
+  "categories": ["education", "productivity"],
   "icons": [
     {
       "src": "/icons/icon-192.png",

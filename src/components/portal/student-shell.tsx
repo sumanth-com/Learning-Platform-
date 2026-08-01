@@ -8,6 +8,7 @@ import {
   usePortalShell,
 } from "@/components/portal/portal-shell-context";
 import { PortalChromeProvider, usePortalChrome } from "@/components/portal/portal-chrome";
+import { PortalRuntimeProviders } from "@/components/portal/portal-runtime-providers";
 import { StudentSidebar } from "@/components/portal/student-sidebar";
 import { StudentHeader } from "@/components/portal/student-header";
 import { ContinueOnDesktop } from "@/components/portal/continue-on-desktop";
@@ -33,6 +34,7 @@ export function StudentShell(props: StudentShellProps) {
     <QueryClientProvider client={queryClient}>
       <PortalShellProvider>
         <PortalChromeProvider>
+          <PortalRuntimeProviders />
           <StudentShellInner {...props} />
         </PortalChromeProvider>
       </PortalShellProvider>

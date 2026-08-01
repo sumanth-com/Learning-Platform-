@@ -1,18 +1,26 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/site";
 
+/**
+ * Crawl policy: index marketing + invite entry + public credential verify.
+ * Block student portal, admin, APIs, and sensitive auth flows.
+ */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/public", "/reserve-seat", "/login", "/verify/"],
+        allow: "/",
         disallow: [
           "/api/",
           "/admin",
+          "/admin/",
           "/dashboard",
+          "/dashboard/",
           "/profile",
+          "/profile/",
           "/settings",
+          "/settings/",
           "/notifications",
           "/notes",
           "/ai-mentor",
@@ -20,11 +28,51 @@ export default function robots(): MetadataRoute.Robots {
           "/assignments",
           "/practice",
           "/certifications",
+          "/certifications/",
           "/roadmap",
+          "/roadmap/",
           "/module/",
           "/challenge/",
+          "/learn/",
+          "/lesson/",
+          "/interview",
+          "/resources",
+          "/community",
+          "/journey",
+          "/help",
+          "/live",
+          "/ai-skills",
+          "/communication",
           "/reset-password",
           "/verify-email",
+          "/forgot-password",
+          "/auth/",
+          "/signup",
+          "/forbidden",
+        ],
+      },
+      {
+        userAgent: "GPTBot",
+        allow: "/",
+        disallow: [
+          "/api/",
+          "/admin",
+          "/dashboard",
+          "/auth/",
+          "/profile",
+          "/settings",
+        ],
+      },
+      {
+        userAgent: "Google-Extended",
+        allow: "/",
+        disallow: [
+          "/api/",
+          "/admin",
+          "/dashboard",
+          "/auth/",
+          "/profile",
+          "/settings",
         ],
       },
     ],

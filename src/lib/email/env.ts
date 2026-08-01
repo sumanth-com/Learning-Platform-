@@ -41,6 +41,7 @@ export function getBrand() {
     name: "Suprabase",
     appUrl,
     supportEmail: getEmailEnv().support,
-    logoUrl: `${appUrl}/icons/icon-192.png`,
+    /** Prefer 512 for sharper rendering in email clients. */
+    logoUrl: `${appUrl}/icons/icon-512.png`,
   } as const;
 }

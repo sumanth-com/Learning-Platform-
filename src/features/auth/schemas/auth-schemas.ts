@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { isStrongPassword } from "@/lib/auth/password-strength";
+import { getPhoneCountry } from "@/lib/phone-countries";
 
 const emailSchema = z
   .string()
@@ -39,40 +40,41 @@ export const signupSchema = z
     path: ["confirmPassword"],
   });
 
-export const seatRequestSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Name must be at least 2 characters")
-    .max(80, "Name must be at most 80 characters"),
-  email: emailSchema,
-  phone: z
-    .string()
-    .trim()
-    .min(7, "Enter a valid phone number")
-    .max(20, "Phone number is too long"),
-  country: z
-    .string()
-    .trim()
-    .min(2, "Country is required")
-    .max(80, "Country name is too long"),
-  applicantStatus: z.enum(
-    ["student", "working_professional", "career_switcher"],
-    { message: "Select your current status" }
-  ),
-  collegeName: z
-    .string()
-    .trim()
-    .max(120, "College name is too long")
-    .optional()
-    .or(z.literal("")),
-  message: z
-    .string()
-    .trim()
-    .max(800, "Message must be at most 800 characters")
-    .optional()
-    .or(z.literal("")),
-});
+export const seatRequestSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(2, "Name must be at least 2 characters")
+      .max(80, "Name must be at most 80 characters"),
+    email: emailSchema,
+    countryCode: z
+      .string()
+      .trim()
+      .min(2, "Select a country code"),
+    phone: z
+      .string()
+      .trim()
+      .regex(/^\d+$/, "Phone number must contain digits only"),
+  })
+  .superRefine((data, ctx) => {
+    const country = getPhoneCountry(data.countryCode);
+    if (!country) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["countryCode"],
+        message: "Select a valid country code",
+      });
+      return;
+    }
+    if (data.phone.length !== country.digits) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["phone"],
+        message: `Enter a ${country.digits}-digit number for ${country.name}`,
+      });
+    }
+  });
 
 export const createAccountSchema = z
   .object({

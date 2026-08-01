@@ -1,6 +1,15 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Access Denied",
+  description: "This area is restricted. Return to your dashboard or sign in.",
+  path: "/forbidden",
+  noIndex: true,
+});
 
 export default function ForbiddenPage() {
   return (
@@ -12,7 +21,6 @@ export default function ForbiddenPage() {
       <p className="mt-3 max-w-md text-sm text-zinc-500">
         This area is restricted to the Super Admin. Students should use the
         learning dashboard.
-        cannot access the Admin CMS.
       </p>
       <Button asChild className="mt-8">
         <Link href={AUTH_ROUTES.dashboard}>Back to dashboard</Link>

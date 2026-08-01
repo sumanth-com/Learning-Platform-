@@ -127,7 +127,7 @@ export function LandingTechnologies() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={tech.src}
-                  alt=""
+                  alt={`${tech.name} logo`}
                   width={32}
                   height={32}
                   draggable={false}

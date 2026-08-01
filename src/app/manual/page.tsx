@@ -15,13 +15,20 @@ import {
 } from "@/components/site/site-page-shell";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { SITE_ROUTES } from "@/lib/site-routes";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Manual",
-  description: `How to use ${SITE.name} — features, workflows, and getting started.`,
-  alternates: { canonical: absoluteUrl(SITE_ROUTES.manual) },
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Manual — How to Use the Learning Platform",
+  description: `How to use ${SITE.name}: learning paths, browser practice, AI mentor, projects, and developer certifications—step-by-step workflows.`,
+  path: SITE_ROUTES.manual,
+  keywords: [
+    "programming learning platform",
+    "developer roadmap",
+    "AI mentor",
+    "coding practice",
+  ],
+});
 
 const FEATURES = [
   {

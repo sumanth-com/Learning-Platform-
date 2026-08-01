@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalDocumentPage } from "@/components/site/legal-document-page";
 import { SITE_ROUTES } from "@/lib/site-routes";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { SITE } from "@/lib/site";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Terms of Service",
-  description: `Terms of Service for ${SITE.name}.`,
-  alternates: { canonical: absoluteUrl(SITE_ROUTES.terms) },
-};
+  description: `Terms of Service for ${SITE.name}. Rules for accounts, invite-only access, certifications, and acceptable use of the platform.`,
+  path: SITE_ROUTES.terms,
+  keywords: ["terms of service", "terms of use", SITE.name],
+});
 
 export default function TermsPage() {
   return (

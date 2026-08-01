@@ -2,45 +2,38 @@ import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/lib/site";
 import { SITE_ROUTES } from "@/lib/site-routes";
 
-/** Only publicly reachable marketing and auth entry points belong in the index. */
+/** Public marketing, legal, and invite entry points only. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
-  const marketing = [
-    SITE_ROUTES.home,
-    SITE_ROUTES.mentor,
-    SITE_ROUTES.platform,
-    SITE_ROUTES.certifications,
-    SITE_ROUTES.stack,
-    SITE_ROUTES.faq,
-    SITE_ROUTES.journey,
-    SITE_ROUTES.about,
-    SITE_ROUTES.manual,
-    SITE_ROUTES.contact,
-    SITE_ROUTES.terms,
-    SITE_ROUTES.privacy,
+  const entries: Array<{
+    path: string;
+    changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+    priority: number;
+  }> = [
+    { path: SITE_ROUTES.home, changeFrequency: "weekly", priority: 1 },
+    { path: SITE_ROUTES.platform, changeFrequency: "monthly", priority: 0.9 },
+    { path: SITE_ROUTES.mentor, changeFrequency: "monthly", priority: 0.9 },
+    {
+      path: SITE_ROUTES.certifications,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    { path: SITE_ROUTES.stack, changeFrequency: "monthly", priority: 0.8 },
+    { path: SITE_ROUTES.journey, changeFrequency: "monthly", priority: 0.8 },
+    { path: SITE_ROUTES.faq, changeFrequency: "monthly", priority: 0.7 },
+    { path: SITE_ROUTES.about, changeFrequency: "monthly", priority: 0.7 },
+    { path: SITE_ROUTES.contact, changeFrequency: "monthly", priority: 0.6 },
+    { path: SITE_ROUTES.manual, changeFrequency: "monthly", priority: 0.5 },
+    { path: "/reserve-seat", changeFrequency: "weekly", priority: 0.85 },
+    { path: SITE_ROUTES.terms, changeFrequency: "yearly", priority: 0.3 },
+    { path: SITE_ROUTES.privacy, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  return [
-    ...marketing.map((path, index) => ({
-      url: absoluteUrl(path),
-      lastModified,
-      changeFrequency: (index === 0 ? "weekly" : "monthly") as
-        | "weekly"
-        | "monthly",
-      priority: index === 0 ? 1 : path === SITE_ROUTES.terms || path === SITE_ROUTES.privacy ? 0.3 : 0.6,
-    })),
-    {
-      url: absoluteUrl("/reserve-seat"),
-      lastModified,
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-    {
-      url: absoluteUrl("/login"),
-      lastModified,
-      changeFrequency: "monthly" as const,
-      priority: 0.5,
-    },
-  ];
+  return entries.map((entry) => ({
+    url: absoluteUrl(entry.path),
+    lastModified,
+    changeFrequency: entry.changeFrequency,
+    priority: entry.priority,
+  }));
 }
