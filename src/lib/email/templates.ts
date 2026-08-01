@@ -98,20 +98,17 @@ export function seatApprovedEmailHtml(
 ) {
   const brand = getBrand();
   const hours = props.expiresInHours ?? 24;
-  const support = brand.supportEmail;
   return renderEmailLayout({
     preview: `Your seat is ready on ${brand.name} — set your password and start learning`,
     title: `You're in — welcome to ${brand.name}`,
     firstName: nameOf(props),
     bodyHtml: `
-      <p style="margin:0 0 14px;text-align:center;">Great news — your access request has been approved.</p>
-      <p style="margin:0;text-align:center;">Click the button below to set your password and open your learning portal. The link works once and expires in ${hours} hours.</p>
+      <p style="margin:0;text-align:center;">Your access request has been approved. Set your password to open the learning portal.</p>
     `,
     ctaLabel: "Set password & activate",
     ctaUrl: props.activateUrl,
     footerNote: `
-      <p style="margin:0 0 10px;text-align:center;">After activating, you can sign in anytime with your email and new password.</p>
-      <p style="margin:0;text-align:center;">Need help? <a href="mailto:${support}" style="color:#d83a32;text-decoration:none;">${support}</a></p>
+      <p style="margin:0;text-align:center;">This link works once and expires in ${hours} hours.</p>
     `,
   });
 }

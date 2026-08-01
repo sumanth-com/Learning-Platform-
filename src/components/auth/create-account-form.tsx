@@ -44,12 +44,13 @@ export function CreateAccountForm() {
       fullName: "",
       password: "",
       confirmPassword: "",
-      acceptTerms: false,
+      acceptTerms: true,
     },
   });
 
   useEffect(() => {
     setValue("token", token);
+    setValue("acceptTerms", true);
   }, [token, setValue]);
 
   useEffect(() => {
@@ -77,7 +78,10 @@ export function CreateAccountForm() {
 
   const onSubmit = handleSubmit((values) => {
     startTransition(async () => {
-      const result = await completeInviteAccountAction(values);
+      const result = await completeInviteAccountAction({
+        ...values,
+        acceptTerms: true,
+      });
       if (!result.success) {
         toast.error(result.error);
         return;
@@ -117,7 +121,7 @@ export function CreateAccountForm() {
   if (previewError || !preview) {
     return (
       <div className="space-y-3 text-center">
-        <p className="text-[14px] text-white/70">
+        <p className="text-[14px] text-[#4b5160]">
           {previewError ?? "Invalid invitation link."}
         </p>
         <Button
@@ -132,16 +136,19 @@ export function CreateAccountForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-2.5" noValidate>
+    <form onSubmit={onSubmit} className="space-y-3" noValidate>
       <input type="hidden" {...register("token")} />
-      <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3.5 py-2.5 text-left">
-        <p className="text-[11px] uppercase tracking-[0.12em] text-white/35">
+      <input type="hidden" {...register("acceptTerms")} />
+
+      <div className="rounded-xl bg-[#f0ece9] px-3.5 py-2.5 text-left">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-[#8b93a3]">
           Invited email
         </p>
-        <p className="mt-0.5 text-[13.5px] font-medium text-white/80">
+        <p className="mt-0.5 text-[13.5px] font-medium text-[#14151a]">
           {preview.email}
         </p>
       </div>
+
       <AuthFormField
         label="Full name"
         autoComplete="name"
@@ -165,37 +172,7 @@ export function CreateAccountForm() {
         error={errors.confirmPassword}
         {...register("confirmPassword")}
       />
-      <label className="flex items-start gap-2.5 pt-1 text-left text-[12.5px] text-white/55">
-        <input
-          type="checkbox"
-          className="mt-0.5 h-4 w-4 rounded border-white/20 bg-transparent"
-          {...register("acceptTerms")}
-        />
-        <span>
-          I accept the{" "}
-          <Link
-            href={SITE_ROUTES.terms}
-            target="_blank"
-            className="text-[#f3b7ac] underline underline-offset-2 hover:text-white"
-          >
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link
-            href={SITE_ROUTES.privacy}
-            target="_blank"
-            className="text-[#f3b7ac] underline underline-offset-2 hover:text-white"
-          >
-            Privacy Policy
-          </Link>
-          .
-          {errors.acceptTerms ? (
-            <span className="mt-1 block text-[12px] text-[#f3aaa0]">
-              {errors.acceptTerms.message}
-            </span>
-          ) : null}
-        </span>
-      </label>
+
       <Button
         type="submit"
         className={`w-full ${authPrimaryBtnClass}`}
@@ -210,6 +187,26 @@ export function CreateAccountForm() {
           "Set password & continue"
         )}
       </Button>
+
+      <p className="pt-0.5 text-center text-[11px] leading-relaxed text-[#8b93a3]">
+        By continuing, you agree to our{" "}
+        <Link
+          href={SITE_ROUTES.terms}
+          target="_blank"
+          className="font-medium text-[#5f3435] underline underline-offset-2 hover:text-[#3f2223]"
+        >
+          Terms
+        </Link>{" "}
+        and{" "}
+        <Link
+          href={SITE_ROUTES.privacy}
+          target="_blank"
+          className="font-medium text-[#5f3435] underline underline-offset-2 hover:text-[#3f2223]"
+        >
+          Privacy Policy
+        </Link>
+        .
+      </p>
     </form>
   );
 }

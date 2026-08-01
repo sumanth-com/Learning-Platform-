@@ -21,6 +21,7 @@ export type EmailLayoutProps = {
 /**
  * Centered transactional email chrome — logo, title, body, CTA.
  * Table-based for Outlook / Gmail / Apple Mail compatibility.
+ * No card border — soft shadow only for a clean look.
  */
 export function renderEmailLayout({
   preview,
@@ -46,10 +47,10 @@ export function renderEmailLayout({
     safeCta && safeUrl
       ? `
       <tr>
-        <td align="center" style="padding:32px 0 8px;">
+        <td align="center" style="padding:28px 0 8px;">
           <table role="presentation" cellspacing="0" cellpadding="0" border="0">
             <tr>
-              <td align="center" bgcolor="#d83a32" style="border-radius:12px;background:#d83a32;">
+              <td align="center" bgcolor="#5f3435" style="border-radius:12px;background:#5f3435;">
                 <a href="${safeUrl}"
                    target="_blank"
                    style="display:inline-block;padding:15px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;line-height:1;color:#ffffff;text-decoration:none;border-radius:12px;">
@@ -61,15 +62,15 @@ export function renderEmailLayout({
         </td>
       </tr>
       <tr>
-        <td align="center" style="padding:16px 8px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.65;color:#71717a;">
-          Or copy this link into your browser:<br/>
-          <a href="${safeUrl}" style="color:#d83a32;word-break:break-all;text-decoration:underline;">${safeUrl}</a>
+        <td align="center" style="padding:14px 8px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.65;color:#71717a;">
+          Or paste this link in your browser:<br/>
+          <a href="${safeUrl}" style="color:#5f3435;word-break:break-all;text-decoration:underline;">${safeUrl}</a>
         </td>
       </tr>`
       : "";
 
   const note = footerNote
-    ? `<tr><td align="center" style="padding:28px 12px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.65;color:#a1a1aa;">${footerNote}</td></tr>`
+    ? `<tr><td align="center" style="padding:24px 12px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.65;color:#a1a1aa;">${footerNote}</td></tr>`
     : "";
 
   return `<!DOCTYPE html>
@@ -88,11 +89,11 @@ export function renderEmailLayout({
   <style type="text/css">
     :root { color-scheme: light dark; }
     body { margin: 0 !important; padding: 0 !important; }
-    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
-    a { color: #d83a32; }
+    img { border: 0 !important; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    a { color: #5f3435; }
     @media (prefers-color-scheme: dark) {
       .email-bg { background:#0c0c0e !important; }
-      .email-card { background:#18181b !important; border-color:#27272a !important; }
+      .email-card { background:#18181b !important; }
       .email-title { color:#fafafa !important; }
       .email-text { color:#d4d4d8 !important; }
       .email-muted { color:#a1a1aa !important; }
@@ -108,17 +109,18 @@ export function renderEmailLayout({
     <tr>
       <td align="center" style="padding:40px 16px;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;width:100%;">
-          <!-- Logo + brand (centered) -->
+          <!-- Logo + brand -->
           <tr>
-            <td align="center" style="padding:0 0 28px;">
+            <td align="center" style="padding:0 0 24px;">
               <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td align="center">
-                    <img src="${safeLogoUrl}" width="56" height="56" alt="${safeBrand}" style="display:block;margin:0 auto;width:56px;height:56px;border:0;border-radius:14px;" />
+                  <td align="center" style="line-height:0;">
+                    <img src="${safeLogoUrl}" width="56" height="56" alt="${safeBrand}"
+                         style="display:block;margin:0 auto;width:56px;height:56px;border:0;outline:none;text-decoration:none;border-radius:14px;" />
                   </td>
                 </tr>
                 <tr>
-                  <td align="center" style="padding-top:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.02em;color:#18181b;" class="brand-name">
+                  <td align="center" style="padding-top:12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.02em;color:#18181b;" class="brand-name">
                     ${safeBrand}
                   </td>
                 </tr>
@@ -126,12 +128,12 @@ export function renderEmailLayout({
             </td>
           </tr>
 
-          <!-- Card -->
+          <!-- Card (no border stroke) -->
           <tr>
-            <td align="center" bgcolor="#ffffff" style="background:#ffffff;border:1px solid #e4e4e7;border-radius:18px;padding:40px 36px;" class="email-card">
+            <td align="center" bgcolor="#ffffff" style="background:#ffffff;border:0;border-radius:18px;padding:36px 32px;box-shadow:0 12px 40px rgba(24,24,27,0.08);" class="email-card">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td align="center" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.03em;line-height:1.25;color:#18181b;padding:0 0 18px;" class="email-title">
+                  <td align="center" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.03em;line-height:1.3;color:#18181b;padding:0 0 16px;" class="email-title">
                     ${safeTitle}
                   </td>
                 </tr>
@@ -141,7 +143,7 @@ export function renderEmailLayout({
                   </td>
                 </tr>
                 <tr>
-                  <td align="center" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:#3f3f46;padding-top:14px;" class="email-text">
+                  <td align="center" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:#3f3f46;padding-top:12px;" class="email-text">
                     ${bodyHtml}
                   </td>
                 </tr>
@@ -155,7 +157,7 @@ export function renderEmailLayout({
           <tr>
             <td align="center" style="padding:28px 12px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.75;color:#71717a;" class="email-muted">
               <strong style="color:#52525b;">${safeBrand}</strong><br/>
-              Need help? <a href="mailto:${safeSupport}" style="color:#d83a32;text-decoration:none;">${safeSupport}</a><br/>
+              Need help? <a href="mailto:${safeSupport}" style="color:#5f3435;text-decoration:none;">${safeSupport}</a><br/>
               &copy; ${year} ${safeBrand}. All rights reserved.
             </td>
           </tr>
@@ -167,9 +169,14 @@ export function renderEmailLayout({
 </html>`;
 }
 
+const HONORIFIC =
+  /^(mr|mrs|ms|miss|dr|prof|sir|madam|mx)\.?$/i;
+
 export function firstNameFrom(fullName?: string | null, email?: string | null) {
-  const fromName = fullName?.trim().split(/\s+/)[0];
-  if (fromName) return fromName;
+  const parts = (fullName?.trim() || "").split(/\s+/).filter(Boolean);
+  const firstReal = parts.find((part) => !HONORIFIC.test(part));
+  if (firstReal) return firstReal;
+
   const local = email?.split("@")[0]?.trim();
   if (local) {
     const cleaned = local.replace(/[._-]+/g, " ").split(/\s+/)[0];

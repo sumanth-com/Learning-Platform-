@@ -40,7 +40,11 @@ export function getBrand() {
     name: "Suprabase",
     appUrl,
     supportEmail: getEmailEnv().support,
-    /** Prefer 512 for sharper rendering in email clients. */
+    /**
+     * Absolute production URL — email clients cannot load localhost icons.
+     * Use 512 PNG served from the live app origin.
+     */
     logoUrl: `${appUrl}/icons/icon-512.png`,
   } as const;
 }
+
