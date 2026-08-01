@@ -5,6 +5,7 @@
 export type AuthAuditEvent =
   | "login_failed"
   | "login_success"
+  | "logout"
   | "signup"
   | "signup_failed"
   | "signup_blocked"
@@ -26,7 +27,9 @@ export type AuthAuditEvent =
   | "seat_contacted"
   | "seat_deleted"
   | "invite_account_activated"
-  | "invite_account_failed";
+  | "invite_account_failed"
+  | "session_restore"
+  | "middleware_redirect";
 
 export async function logAuthEvent(
   event: AuthAuditEvent,

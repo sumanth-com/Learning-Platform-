@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ChevronDown,
   CircleHelp,
@@ -12,7 +13,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { logoutAction } from "@/features/auth/actions/auth-actions";
-import { AUTH_MESSAGES } from "@/features/auth/constants";
+import { AUTH_MESSAGES, AUTH_ROUTES } from "@/features/auth/constants";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { useTheme } from "@/components/theme/theme-provider";
 import { PORTAL_ROUTES } from "@/features/portal/types";
@@ -31,6 +32,7 @@ export function ProfileMenu({
   helpHref = PORTAL_ROUTES.help,
   helpLabel = "Help",
 }: ProfileMenuProps) {
+  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -59,8 +61,14 @@ export function ProfileMenu({
   const handleLogout = () => {
     setConfirmLogout(false);
     startTransition(async () => {
-      toast.success(AUTH_MESSAGES.logoutSuccess);
-      await logoutAction();
+      const result = await logoutAction();
+      if (!result.success) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success(result.message ?? AUTH_MESSAGES.logoutSuccess);
+      router.replace(result.data?.redirectTo ?? AUTH_ROUTES.login);
+      router.refresh();
     });
   };
 

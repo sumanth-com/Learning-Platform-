@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getAppUrl } from "@/lib/supabase/env";
@@ -25,6 +24,7 @@ import {
 } from "@/lib/auth/links";
 import { AUTH_RATE_LIMITS, checkRateLimit } from "@/lib/auth/rate-limit";
 import { logAuthEvent } from "@/lib/auth/audit";
+import { safeInternalPath } from "@/lib/auth/session-response";
 
 function mapAuthError(
   error: { message: string; code?: string; status?: number } | null
@@ -67,9 +67,32 @@ function mapAuthError(
   return "Something went wrong. Please try again.";
 }
 
+function resolvePostLoginPath(
+  role: string | undefined,
+  nextPath: string | null | undefined
+): string {
+  const next = safeInternalPath(nextPath ?? null);
+  if (role === "super_admin") {
+    if (next?.startsWith("/admin")) return next;
+    return AUTH_ROUTES.admin;
+  }
+  if (next) return next;
+  return AUTH_ROUTES.dashboard;
+}
+
+/**
+ * Password sign-in.
+ *
+ * IMPORTANT: Do NOT call redirect() after signInWithPassword.
+ * On Vercel, Set-Cookie from a Server Action often does not attach to the
+ * NEXT_REDIRECT response, so the next document request has no session and
+ * proxy sends the user back to /login. Return the destination and let the
+ * client navigate after cookies are committed on the action response.
+ */
 export async function loginAction(
-  input: unknown
-): Promise<AuthActionResult> {
+  input: unknown,
+  options?: { next?: string | null }
+): Promise<AuthActionResult<{ redirectTo: string }>> {
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) {
     return {
@@ -89,7 +112,7 @@ export async function loginAction(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data: signInData, error } = await supabase.auth.signInWithPassword({
     email,
     password: parsed.data.password,
   });
@@ -102,25 +125,33 @@ export async function loginAction(
     return { success: false, error: mapAuthError(error) };
   }
 
-  await logAuthEvent("login_success", { email });
-  revalidatePath("/", "layout");
-
-  // Super admin lands on admin; students on learning dashboard
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = signInData.user;
+  let role: string | undefined;
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
       .maybeSingle();
-    if ((profile as { role?: string } | null)?.role === "super_admin") {
-      redirect(AUTH_ROUTES.admin);
-    }
+    role = (profile as { role?: string } | null)?.role;
   }
 
-  redirect(AUTH_ROUTES.dashboard);
+  const redirectTo = resolvePostLoginPath(role, options?.next);
+
+  await logAuthEvent("login_success", {
+    email,
+    userId: user?.id ?? null,
+    role: role ?? null,
+    redirectTo,
+    hasSession: Boolean(signInData.session),
+  });
+  revalidatePath("/", "layout");
+
+  return {
+    success: true,
+    message: AUTH_MESSAGES.loginSuccess,
+    data: { redirectTo },
+  };
 }
 
 export async function signupAction(
@@ -374,11 +405,27 @@ export async function changePasswordAction(
   };
 }
 
-export async function logoutAction(): Promise<void> {
+/**
+ * Sign out and clear session cookies on the action response.
+ * Client must navigate after this returns so cleared cookies are applied.
+ */
+export async function logoutAction(): Promise<
+  AuthActionResult<{ redirectTo: string }>
+> {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   await supabase.auth.signOut();
+  await logAuthEvent("logout", {
+    userId: user?.id ?? null,
+  });
   revalidatePath("/", "layout");
-  redirect(AUTH_ROUTES.login);
+  return {
+    success: true,
+    message: AUTH_MESSAGES.logoutSuccess,
+    data: { redirectTo: AUTH_ROUTES.login },
+  };
 }
 
 export async function getCurrentUser(): Promise<AuthSessionUser | null> {

@@ -1,11 +1,13 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 import type { EmailOtpType } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/server";
+import type { Database } from "@/types/database";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { sendWelcomeEmail } from "@/lib/email/send";
 import { firstNameFrom } from "@/lib/email/layout";
 import { logAuthEvent } from "@/lib/auth/audit";
+import { getSupabaseEnv } from "@/lib/supabase/env";
+import { safeInternalPath } from "@/lib/auth/session-response";
 
 const OTP_TYPES = new Set<EmailOtpType>([
   "signup",
@@ -17,47 +19,19 @@ const OTP_TYPES = new Set<EmailOtpType>([
 ]);
 
 function resolveRedirectPath(next: string | null) {
-  if (next && next.startsWith("/")) return next;
-  return AUTH_ROUTES.dashboard;
+  return safeInternalPath(next) ?? AUTH_ROUTES.dashboard;
 }
 
-async function maybeSendWelcome(
-  redirectPath: string,
-  supabase: Awaited<ReturnType<typeof createClient>>
-) {
-  if (redirectPath === AUTH_ROUTES.resetPassword) return;
-
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user?.email) return;
-
-    const fullName =
-      (user.user_metadata?.full_name as string | undefined) ?? "";
-    const createdAt = user.created_at ? new Date(user.created_at).getTime() : 0;
-    const isFresh = Date.now() - createdAt < 1000 * 60 * 60 * 24;
-    if (!isFresh) return;
-
-    await sendWelcomeEmail({
-      to: user.email,
-      fullName,
-      firstName: firstNameFrom(fullName, user.email),
-    });
-    await logAuthEvent("email_sent", {
-      category: "post_verify_welcome",
-      email: user.email,
-    });
-  } catch {
-    /* non-blocking */
-  }
-}
+type CookieToSet = {
+  name: string;
+  value: string;
+  options?: Parameters<NextResponse["cookies"]["set"]>[2];
+};
 
 /**
  * Handles email verification + password-recovery redirects.
- * Supports:
- * - PKCE `?code=`
- * - Custom Resend links `?token_hash=&type=` (verifyOtp)
+ * Session cookies are written onto the redirect response itself so they
+ * survive the 302 on Vercel (cookies().set + separate redirect is unreliable).
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = request.nextUrl;
@@ -67,7 +41,23 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get("next");
   const redirectPath = resolveRedirectPath(next);
 
-  const supabase = await createClient();
+  const cookieJar: CookieToSet[] = [];
+  const { url, anonKey } = getSupabaseEnv();
+
+  const supabase = createServerClient<Database>(url, anonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          cookieJar.push({ name, value, options });
+          request.cookies.set(name, value);
+        });
+      },
+    },
+  });
+
   let verified = false;
   let verifyError: string | null = null;
 
@@ -108,7 +98,16 @@ export async function GET(request: NextRequest) {
 
   if (verified) {
     await maybeSendWelcome(redirectPath, supabase);
-    return NextResponse.redirect(`${origin}${redirectPath}`);
+    await logAuthEvent("login_success", {
+      action: "auth_callback",
+      redirectPath,
+      cookieCount: cookieJar.length,
+    });
+    const response = NextResponse.redirect(`${origin}${redirectPath}`);
+    cookieJar.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options);
+    });
+    return response;
   }
 
   const loginUrl = new URL(AUTH_ROUTES.login, origin);
@@ -116,5 +115,41 @@ export async function GET(request: NextRequest) {
   if (verifyError) {
     loginUrl.searchParams.set("reason", verifyError.slice(0, 80));
   }
-  return NextResponse.redirect(loginUrl);
+  const fail = NextResponse.redirect(loginUrl);
+  cookieJar.forEach(({ name, value, options }) => {
+    fail.cookies.set(name, value, options);
+  });
+  return fail;
+}
+
+async function maybeSendWelcome(
+  redirectPath: string,
+  supabase: ReturnType<typeof createServerClient<Database>>
+) {
+  if (redirectPath === AUTH_ROUTES.resetPassword) return;
+
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user?.email) return;
+
+    const fullName =
+      (user.user_metadata?.full_name as string | undefined) ?? "";
+    const createdAt = user.created_at ? new Date(user.created_at).getTime() : 0;
+    const isFresh = Date.now() - createdAt < 1000 * 60 * 60 * 24;
+    if (!isFresh) return;
+
+    await sendWelcomeEmail({
+      to: user.email,
+      fullName,
+      firstName: firstNameFrom(fullName, user.email),
+    });
+    await logAuthEvent("email_sent", {
+      category: "post_verify_welcome",
+      email: user.email,
+    });
+  } catch {
+    /* non-blocking */
+  }
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { logoutAction } from "@/features/auth/actions/auth-actions";
-import { AUTH_MESSAGES } from "@/features/auth/constants";
+import { AUTH_MESSAGES, AUTH_ROUTES } from "@/features/auth/constants";
 import type { VariantProps } from "class-variance-authority";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -23,6 +24,7 @@ export function LogoutButton({
   className,
   ...props
 }: LogoutButtonProps) {
+  const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -55,8 +57,14 @@ export function LogoutButton({
         onConfirm={() => {
           setConfirmOpen(false);
           startTransition(async () => {
-            toast.success(AUTH_MESSAGES.logoutSuccess);
-            await logoutAction();
+            const result = await logoutAction();
+            if (!result.success) {
+              toast.error(result.error);
+              return;
+            }
+            toast.success(result.message ?? AUTH_MESSAGES.logoutSuccess);
+            router.replace(result.data?.redirectTo ?? AUTH_ROUTES.login);
+            router.refresh();
           });
         }}
         onCancel={() => setConfirmOpen(false)}

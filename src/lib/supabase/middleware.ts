@@ -37,7 +37,26 @@ export async function updateSession(request: NextRequest) {
 
     const {
       data: { user },
+      error,
     } = await supabase.auth.getUser();
+
+    if (error) {
+      console.info(
+        "[auth-middleware]",
+        JSON.stringify({
+          reason: "get_user_failed",
+          at: new Date().toISOString(),
+          message: error.message,
+          hasCookie: request.cookies
+            .getAll()
+            .some(
+              (c) =>
+                c.name.includes("-auth-token") ||
+                (c.name.startsWith("sb-") && c.name.includes("auth"))
+            ),
+        })
+      );
+    }
 
     return { user, supabaseResponse };
   } catch (error) {

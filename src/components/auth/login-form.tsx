@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
 import { AUTH_ROUTES } from "@/features/auth/constants";
 
 export function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [isResending, startResend] = useTransition();
@@ -53,8 +54,11 @@ export function LoginForm() {
 
   const onSubmit = handleSubmit((values) => {
     startTransition(async () => {
-      const result = await loginAction(values);
-      if (result && !result.success) {
+      const result = await loginAction(values, {
+        next: searchParams.get("next"),
+      });
+
+      if (!result.success) {
         toast.error(result.error);
         const msg = result.error.toLowerCase();
         if (
@@ -64,7 +68,14 @@ export function LoginForm() {
         ) {
           setShowResend(true);
         }
+        return;
       }
+
+      // Cookies are on the Server Action response. Navigate only after that
+      // settles, then refresh the RSC tree so server components see the session.
+      const redirectTo = result.data?.redirectTo ?? AUTH_ROUTES.dashboard;
+      router.replace(redirectTo);
+      router.refresh();
     });
   });
 

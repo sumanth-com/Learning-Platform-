@@ -90,7 +90,7 @@ export function CreateAccountForm() {
         typeof result.data.redirectTo === "string"
           ? result.data.redirectTo
           : AUTH_ROUTES.login;
-      router.push(redirectTo);
+      router.replace(redirectTo);
       router.refresh();
     });
   });

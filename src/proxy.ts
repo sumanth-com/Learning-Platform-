@@ -9,6 +9,10 @@ import { CURRICULUM_PROTECTED_ROUTES } from "@/features/curriculum/types";
 import { ASSIGNMENT_PROTECTED_ROUTES } from "@/features/assignments/types";
 import { ADMIN_PROTECTED_ROUTES } from "@/features/admin/types";
 import { SITE_ROUTES } from "@/lib/site-routes";
+import {
+  hasSupabaseAuthCookie,
+  redirectWithSessionCookies,
+} from "@/lib/auth/session-response";
 
 function isPathMatch(pathname: string, routes: readonly string[]) {
   return routes.some(
@@ -47,31 +51,35 @@ function isPublicFastPath(pathname: string) {
   return false;
 }
 
-function hasSupabaseAuthCookie(request: NextRequest) {
-  return request.cookies
-    .getAll()
-    .some(
-      (cookie) =>
-        cookie.name.includes("-auth-token") ||
-        (cookie.name.startsWith("sb-") && cookie.name.includes("auth"))
-    );
+function logProxy(
+  reason: string,
+  meta: Record<string, unknown> = {}
+) {
+  console.info(
+    "[auth-proxy]",
+    JSON.stringify({ reason, at: new Date().toISOString(), ...meta })
+  );
 }
 
 /**
  * Next.js 16 network boundary (formerly middleware.ts).
  * Refreshes the Supabase session and enforces auth + learning route rules.
+ *
+ * CRITICAL: every redirect must preserve cookies from updateSession.
+ * Dropping them causes production-only /login ↔ /dashboard loops.
  */
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const hasCookie = hasSupabaseAuthCookie(request);
 
   try {
     // Fast path: marketing/static without a session cookie — skip Supabase getUser.
-    if (isPublicFastPath(pathname) && !hasSupabaseAuthCookie(request)) {
+    if (isPublicFastPath(pathname) && !hasCookie) {
       return NextResponse.next();
     }
 
     // Root: guests go straight to marketing without a second page-level auth call.
-    if (pathname === "/" && !hasSupabaseAuthCookie(request)) {
+    if (pathname === "/" && !hasCookie) {
       const url = request.nextUrl.clone();
       url.pathname = AUTH_ROUTES.public;
       return NextResponse.redirect(url);
@@ -83,7 +91,12 @@ export async function proxy(request: NextRequest) {
       const url = request.nextUrl.clone();
       url.pathname = user ? AUTH_ROUTES.dashboard : AUTH_ROUTES.public;
       url.search = "";
-      return NextResponse.redirect(url);
+      logProxy(user ? "root_to_dashboard" : "root_to_public", {
+        pathname,
+        hasCookie,
+        userId: user?.id ?? null,
+      });
+      return redirectWithSessionCookies(url, supabaseResponse);
     }
 
     const protectedRoutes = [
@@ -99,19 +112,32 @@ export async function proxy(request: NextRequest) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = AUTH_ROUTES.login;
       loginUrl.searchParams.set("next", pathname);
-      return NextResponse.redirect(loginUrl);
+      logProxy("protected_requires_auth", {
+        pathname,
+        hasCookie,
+        cookieNames: request.cookies
+          .getAll()
+          .map((c) => c.name)
+          .filter((n) => n.includes("sb-") || n.includes("auth")),
+      });
+      return redirectWithSessionCookies(loginUrl, supabaseResponse);
     }
 
     if (isGuestOnly && user) {
       const dashboardUrl = request.nextUrl.clone();
       dashboardUrl.pathname = AUTH_ROUTES.dashboard;
       dashboardUrl.search = "";
-      return NextResponse.redirect(dashboardUrl);
+      logProxy("guest_route_already_authed", {
+        pathname,
+        userId: user.id,
+        to: AUTH_ROUTES.dashboard,
+      });
+      return redirectWithSessionCookies(dashboardUrl, supabaseResponse);
     }
 
     return supabaseResponse;
   } catch (error) {
-    console.error("[proxy] unexpected failure", pathname, error);
+    console.error("[auth-proxy] unexpected failure", pathname, error);
     return NextResponse.next();
   }
 }
