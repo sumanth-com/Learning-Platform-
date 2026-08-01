@@ -21,10 +21,31 @@ import {
 } from "@/features/ai-mentor/actions/mentor-actions";
 import { useMentorChat } from "@/hooks/use-mentor-chat";
 import { useProgressStore } from "@/store/use-progress-store";
+import { AnimatePresence, motion } from "framer-motion";
+import { SquarePen } from "lucide-react";
 import { MentorSidebar } from "@/components/ai-mentor/mentor-sidebar";
 import { MentorChatPane } from "@/components/ai-mentor/mentor-chat-pane";
+import { MentorModelPicker } from "@/components/ai-mentor/mentor-model-picker";
 import { PortalChrome } from "@/components/portal/portal-chrome";
 import { cn } from "@/lib/utils";
+
+/** ChatGPT-style two-line menu icon */
+function MenuIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M4 8h16" />
+      <path d="M4 16h16" />
+    </svg>
+  );
+}
 
 function useLearningContextFromStore(): LearningContext {
   const resume = useProgressStore((s) => s.resumePosition);
@@ -298,32 +319,52 @@ export function MentorWorkspace() {
         data-ai-mentor
         className="relative flex h-full min-h-0 overflow-hidden bg-background"
       >
-        <button
-          type="button"
-          className="absolute left-3 top-3 z-20 rounded-xl border border-border/80 bg-background/95 px-2.5 py-1.5 text-xs font-medium shadow-sm backdrop-blur lg:hidden"
-          onClick={() => setMobileSidebar((v) => !v)}
-          aria-label="Open chats"
-        >
-          Chats
-        </button>
-
-        {mobileSidebar ? (
+        {/* ChatGPT-style mobile chrome: menu + Supra + new chat */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex h-11 items-center gap-0.5 px-1.5 lg:hidden">
           <button
             type="button"
-            aria-label="Close chats"
-            className="absolute inset-0 z-20 bg-black/40 lg:hidden"
-            onClick={() => setMobileSidebar(false)}
-          />
-        ) : null}
+            className={cn(
+              "pointer-events-auto inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+              "text-foreground/90 transition-colors",
+              "hover:bg-muted/80 active:bg-muted",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            )}
+            onClick={() => setMobileSidebar(true)}
+            aria-label="Open chats"
+            aria-expanded={mobileSidebar}
+          >
+            <MenuIcon className="h-5 w-5" />
+          </button>
 
+          <div className="pointer-events-auto min-w-0">
+            <MentorModelPicker variant="title" />
+          </div>
+
+          <div className="flex-1" />
+
+          <button
+            type="button"
+            className={cn(
+              "pointer-events-auto inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+              "text-foreground/90 transition-colors",
+              "hover:bg-muted/80 active:bg-muted",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+              "disabled:opacity-50"
+            )}
+            onClick={newChat}
+            disabled={pending}
+            aria-label="New chat"
+          >
+            <SquarePen className="h-5 w-5" strokeWidth={1.75} />
+          </button>
+        </div>
+
+        {/* Desktop rail */}
         <div
           className={cn(
-            "h-full shrink-0 overflow-hidden bg-background",
+            "hidden h-full shrink-0 overflow-hidden bg-background lg:block",
             "transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-            sidebarCollapsed ? "lg:w-[68px]" : "lg:w-[272px] xl:w-[292px]",
-            "max-lg:absolute max-lg:inset-y-0 max-lg:left-0 max-lg:z-30 max-lg:w-[min(86vw,300px)] max-lg:shadow-2xl",
-            mobileSidebar ? "max-lg:block" : "max-lg:hidden",
-            "lg:block"
+            sidebarCollapsed ? "lg:w-[68px]" : "lg:w-[272px] xl:w-[292px]"
           )}
         >
           <MentorSidebar
@@ -341,6 +382,59 @@ export function MentorWorkspace() {
             }}
           />
         </div>
+
+        {/* Mobile drawer — slides open & closed */}
+        <AnimatePresence>
+          {mobileSidebar ? (
+            <>
+              <motion.button
+                key="mentor-drawer-overlay"
+                type="button"
+                aria-label="Close chats"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-0 z-30 bg-black/45 backdrop-blur-[2px] lg:hidden"
+                onClick={() => setMobileSidebar(false)}
+              />
+              <motion.div
+                key="mentor-drawer-panel"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Chats"
+                initial={{ x: "-105%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-105%" }}
+                transition={{
+                  type: "spring",
+                  stiffness: 380,
+                  damping: 36,
+                  mass: 0.9,
+                }}
+                className="absolute inset-y-0 left-0 z-40 w-[min(88vw,300px)] overflow-hidden bg-background shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] lg:hidden"
+              >
+                <MentorSidebar
+                  conversations={conversations}
+                  activeId={activeId}
+                  search={search}
+                  collapsed={false}
+                  onSearchChange={setSearch}
+                  onSelect={selectConversation}
+                  onNewChat={() => {
+                    newChat();
+                    setMobileSidebar(false);
+                  }}
+                  onCloseMobile={() => setMobileSidebar(false)}
+                  onLocalUpdate={(next) => setConversations(next)}
+                  onRefresh={() => {
+                    void refreshConversations(debouncedSearch || undefined);
+                  }}
+                />
+              </motion.div>
+            </>
+          ) : null}
+        </AnimatePresence>
 
         <div className="min-w-0 flex-1">
           <MentorChatPane
@@ -362,6 +456,7 @@ export function MentorWorkspace() {
               void continueResponse(learningContext);
             }}
             onEnsureConversation={ensureConversation}
+            compactMobileChrome
           />
         </div>
       </div>

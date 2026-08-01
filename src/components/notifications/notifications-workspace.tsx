@@ -324,7 +324,7 @@ export function NotificationsWorkspace({ user }: { user: PortalUser }) {
                         type="button"
                         onClick={() => openMessage(item)}
                         className={cn(
-                          "group flex w-full gap-3 px-4 py-3 text-left transition",
+                          "group flex w-full gap-3 px-4 py-3.5 text-left transition max-md:min-h-[4.25rem] max-md:py-4",
                           active
                             ? "bg-primary/[0.09]"
                             : "hover:bg-muted/40",

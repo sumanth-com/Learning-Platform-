@@ -700,6 +700,7 @@
     #000 90%,
     transparent 100%
   );
+  animation: circuitBreathe 6.5s ease-in-out infinite;
 }
 
 .circuitLeft {
@@ -709,6 +710,7 @@
 .circuitRight {
   right: 0;
   transform: translateY(-50%) scaleX(-1);
+  animation-delay: -3.2s;
 }
 
 .circuitBoard {
@@ -720,6 +722,143 @@
 
 .channel {
   opacity: 0.95;
+}
+
+/* Soft center wash behind hero copy (desktop) */
+.heroAmbient {
+  pointer-events: none;
+  position: absolute;
+  inset: 18% 12% 22%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse 55% 45% at 50% 42%,
+      rgba(229, 107, 104, 0.14),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 40% 35% at 50% 55%,
+      rgba(120, 108, 172, 0.1),
+      transparent 72%
+    );
+  animation: heroAmbientPulse 7s ease-in-out infinite;
+  filter: blur(2px);
+}
+
+/* Mobile Apple-level ambient: soft round washes only — no card chrome */
+.heroWashTop,
+.heroWashBottom,
+.heroWashCore {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .heroWashTop,
+  .heroWashBottom,
+  .heroWashCore {
+    display: block;
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    z-index: 0;
+    border-radius: 50%;
+    transform: translate3d(-50%, 0, 0);
+    will-change: transform, opacity, filter;
+  }
+
+  /* Round coral orb blooming from the top */
+  .heroWashTop {
+    top: -32%;
+    width: min(140vw, 34rem);
+    height: min(140vw, 34rem);
+    background:
+      radial-gradient(
+        circle at 50% 48%,
+        rgba(255, 186, 168, 0.62) 0%,
+        rgba(229, 107, 104, 0.38) 28%,
+        rgba(241, 163, 121, 0.16) 48%,
+        rgba(120, 108, 172, 0.06) 62%,
+        transparent 74%
+      );
+    filter: blur(40px) saturate(1.2);
+    animation: heroWashDriftA 9s ease-in-out infinite;
+  }
+
+  /* Round violet/coral orb blooming from the bottom */
+  .heroWashBottom {
+    bottom: -36%;
+    width: min(150vw, 36rem);
+    height: min(150vw, 36rem);
+    background:
+      radial-gradient(
+        circle at 50% 52%,
+        rgba(140, 120, 200, 0.55) 0%,
+        rgba(229, 107, 104, 0.28) 30%,
+        rgba(241, 163, 121, 0.12) 50%,
+        transparent 72%
+      );
+    filter: blur(44px) saturate(1.15);
+    animation: heroWashDriftB 11s ease-in-out infinite;
+  }
+
+  /* Soft mid light — keeps copy luminous without a card */
+  .heroWashCore {
+    top: 32%;
+    width: min(120vw, 28rem);
+    height: min(70vw, 16rem);
+    background: radial-gradient(
+      ellipse 55% 50% at 50% 50%,
+      rgba(255, 236, 231, 0.16) 0%,
+      rgba(229, 107, 104, 0.18) 40%,
+      transparent 76%
+    );
+    filter: blur(42px);
+    animation: heroWashCorePulse 7s ease-in-out infinite;
+  }
+}
+
+@keyframes heroWashDriftA {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+  40% {
+    opacity: 1;
+    transform: translate3d(-46%, 2.5%, 0) scale(1.1);
+  }
+  70% {
+    opacity: 0.88;
+    transform: translate3d(-54%, 1%, 0) scale(1.04);
+  }
+}
+
+@keyframes heroWashDriftB {
+  0%,
+  100% {
+    opacity: 0.68;
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+  45% {
+    opacity: 1;
+    transform: translate3d(-54%, -3%, 0) scale(1.12);
+  }
+  75% {
+    opacity: 0.82;
+    transform: translate3d(-46%, -1.5%, 0) scale(1.05);
+  }
+}
+
+@keyframes heroWashCorePulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate3d(-50%, 0, 0) scale(0.94);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate3d(-50%, -1%, 0) scale(1.08);
+  }
 }
 
 /* Top-edge shadow — the recessed cut falls away from light. */
@@ -794,6 +933,35 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 12px 36px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(16px);
+  /* Pill size is locked by the text-slot sizer — rotating lines won't stretch it */
+  flex-shrink: 0;
+}
+
+.statusTextSlot {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  text-align: left;
+}
+
+.statusTextSizer,
+.statusTextActive {
+  grid-area: 1 / 1;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.statusTextSizer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.statusTextActive {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .statusPulse {
@@ -813,6 +981,64 @@
   border-radius: inherit;
   border: 1px solid rgba(243, 170, 160, 0.55);
   animation: statusRing 2.2s ease-out infinite;
+}
+
+/* Hero middle stack — fixed vertical rhythm on phones */
+.heroMiddle {
+  isolation: isolate;
+}
+
+.heroSubhead {
+  /* Reserve exactly 3 mobile lines so copy swaps never shift the CTA */
+  min-height: calc(1.45em * 3);
+}
+
+@media (min-width: 640px) {
+  .heroSubhead {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .heroMiddle {
+    max-width: 22rem;
+  }
+
+  .heroMiddle::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    z-index: -1;
+    width: 118%;
+    height: 72%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse 55% 48% at 50% 50%,
+      rgba(255, 220, 210, 0.1) 0%,
+      rgba(229, 107, 104, 0.12) 42%,
+      transparent 72%
+    );
+    filter: blur(28px);
+    pointer-events: none;
+    animation: heroWashCorePulse 7.5s ease-in-out infinite;
+  }
+
+  .heroInvite {
+    margin-top: 1.85rem;
+  }
+
+  .heroInviteAura {
+    inset: -0.55rem;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(229, 107, 104, 0.48) 0%,
+      rgba(241, 163, 121, 0.22) 38%,
+      transparent 72%
+    );
+    filter: blur(18px);
+  }
 }
 
 .heroInvite {
@@ -1326,6 +1552,50 @@
   color: #dca39a;
 }
 
+.promptSuggestionLabel {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-align: left;
+  color: inherit;
+}
+
+@media (max-width: 767px) {
+  .promptSuggestions {
+    border-radius: 18px;
+    padding: 0.28rem;
+  }
+
+  .promptSuggestion {
+    gap: 0.65rem;
+    min-height: 2.85rem;
+    border-radius: 14px;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .promptSuggestionIcon {
+    height: 1.85rem;
+    width: 1.85rem;
+    border-radius: 0.65rem;
+  }
+
+  .promptSuggestionLabel {
+    font-size: 12.5px;
+    line-height: 1.25;
+  }
+
+  .promptComposer {
+    min-height: 7.25rem;
+    padding: 0.85rem 0.85rem 0.7rem;
+    border-radius: 22px;
+  }
+}
+
 /* ----------------------------------------------------------- core hub */
 
 .premiumCard {
@@ -1459,6 +1729,7 @@
 
 .certFrame {
   position: relative;
+  overflow: visible;
   border-radius: 1.35rem;
   padding: 0.85rem;
   background:
@@ -1467,6 +1738,13 @@
   box-shadow:
     0 30px 80px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+@media (max-width: 767px) {
+  .certFrame {
+    padding: 0.65rem;
+    border-radius: 1.15rem;
+  }
 }
 
 .certFrame::after {
@@ -1512,6 +1790,7 @@
   );
   filter: blur(40px);
   animation: corePulse 6.5s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 .coreOrb {
@@ -1540,6 +1819,8 @@
   box-shadow:
     0 0 22px rgba(229, 107, 104, 0.45),
     inset 0 0 18px rgba(255, 236, 231, 0.2);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .coreRingA {
@@ -1889,9 +2170,71 @@
 
 @media (max-width: 767px) {
   .circuit {
-    width: 4.25rem;
-    height: 16rem;
+    width: 3.65rem;
+    height: 18rem;
+    opacity: 0.85;
+  }
+
+  .channelSupply {
+    stroke-width: 2.1;
+    animation-duration: 2.9s;
+    filter: drop-shadow(0 0 5px rgba(229, 107, 104, 0.9));
+  }
+
+  .heroAmbient {
+    inset: 22% 6% 28%;
+    opacity: 0.9;
+  }
+
+  .coreOrb {
+    height: 8.75rem;
+    width: 8.75rem;
+    box-shadow:
+      0 0 56px rgba(229, 107, 104, 0.48),
+      inset 0 0 34px rgba(255, 236, 231, 0.28);
+  }
+
+  .coreHalo {
+    inset: -55%;
+    filter: blur(32px);
+    animation-duration: 5.2s;
+  }
+
+  .coreRingA {
+    inset: -0.75rem;
+    animation-duration: 12s;
+  }
+
+  .coreRingB {
+    inset: -1.55rem;
+    animation-duration: 17s;
+  }
+
+  .coreRingC {
+    inset: -0.15rem -2.35rem;
+    animation-duration: 22s;
+  }
+}
+
+@keyframes circuitBreathe {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes heroAmbientPulse {
+  0%,
+  100% {
     opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
   }
 }
 
@@ -1932,6 +2275,11 @@
   .coreHalo,
   .coreRing,
   .circuitTracePulse,
+  .circuit,
+  .heroAmbient,
+  .heroWashTop,
+  .heroWashBottom,
+  .heroWashCore,
   .techOrbitA,
   .techOrbitB,
   .techPulse,
@@ -1952,7 +2300,8 @@
   .coreRingC { transform: scaleY(0.78); }
 }
 
-/* Keep mobile smooth: pause heavy continuous effects, lighter filters. */
+/* Keep mobile smooth: pause heavy continuous effects, lighter filters.
+   Keep Ask Supra core orb rings + halo animating — they are the focal motion. */
 @media (max-width: 767px) {
   .aurora,
   .mentorOrbA,
@@ -1963,15 +2312,11 @@
   .techOrbitB,
   .techPulse,
   .techCardWrap,
-  .coreHalo,
-  .coreRing,
   .circuitTracePulse,
   .channelSupply,
   .prismSpread,
   .prismRing,
-  .prismRingComposer,
-  .heroInviteAura,
-  .heroInviteRing {
+  .prismRingComposer {
     animation: none !important;
   }
 
@@ -1988,12 +2333,14 @@
   .techPulse,
   .prismSpread,
   .prismRing,
-  .prismRingComposer,
-  .heroInviteAura,
-  .heroInviteRing,
-  .coreHalo {
+  .prismRingComposer {
     filter: none;
     opacity: 0.35;
+  }
+
+  .heroInviteAura,
+  .heroInviteRing {
+    animation: heroInvitePulse 3.2s ease-in-out infinite !important;
   }
 
   .heroInviteRing {
@@ -2005,9 +2352,47 @@
     );
   }
 
+  .coreHalo {
+    filter: blur(28px);
+    opacity: 0.95;
+    animation: corePulse 4.8s ease-in-out infinite !important;
+  }
+
+  .coreRing {
+    animation-play-state: running !important;
+  }
+
+  .coreRingA {
+    animation: coreRingA 10s linear infinite !important;
+  }
+
+  .coreRingB {
+    animation: coreRingB 14s linear infinite reverse !important;
+  }
+
+  .coreRingC {
+    animation: coreRingC 18s linear infinite !important;
+  }
+
+  .coreOrb {
+    animation: coreOrbBreathe 3.6s ease-in-out infinite;
+  }
+
   .promptComposer,
   .premiumCard,
   .statusBadge {
     backdrop-filter: blur(10px);
+  }
+}
+
+@keyframes coreOrbBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.04);
+    filter: brightness(1.08);
   }
 }

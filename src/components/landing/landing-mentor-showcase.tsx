@@ -29,9 +29,21 @@ const ROTATING_PROMPTS = [
 ];
 
 const SUGGESTIONS = [
-  { text: "Explain React Server Components simply", icon: Sparkles },
-  { text: "Design a production-ready learning dashboard", icon: Code2 },
-  { text: "Help me debug a Next.js hydration error", icon: GitBranch },
+  {
+    text: "Explain React Server Components simply",
+    short: "Explain React Server Components",
+    icon: Sparkles,
+  },
+  {
+    text: "Design a production-ready learning dashboard",
+    short: "Design a learning dashboard",
+    icon: Code2,
+  },
+  {
+    text: "Help me debug a Next.js hydration error",
+    short: "Debug a Next.js hydration error",
+    icon: GitBranch,
+  },
 ] as const;
 
 const TABS = ["Explore", "Explain", "Debug", "Build", "Review"] as const;
@@ -67,19 +79,25 @@ export function LandingMentorShowcase() {
       <div className="relative z-10 mx-auto w-full max-w-5xl px-5 text-center sm:px-8">
         <Reveal>
           <span className={styles.sectionPill}>Ask Supra · AI Mentor</span>
-          <h2 className={`${styles.sectionHeading} sm:whitespace-nowrap`}>
+          <h2 className={`${styles.sectionHeading} max-md:text-[1.65rem] sm:whitespace-nowrap`}>
             Your AI software engineering mentor.
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-balance text-[13.5px] leading-6 text-white/50">
-            Get instant help with debugging, architecture, React, Next.js,
-            Python, Java, databases, AI, DevOps, interviews, system design, and
-            production engineering—powered by your learning progress.
+          <p className="mx-auto mt-3 max-w-2xl text-balance text-[13.5px] leading-6 text-white/50 max-md:mt-2.5 max-md:max-w-[20rem] max-md:text-[12.5px] max-md:leading-[1.45]">
+            <span className="sm:hidden">
+              Instant help with debugging, architecture, React, Next.js, and
+              production engineering.
+            </span>
+            <span className="hidden sm:inline">
+              Get instant help with debugging, architecture, React, Next.js,
+              Python, Java, databases, AI, DevOps, interviews, system design, and
+              production engineering—powered by your learning progress.
+            </span>
           </p>
         </Reveal>
 
         <Reveal
           delay={0.08}
-          className="relative mx-auto mt-7 w-full max-w-[720px] text-left"
+          className="relative mx-auto mt-6 w-full max-w-[720px] text-left sm:mt-7"
         >
           <span aria-hidden className={styles.prismLayer}>
             <span className={styles.prismSpread} />
@@ -95,7 +113,7 @@ export function LandingMentorShowcase() {
                 aria-label={`Ask Supra: ${ROTATING_PROMPTS[active]}`}
                 className={styles.promptComposer}
               >
-                <span className="relative block min-h-[52px] overflow-hidden px-1 pt-0.5">
+                <span className="relative block min-h-[52px] overflow-hidden px-1 pt-0.5 max-md:min-h-[44px]">
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.span
                       key={ROTATING_PROMPTS[active]}
@@ -103,20 +121,20 @@ export function LandingMentorShowcase() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
                       transition={{ duration: 0.35, ease: EASE }}
-                      className="absolute inset-x-1 top-0.5 block text-[15px] leading-6 text-[#f3b7ac]/80"
+                      className="absolute inset-x-1 top-0.5 block text-[15px] leading-6 text-[#f3b7ac]/80 max-md:text-[14px] max-md:leading-5"
                     >
                       {ROTATING_PROMPTS[active]}
                     </motion.span>
                   </AnimatePresence>
                   <span
-                    className="invisible block text-[15px] leading-6"
+                    className="invisible block text-[15px] leading-6 max-md:text-[14px] max-md:leading-5"
                     aria-hidden
                   >
                     {ROTATING_PROMPTS[0]}
                   </span>
                 </span>
 
-                <span className="mt-3 flex items-center justify-between gap-2">
+                <span className="mt-3 flex items-center justify-between gap-2 max-md:mt-2.5">
                   <span className="flex items-center gap-0.5">
                     <span className={styles.promptTool} aria-hidden>
                       <Plus className="h-5 w-5" strokeWidth={1.75} />
@@ -143,7 +161,7 @@ export function LandingMentorShowcase() {
             </div>
           </div>
 
-          <div className="relative z-10 mt-4 space-y-3" aria-hidden>
+          <div className="relative z-10 mt-3.5 space-y-2.5 sm:mt-4 sm:space-y-3" aria-hidden>
             <div className="pointer-events-none flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {TABS.map((tab) => (
                 <span
@@ -166,12 +184,13 @@ export function LandingMentorShowcase() {
                 return (
                   <div key={prompt.text} className={styles.promptSuggestion}>
                     <span className={styles.promptSuggestionIcon}>
-                      <PromptIcon className="h-4 w-4" />
+                      <PromptIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-[13px] font-medium">
-                      {prompt.text}
+                    <span className={styles.promptSuggestionLabel}>
+                      <span className="sm:hidden">{prompt.short}</span>
+                      <span className="hidden sm:inline">{prompt.text}</span>
                     </span>
-                    <ArrowUp className="h-3.5 w-3.5 rotate-90 opacity-30" />
+                    <ArrowUp className="h-3.5 w-3.5 shrink-0 rotate-90 opacity-30" />
                   </div>
                 );
               })}

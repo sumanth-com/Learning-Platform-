@@ -23,6 +23,7 @@ export type PhasePoint = {
 };
 
 const AXIS_TICK = { fontSize: 11, fill: "var(--color-muted-foreground)" };
+const CHART_HEIGHT = 192;
 
 function TipBox({ children }: { children: React.ReactNode }) {
   return (
@@ -36,19 +37,19 @@ function TipBox({ children }: { children: React.ReactNode }) {
 export function PhaseCompletionChart({ data }: { data: PhasePoint[] }) {
   if (data.length === 0) {
     return (
-      <div className="flex h-full min-h-[12rem] items-center justify-center text-[12.5px] text-muted-foreground">
+      <div className="flex h-full min-h-[8rem] w-full items-center justify-center px-2 text-center text-[12.5px] leading-relaxed text-muted-foreground">
         Phase progress appears once your roadmap loads.
       </div>
     );
   }
 
   return (
-    <div className="h-full min-h-[12rem] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="h-full w-full min-h-0 min-w-0">
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <BarChart
           data={data}
-          margin={{ top: 8, right: 8, left: 8, bottom: 4 }}
-          barCategoryGap="30%"
+          margin={{ top: 4, right: 4, left: 0, bottom: 0 }}
+          barCategoryGap="28%"
         >
           <CartesianGrid
             vertical={false}
@@ -61,7 +62,7 @@ export function PhaseCompletionChart({ data }: { data: PhasePoint[] }) {
             axisLine={false}
             interval={0}
             tick={AXIS_TICK}
-            tickMargin={8}
+            tickMargin={6}
           />
           <YAxis
             domain={[0, 100]}
@@ -70,8 +71,8 @@ export function PhaseCompletionChart({ data }: { data: PhasePoint[] }) {
             tickLine={false}
             axisLine={false}
             tick={AXIS_TICK}
-            width={48}
-            tickMargin={6}
+            width={40}
+            tickMargin={4}
           />
           <Tooltip
             cursor={{ fill: "var(--color-border)", opacity: 0.35 }}
@@ -130,8 +131,8 @@ export function TimeSplitChart({
   ];
 
   return (
-    <div className="relative h-full min-h-[12rem] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="relative w-full min-w-0" style={{ height: CHART_HEIGHT }}>
+      <ResponsiveContainer width="100%" height={CHART_HEIGHT} minWidth={0}>
         <PieChart>
           <Pie
             data={data}

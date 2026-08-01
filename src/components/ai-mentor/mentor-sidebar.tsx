@@ -54,6 +54,8 @@ type MentorSidebarProps = {
   onNewChat: () => void;
   onRefresh: () => void;
   onLocalUpdate?: (next: AiConversationRow[]) => void;
+  /** Mobile drawer: show close control instead of desktop collapse. */
+  onCloseMobile?: () => void;
 };
 
 type MenuAction =
@@ -418,6 +420,7 @@ export function MentorSidebar({
   onNewChat,
   onRefresh,
   onLocalUpdate,
+  onCloseMobile,
 }: MentorSidebarProps) {
   const [pending, startTransition] = useTransition();
   const [searchFocused, setSearchFocused] = useState(false);
@@ -621,15 +624,27 @@ export function MentorSidebar({
                   Private chats
                 </p>
               </div>
-              <button
-                type="button"
-                aria-label="Collapse sidebar"
-                title="Collapse sidebar"
-                onClick={() => onCollapsedChange?.(true)}
-                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-              >
-                <PanelLeftClose className="h-4 w-4" strokeWidth={1.75} />
-              </button>
+              {onCloseMobile ? (
+                <button
+                  type="button"
+                  aria-label="Close chats"
+                  title="Close"
+                  onClick={onCloseMobile}
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                >
+                  <X className="h-4 w-4" strokeWidth={1.75} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  aria-label="Collapse sidebar"
+                  title="Collapse sidebar"
+                  onClick={() => onCollapsedChange?.(true)}
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                >
+                  <PanelLeftClose className="h-4 w-4" strokeWidth={1.75} />
+                </button>
+              )}
             </div>
 
             <motion.button

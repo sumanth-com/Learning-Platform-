@@ -78,12 +78,12 @@ export function LandingFooter() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 py-5 text-[11px] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:text-[11.5px]">
+        <div className="flex flex-col items-center gap-2.5 py-5 text-center text-[11px] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:text-left sm:text-[11.5px]">
           <p className="shrink-0">
             Copyright © {new Date().getFullYear()} {SITE.name}. All rights
             reserved.
           </p>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:justify-end sm:gap-x-5">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:justify-end sm:gap-x-5">
             <Link
               href={SITE_ROUTES.terms}
               className="transition-colors hover:text-white/70"

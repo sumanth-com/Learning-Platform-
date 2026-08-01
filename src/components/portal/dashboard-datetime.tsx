@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Clock3 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
- * Little desk-calendar + clock. Rendered client-side only so the timezone is
- * the user's; the box keeps a fixed footprint so nothing shifts after mount.
+ * Desk calendar + clock. Client-only so the timezone is the user's;
+ * keeps a stable footprint so nothing shifts after mount.
+ *
+ * Mobile: flat strip under the greeting (no nested card).
+ * sm+: compact side card.
  */
-export function DashboardDateTime() {
+export function DashboardDateTime({ className }: { className?: string }) {
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -36,38 +40,47 @@ export function DashboardDateTime() {
     : "";
 
   return (
-    <div className="flex w-full shrink-0 items-center gap-3 rounded-2xl border border-border/70 bg-background/70 px-3.5 py-3 sm:w-auto sm:min-w-[15rem]">
-      <div className="relative shrink-0">
-        <span
-          aria-hidden
-          className="absolute -top-[3px] left-2.5 h-1.5 w-1.5 rounded-full bg-border"
-        />
-        <span
-          aria-hidden
-          className="absolute -top-[3px] right-2.5 h-1.5 w-1.5 rounded-full bg-border"
-        />
-        <div className="flex h-[3.1rem] w-[3.1rem] flex-col overflow-hidden rounded-xl border border-border/70 bg-card shadow-[0_2px_8px_-4px_rgba(20,20,25,0.25)]">
-          <span className="flex h-[1.05rem] items-center justify-center bg-brand text-[8.5px] font-bold uppercase tracking-[0.14em] text-white">
-            {month || "\u00A0"}
-          </span>
-          <span className="flex flex-1 items-center justify-center text-[17px] font-semibold tabular-nums leading-none text-foreground">
-            {day || "\u00A0"}
-          </span>
-        </div>
+    <div
+      className={cn(
+        // Mobile strip
+        "flex w-full min-w-0 items-center gap-3 border-t border-border/50 pt-3",
+        // Desktop side card
+        "sm:w-auto sm:min-w-[15rem] sm:gap-3 sm:rounded-2xl sm:border sm:border-border/60 sm:bg-background/70 sm:px-3.5 sm:py-3 sm:pt-3",
+        className
+      )}
+    >
+      <div
+        className={cn(
+          "flex shrink-0 flex-col overflow-hidden rounded-xl border border-border/60",
+          "h-11 w-11 bg-muted/40",
+          "sm:h-[3.1rem] sm:w-[3.1rem] sm:bg-card"
+        )}
+      >
+        <span className="flex h-4 items-center justify-center bg-primary/90 text-[8px] font-bold uppercase tracking-[0.12em] text-primary-foreground sm:h-[1.05rem] sm:bg-primary sm:text-[8.5px]">
+          {month || "\u00A0"}
+        </span>
+        <span className="flex flex-1 items-center justify-center text-[15px] font-semibold tabular-nums leading-none tracking-tight text-foreground sm:text-[17px]">
+          {day || "\u00A0"}
+        </span>
       </div>
 
-      <div className="min-w-0">
-        <p className="truncate text-[13px] font-semibold leading-none text-foreground">
+      <div className="min-w-0 flex-1 sm:flex-none">
+        <p className="truncate text-[13px] font-semibold tracking-[-0.02em] text-foreground">
           {weekday || "\u00A0"}
         </p>
-        <p className="mt-1.5 truncate text-[11.5px] leading-none text-muted-foreground">
+        <p className="mt-0.5 truncate text-[11.5px] leading-snug text-muted-foreground sm:mt-1 sm:leading-none">
           {fullDate || "\u00A0"}
         </p>
-        <p className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] font-medium leading-none tabular-nums text-foreground">
-          <Clock3 className="h-3.5 w-3.5 text-brand" />
+        <p className="mt-2 hidden items-center gap-1.5 text-[11.5px] font-medium leading-none tabular-nums tracking-tight text-foreground sm:inline-flex">
+          <Clock3 className="h-3.5 w-3.5 text-primary" strokeWidth={2} />
           {time || "\u00A0"}
         </p>
       </div>
+
+      <p className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-muted/60 px-2.5 py-1.5 text-[11.5px] font-medium tabular-nums tracking-tight text-foreground sm:hidden">
+        <Clock3 className="h-3.5 w-3.5 text-primary" strokeWidth={2} />
+        {time || "\u00A0"}
+      </p>
     </div>
   );
 }

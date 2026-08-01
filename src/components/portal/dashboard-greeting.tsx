@@ -27,10 +27,10 @@ export function DashboardGreeting({
 
   return (
     <div className="min-w-0">
-      <h1 className="truncate text-[23px] font-semibold tracking-tight text-foreground sm:text-[27px]">
+      <h1 className="text-[1.375rem] font-semibold tracking-[-0.035em] text-foreground max-md:text-[1.25rem] max-md:leading-[1.25] sm:text-[1.65rem]">
         {greeting}, {firstName}
       </h1>
-      <p className="mt-1.5 max-w-[52ch] text-[13px] leading-relaxed text-muted-foreground">
+      <p className="mt-1.5 max-w-[48ch] text-[13px] leading-[1.5] tracking-[-0.01em] text-muted-foreground max-md:mt-1 max-md:text-[12.5px] max-md:leading-[1.45] max-md:line-clamp-2 sm:mt-2">
         {message}
       </p>
     </div>

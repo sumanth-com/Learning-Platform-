@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 import type { ProfileRow } from "@/types/database";
 
 const MAX_BYTES = 10 * 1024 * 1024;
@@ -90,6 +91,13 @@ export function ProfileWorkspace({
     ? new Date(initialProfile.created_at).toLocaleDateString(undefined, {
         year: "numeric",
         month: "long",
+        day: "numeric",
+      })
+    : "—";
+  const memberSinceShort = initialProfile?.created_at
+    ? new Date(initialProfile.created_at).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
         day: "numeric",
       })
     : "—";
@@ -282,293 +290,486 @@ export function ProfileWorkspace({
   }, [hasPhoto, userId]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-1 pb-14">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-stretch lg:gap-8">
-        {/* Candidate Information */}
-        <section className="flex h-full min-h-0 flex-col rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] sm:p-8">
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Candidate Information
-            </h2>
-            <p className="mt-1 text-[13px] text-muted-foreground">
-              Update your name and photo. Account details are managed by
-              SupraBase.
-            </p>
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-col px-3.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2.5 sm:px-1 sm:pb-14 sm:pt-0 max-md:overflow-hidden md:space-y-8 md:overflow-visible md:px-1">
+      {/* ── Mobile: tall ID card + slim edit strip — one screen ── */}
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden md:hidden">
+        {/* Vertical identity card — proper length */}
+        <motion.div
+          className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.5rem]"
+          style={{
+            background:
+              "linear-gradient(180deg, #222328 0%, #29282d 52%, #5f3435 78%, #a7423d 100%)",
+            boxShadow:
+              "0 0 0 1px rgba(217,74,65,0.34), 0 18px 40px -20px rgba(24,24,27,0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+          }}
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-24 bg-gradient-to-b from-white/30 to-transparent"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-4 right-3 z-20 w-[2.5px] overflow-hidden rounded-full"
+          >
+            <div className="absolute inset-0 bg-primary/25" />
+            <motion.div
+              className="absolute left-0 right-0 h-[32%] rounded-full"
+              style={{
+                background:
+                  "linear-gradient(to bottom, transparent, rgba(220,163,154,0.75), rgba(217,74,65,0.7), transparent)",
+              }}
+              animate={{ top: ["-35%", "110%"] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: "linear" }}
+            />
           </div>
 
-          <div className="mt-7 flex flex-1 flex-col gap-5">
-            <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-foreground">
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading || deleting}
+            className="relative min-h-0 flex-[1.25] w-full overflow-hidden"
+            aria-label={hasPhoto ? "Replace photo" : "Upload photo"}
+          >
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+                style={{
+                  maskImage:
+                    "linear-gradient(to bottom, black 0%, black 58%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black 0%, black 58%, transparent 100%)",
+                }}
+              />
+            ) : (
+              <div
+                className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#24252a] via-[#2f2d32] to-[#74403f] text-6xl font-semibold text-white/90"
+                style={{
+                  maskImage:
+                    "linear-gradient(to bottom, black 0%, black 58%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, black 0%, black 58%, transparent 100%)",
+                }}
+              >
+                {initials}
+              </div>
+            )}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#3f292b] via-[#5f3435]/70 to-transparent"
+            />
+            <span className="absolute bottom-3 left-3 z-10 inline-flex items-center gap-1 rounded-lg bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-md">
+              {uploading ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Camera className="h-3 w-3" />
+              )}
+              Photo
+            </span>
+          </button>
+
+          <div className="relative z-10 shrink-0 px-4 pb-3.5 pt-0.5 text-white">
+            <div className="flex items-center gap-1.5">
+              <h2 className="truncate text-[1.25rem] font-bold tracking-tight">
+                {fullName.trim() || "Your name"}
+              </h2>
+              <BadgeCheck className="h-[17px] w-[17px] shrink-0 fill-white text-[#d96b61]" />
+            </div>
+            <p className="mt-1 line-clamp-1 text-[12px] leading-snug text-white/82">
+              {headline.trim() || "Upcoming Developer"} · SupraBase learner
+            </p>
+            <div className="mt-3 flex items-center justify-between gap-2 text-[11.5px] font-medium text-white/90">
+              <span className="inline-flex items-center gap-1.5">
+                <Users className="h-3.5 w-3.5 opacity-90" />
+                <span className="capitalize">{role}</span>
+              </span>
+              <span className="truncate font-mono text-[10px] tracking-[0.14em] text-white/65">
+                {cardId}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Slim candidate edit — stays under the card */}
+        <section className="flex shrink-0 flex-col overflow-hidden rounded-2xl border border-border/60 bg-card">
+          <div className="flex items-end gap-2 px-3 pb-2 pt-2.5">
+            <div className="min-w-0 flex-1 space-y-1">
+              <Label
+                htmlFor="fullNameMobile"
+                className="text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground"
+              >
                 Full name
               </Label>
               <Input
-                id="fullName"
+                id="fullNameMobile"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Your full name"
-                className="h-11 rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
+                className="h-8 rounded-lg border-border/70 bg-background text-[13px] text-foreground placeholder:text-muted-foreground"
               />
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="headline" className="text-foreground">
-                Title
-              </Label>
-              <Input
-                id="headline"
-                value={headline}
-                readOnly
-                aria-readonly="true"
-                className="h-11 cursor-default rounded-xl border-border bg-muted/40 text-foreground"
-              />
-              <p className="text-[11px] text-muted-foreground">
-                Assigned from your learner profile.
-              </p>
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-foreground">Email</Label>
-                <Input
-                  value={email}
-                  readOnly
-                  className="h-11 rounded-xl border-border bg-muted/40 text-foreground"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-foreground">Role</Label>
-                <Input
-                  value={role}
-                  readOnly
-                  aria-readonly="true"
-                  className="h-11 cursor-default rounded-xl border-border bg-muted/40 capitalize text-foreground"
-                />
-              </div>
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-foreground">Member since</Label>
-                <Input
-                  value={memberSince}
-                  readOnly
-                  className="h-11 rounded-xl border-border bg-muted/40 text-foreground"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-foreground">ID number</Label>
-                <Input
-                  value={cardId}
-                  readOnly
-                  className="h-11 rounded-xl border-border bg-muted/40 font-mono text-[13px] tracking-wide text-foreground"
-                />
-              </div>
-            </div>
-
-            <div className="mt-auto flex flex-wrap items-center gap-3 pt-4">
-              <Button
-                type="button"
-                onClick={handleSave}
-                disabled={saving}
-                className="h-11 rounded-xl px-5"
-              >
-                {saving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : savedFlash ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Pencil className="h-4 w-4" />
-                )}
-                {saving ? "Saving…" : savedFlash ? "Saved" : "Save changes"}
-              </Button>
+            <Button
+              type="button"
+              onClick={handleSave}
+              disabled={saving}
+              className="h-8 shrink-0 rounded-lg px-3 text-[12px]"
+            >
+              {saving ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : savedFlash ? (
+                <Check className="h-3.5 w-3.5" />
+              ) : (
+                <Pencil className="h-3.5 w-3.5" />
+              )}
+              {saving ? "…" : savedFlash ? "Saved" : "Save"}
+            </Button>
+            {hasPhoto ? (
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => fileRef.current?.click()}
+                onClick={handleDeletePhoto}
                 disabled={uploading || deleting}
-                className="h-11 rounded-xl border-border text-foreground"
+                className="h-8 rounded-lg border-rose-500/30 px-2.5 text-rose-600 hover:bg-rose-500/10 dark:text-rose-400"
+                aria-label="Delete photo"
               >
-                {uploading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                {deleting ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <Camera className="h-4 w-4" />
+                  <Trash2 className="h-3.5 w-3.5" />
                 )}
-                {uploading
-                  ? "Uploading…"
-                  : hasPhoto
-                    ? "Replace photo"
-                    : "Upload photo"}
               </Button>
-              {hasPhoto ? (
+            ) : null}
+          </div>
+
+          <dl className="grid grid-cols-2 gap-x-3 gap-y-1 border-t border-border/40 px-3 py-2">
+            <MetaCell label="Email" value={email} />
+            <MetaCell label="Since" value={memberSinceShort} />
+            <MetaCell label="Role" value={role} capitalize />
+            <MetaCell label="ID" value={cardId} mono />
+          </dl>
+        </section>
+      </div>
+
+      {/* ── Desktop / tablet ── */}
+      <div className="hidden min-h-0 flex-1 flex-col md:flex md:space-y-8">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-stretch lg:gap-8">
+          <section className="flex h-full min-h-0 flex-col rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] sm:p-8">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                Candidate Information
+              </h2>
+              <p className="mt-1 text-[13px] text-muted-foreground">
+                Update your name and photo. Account details are managed by
+                SupraBase.
+              </p>
+            </div>
+
+            <div className="mt-7 flex flex-1 flex-col gap-5">
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-foreground">
+                  Full name
+                </Label>
+                <Input
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Your full name"
+                  className="h-11 rounded-xl border-border bg-background text-foreground placeholder:text-muted-foreground"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="headline" className="text-foreground">
+                  Title
+                </Label>
+                <Input
+                  id="headline"
+                  value={headline}
+                  readOnly
+                  aria-readonly="true"
+                  className="h-11 cursor-default rounded-xl border-border bg-muted/40 text-foreground"
+                />
+                <p className="text-[11px] text-muted-foreground">
+                  Assigned from your learner profile.
+                </p>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-foreground">Email</Label>
+                  <Input
+                    value={email}
+                    readOnly
+                    className="h-11 rounded-xl border-border bg-muted/40 text-foreground"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-foreground">Role</Label>
+                  <Input
+                    value={role}
+                    readOnly
+                    aria-readonly="true"
+                    className="h-11 cursor-default rounded-xl border-border bg-muted/40 capitalize text-foreground"
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-foreground">Member since</Label>
+                  <Input
+                    value={memberSince}
+                    readOnly
+                    className="h-11 rounded-xl border-border bg-muted/40 text-foreground"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-foreground">ID number</Label>
+                  <Input
+                    value={cardId}
+                    readOnly
+                    className="h-11 rounded-xl border-border bg-muted/40 font-mono text-[13px] tracking-wide text-foreground"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-auto flex flex-wrap items-center gap-3 pt-4">
+                <Button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="h-11 rounded-xl px-5"
+                >
+                  {saving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : savedFlash ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Pencil className="h-4 w-4" />
+                  )}
+                  {saving ? "Saving…" : savedFlash ? "Saved" : "Save changes"}
+                </Button>
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={handleDeletePhoto}
-                  disabled={uploading || deleting}
-                  className="h-11 rounded-xl border-rose-500/30 text-rose-600 hover:bg-rose-500/10 hover:text-rose-600 dark:text-rose-400"
-                >
-                  {deleting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="h-4 w-4" />
-                  )}
-                  {deleting ? "Removing…" : "Delete photo"}
-                </Button>
-              ) : null}
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                className="hidden"
-                onChange={handleAvatarPick}
-              />
-              <p className="w-full text-[12px] text-muted-foreground">
-                Profile photo · JPG, PNG, WebP · max 10MB · upload, replace, or
-                delete anytime
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Neon glass ID card — narrower, no black frame */}
-        <div className="relative mx-auto flex h-full min-h-[520px] w-full max-w-[300px] flex-col lg:mx-0 lg:ml-auto lg:min-h-0 lg:max-w-none">
-          <motion.div
-            className="relative z-10 flex h-full w-full flex-1 flex-col overflow-hidden rounded-[1.6rem]"
-            style={{
-              background:
-                "linear-gradient(180deg, #222328 0%, #29282d 58%, #5f3435 84%, #a7423d 100%)",
-              boxShadow:
-                "0 0 0 1px rgba(217,74,65,0.34), 0 0 18px rgba(217,74,65,0.12), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
-            }}
-            animate={{
-              boxShadow: [
-                "0 0 0 1px rgba(217,74,65,0.3), 0 0 14px rgba(217,74,65,0.1), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
-                "0 0 0 1px rgba(220,163,154,0.5), 0 0 22px rgba(217,74,65,0.18), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.26)",
-                "0 0 0 1px rgba(217,74,65,0.3), 0 0 14px rgba(217,74,65,0.1), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
-              ],
-            }}
-            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {/* Soft glass highlight */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28 bg-gradient-to-b from-white/35 to-transparent"
-            />
-
-            {/* Right-side waterfall light */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-3 right-3 z-20 w-[3px] overflow-hidden rounded-full"
-            >
-              <div className="absolute inset-0 bg-primary/20" />
-              <motion.div
-                className="absolute left-0 right-0 h-[38%] rounded-full"
-                style={{
-                  background:
-                    "linear-gradient(to bottom, transparent, rgba(220,163,154,0.72), rgba(217,74,65,0.72), rgba(95,52,53,0.6), transparent)",
-                  boxShadow:
-                    "0 0 8px 1px rgba(217,74,65,0.35), 0 0 16px 3px rgba(217,74,65,0.16)",
-                }}
-                animate={{ top: ["-40%", "105%"] }}
-                transition={{
-                  duration: 2.2,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-              <motion.div
-                className="absolute left-1/2 h-8 w-8 -translate-x-1/2 rounded-full bg-[#fcb49c]/50 blur-md"
-                animate={{ top: ["-10%", "110%"], opacity: [0.2, 0.85, 0.2] }}
-                transition={{
-                  duration: 2.2,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-            </div>
-
-            <div className="relative min-h-0 flex-[1.35] overflow-hidden">
-              {avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={avatarUrl}
-                  alt={fullName || "Profile"}
-                  className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
-                  style={{
-                    maskImage:
-                      "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
-                    WebkitMaskImage:
-                      "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
-                  }}
-                />
-              ) : (
-                <div
-                  className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#24252a] via-[#2f2d32] to-[#74403f] text-7xl font-semibold text-white/90"
-                  style={{
-                    maskImage:
-                      "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
-                    WebkitMaskImage:
-                      "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
-                  }}
-                >
-                  {initials}
-                </div>
-              )}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#3f292b] via-[#5f3435]/75 to-transparent"
-              />
-            </div>
-
-            <div className="relative z-10 mt-auto shrink-0 px-5 pb-5 pt-1 text-white">
-              <div className="flex items-center gap-1.5">
-                <h3 className="truncate text-[1.35rem] font-bold tracking-tight drop-shadow-sm">
-                  {fullName.trim() || "Your name"}
-                </h3>
-                <BadgeCheck className="h-[18px] w-[18px] shrink-0 fill-white text-[#d96b61]" />
-              </div>
-              <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-relaxed text-white/85">
-                {headline.trim() || "Upcoming Developer"} · SupraBase learner
-                identity
-              </p>
-
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3.5 text-[12px] font-medium text-white/90">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 opacity-90" />
-                    <span className="capitalize">{role}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <FileText className="h-3.5 w-3.5 opacity-90" />
-                    <span className="font-mono text-[11px] tracking-wide">
-                      {cardId.slice(-8)}
-                    </span>
-                  </span>
-                </div>
-                <button
-                  type="button"
                   onClick={() => fileRef.current?.click()}
                   disabled={uploading || deleting}
-                  className="inline-flex h-8 shrink-0 items-center gap-1 rounded-lg bg-white px-3 text-[12px] font-semibold text-slate-900 shadow-md transition hover:bg-slate-100 disabled:opacity-60"
+                  className="h-11 rounded-xl border-border text-foreground"
                 >
                   {uploading ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <Camera className="h-3.5 w-3.5" />
+                    <Camera className="h-4 w-4" />
                   )}
-                  Photo +
-                </button>
+                  {uploading
+                    ? "Uploading…"
+                    : hasPhoto
+                      ? "Replace photo"
+                      : "Upload photo"}
+                </Button>
+                {hasPhoto ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleDeletePhoto}
+                    disabled={uploading || deleting}
+                    className="h-11 rounded-xl border-rose-500/30 text-rose-600 hover:bg-rose-500/10 hover:text-rose-600 dark:text-rose-400"
+                  >
+                    {deleting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                    {deleting ? "Removing…" : "Delete photo"}
+                  </Button>
+                ) : null}
+                <p className="w-full text-[12px] text-muted-foreground">
+                  Profile photo · JPG, PNG, WebP · max 10MB · upload, replace, or
+                  delete anytime
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <div className="relative mx-auto flex h-full min-h-[520px] w-full max-w-[300px] flex-col lg:mx-0 lg:ml-auto lg:min-h-0 lg:max-w-none">
+            <motion.div
+              className="relative z-10 flex h-full w-full flex-1 flex-col overflow-hidden rounded-[1.6rem]"
+              style={{
+                background:
+                  "linear-gradient(180deg, #222328 0%, #29282d 58%, #5f3435 84%, #a7423d 100%)",
+                boxShadow:
+                  "0 0 0 1px rgba(217,74,65,0.34), 0 0 18px rgba(217,74,65,0.12), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
+              }}
+              animate={{
+                boxShadow: [
+                  "0 0 0 1px rgba(217,74,65,0.3), 0 0 14px rgba(217,74,65,0.1), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
+                  "0 0 0 1px rgba(220,163,154,0.5), 0 0 22px rgba(217,74,65,0.18), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.26)",
+                  "0 0 0 1px rgba(217,74,65,0.3), 0 0 14px rgba(217,74,65,0.1), 0 22px 48px -22px rgba(24,24,27,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
+                ],
+              }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-28 bg-gradient-to-b from-white/35 to-transparent"
+              />
+
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-y-3 right-3 z-20 w-[3px] overflow-hidden rounded-full"
+              >
+                <div className="absolute inset-0 bg-primary/20" />
+                <motion.div
+                  className="absolute left-0 right-0 h-[38%] rounded-full"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, transparent, rgba(220,163,154,0.72), rgba(217,74,65,0.72), rgba(95,52,53,0.6), transparent)",
+                    boxShadow:
+                      "0 0 8px 1px rgba(217,74,65,0.35), 0 0 16px 3px rgba(217,74,65,0.16)",
+                  }}
+                  animate={{ top: ["-40%", "105%"] }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+                <motion.div
+                  className="absolute left-1/2 h-8 w-8 -translate-x-1/2 rounded-full bg-[#fcb49c]/50 blur-md"
+                  animate={{ top: ["-10%", "110%"], opacity: [0.2, 0.85, 0.2] }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
               </div>
 
-              <p className="mt-3 truncate font-mono text-[10px] tracking-[0.14em] text-white/65">
-                ID {cardId}
-              </p>
-            </div>
-          </motion.div>
+              <div className="relative min-h-0 flex-[1.35] overflow-hidden">
+                {avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={avatarUrl}
+                    alt={fullName || "Profile"}
+                    className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
+                    style={{
+                      maskImage:
+                        "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
+                      WebkitMaskImage:
+                        "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#24252a] via-[#2f2d32] to-[#74403f] text-7xl font-semibold text-white/90"
+                    style={{
+                      maskImage:
+                        "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
+                      WebkitMaskImage:
+                        "linear-gradient(to bottom, black 0%, black 52%, transparent 96%)",
+                    }}
+                  >
+                    {initials}
+                  </div>
+                )}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#3f292b] via-[#5f3435]/75 to-transparent"
+                />
+              </div>
+
+              <div className="relative z-10 mt-auto shrink-0 px-5 pb-5 pt-1 text-white">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="truncate text-[1.35rem] font-bold tracking-tight drop-shadow-sm">
+                    {fullName.trim() || "Your name"}
+                  </h3>
+                  <BadgeCheck className="h-[18px] w-[18px] shrink-0 fill-white text-[#d96b61]" />
+                </div>
+                <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-relaxed text-white/85">
+                  {headline.trim() || "Upcoming Developer"} · SupraBase learner
+                  identity
+                </p>
+
+                <div className="mt-5 flex items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3.5 text-[12px] font-medium text-white/90">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Users className="h-3.5 w-3.5 opacity-90" />
+                      <span className="capitalize">{role}</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <FileText className="h-3.5 w-3.5 opacity-90" />
+                      <span className="font-mono text-[11px] tracking-wide">
+                        {cardId.slice(-8)}
+                      </span>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    disabled={uploading || deleting}
+                    className="inline-flex h-8 shrink-0 items-center gap-1 rounded-lg bg-white px-3 text-[12px] font-semibold text-slate-900 shadow-md transition hover:bg-slate-100 disabled:opacity-60"
+                  >
+                    {uploading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Camera className="h-3.5 w-3.5" />
+                    )}
+                    Photo +
+                  </button>
+                </div>
+
+                <p className="mt-3 truncate font-mono text-[10px] tracking-[0.14em] text-white/65">
+                  ID {cardId}
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        <div className="hidden md:block">
+          <ProfileCertificates />
         </div>
       </div>
 
-      <ProfileCertificates />
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="hidden"
+        onChange={handleAvatarPick}
+      />
+    </div>
+  );
+}
+
+function MetaCell({
+  label,
+  value,
+  capitalize,
+  mono,
+}: {
+  label: string;
+  value: string;
+  capitalize?: boolean;
+  mono?: boolean;
+}) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+        {label}
+      </dt>
+      <dd
+        className={cn(
+          "mt-0.5 truncate text-[12.5px] font-medium tracking-tight text-foreground",
+          capitalize && "capitalize",
+          mono && "font-mono text-[11px] tracking-wide"
+        )}
+        title={value}
+      >
+        {value || "—"}
+      </dd>
     </div>
   );
 }

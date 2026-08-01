@@ -50,29 +50,36 @@ export function DashboardHome({
   const heroMessage = buildHeroMessage(stats, courseTitle);
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1500px] flex-col gap-3 overflow-y-auto pb-1">
+    <div
+      className={cn(
+        "mx-auto flex h-full min-h-0 w-full max-w-[1500px] flex-col",
+        "gap-3 overflow-x-hidden overflow-y-auto pb-1",
+        "max-md:gap-3 max-md:pb-[max(1rem,env(safe-area-inset-bottom))]",
+        "max-md:[-ms-overflow-style:none] max-md:[scrollbar-width:none]",
+        "max-md:[&::-webkit-scrollbar]:hidden"
+      )}
+    >
       {/* ── Welcome ───────────────────────────────────── */}
-      <section className="relative shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card">
+      <section className="relative shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-card sm:rounded-[1.25rem]">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 max-md:opacity-80"
           style={{
             background:
-              "radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--color-primary) 16%, transparent) 0%, transparent 55%), radial-gradient(90% 120% at 0% 100%, color-mix(in srgb, var(--color-primary) 9%, transparent) 0%, transparent 60%)",
+              "radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--color-primary) 12%, transparent) 0%, transparent 55%), radial-gradient(90% 120% at 0% 100%, color-mix(in srgb, var(--color-primary) 6%, transparent) 0%, transparent 60%)",
           }}
         />
 
-        <div className="relative flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
-          <div className="min-w-0">
+        <div className="relative flex flex-col gap-0 p-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
+          <div className="min-w-0 flex-1">
             <DashboardGreeting firstName={firstName} message={heroMessage} />
           </div>
-
-          <DashboardDateTime />
+          <DashboardDateTime className="mt-3 sm:mt-0" />
         </div>
       </section>
 
       {/* ── Key numbers ───────────────────────────────── */}
-      <div className="grid shrink-0 grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid shrink-0 grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3 max-md:gap-2">
         <StatCard
           icon={CheckCircle2}
           label="Lessons done"
@@ -104,31 +111,31 @@ export function DashboardHome({
       </div>
 
       {/* ── Charts ────────────────────────────────────── */}
-      <div className="grid shrink-0 gap-3 lg:grid-cols-12">
-        <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4 lg:col-span-8">
-          <div className="flex shrink-0 items-center justify-between">
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              <BarChart3 className="h-3.5 w-3.5" />
-              Completion by phase
+      <div className="grid shrink-0 gap-2.5 sm:gap-3 lg:grid-cols-12">
+        <section className="flex min-h-0 flex-col overflow-hidden rounded-[1.25rem] border border-border/60 bg-card p-3.5 sm:p-4 max-md:rounded-2xl lg:col-span-8">
+          <div className="flex shrink-0 items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
+              <BarChart3 className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">Completion by phase</span>
             </div>
             <Link
               href={CURRICULUM_ROUTES.roadmap}
-              className="text-[11.5px] font-medium text-primary hover:underline"
+              className="shrink-0 text-[11px] font-semibold tracking-tight text-primary hover:underline"
             >
               All phases
             </Link>
           </div>
-          <div className="mt-3 h-[12rem]">
+          <div className="mt-2.5 h-[10.5rem] min-w-0 sm:mt-3 sm:h-[12rem]">
             <PhaseCompletionChart data={phasePoints} />
           </div>
         </section>
 
-        <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4 lg:col-span-4">
-          <div className="flex shrink-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+        <section className="hidden min-h-0 flex-col overflow-hidden rounded-[1.25rem] border border-border/60 bg-card p-3.5 sm:p-4 lg:col-span-4 lg:flex">
+          <div className="flex shrink-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
             <PieChart className="h-3.5 w-3.5" />
             Time split
           </div>
-          <div className="mt-3 h-[12rem]">
+          <div className="mt-3 h-[12rem] min-w-0">
             <TimeSplitChart
               investedMinutes={stats.investedMinutes}
               remainingMinutes={stats.remainingMinutes}
@@ -330,10 +337,10 @@ function formatMinutes(total: number) {
 /* ─────────────────── ui pieces ─────────────────── */
 
 const ACCENTS = {
-  emerald: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-  violet: "text-violet-500 bg-violet-500/10 border-violet-500/20",
-  sky: "text-sky-500 bg-sky-500/10 border-sky-500/20",
-  amber: "text-amber-500 bg-amber-500/10 border-amber-500/20",
+  emerald: "text-emerald-600 bg-emerald-500/10 border-emerald-500/15",
+  violet: "text-primary bg-primary/10 border-primary/15",
+  sky: "text-sky-600 bg-sky-500/10 border-sky-500/15",
+  amber: "text-amber-600 bg-amber-500/10 border-amber-500/15",
 } as const;
 
 function StatCard({
@@ -350,22 +357,22 @@ function StatCard({
   accent: keyof typeof ACCENTS;
 }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-card p-3.5">
+    <div className="rounded-2xl border border-border/60 bg-card p-3 max-md:p-2.5 sm:p-3.5">
       <span
         className={cn(
-          "flex h-7 w-7 items-center justify-center rounded-lg border",
+          "flex h-7 w-7 items-center justify-center rounded-lg border max-md:h-6 max-md:w-6",
           ACCENTS[accent]
         )}
       >
-        <Icon className="h-3.5 w-3.5" />
+        <Icon className="h-3.5 w-3.5 max-md:h-3 max-md:w-3" />
       </span>
-      <p className="mt-2.5 text-[18px] font-semibold tabular-nums leading-none text-foreground">
+      <p className="mt-2.5 text-[17px] font-semibold tabular-nums tracking-tight leading-none text-foreground max-md:mt-2 max-md:text-[16px] sm:text-[18px]">
         {value}
       </p>
-      <p className="mt-1.5 text-[11px] font-medium leading-none text-foreground">
+      <p className="mt-1.5 text-[11px] font-medium leading-snug tracking-tight text-foreground max-md:mt-1 max-md:text-[10.5px]">
         {label}
       </p>
-      <p className="mt-1 text-[10.5px] leading-none text-muted-foreground">
+      <p className="mt-1 text-[10.5px] leading-none text-muted-foreground max-md:text-[10px]">
         {hint}
       </p>
     </div>

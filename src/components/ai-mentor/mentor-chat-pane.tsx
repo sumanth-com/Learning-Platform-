@@ -19,7 +19,6 @@ import {
   Bookmark,
   Bug,
   Check,
-  ChevronDown,
   ClipboardCheck,
   Code2,
   Copy,
@@ -50,6 +49,7 @@ import { toast } from "sonner";
 import type { AiMessageRow } from "@/types/database";
 import type { MentorResponseMode } from "@/features/ai-mentor/types";
 import { MentorMarkdown } from "@/components/ai-mentor/mentor-markdown";
+import { MentorModelPicker } from "@/components/ai-mentor/mentor-model-picker";
 import { bookmarkMessageAction } from "@/features/ai-mentor/actions/mentor-actions";
 import { AI_MENTOR_ROUTES } from "@/features/ai-mentor/types";
 import { AI_MENTOR_MAX_ATTACHMENTS } from "@/features/ai-mentor/repositories/attachments.repository";
@@ -97,14 +97,9 @@ type MentorChatPaneProps = {
   onRegenerate: (messageId?: string) => void;
   onContinue: () => void;
   onEnsureConversation?: () => Promise<string | null>;
+  /** Slimmer mobile header — ChatGPT-style model title centered. */
+  compactMobileChrome?: boolean;
 };
-
-const MODEL_OPTIONS = [
-  { id: "supra", label: "Supra", available: true },
-  { id: "supra-pro", label: "Supra Pro", available: false },
-  { id: "supra-pro-plus", label: "Supra Pro+", available: false },
-  { id: "premium", label: "Premium", available: false },
-] as const;
 
 function MentorAuroraBackground({ vivid = false }: { vivid?: boolean }) {
   return (
@@ -189,106 +184,6 @@ const PLACEHOLDERS = [
   "Paste code to review…",
   "Help me debug this…",
 ];
-
-function ModelPicker({ openAbove = false }: { openAbove?: boolean }) {
-  const [open, setOpen] = useState(false);
-  const [modelId, setModelId] = useState<(typeof MODEL_OPTIONS)[number]["id"]>(
-    "supra"
-  );
-  const ref = useRef<HTMLDivElement>(null);
-  const current = MODEL_OPTIONS.find((m) => m.id === modelId) ?? MODEL_OPTIONS[0];
-
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("mousedown", onDown);
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("mousedown", onDown);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  return (
-    <div className="relative" ref={ref}>
-      <button
-        type="button"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        className={cn(
-          "inline-flex h-8 items-center gap-1.5 rounded-full border border-border/70 bg-muted/50 px-2.5",
-          "text-[12px] font-medium text-foreground/90 shadow-sm",
-          "transition-[background-color,border-color,box-shadow] duration-150",
-          "hover:border-border hover:bg-muted hover:shadow",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-          open && "border-border bg-muted"
-        )}
-      >
-        <span className="max-w-[140px] truncate">{current.label}</span>
-        <ChevronDown
-          className={cn(
-            "h-3.5 w-3.5 text-muted-foreground transition-transform duration-150",
-            open && "rotate-180"
-          )}
-        />
-      </button>
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            role="listbox"
-            aria-label="Model"
-            initial={{ opacity: 0, y: openAbove ? 4 : -4, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: openAbove ? 2 : -2, scale: 0.98 }}
-            transition={{ duration: 0.15 }}
-            className={cn(
-              "absolute right-0 z-50 min-w-[180px] overflow-hidden rounded-xl border border-border/80 bg-card p-1 shadow-[0_14px_38px_-12px_rgba(0,0,0,0.32)]",
-              openAbove ? "bottom-10" : "top-10"
-            )}
-          >
-            {MODEL_OPTIONS.map((opt) => (
-              <button
-                key={opt.id}
-                type="button"
-                role="option"
-                aria-selected={opt.id === modelId}
-                className={cn(
-                  "flex w-full items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors",
-                  opt.id === modelId
-                    ? "bg-muted font-medium text-foreground"
-                    : "text-foreground hover:bg-muted/70",
-                  !opt.available && "opacity-70"
-                )}
-                onClick={() => {
-                  if (!opt.available) {
-                    toast.message("Coming soon");
-                    setOpen(false);
-                    return;
-                  }
-                  setModelId(opt.id);
-                  setOpen(false);
-                }}
-              >
-                <span>{opt.label}</span>
-                {!opt.available ? (
-                  <span className="text-[10px] text-muted-foreground">Soon</span>
-                ) : opt.id === modelId ? (
-                  <Check className="h-3.5 w-3.5 text-foreground" />
-                ) : null}
-              </button>
-            ))}
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 const PROMPT_GROUPS = {
   Explore: [
@@ -548,9 +443,8 @@ const MessageRow = memo(function MessageRow({
 
   return (
     <motion.div
-      initial={streaming ? false : { opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: streaming ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
+      initial={false}
+      animate={{ opacity: 1 }}
       className={cn(
         "group/msg mx-auto w-full max-w-[760px]",
         isUser && "flex justify-end"
@@ -573,7 +467,7 @@ const MessageRow = memo(function MessageRow({
                 Edited
               </span>
             ) : null}
-            <div className="flex gap-0.5 opacity-0 transition-opacity duration-150 group-hover/msg:opacity-100 focus-within:opacity-100">
+            <div className="flex gap-0.5 opacity-100 transition-opacity duration-150 sm:opacity-0 sm:group-hover/msg:opacity-100 sm:focus-within:opacity-100">
               <IconAction label="Copy" onClick={copyText}>
                 <Copy className="h-3.5 w-3.5" />
               </IconAction>
@@ -614,7 +508,7 @@ const MessageRow = memo(function MessageRow({
           ) : null}
 
           {message.status === "complete" && message.content ? (
-            <div className="mt-1.5 flex items-center gap-0.5 opacity-0 transition-opacity duration-150 group-hover/msg:opacity-100 focus-within:opacity-100">
+            <div className="mt-1.5 flex items-center gap-0.5 opacity-100 transition-opacity duration-150 sm:opacity-0 sm:group-hover/msg:opacity-100 sm:focus-within:opacity-100">
               <IconAction label="Copy" onClick={copyText}>
                 <Copy className="h-3.5 w-3.5" />
               </IconAction>
@@ -684,6 +578,7 @@ export function MentorChatPane({
   onRegenerate,
   onContinue,
   onEnsureConversation,
+  compactMobileChrome = false,
 }: MentorChatPaneProps) {
   const [draft, setDraft] = useState("");
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -1214,7 +1109,11 @@ export function MentorChatPane({
           </div>
 
           <div className="flex items-center gap-2">
-            {isEmptyChat ? <ModelPicker openAbove /> : null}
+            {isEmptyChat ? (
+              <div className={cn(compactMobileChrome && "max-lg:hidden")}>
+                <MentorModelPicker />
+              </div>
+            ) : null}
             {isStreaming ? (
               <button
                 type="button"
@@ -1286,8 +1185,14 @@ export function MentorChatPane({
         ) : null}
       </AnimatePresence>
 
+      {/* Desktop conversation chrome only — mobile uses workspace bar */}
       {!isEmptyChat ? (
-        <header className="relative z-10 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/40 px-4 backdrop-blur-md sm:px-6">
+        <header
+          className={cn(
+            "relative z-10 flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/40 px-4 backdrop-blur-md sm:px-6",
+            compactMobileChrome && "max-lg:hidden"
+          )}
+        >
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 shrink-0 text-foreground/70" />
@@ -1306,9 +1211,14 @@ export function MentorChatPane({
                 Generating
               </span>
             ) : null}
-            <ModelPicker />
+            <MentorModelPicker />
           </div>
         </header>
+      ) : null}
+
+      {/* Reserve space under floating mobile chrome */}
+      {compactMobileChrome ? (
+        <div className="h-11 shrink-0 lg:hidden" aria-hidden />
       ) : null}
 
       <div
@@ -1336,7 +1246,7 @@ export function MentorChatPane({
             ))}
           </div>
         ) : isEmptyChat ? (
-          <div className="mx-auto flex min-h-full w-full max-w-[720px] flex-col justify-center gap-4 px-4 py-5 sm:px-6 sm:py-6">
+          <div className="mx-auto flex min-h-full w-full max-w-[720px] flex-col justify-center gap-4 px-4 py-5 max-md:pb-4 sm:px-6 sm:py-6">
             <motion.div
               initial={{ opacity: 0, y: 10, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1456,7 +1366,7 @@ export function MentorChatPane({
       </div>
 
       {!isEmptyChat ? (
-        <div className="relative z-10 shrink-0 px-3 pb-3 pt-1 sm:px-6 sm:pb-4">
+        <div className="relative z-10 shrink-0 px-3 pb-3 pt-1 max-md:pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6 sm:pb-4">
           {error ? (
             <p className="mb-2 text-center text-xs text-rose-600" role="alert">
               {error}
@@ -1465,7 +1375,7 @@ export function MentorChatPane({
 
           <div className="mx-auto max-w-[760px]">
             {renderComposer()}
-            <p className="mt-2.5 text-center text-[11px] text-muted-foreground/75">
+            <p className="mt-2.5 hidden text-center text-[11px] text-muted-foreground/75 sm:block">
               Enter to send · Shift+Enter newline · Drop or paste files · Esc
               stops generation
             </p>

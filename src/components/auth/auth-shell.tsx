@@ -47,7 +47,7 @@ export function AuthShell({
   const points = panelPoints ?? panel.points;
 
   return (
-    <div className="relative flex h-svh max-h-svh items-stretch overflow-hidden bg-[#0c0d0e] p-3 sm:p-4 lg:p-5">
+    <div className="relative flex min-h-svh items-stretch overflow-x-hidden overflow-y-auto bg-[#0c0d0e] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:p-4 lg:p-5">
       {/* Brand aurora — same family as /public landing */}
       <div
         aria-hidden
@@ -58,7 +58,7 @@ export function AuthShell({
         }}
       />
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl overflow-hidden rounded-[1.5rem] bg-[#f7f4f1] shadow-[0_40px_100px_-40px_rgba(0,0,0,0.65)] sm:rounded-[1.75rem] lg:rounded-[2rem]">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl min-h-[calc(100svh-1.5rem)] flex-1 flex-col rounded-[1.5rem] bg-[#f7f4f1] shadow-[0_40px_100px_-40px_rgba(0,0,0,0.65)] sm:min-h-[calc(100svh-2rem)] sm:rounded-[1.75rem] lg:min-h-[min(100%,44rem)] lg:flex-row lg:overflow-hidden lg:rounded-[2rem]">
         {/* Left marketing panel — soft aurora under readable dark type */}
         <aside className="relative hidden min-h-0 w-[48%] flex-col justify-between overflow-hidden bg-[#fbf9f7] p-8 lg:flex xl:w-[52%] xl:p-10">
           <AuthLeftAurora intensity="soft" />
@@ -120,63 +120,67 @@ export function AuthShell({
         </aside>
 
         {/* Right form column — fuller aurora behind the card */}
-        <section className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-[#f4f1ee] px-4 py-4 sm:px-6 sm:py-5 lg:px-8 lg:py-6">
+        <section className="relative flex min-h-0 flex-1 flex-col bg-[#f4f1ee] px-4 py-4 sm:px-6 sm:py-5 lg:overflow-hidden lg:px-8 lg:py-6">
           <AuthLeftAurora intensity="full" />
 
-          <div className="relative z-10 mb-3 flex shrink-0 items-center justify-between lg:hidden">
-            <Link
-              href={AUTH_ROUTES.public}
-              className="inline-flex items-center gap-2 text-[14px] font-semibold tracking-tight text-[#1c1d21]"
-            >
-              <SupraBaseMark className="h-7 w-7" />
-              {SITE.name}
-            </Link>
-          </div>
+          <div className="relative z-10 flex min-h-0 flex-1 flex-col">
+            {/* Brand + card centered as one stack (logo sits above the card) */}
+            <div className="flex min-h-0 flex-1 items-center justify-center py-2">
+              <div className="flex w-full max-w-[400px] flex-col items-center max-md:max-w-[min(100%,22.5rem)]">
+                <Link
+                  href={AUTH_ROUTES.public}
+                  className="mb-3.5 inline-flex items-center gap-2 text-[15px] font-semibold tracking-[-0.02em] text-[#1c1d21] lg:hidden"
+                >
+                  <SupraBaseMark className="h-7 w-7" />
+                  {SITE.name}
+                </Link>
 
-          <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center">
-            <div
-              className={cn(
-                "flex w-full max-w-[400px] max-h-full flex-col overflow-y-auto rounded-[1.35rem] bg-white/95 px-5 py-5 shadow-[0_28px_70px_-30px_rgba(40,30,40,0.4)] backdrop-blur-sm sm:px-6 sm:py-6"
-              )}
-            >
-              <div className="mb-4 shrink-0 text-center">
-                <h1 className="text-[1.45rem] font-semibold tracking-[-0.03em] text-[#14151a] sm:text-[1.6rem]">
-                  {title}
-                </h1>
-                <p className="mt-1.5 text-[13px] leading-5 text-[#4b5160]">
-                  {description}
-                </p>
+                <div
+                  className={cn(
+                    "flex w-full flex-col rounded-[1.35rem] bg-white/95 px-5 py-5 shadow-[0_28px_70px_-30px_rgba(40,30,40,0.4)] backdrop-blur-sm sm:px-6 sm:py-6",
+                    "lg:max-h-full lg:overflow-y-auto"
+                  )}
+                >
+                  <div className="mb-4 shrink-0 text-center">
+                    <h1 className="text-[1.45rem] font-semibold tracking-[-0.03em] text-[#14151a] sm:text-[1.6rem]">
+                      {title}
+                    </h1>
+                    <p className="mt-1.5 text-[13px] leading-5 text-[#4b5160]">
+                      {description}
+                    </p>
+                  </div>
+
+                  <div className="min-w-0">{children}</div>
+
+                  {footer ? (
+                    <p className="mt-4 shrink-0 text-center text-[13px] font-normal text-[#14151a]">
+                      {footer}
+                    </p>
+                  ) : null}
+                </div>
               </div>
-
-              <div className="min-h-0">{children}</div>
-
-              {footer ? (
-                <p className="mt-4 shrink-0 text-center text-[13px] font-normal text-[#14151a]">
-                  {footer}
-                </p>
-              ) : null}
             </div>
-          </div>
 
-          <div className="relative z-10 mt-3 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-[#8b93a3] lg:hidden">
-            <Link
-              href={SITE_ROUTES.terms}
-              className="transition hover:text-[#1c1d21]"
-            >
-              Terms
-            </Link>
-            <Link
-              href={SITE_ROUTES.privacy}
-              className="transition hover:text-[#1c1d21]"
-            >
-              Privacy
-            </Link>
-            <Link
-              href={SITE_ROUTES.contact}
-              className="transition hover:text-[#1c1d21]"
-            >
-              Contact
-            </Link>
+            <div className="relative z-10 mt-1 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-1 pb-0.5 text-[11px] text-[#8b93a3] lg:hidden">
+              <Link
+                href={SITE_ROUTES.terms}
+                className="transition hover:text-[#1c1d21]"
+              >
+                Terms
+              </Link>
+              <Link
+                href={SITE_ROUTES.privacy}
+                className="transition hover:text-[#1c1d21]"
+              >
+                Privacy
+              </Link>
+              <Link
+                href={SITE_ROUTES.contact}
+                className="transition hover:text-[#1c1d21]"
+              >
+                Contact
+              </Link>
+            </div>
           </div>
         </section>
       </div>

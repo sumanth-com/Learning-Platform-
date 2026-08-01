@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, ChevronRight, Menu } from "lucide-react";
-import { usePortalShell } from "@/components/portal/portal-shell-context";
+import { ArrowLeft, ChevronRight } from "lucide-react";
+import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { usePortalChrome } from "@/components/portal/portal-chrome";
 import { ProfileMenu } from "@/components/portal/profile-menu";
 import { HeaderNotifications } from "@/components/notifications/header-notifications";
 import type { PortalUser } from "@/features/portal/types";
+import { PORTAL_ROUTES } from "@/features/portal/types";
+import { SITE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type StudentHeaderProps = {
@@ -22,47 +24,59 @@ function isProjectDetailPath(pathname: string) {
 
 export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
   const pathname = usePathname();
-  const { toggleMobile } = usePortalShell();
   const { breadcrumbs } = usePortalChrome();
   const showBackToProjects = isProjectDetailPath(pathname);
   const hasBreadcrumbs = Boolean(breadcrumbs && breadcrumbs.length > 0);
+  const mentorMobile = pathname.startsWith("/ai-mentor");
 
   return (
-    <header className="portal-topbar sticky top-0 z-20 border-b border-zinc-800/90 backdrop-blur-xl">
-      <div className="flex min-h-16 items-center gap-2.5 px-4 py-3 sm:gap-3 sm:px-6">
-        <button
-          type="button"
-          className={cn(
-            "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md md:hidden",
-            "text-muted-foreground transition-colors",
-            "hover:bg-muted hover:text-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-          )}
-          onClick={toggleMobile}
-          aria-label="Open navigation"
-        >
-          <Menu className="h-4 w-4" strokeWidth={1.75} />
-        </button>
-
+    <header
+      className={cn(
+        "portal-topbar sticky top-0 z-20 backdrop-blur-xl",
+        mentorMobile
+          ? "max-lg:border-b-0 border-b border-zinc-800/90"
+          : "border-b border-zinc-800/90"
+      )}
+    >
+      <div className="flex min-h-14 items-center gap-2.5 px-3.5 py-2.5 sm:min-h-16 sm:gap-3 sm:px-6 sm:py-3 max-md:min-h-[3.25rem]">
+        {/* Desktop-only: back to projects. Mobile hits Continue-on-Desktop for labs. */}
         {showBackToProjects ? (
           <Link
             href="/projects"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/80 px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-zinc-700 hover:bg-zinc-900 hover:text-zinc-50"
+            className="hidden shrink-0 items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/80 px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-zinc-700 hover:bg-zinc-900 hover:text-zinc-50 md:inline-flex"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Back to Projects</span>
-            <span className="sm:hidden">Projects</span>
+            <span>Back to Projects</span>
           </Link>
         ) : null}
 
         <div className="flex min-w-0 flex-1 items-center gap-3">
+          {/* Mobile companion: brand lockup instead of page titles */}
+          <Link
+            href={PORTAL_ROUTES.dashboard}
+            className="inline-flex min-w-0 items-center gap-2 md:hidden"
+            aria-label={`${SITE.name} home`}
+          >
+            <SupraBaseMark className="h-7 w-7" />
+            <span className="truncate text-[14.5px] font-semibold tracking-[-0.02em] text-foreground">
+              {SITE.name}
+            </span>
+          </Link>
+
+          {/* Desktop / tablet: breadcrumbs or page title */}
           {hasBreadcrumbs ? (
-            <nav aria-label="Breadcrumb" className="min-w-0 flex-1 overflow-hidden">
+            <nav
+              aria-label="Breadcrumb"
+              className="hidden min-w-0 flex-1 overflow-hidden md:block"
+            >
               <ol className="flex min-w-0 items-center gap-1.5 overflow-x-auto whitespace-nowrap text-sm [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {breadcrumbs!.map((crumb, index) => {
                   const isLast = index === breadcrumbs!.length - 1;
                   return (
-                    <li key={`${crumb.label}-${index}`} className="flex items-center gap-1.5">
+                    <li
+                      key={`${crumb.label}-${index}`}
+                      className="flex items-center gap-1.5"
+                    >
                       {index > 0 ? (
                         <ChevronRight
                           className="h-3.5 w-3.5 shrink-0 text-zinc-600"
@@ -93,18 +107,18 @@ export function StudentHeader({ title, subtitle, user }: StudentHeaderProps) {
               </ol>
             </nav>
           ) : title ? (
-            <div className="flex min-w-0 flex-1 items-center overflow-visible py-0.5">
+            <div className="hidden min-w-0 flex-1 items-center overflow-visible py-0.5 md:flex">
               <h1 className="truncate text-base font-semibold leading-snug tracking-tight text-foreground sm:text-lg">
                 {title}
               </h1>
               {subtitle ? (
-                <p className="ml-2 truncate text-xs leading-snug text-muted-foreground">
+                <p className="ml-2 hidden truncate text-xs leading-snug text-muted-foreground sm:block">
                   {subtitle}
                 </p>
               ) : null}
             </div>
           ) : (
-            <div className="min-w-0 flex-1" />
+            <div className="hidden min-w-0 flex-1 md:block" />
           )}
         </div>
 

@@ -2,9 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Info } from "lucide-react";
+import { CheckCircle2, Info, Laptop, Link2 } from "lucide-react";
+import { toast } from "sonner";
 import { PortalChrome } from "@/components/portal/portal-chrome";
 import { CertTechLogo } from "@/components/certifications/cert-tech-logos";
+import { Button } from "@/components/ui/button";
 import {
   CERT_CATEGORIES,
   CERTIFICATIONS,
@@ -18,6 +20,7 @@ import {
   msUntilRetry,
 } from "@/features/certifications/lib/retry-cooldown";
 import type { CertCategoryId } from "@/features/certifications/types";
+import { useMinWidth } from "@/hooks/use-min-width";
 import { cn } from "@/lib/utils";
 
 const SHOWCASE = CERT_CATEGORIES.slice(0, 14);
@@ -40,17 +43,81 @@ function continueHref(certId: string, lastPath?: string) {
   return map[lastPath] ?? CERT_FLOW.lobby(certId);
 }
 
+function DesktopAssessmentsCard({ remaining }: { remaining: number }) {
+  const copyLink = async () => {
+    try {
+      const url = `${window.location.origin}/certifications`;
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied — open it on your laptop");
+    } catch {
+      toast.message("Open Certifications on your desktop or laptop");
+    }
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-card px-5 py-6 text-center">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 70% at 50% 0%, color-mix(in srgb, var(--color-primary) 16%, transparent), transparent 55%)",
+        }}
+      />
+      <div className="relative mx-auto flex max-w-sm flex-col items-center">
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+          <Laptop className="h-6 w-6" strokeWidth={1.75} />
+        </span>
+        <h3 className="mt-3.5 text-[16px] font-semibold tracking-tight text-foreground">
+          Continue on Desktop
+        </h3>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
+          {remaining > 0
+            ? `${remaining} more certification${remaining === 1 ? "" : "s"} available. Take assessments on a laptop or desktop for the full coding workspace.`
+            : "Certification assessments need a laptop or desktop for the full coding workspace."}
+        </p>
+        <Button
+          type="button"
+          className="mt-5 h-11 w-full gap-2 rounded-xl text-[13px] font-semibold"
+          onClick={() => void copyLink()}
+        >
+          <Link2 className="h-4 w-4" />
+          Copy link for desktop
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function CertificationsWorkspace() {
   const { state, isPassed, ready, clearAttempt } = useCertifications();
   const [focus, setFocus] = useState<CertCategoryId | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const [highlightId, setHighlightId] = useState<string | null>(null);
+  const isMdUp = useMinWidth(768);
+  // Treat unknown (SSR/hydration) as desktop so layout doesn't flash companion mode
+  const companionMobile = isMdUp === false;
+
   const earned = ready ? state.certificates.length : 0;
 
   const list = useMemo(() => {
     if (!focus) return CERTIFICATIONS;
     return CERTIFICATIONS.filter((c) => c.categoryId === focus);
   }, [focus]);
+
+  const completedList = useMemo(
+    () => list.filter((c) => isPassed(c.id)),
+    [list, isPassed]
+  );
+
+  const remainingCount = useMemo(() => {
+    const source = focus
+      ? CERTIFICATIONS.filter((c) => c.categoryId === focus)
+      : CERTIFICATIONS;
+    return source.filter((c) => !isPassed(c.id)).length;
+  }, [focus, isPassed]);
+
+  const visibleList = companionMobile ? completedList : list;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -66,7 +133,6 @@ export function CertificationsWorkspace() {
     return () => window.clearTimeout(t);
   }, [highlightId]);
 
-  // Keep cooldown labels live, and clear expired fails so cards look fresh
   useEffect(() => {
     const id = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(id);
@@ -84,14 +150,19 @@ export function CertificationsWorkspace() {
     }
   }, [ready, state.attempts, now, clearAttempt]);
 
-  // Duplicate for seamless marquee
   const marquee = [...SHOWCASE, ...SHOWCASE];
 
   return (
     <>
       <PortalChrome title="Certifications" fillViewport />
       <div className="h-full min-h-0 overflow-y-auto bg-background">
-        <section className="relative overflow-hidden border-b border-border">
+        {/* Desktop hero + marquee */}
+        <section
+          className={cn(
+            "relative overflow-hidden border-b border-border",
+            companionMobile && "hidden"
+          )}
+        >
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0"
@@ -121,7 +192,6 @@ export function CertificationsWorkspace() {
             </div>
           </div>
 
-          {/* Creative logo card marquee */}
           <div className="relative mt-5 pb-8">
             <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-background to-transparent sm:w-20" />
             <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background to-transparent sm:w-20" />
@@ -164,9 +234,48 @@ export function CertificationsWorkspace() {
           </div>
         </section>
 
-        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {list.map((cert) => {
+        <div
+          className={cn(
+            "mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:px-8",
+            companionMobile && "max-w-lg px-5 pb-10 pt-6"
+          )}
+        >
+          {companionMobile ? (
+            <div className="mb-7 text-center">
+              <p className="text-[12px] font-medium text-muted-foreground">
+                {completedList.length > 0
+                  ? `${completedList.length} completed${earned > 0 ? ` · ${earned} certificate${earned === 1 ? "" : "s"}` : ""}`
+                  : "Your earned certificates"}
+              </p>
+              <h2 className="mt-3 text-[1.35rem] font-semibold tracking-tight text-foreground">
+                Completed
+              </h2>
+              <p className="mx-auto mt-1.5 max-w-[22rem] text-[13px] leading-relaxed text-muted-foreground">
+                View and share certificates you’ve earned. New assessments stay
+                on desktop.
+              </p>
+            </div>
+          ) : null}
+
+          {companionMobile && visibleList.length === 0 ? (
+            <div className="mb-7 rounded-2xl border border-dashed border-border/80 bg-muted/20 px-5 py-10 text-center">
+              <p className="text-[14px] font-medium text-foreground">
+                No certificates yet
+              </p>
+              <p className="mx-auto mt-1.5 max-w-sm text-[13px] leading-relaxed text-muted-foreground">
+                Pass a certification on your laptop, then it will show up here
+                to view and share.
+              </p>
+            </div>
+          ) : null}
+
+          <div
+            className={cn(
+              "grid gap-4 sm:grid-cols-2 lg:grid-cols-3",
+              companionMobile && "grid-cols-1 gap-3.5"
+            )}
+          >
+            {visibleList.map((cert) => {
               const meta = categoryMeta(cert.categoryId);
               const passed = isPassed(cert.id);
               const attempt = state.attempts[cert.id];
@@ -262,7 +371,8 @@ export function CertificationsWorkspace() {
                             : CERT_FLOW.root(cert.id)
                     }
                     className={cn(
-                      "relative mt-6 inline-flex rounded-md border px-3.5 py-1.5 text-[13px] font-medium transition",
+                      "relative mt-6 inline-flex min-h-10 items-center justify-center rounded-xl border px-3.5 py-2 text-[13px] font-medium transition",
+                      companionMobile && "w-full",
                       passed
                         ? "border-primary/45 bg-primary/10 text-primary hover:bg-primary/16"
                         : onCooldown
@@ -284,6 +394,20 @@ export function CertificationsWorkspace() {
               );
             })}
           </div>
+
+          {companionMobile ? (
+            <div className="mt-10 space-y-4 text-center">
+              <div>
+                <h2 className="text-[1.35rem] font-semibold tracking-tight text-foreground">
+                  Remaining assessments
+                </h2>
+                <p className="mx-auto mt-1.5 max-w-[22rem] text-[13px] leading-relaxed text-muted-foreground">
+                  Finish these on a larger screen for the coding workspace.
+                </p>
+              </div>
+              <DesktopAssessmentsCard remaining={remainingCount} />
+            </div>
+          ) : null}
         </div>
       </div>
 

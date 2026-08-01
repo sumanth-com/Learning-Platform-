@@ -26,14 +26,14 @@ export function SitePageShell({
       <footer className="relative z-10">
         <div
           className={cn(
-            "mx-auto flex flex-wrap items-center justify-between gap-3 px-5 py-8 text-[12px] text-white/35 sm:px-8",
+            "mx-auto flex flex-col items-center gap-2.5 px-5 py-8 text-center text-[12px] text-white/35 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-8 sm:text-left",
             wide ? "max-w-6xl" : "max-w-5xl"
           )}
         >
           <p>
             © {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </p>
-          <div className="flex flex-wrap gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <Link
               href={SITE_ROUTES.manual}
               className="transition hover:text-white/70"

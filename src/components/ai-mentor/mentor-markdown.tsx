@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { Check, Copy } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import "highlight.js/styles/github-dark.css";
 
@@ -20,20 +21,29 @@ function CodeBlock({
   const text = String(children).replace(/\n$/, "");
 
   const copy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1400);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast.success("Code copied");
+      window.setTimeout(() => setCopied(false), 1400);
+    } catch {
+      toast.error("Couldn’t copy code");
+    }
   };
 
   return (
     <div className="group/code relative my-4 overflow-hidden rounded-xl border border-white/10 bg-[#0d1117] shadow-sm">
-      <div className="flex items-center justify-between border-b border-white/10 px-3 py-1.5 text-[11px] text-white/50">
+      <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-1.5 text-[11px] text-white/50">
         <span className="font-medium lowercase tracking-wide">{language}</span>
         <button
           type="button"
-          onClick={copy}
+          onClick={() => void copy()}
           aria-label={copied ? "Copied" : "Copy code"}
-          className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-white/60 transition hover:bg-white/10 hover:text-white"
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-white/70 transition",
+            "hover:bg-white/10 hover:text-white",
+            "opacity-100" // always visible on mobile — no hover-only
+          )}
         >
           {copied ? (
             <Check className="h-3.5 w-3.5" />
@@ -48,6 +58,17 @@ function CodeBlock({
       </pre>
     </div>
   );
+}
+
+function extractText(node: React.ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(extractText).join("");
+  if (typeof node === "object" && "props" in node) {
+    const el = node as { props?: { children?: React.ReactNode } };
+    return extractText(el.props?.children);
+  }
+  return "";
 }
 
 export const MentorMarkdown = memo(function MentorMarkdown({
@@ -93,9 +114,12 @@ export const MentorMarkdown = memo(function MentorMarkdown({
         rehypePlugins={[rehypeHighlight]}
         components={{
           code({ className, children, ...props }) {
-            const isBlock = Boolean(className?.includes("language-"));
+            const text = extractText(children).replace(/\n$/, "");
+            const hasLanguage = Boolean(className?.includes("language-"));
+            // Fenced blocks are multi-line or tagged with a language class
+            const isBlock = hasLanguage || text.includes("\n");
             if (isBlock) {
-              return <CodeBlock className={className}>{children}</CodeBlock>;
+              return <CodeBlock className={className}>{text}</CodeBlock>;
             }
             return (
               <code

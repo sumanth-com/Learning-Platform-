@@ -23,13 +23,16 @@ export default async function ProfilePage() {
       <PortalChrome
         title="Profile"
         subtitle="Candidate details and your SupraBase identity card."
+        fillViewport
       />
-      <ProfileWorkspace
-        userId={user.id}
-        email={user.email || profile?.email || ""}
-        initialProfile={profile}
-        initialHeadline={headline}
-      />
+      <div className="flex h-full min-h-0 flex-col max-md:overflow-hidden md:overflow-y-auto">
+        <ProfileWorkspace
+          userId={user.id}
+          email={user.email || profile?.email || ""}
+          initialProfile={profile}
+          initialHeadline={headline}
+        />
+      </div>
     </>
   );
 }

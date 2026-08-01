@@ -6,6 +6,8 @@ import { Code2, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { useProgressStore } from "@/store/use-progress-store";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
+import { useMinWidth } from "@/hooks/use-min-width";
+import { isMobileAllowedLearnModuleSlug } from "@/lib/portal-mobile";
 import { cn } from "@/lib/utils";
 
 export type ResumeModuleCard = {
@@ -33,20 +35,30 @@ const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
 
 const CELL_GAP = "3px";
 const DAY_COL = "2.4rem";
+const MOBILE_DAY_COL = "1.6rem";
 
 export function DashboardPracticeFeatures({
   modules,
 }: DashboardPracticeFeaturesProps) {
   const hydrated = useStoreHydrated();
+  const isMdUp = useMinWidth(768);
+  const companionMobile = isMdUp === false;
   const completionDates = useProgressStore((s) => s.progress.completionDates);
 
-  const { cells, monthLabels, maxCount, weekCount } = useMemo(
-    () => buildHeatmap(Object.values(completionDates)),
-    [completionDates]
+  const visibleModules = useMemo(() => {
+    if (!companionMobile) return modules;
+    return modules
+      .filter((m) => isMobileAllowedLearnModuleSlug(m.slug))
+      .slice(0, 1);
+  }, [companionMobile, modules]);
+
+  const { cells, monthLabels, maxCount, weekCount, activeDays } = useMemo(
+    () =>
+      buildHeatmap(Object.values(completionDates), companionMobile ? 13 : null),
+    [completionDates, companionMobile]
   );
 
   const shareStreak = async () => {
-    const activeDays = cells.filter((c) => c.count > 0 && !c.pad).length;
     const text = `I've practiced on ${activeDays} days this year on Suprabase.`;
     try {
       if (navigator.share) {
@@ -60,22 +72,24 @@ export function DashboardPracticeFeatures({
     }
   };
 
+  const dayCol = companionMobile ? MOBILE_DAY_COL : DAY_COL;
+
   return (
-    <div className="flex w-full shrink-0 flex-col gap-3">
-      {modules.length > 0 ? (
+    <div className="flex w-full shrink-0 flex-col gap-2.5 sm:gap-3">
+      {visibleModules.length > 0 ? (
         <div className="flex flex-col gap-2.5">
-          {modules.map((mod) => (
+          {visibleModules.map((mod) => (
             <article
               key={mod.slug}
-              className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-card p-3.5 sm:flex-row sm:items-center sm:gap-4 sm:p-4"
+              className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-border/60 bg-card p-3.5 sm:flex-row sm:items-center sm:gap-4 sm:p-4 max-md:p-3"
             >
               <div className="flex min-w-0 flex-1 items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary max-md:h-9 max-md:w-9">
                   <Code2 className="h-4 w-4" strokeWidth={2} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                    <h3 className="truncate text-[14px] font-semibold text-foreground">
+                    <h3 className="truncate text-[14px] font-semibold tracking-tight text-foreground max-md:text-[13.5px]">
                       {mod.title}
                     </h3>
                     <span className="truncate text-[11px] text-muted-foreground">
@@ -99,7 +113,7 @@ export function DashboardPracticeFeatures({
               </div>
               <Link
                 href={mod.href}
-                className="inline-flex h-9 shrink-0 items-center justify-center rounded-xl bg-primary px-4 text-[12.5px] font-semibold text-primary-foreground transition hover:opacity-90"
+                className="inline-flex h-9 shrink-0 items-center justify-center rounded-xl bg-primary px-4 text-[12.5px] font-semibold tracking-tight text-primary-foreground transition hover:opacity-90 max-md:h-10 max-md:w-full"
               >
                 {mod.cta}
               </Link>
@@ -108,62 +122,68 @@ export function DashboardPracticeFeatures({
         </div>
       ) : null}
 
-      <section className="w-full rounded-2xl border border-border/70 bg-card p-4 sm:p-5">
+      <section className="w-full overflow-hidden rounded-2xl border border-border/60 bg-card p-3.5 sm:p-5 max-md:p-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-[14px] font-semibold tracking-tight text-foreground">
-            Practice streak
-          </h3>
+          <div className="min-w-0">
+            <h3 className="text-[14px] font-semibold tracking-tight text-foreground max-md:text-[13.5px]">
+              Practice streak
+            </h3>
+            {companionMobile && hydrated ? (
+              <p className="mt-0.5 text-[11.5px] text-muted-foreground">
+                {activeDays} active day{activeDays === 1 ? "" : "s"} · last{" "}
+                {weekCount} weeks
+              </p>
+            ) : null}
+          </div>
           <button
             type="button"
             onClick={() => void shareStreak()}
             aria-label="Share practice streak"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
           >
             <Share2 className="h-3.5 w-3.5" />
           </button>
         </div>
 
         {!hydrated ? (
-          <div className="mt-5 h-[8rem] w-full animate-pulse rounded-xl bg-muted/40" />
+          <div className="mt-4 h-[7rem] w-full animate-pulse rounded-xl bg-muted/40 sm:mt-5 sm:h-[8rem]" />
         ) : (
-          <div className="mt-5 w-full">
-            {/* Month labels — same column track as the week grid */}
+          <div className="mt-4 w-full min-w-0 overflow-hidden sm:mt-5">
             <div
-              className="mb-1.5 grid w-full overflow-visible"
+              className="mb-1.5 grid w-full"
               style={{
                 gap: CELL_GAP,
-                gridTemplateColumns: `${DAY_COL} repeat(${weekCount}, minmax(0, 1fr))`,
+                gridTemplateColumns: `${dayCol} repeat(${weekCount}, minmax(0, 1fr))`,
               }}
             >
               <span aria-hidden />
               {monthLabels.map((label, i) => (
                 <span
                   key={`m-${i}`}
-                  className="relative z-[1] overflow-visible whitespace-nowrap text-left text-[10px] font-medium leading-none text-muted-foreground"
+                  className="overflow-hidden whitespace-nowrap text-left text-[9.5px] font-medium leading-none text-muted-foreground sm:text-[10px]"
                 >
                   {label || "\u00A0"}
                 </span>
               ))}
             </div>
 
-            {/* Weekdays + cells share one aligned grid */}
             <div
               className="grid w-full"
               style={{
                 gap: CELL_GAP,
-                gridTemplateColumns: `${DAY_COL} repeat(${weekCount}, minmax(0, 1fr))`,
+                gridTemplateColumns: `${dayCol} repeat(${weekCount}, minmax(0, 1fr))`,
                 gridTemplateRows: `repeat(7, minmax(0, 1fr))`,
-                aspectRatio: `${2.2 + weekCount} / 7`,
-                maxHeight: "9.5rem",
+                aspectRatio: `${1.8 + weekCount} / 7`,
+                maxHeight: companionMobile ? "6.75rem" : "9.5rem",
               }}
             >
               {WEEKDAYS.map((day, row) => (
                 <span
                   key={day}
                   style={{ gridColumn: 1, gridRow: row + 1 }}
-                  className="flex items-center text-[10px] font-medium leading-none text-muted-foreground"
+                  className="flex items-center text-[9.5px] font-medium leading-none text-muted-foreground sm:text-[10px]"
                 >
-                  {day}
+                  {companionMobile ? day.slice(0, 1) : day}
                 </span>
               ))}
 
@@ -183,7 +203,7 @@ export function DashboardPracticeFeatures({
                       gridRow: weekday + 1,
                     }}
                     className={cn(
-                      "min-h-0 min-w-0 rounded-[4px]",
+                      "min-h-0 min-w-0 rounded-[3px] sm:rounded-[4px]",
                       cell.pad ? "bg-transparent" : LEVEL_COLORS[cell.level]
                     )}
                   />
@@ -191,7 +211,7 @@ export function DashboardPracticeFeatures({
               })}
             </div>
 
-            <div className="mt-3.5 flex items-center justify-end gap-1.5 text-[10px] text-muted-foreground">
+            <div className="mt-3 flex items-center justify-end gap-1.5 text-[10px] text-muted-foreground">
               <span>Less</span>
               {LEVEL_COLORS.map((color, i) => (
                 <span
@@ -220,7 +240,7 @@ type HeatCell = {
   pad?: boolean;
 };
 
-function buildHeatmap(rawDates: string[]) {
+function buildHeatmap(rawDates: string[], weekLimit: number | null) {
   const counts = new Map<string, number>();
   for (const raw of rawDates) {
     const day = toDayKey(raw);
@@ -231,9 +251,12 @@ function buildHeatmap(rawDates: string[]) {
   const end = new Date();
   end.setHours(23, 59, 59, 999);
 
-  // Monday-start weeks so weekday labels line up Mon → Sun
   const start = new Date(end);
-  start.setDate(start.getDate() - 364);
+  if (weekLimit != null) {
+    start.setDate(start.getDate() - weekLimit * 7 + 1);
+  } else {
+    start.setDate(start.getDate() - 364);
+  }
   start.setHours(0, 0, 0, 0);
   while (start.getDay() !== 1) {
     start.setDate(start.getDate() - 1);
@@ -251,7 +274,6 @@ function buildHeatmap(rawDates: string[]) {
     cursor.setDate(cursor.getDate() + 1);
   }
 
-  // Complete the final week so the grid stays rectangular
   while (cells.length % 7 !== 0) {
     const key = toDayKey(localIso(cursor))!;
     cells.push({ date: `pad-${key}`, count: 0, level: 0, pad: true });
@@ -265,6 +287,7 @@ function buildHeatmap(rawDates: string[]) {
 
   const weekCount = cells.length / 7;
   const monthLabels = Array.from({ length: weekCount }, () => "");
+  const activeDays = cells.filter((c) => c.count > 0 && !c.pad).length;
 
   for (let w = 0; w < weekCount; w++) {
     const week = cells.slice(w * 7, w * 7 + 7);
@@ -290,7 +313,7 @@ function buildHeatmap(rawDates: string[]) {
     }
   }
 
-  return { cells, monthLabels, maxCount, weekCount };
+  return { cells, monthLabels, maxCount, weekCount, activeDays };
 }
 
 function intensityLevel(count: number, max: number) {

@@ -120,25 +120,37 @@ function Row({ label, done }: { label: string; done?: boolean }) {
 
 export function LandingCore() {
   return (
-    <section id="platform" className="relative overflow-hidden py-20 sm:py-28">
+    <section id="platform" className="relative overflow-x-clip py-16 sm:overflow-hidden sm:py-28">
       <div aria-hidden className={styles.coreGrid} />
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal className="text-center">
           <span className={styles.sectionPill}>One connected system</span>
-          <h2 className={`${styles.sectionHeading} mx-auto max-w-3xl`}>
-            One profile. Every skill. Every project. Every certification.
+          <h2 className={`${styles.sectionHeading} mx-auto max-w-[20rem] max-md:text-[1.7rem] max-md:leading-[1.2] sm:max-w-3xl`}>
+            <span className="sm:hidden">
+              <span className="block">One profile. Every skill.</span>
+              <span className="block">Every project. Every certification.</span>
+            </span>
+            <span className="hidden sm:inline">
+              One profile. Every skill. Every project. Every certification.
+            </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-balance text-[13px] leading-6 text-white/45">
-            Your roadmap, coding practice, AI mentor, projects, certifications,
-            notes, and progress stay connected—creating a personalized software
-            engineering experience from beginner to production-ready developer.
+          <p className="mx-auto mt-3.5 max-w-2xl text-balance text-[13px] leading-6 text-white/45 max-md:mt-3 max-md:max-w-[21rem] max-md:text-[12.5px] max-md:leading-[1.45]">
+            <span className="sm:hidden">
+              Your roadmap, practice, AI mentor, projects, and certifications
+              stay connected—from beginner to production-ready developer.
+            </span>
+            <span className="hidden sm:inline">
+              Your roadmap, coding practice, AI mentor, projects, certifications,
+              notes, and progress stay connected—creating a personalized software
+              engineering experience from beginner to production-ready developer.
+            </span>
           </p>
         </Reveal>
 
         <RevealGroup
           delay={0.1}
-          className="relative mt-16 grid items-stretch gap-5 md:grid-cols-[minmax(0,1fr)_10.5rem_minmax(0,1fr)] md:grid-rows-2 md:gap-x-12 md:gap-y-6 lg:grid-cols-[minmax(0,1fr)_13rem_minmax(0,1fr)] lg:gap-x-16"
+          className="relative mt-12 grid items-stretch gap-4 sm:mt-16 sm:gap-5 md:grid-cols-[minmax(0,1fr)_10.5rem_minmax(0,1fr)] md:grid-rows-2 md:gap-x-12 md:gap-y-6 lg:grid-cols-[minmax(0,1fr)_13rem_minmax(0,1fr)] lg:gap-x-16"
         >
           <div className="h-full md:col-start-1 md:row-start-1">
             <CoreCard icon={GitBranch} title="Roadmap" side="left" slot="top">
@@ -158,17 +170,18 @@ export function LandingCore() {
             </CoreCard>
           </div>
 
-          <RevealItem className="relative mx-auto flex h-[12rem] w-[12rem] items-center justify-center self-center md:col-start-2 md:row-span-2 lg:h-[14.5rem] lg:w-[14.5rem]">
+          {/* Plain div — Framer transform parents can freeze CSS ring animations on iOS */}
+          <div className="relative z-10 mx-auto flex h-[13.5rem] w-full max-w-[16rem] items-center justify-center self-center overflow-visible py-2 md:col-start-2 md:row-span-2 md:h-[12rem] md:w-[12rem] md:max-w-none md:py-0 lg:h-[14.5rem] lg:w-[14.5rem]">
             <span aria-hidden className={styles.coreHalo} />
             <span aria-hidden className={styles.coreOrb}>
               <span className={`${styles.coreRing} ${styles.coreRingA}`} />
               <span className={`${styles.coreRing} ${styles.coreRingB}`} />
               <span className={`${styles.coreRing} ${styles.coreRingC}`} />
             </span>
-            <span className="pointer-events-none absolute bottom-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+            <span className="pointer-events-none absolute bottom-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45 md:bottom-1">
               Ask Supra
             </span>
-          </RevealItem>
+          </div>
 
           <div className="h-full md:col-start-3 md:row-start-1">
             <CoreCard icon={TrendingUp} title="Progress" side="right" slot="top">

@@ -34,7 +34,7 @@ export function ModuleHubShell({
           "h-full min-h-0",
           onChallenge
             ? "overflow-hidden"
-            : "overflow-hidden px-4 py-4 sm:px-6"
+            : "overflow-x-hidden overflow-y-auto px-3 py-3 max-md:pb-2 sm:px-6 sm:py-4"
         )}
       >
         {children}

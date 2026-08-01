@@ -26,7 +26,9 @@ import {
   WEEK_CARD_ART_PADDING,
 } from "@/components/roadmap/week-roadmap-art";
 import { getWeekRoadmapArt } from "@/lib/week-roadmap-art";
+import { useMinWidth } from "@/hooks/use-min-width";
 import { cn } from "@/lib/utils";
+import { MOBILE_LEARN_MODULE_LIMIT } from "@/lib/portal-mobile";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 import {
   isProgrammingFundamentalsModule,
@@ -346,6 +348,8 @@ export function JourneyRoadmap({
 }: JourneyRoadmapProps) {
   const assignmentSet = new Set(assignmentLessonIds);
   const projectSet = new Set(projectModuleIds);
+  const isMdUp = useMinWidth(768);
+  const companionMobile = isMdUp === false;
 
   const cards = buildModuleCards(journey, assignmentSet, projectSet);
   const completedModules = cards.filter((c) => c.done).length;
@@ -363,18 +367,35 @@ export function JourneyRoadmap({
     <>
       <PortalChrome title="Roadmap" fillViewport />
       <div className="h-full min-h-0 overflow-y-auto bg-zinc-950">
-        <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:py-8">
+        <div
+          className={cn(
+            "mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:py-8",
+            companionMobile && "max-w-md px-4 py-5"
+          )}
+        >
           <header className="mb-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
               <div className="flex min-w-0 flex-1 flex-col gap-4">
-                <h1 className="text-2xl font-bold tracking-tight text-zinc-50 sm:text-3xl">
+                <h1
+                  className={cn(
+                    "font-bold tracking-tight text-zinc-50",
+                    companionMobile
+                      ? "text-center text-xl"
+                      : "text-2xl sm:text-3xl"
+                  )}
+                >
                   {journey.course.title}
                 </h1>
-                <div className="inline-flex w-fit items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3">
+                <div
+                  className={cn(
+                    "inline-flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3",
+                    companionMobile && "w-full justify-center"
+                  )}
+                >
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-indigo-500/30 bg-indigo-500/10">
                     <Trophy className="h-5 w-5 text-indigo-400" />
                   </div>
-                  <div>
+                  <div className={companionMobile ? "text-left" : undefined}>
                     <p className="text-xl font-bold tabular-nums text-zinc-50">
                       {journey.progressPercent}%
                     </p>
@@ -386,11 +407,26 @@ export function JourneyRoadmap({
                 </div>
               </div>
 
-              <div className="w-full shrink-0 lg:w-[22.5rem]">
-                <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+              <div
+                className={cn(
+                  "w-full shrink-0 lg:w-[22.5rem]",
+                  companionMobile && "mx-auto w-[min(100%,17.5rem)] max-w-[17.5rem]"
+                )}
+              >
+                <p
+                  className={cn(
+                    "mb-2.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500",
+                    companionMobile && "text-center"
+                  )}
+                >
                   What you will learn
                 </p>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                <div
+                  className={cn(
+                    "grid grid-cols-2 gap-2 sm:grid-cols-3",
+                    companionMobile && "grid-cols-2 gap-1.5"
+                  )}
+                >
                   {pillars.map((pillar) => {
                     const Icon = pillar.icon;
                     return (
@@ -398,19 +434,33 @@ export function JourneyRoadmap({
                         key={pillar.label}
                         title={pillar.label}
                         className={cn(
-                          "flex min-h-[3.25rem] w-full items-center gap-2.5 rounded-xl border-2 px-2.5 py-2 text-left sm:min-h-[3.4rem]",
+                          "flex w-full items-center gap-2 rounded-xl border-2 text-left",
+                          companionMobile
+                            ? "min-h-[2.5rem] gap-1 px-1.5 py-1"
+                            : "min-h-[3.25rem] gap-2.5 px-2.5 py-2 sm:min-h-[3.4rem]",
                           pillar.theme.card
                         )}
                       >
                         <span
                           className={cn(
-                            "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
+                            "flex shrink-0 items-center justify-center rounded-lg",
+                            companionMobile ? "h-5 w-5 rounded-md" : "h-7 w-7",
                             pillar.theme.chip
                           )}
                         >
-                          <Icon className="h-3.5 w-3.5" strokeWidth={2.4} />
+                          <Icon
+                            className={companionMobile ? "h-2.5 w-2.5" : "h-3.5 w-3.5"}
+                            strokeWidth={2.4}
+                          />
                         </span>
-                        <span className="min-w-0 text-[11px] font-semibold tracking-tight text-zinc-100 sm:text-xs">
+                        <span
+                          className={cn(
+                            "min-w-0 truncate font-semibold tracking-tight text-zinc-100",
+                            companionMobile
+                              ? "text-[9.5px] leading-tight"
+                              : "text-[11px] sm:text-xs"
+                          )}
+                        >
                           {pillar.shortLabel}
                         </span>
                       </span>
@@ -422,9 +472,20 @@ export function JourneyRoadmap({
           </header>
 
           <div className="mb-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+            <p
+              className={cn(
+                "text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500",
+                companionMobile && "text-center"
+              )}
+            >
               Learning modules
             </p>
+            {companionMobile ? (
+              <p className="mx-auto mt-1.5 max-w-sm text-center text-[12px] leading-relaxed text-zinc-500">
+                Modules 1–{MOBILE_LEARN_MODULE_LIMIT} are open here. Later modules
+                need desktop.
+              </p>
+            ) : null}
           </div>
 
           <ol className="relative">
@@ -435,6 +496,10 @@ export function JourneyRoadmap({
                 index={index}
                 isLast={index === cards.length - 1}
                 prevDone={index === 0 ? true : cards[index - 1]!.done}
+                companionMobile={companionMobile}
+                desktopOnlyOnMobile={
+                  companionMobile && index >= MOBILE_LEARN_MODULE_LIMIT
+                }
               />
             ))}
           </ol>
@@ -449,16 +514,21 @@ function ModuleJourneyCard({
   index,
   isLast,
   prevDone,
+  companionMobile = false,
+  desktopOnlyOnMobile = false,
 }: {
   card: ModuleCardModel;
   index: number;
   isLast: boolean;
   prevDone: boolean;
+  companionMobile?: boolean;
+  desktopOnlyOnMobile?: boolean;
 }) {
   const themeKey = THEME_KEYS[index % THEME_KEYS.length]!;
   const themeStyle = THEME_STYLES[themeKey] ?? THEME_STYLES["candy-indigo"]!;
-  const art = getWeekRoadmapArt((index % 12) + 1);
+  const art = companionMobile ? null : getWeekRoadmapArt((index % 12) + 1);
   const pct = card.module.progressPercent;
+  const showDesktopGate = desktopOnlyOnMobile && !card.locked;
 
   const cardInner = (
     <motion.article
@@ -466,20 +536,33 @@ function ModuleJourneyCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.24) }}
-      whileHover={!card.locked ? { y: -2 } : undefined}
+      whileHover={
+        !card.locked && !showDesktopGate ? { y: -2 } : undefined
+      }
       className={cn(
         "group relative overflow-hidden rounded-2xl border transition-all duration-300",
+        companionMobile && "rounded-[1.25rem]",
         card.locked && "border-zinc-800/60 bg-zinc-950/30 opacity-50",
-        card.done && "border-emerald-500/20 bg-zinc-950/80",
+        showDesktopGate &&
+          "border-zinc-800/70 bg-zinc-950/50 opacity-90",
+        card.done &&
+          !showDesktopGate &&
+          "border-emerald-500/20 bg-zinc-950/80",
         card.active &&
+          !showDesktopGate &&
           cn("border-indigo-500/30 bg-zinc-950/90 shadow-2xl", themeStyle.glow),
         !card.locked &&
           !card.done &&
           !card.active &&
-          "border-zinc-800/70 bg-zinc-950/70 hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40"
+          !showDesktopGate &&
+          "border-zinc-800/70 bg-zinc-950/70 hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40",
+        companionMobile &&
+          !card.locked &&
+          !showDesktopGate &&
+          "border-zinc-800/80 bg-zinc-950/85 shadow-lg shadow-black/20"
       )}
     >
-      {!card.locked ? (
+      {!card.locked && !showDesktopGate ? (
         <div
           className={cn(
             "pointer-events-none absolute inset-0 bg-gradient-to-br opacity-60",
@@ -488,24 +571,30 @@ function ModuleJourneyCard({
         />
       ) : null}
 
-      {card.active ? (
+      {card.active && !showDesktopGate ? (
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-400/60 to-transparent" />
       ) : null}
 
       <div
         className={cn(
           "relative flex items-start gap-3 p-4 sm:gap-4 sm:p-5",
+          companionMobile && "gap-3 p-3.5",
           art && !card.locked && WEEK_CARD_ART_MIN_HEIGHT
         )}
       >
         <div
           className={cn(
             "relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border sm:h-16 sm:w-16",
+            companionMobile && "h-12 w-12 rounded-xl sm:h-12 sm:w-12",
             card.locked && "border-zinc-800 bg-zinc-900/80 text-zinc-600",
+            showDesktopGate &&
+              "border-zinc-800 bg-zinc-900/70 text-zinc-500",
             card.done &&
+              !showDesktopGate &&
               "border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 to-emerald-600/5 text-emerald-400 shadow-lg shadow-emerald-500/10",
             !card.locked &&
               !card.done &&
+              !showDesktopGate &&
               cn(
                 "border-white/5 bg-gradient-to-br shadow-lg",
                 themeStyle.ring,
@@ -517,10 +606,15 @@ function ModuleJourneyCard({
         >
           {card.locked ? (
             <Lock className="relative h-5 w-5" />
-          ) : card.done ? (
+          ) : card.done && !showDesktopGate ? (
             <CheckCircle2 className="relative h-6 w-6" />
           ) : (
-            <Layers className="relative h-6 w-6 sm:h-7 sm:w-7" />
+            <Layers
+              className={cn(
+                "relative",
+                companionMobile ? "h-5 w-5" : "h-6 w-6 sm:h-7 sm:w-7"
+              )}
+            />
           )}
         </div>
 
@@ -530,28 +624,32 @@ function ModuleJourneyCard({
             art && !card.locked && WEEK_CARD_ART_PADDING
           )}
         >
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-500">
               Module {card.globalIndex + 1}
             </span>
-            {card.isInterviewPrep ? (
+            {showDesktopGate ? (
+              <StatusBadge variant="desktop">Desktop only</StatusBadge>
+            ) : null}
+            {!showDesktopGate && card.isInterviewPrep ? (
               <StatusBadge variant="start">Career critical</StatusBadge>
             ) : null}
-            {card.active && !card.done ? (
+            {!showDesktopGate && card.active && !card.done ? (
               <StatusBadge variant="start">Start here</StatusBadge>
             ) : null}
-            {card.active ? (
+            {!showDesktopGate && card.active ? (
               <StatusBadge variant="current">Current</StatusBadge>
             ) : null}
-            {card.done ? (
+            {!showDesktopGate && card.done ? (
               <StatusBadge variant="complete">Complete</StatusBadge>
             ) : null}
           </div>
 
           <h3
             className={cn(
-              "mt-1.5 text-lg font-bold tracking-tight sm:text-xl",
-              card.locked ? "text-zinc-600" : "text-zinc-50"
+              "mt-1.5 font-bold tracking-tight",
+              companionMobile ? "text-base leading-snug" : "text-lg sm:text-xl",
+              card.locked || showDesktopGate ? "text-zinc-400" : "text-zinc-50"
             )}
           >
             {card.module.title}
@@ -565,13 +663,23 @@ function ModuleJourneyCard({
             <p className="mt-2 text-sm text-zinc-500">
               Locked — finish the previous module to unlock.
             </p>
+          ) : showDesktopGate ? (
+            <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              Available on desktop only — open this module on a laptop or larger
+              screen.
+            </p>
           ) : card.module.description ? (
-            <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-zinc-500">
+            <p
+              className={cn(
+                "mt-1.5 text-sm leading-relaxed text-zinc-500",
+                companionMobile ? "line-clamp-2" : "line-clamp-2"
+              )}
+            >
               {card.module.description}
             </p>
           ) : null}
 
-          {!card.locked ? (
+          {!card.locked && !showDesktopGate ? (
             <div className="mt-3 flex flex-wrap gap-1.5">
               <StatPill icon={Layers}>
                 {card.challengeTotal != null
@@ -587,26 +695,26 @@ function ModuleJourneyCard({
                   {card.isInterviewPrep ? "drills" : "challenges"}
                 </StatPill>
               ) : null}
-              {card.assignmentCount > 0 ? (
+              {!companionMobile && card.assignmentCount > 0 ? (
                 <StatPill icon={ClipboardList}>
                   {card.assignmentCount} assignment
                   {card.assignmentCount === 1 ? "" : "s"}
                 </StatPill>
               ) : null}
-              {card.hasProject ? (
+              {!companionMobile && card.hasProject ? (
                 <StatPill icon={FolderKanban}>Project</StatPill>
               ) : null}
-              {card.easy > 0 ? (
+              {!companionMobile && card.easy > 0 ? (
                 <StatPill dotColor="bg-emerald-400" textColor="text-emerald-400">
                   {card.easy} Easy
                 </StatPill>
               ) : null}
-              {card.medium > 0 ? (
+              {!companionMobile && card.medium > 0 ? (
                 <StatPill dotColor="bg-amber-400" textColor="text-amber-400">
                   {card.medium} Med
                 </StatPill>
               ) : null}
-              {card.hard > 0 ? (
+              {!companionMobile && card.hard > 0 ? (
                 <StatPill dotColor="bg-rose-400" textColor="text-rose-400">
                   {card.hard} Hard
                 </StatPill>
@@ -624,14 +732,14 @@ function ModuleJourneyCard({
                 : undefined
             }
           />
-        ) : !card.locked ? (
+        ) : !card.locked && !showDesktopGate ? (
           <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-800/80 bg-zinc-900/80 text-zinc-500 transition-all duration-300 group-hover:border-zinc-700 group-hover:bg-zinc-800 group-hover:text-zinc-200">
             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </div>
         ) : null}
       </div>
 
-      {!card.locked ? (
+      {!card.locked && !showDesktopGate ? (
         <div className="relative border-t border-zinc-800/60 bg-zinc-950/40 px-4 py-2.5 sm:px-5">
           <div className="flex items-center gap-3">
             <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-800/80">
@@ -661,9 +769,14 @@ function ModuleJourneyCard({
 
   return (
     <li className="relative flex gap-3 sm:gap-6">
-      <div className="relative flex w-10 shrink-0 flex-col items-center sm:w-12">
+      <div
+        className={cn(
+          "relative flex w-10 shrink-0 flex-col items-center sm:w-12",
+          companionMobile && "w-8 sm:w-8"
+        )}
+      >
         <div className="relative">
-          {card.active ? (
+          {card.active && !showDesktopGate ? (
             <span
               className={cn(
                 "absolute inset-0 animate-ping rounded-full opacity-40",
@@ -674,27 +787,32 @@ function ModuleJourneyCard({
           <div
             className={cn(
               "relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 bg-zinc-950 transition-all duration-300 sm:h-11 sm:w-11",
+              companionMobile && "h-8 w-8 sm:h-8 sm:w-8",
               card.locked && "border-zinc-800 text-zinc-600",
+              showDesktopGate && "border-zinc-800 text-zinc-600",
               card.done &&
+                !showDesktopGate &&
                 "border-emerald-500 bg-emerald-500/10 shadow-lg shadow-emerald-500/20",
               card.active &&
+                !showDesktopGate &&
                 "border-indigo-400 bg-indigo-500/15 shadow-lg shadow-indigo-500/40 ring-4 ring-indigo-500/10",
               !card.locked &&
                 !card.done &&
                 !card.active &&
+                !showDesktopGate &&
                 cn("border-zinc-700 bg-zinc-900 shadow-md", themeStyle.ring)
             )}
           >
-            {card.done ? (
+            {card.done && !showDesktopGate ? (
               <CheckCircle2 className="h-4 w-4 text-emerald-400 sm:h-5 sm:w-5" />
-            ) : card.active ? (
+            ) : card.active && !showDesktopGate ? (
               <span
                 className={cn(
                   "h-2.5 w-2.5 rounded-full shadow-lg",
                   themeStyle.dot
                 )}
               />
-            ) : card.locked ? (
+            ) : card.locked || showDesktopGate ? (
               <Lock className="h-3.5 w-3.5 text-zinc-600" />
             ) : (
               <Layers className={cn("h-4 w-4", themeStyle.icon)} />
@@ -715,13 +833,13 @@ function ModuleJourneyCard({
         ) : null}
       </div>
 
-      <div className="min-w-0 flex-1 pb-8">
+      <div className={cn("min-w-0 flex-1 pb-8", companionMobile && "pb-5")}>
         {card.locked ? (
           cardInner
         ) : (
           <Link
             href={card.href}
-            prefetch
+            prefetch={!showDesktopGate}
             className="block rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
           >
             {cardInner}
@@ -737,7 +855,7 @@ function StatusBadge({
   variant,
 }: {
   children: React.ReactNode;
-  variant: "start" | "current" | "complete";
+  variant: "start" | "current" | "complete" | "desktop";
 }) {
   return (
     <span
@@ -748,7 +866,9 @@ function StatusBadge({
         variant === "current" &&
           "border border-indigo-500/50 bg-indigo-600/80 text-white shadow-[0_0_16px_color-mix(in_srgb,var(--color-primary)_35%,transparent)]",
         variant === "complete" &&
-          "border border-emerald-500/30 bg-emerald-500/15 text-emerald-300"
+          "border border-emerald-500/30 bg-emerald-500/15 text-emerald-300",
+        variant === "desktop" &&
+          "border border-zinc-700/80 bg-zinc-800/80 text-zinc-400"
       )}
     >
       {children}

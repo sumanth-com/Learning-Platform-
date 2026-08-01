@@ -8,8 +8,20 @@ import { AUTH_ROUTES } from "@/features/auth/constants";
 import styles from "./landing.module.css";
 
 const HEADLINE = "Become the developer companies actually hire";
+/** Forced 2-line break — keeps mobile hero clean and readable. */
+const HEADLINE_LINES = [
+  "Become the developer",
+  "companies actually hire.",
+] as const;
+
 const SUBHEAD =
   "Full Stack, AI Engineering, System Design, and DevOps — built through real projects, AI mentoring, and verifiable certifications.";
+/** Forced 3-line mobile subcopy — fixed rhythm, never reflows oddly. */
+const SUBHEAD_MOBILE_LINES = [
+  "Full Stack, AI, System Design & DevOps —",
+  "real projects, mentoring,",
+  "and verifiable certifications.",
+] as const;
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -17,7 +29,7 @@ const STATUS_LINES = [
   "Production-ready engineering paths",
   "AI mentor on every module",
   "Verifiable skill certifications",
-];
+] as const;
 
 /**
  * Image-2 layout:
@@ -143,7 +155,13 @@ function StatusBadge({ reduceMotion }: { reduceMotion: boolean | null }) {
       className={styles.statusBadge}
     >
       <span className={styles.statusPulse} aria-hidden />
-      <span className="relative min-w-[11.5rem] overflow-hidden text-left sm:min-w-[13.5rem]">
+      {/* Grid sizer: longest line sets width so rotating copy never stretches the pill */}
+      <span className={styles.statusTextSlot}>
+        {STATUS_LINES.map((line) => (
+          <span key={line} className={styles.statusTextSizer} aria-hidden>
+            {line}
+          </span>
+        ))}
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={STATUS_LINES[active]}
@@ -151,7 +169,7 @@ function StatusBadge({ reduceMotion }: { reduceMotion: boolean | null }) {
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: -10 }}
             transition={{ duration: 0.35, ease: EASE }}
-            className="block text-[10.5px] font-semibold uppercase tracking-[0.14em] text-white/78"
+            className={styles.statusTextActive}
           >
             {STATUS_LINES[active]}
           </motion.span>
@@ -163,35 +181,43 @@ function StatusBadge({ reduceMotion }: { reduceMotion: boolean | null }) {
 
 export function LandingHero() {
   const reduceMotion = useReducedMotion();
-  const words = HEADLINE.split(" ");
 
   return (
     <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-5 pb-24 pt-28 text-center sm:px-8">
-      <CircuitWall side="left" />
-      <CircuitWall side="right" />
+      {/* Mobile: floating content + animated round washes (no glass card) */}
+      <div aria-hidden className={styles.heroWashTop} />
+      <div aria-hidden className={styles.heroWashBottom} />
+      <div aria-hidden className={styles.heroWashCore} />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[760px] flex-col items-center">
+      {/* Desktop ambient + circuit walls */}
+      <div aria-hidden className={`${styles.heroAmbient} max-md:hidden`} />
+      <div className="max-md:hidden">
+        <CircuitWall side="left" />
+        <CircuitWall side="right" />
+      </div>
+
+      <div className={`${styles.heroMiddle} relative z-10 mx-auto flex w-full max-w-[760px] flex-col items-center`}>
         <StatusBadge reduceMotion={reduceMotion} />
 
-        <h1 className="mt-7 w-full text-[2.45rem] font-medium leading-[1.12] tracking-[-0.045em] text-white sm:text-[3.2rem] lg:text-[3.65rem]">
+        <h1 className="mt-6 w-full max-w-[20.5rem] text-[1.85rem] font-medium leading-[1.15] tracking-[-0.04em] text-white sm:mt-7 sm:max-w-none sm:text-[3.2rem] sm:leading-[1.12] sm:tracking-[-0.045em] lg:text-[3.65rem]">
           <span className="sr-only">{HEADLINE}.</span>
           <span
             aria-hidden
-            className="flex flex-wrap justify-center gap-x-[0.28em] gap-y-1"
+            className="flex flex-col items-center gap-y-0.5 sm:gap-y-1"
           >
-            {words.map((word, index) => (
+            {HEADLINE_LINES.map((line, index) => (
               <motion.span
-                key={`${word}-${index}`}
-                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
+                key={line}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  duration: 0.6,
-                  delay: 0.08 + index * 0.05,
+                  duration: 0.55,
+                  delay: 0.1 + index * 0.1,
                   ease: EASE,
                 }}
-                className="inline-block text-white"
+                className="block text-balance text-white"
               >
-                {word}
+                {line}
               </motion.span>
             ))}
           </span>
@@ -200,16 +226,26 @@ export function LandingHero() {
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.45, ease: EASE }}
-          className="mt-5 max-w-[32rem] text-pretty text-[13.5px] leading-6 text-white/55 sm:text-[15px] sm:leading-7"
+          transition={{ duration: 0.65, delay: 0.4, ease: EASE }}
+          className={`${styles.heroSubhead} mt-4 max-w-[19.5rem] text-[13px] leading-[1.45] text-white/55 sm:mt-5 sm:max-w-[32rem] sm:text-pretty sm:text-[15px] sm:leading-7`}
         >
-          {SUBHEAD}
+          <span className="flex flex-col items-center sm:hidden" aria-hidden>
+            {SUBHEAD_MOBILE_LINES.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </span>
+          <span className="sr-only sm:hidden">
+            {SUBHEAD_MOBILE_LINES.join(" ")}
+          </span>
+          <span className="hidden sm:inline">{SUBHEAD}</span>
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 16, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.58, ease: EASE }}
+          transition={{ duration: 0.7, delay: 0.55, ease: EASE }}
           className={styles.heroInvite}
         >
           <span aria-hidden className={styles.heroInviteAura} />

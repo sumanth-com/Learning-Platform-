@@ -39,7 +39,7 @@ export default async function DashboardPage() {
   return (
     <>
       <PortalChrome fillViewport />
-      <div className="h-full min-h-0 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="h-full min-h-0 px-3.5 py-3 sm:px-6 sm:py-4 lg:px-8 max-md:pb-2">
         <DashboardHome
           displayName={data.user.name}
           continueState={data.continueState}
