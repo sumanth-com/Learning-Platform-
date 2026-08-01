@@ -16,9 +16,9 @@ export default function LoginPage() {
       panelVariant="login"
       footer={
         <>
-          Don&apos;t have an account yet?{" "}
-          <Link href={AUTH_ROUTES.signup} className={authLinkClass}>
-            Sign up
+          Want to join?{" "}
+          <Link href={AUTH_ROUTES.reserveSeat} className={authLinkClass}>
+            Reserve your seat
           </Link>
         </>
       }

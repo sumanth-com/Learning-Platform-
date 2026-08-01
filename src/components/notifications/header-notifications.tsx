@@ -14,7 +14,13 @@ import {
 import { PORTAL_ROUTES } from "@/features/portal/types";
 import { cn } from "@/lib/utils";
 
-export function HeaderNotifications() {
+type HeaderNotificationsProps = {
+  inboxHref?: string;
+};
+
+export function HeaderNotifications({
+  inboxHref = PORTAL_ROUTES.notifications,
+}: HeaderNotificationsProps) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<AppNotification[]>([]);
   const [unread, setUnread] = useState(0);
@@ -113,7 +119,7 @@ export function HeaderNotifications() {
                 >
                   <div className="bg-primary/[0.05] px-3.5 py-3 transition hover:bg-muted/50">
                     <Link
-                      href={item.href || PORTAL_ROUTES.notifications}
+                      href={item.href || inboxHref}
                       onClick={() => {
                         markNotificationRead(item.id);
                         setOpen(false);
@@ -157,7 +163,7 @@ export function HeaderNotifications() {
 
           <div className="border-t border-border/70 px-3.5 py-2.5">
             <Link
-              href={PORTAL_ROUTES.notifications}
+              href={inboxHref}
               onClick={() => setOpen(false)}
               className="block text-center text-[12px] font-medium text-foreground hover:underline"
             >

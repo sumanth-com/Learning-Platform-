@@ -53,7 +53,7 @@ export function FeatureMarketingPage({
               </p>
             </div>
             <Link
-              href={AUTH_ROUTES.signup}
+              href={AUTH_ROUTES.reserveSeat}
               className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-[13px] font-semibold text-[#181719] transition hover:bg-[#fff8f4]"
             >
               {ctaLabel}

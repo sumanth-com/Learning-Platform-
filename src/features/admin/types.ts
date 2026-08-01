@@ -2,6 +2,12 @@ import type { UserRole } from "@/types/database";
 
 export const ADMIN_ROUTES = {
   root: "/admin",
+  students: "/admin/students",
+  studentDetail: (id: string) => `/admin/students/${id}`,
+  accessRequests: "/admin/access-requests",
+  /** @deprecated Use accessRequests */
+  seatRequests: "/admin/access-requests",
+  learning: "/admin/learning",
   courses: "/admin/courses",
   courseNew: "/admin/courses/new",
   courseEdit: (id: string) => `/admin/courses/${id}/edit`,
@@ -22,77 +28,31 @@ export const ADMIN_ROUTES = {
   resourceEdit: (id: string) => `/admin/resources/${id}/edit`,
   developerHub: "/admin/developer-hub",
   certifications: "/admin/certifications",
-  students: "/admin/students",
-  studentDetail: (id: string) => `/admin/students/${id}`,
   submissions: "/admin/submissions",
   submissionDetail: (id: string) => `/admin/submissions/${id}`,
   analytics: "/admin/analytics",
+  notifications: "/admin/notifications",
   settings: "/admin/settings",
   forbidden: "/forbidden",
 } as const;
 
 export const ADMIN_NAV_ITEMS = [
-  {
-    href: "/admin",
-    label: "Dashboard",
-    exact: true,
-  },
-  {
-    href: "/admin/courses",
-    label: "Courses",
-  },
-  {
-    href: "/admin/phases",
-    label: "Phases",
-  },
-  {
-    href: "/admin/modules",
-    label: "Modules",
-  },
-  {
-    href: "/admin/lessons",
-    label: "Lessons",
-  },
-  {
-    href: "/admin/assignments",
-    label: "Assignments",
-  },
-  {
-    href: "/admin/resources",
-    label: "Resources",
-  },
-  {
-    href: "/admin/developer-hub",
-    label: "Developer Hub",
-  },
-  {
-    href: "/admin/certifications",
-    label: "Certifications",
-  },
-  {
-    href: "/admin/students",
-    label: "Students",
-  },
-  {
-    href: "/admin/submissions",
-    label: "Submissions",
-  },
-  {
-    href: "/admin/analytics",
-    label: "Analytics",
-  },
-  {
-    href: "/admin/settings",
-    label: "Settings",
-  },
+  { href: "/admin", label: "Dashboard", exact: true },
+  { href: "/admin/students", label: "Students" },
+  { href: "/admin/access-requests", label: "Access Requests" },
+  { href: "/admin/learning", label: "Learning Management" },
+  { href: "/admin/certifications", label: "Certifications" },
+  { href: "/admin/analytics", label: "Analytics" },
+  { href: "/admin/notifications", label: "Notifications" },
+  { href: "/admin/settings", label: "Settings" },
 ] as const;
 
 export const ADMIN_PROTECTED_ROUTES = ["/admin"] as const;
 
-export const ADMIN_ROLES: UserRole[] = ["admin", "instructor"];
+export const ADMIN_ROLES: UserRole[] = ["super_admin"];
 
 export function isAdminRole(role: UserRole | null | undefined): boolean {
-  return role === "admin" || role === "instructor";
+  return role === "super_admin";
 }
 
 export const MODULE_ICON_OPTIONS = [
@@ -164,6 +124,30 @@ export type AdminStats = {
   assignments: number;
   students: number;
   submissions: number;
+};
+
+export type BusinessOverview = {
+  totalStudents: number;
+  activeStudents: number;
+  pendingRequests: number;
+  approvedThisWeek: number;
+  rejectedRequests: number;
+  certificatesIssued: number;
+  weeklyActiveUsers: number;
+  monthlyActiveUsers: number;
+  completionRate: number;
+  revenue: null;
+  recentSignups: Array<{
+    id: string;
+    full_name: string | null;
+    email: string;
+    created_at: string;
+    avatar_url: string | null;
+  }>;
+  learningProgress: {
+    completedLessons: number;
+    totalProgressRows: number;
+  };
 };
 
 export type AdminActionResult<T = undefined> =

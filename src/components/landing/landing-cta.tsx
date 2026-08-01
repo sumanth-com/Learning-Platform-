@@ -23,10 +23,10 @@ export function LandingCta() {
 
         <div className="relative mx-auto mt-8 grid w-full max-w-md grid-cols-2 gap-2.5 sm:mt-10 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
           <Link
-            href={AUTH_ROUTES.signup}
+            href={AUTH_ROUTES.reserveSeat}
             className={`${styles.shine} inline-flex h-11 w-full items-center justify-center rounded-full bg-white px-3 text-[12.5px] font-semibold text-[#1b181a] shadow-[0_18px_45px_rgba(0,0,0,0.4)] transition hover:-translate-y-0.5 hover:bg-[#fff8f4] sm:h-12 sm:w-auto sm:px-8 sm:text-[13px]`}
           >
-            Get started
+            Reserve your seat
           </Link>
           <Link
             href={AUTH_ROUTES.login}

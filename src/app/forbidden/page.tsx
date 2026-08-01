@@ -10,7 +10,8 @@ export default function ForbiddenPage() {
       </p>
       <h1 className="mt-3 font-display text-3xl text-zinc-50">Access denied</h1>
       <p className="mt-3 max-w-md text-sm text-zinc-500">
-        This area is restricted to administrators and instructors. Students
+        This area is restricted to the Super Admin. Students should use the
+        learning dashboard.
         cannot access the Admin CMS.
       </p>
       <Button asChild className="mt-8">

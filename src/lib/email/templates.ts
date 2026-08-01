@@ -92,6 +92,30 @@ export function invitationEmailHtml(
   });
 }
 
+/** Branded seat-approval / activate-account email. */
+export function seatApprovedEmailHtml(
+  props: PersonEmailProps & { activateUrl: string; expiresInHours?: number }
+) {
+  const brand = getBrand();
+  const hours = props.expiresInHours ?? 24;
+  const support = "support@suprabase.com";
+  return renderEmailLayout({
+    preview: `Your seat is ready on ${brand.name}`,
+    title: `Welcome to ${brand.name}`,
+    firstName: nameOf(props),
+    bodyHtml: `
+      <p style="margin:0 0 12px;">Your seat request has been approved.</p>
+      <p style="margin:0;">Click below to activate your account and set your password.</p>
+    `,
+    ctaLabel: "Activate Account",
+    ctaUrl: props.activateUrl,
+    footerNote: `
+      <p style="margin:0 0 10px;">This link expires in <strong>${hours} hours</strong> and can only be used once.</p>
+      <p style="margin:0;">Need help? <a href="mailto:${support}" style="color:#e56b68;text-decoration:none;">${support}</a></p>
+    `,
+  });
+}
+
 export function teamInviteEmailHtml(
   props: PersonEmailProps & {
     inviteUrl: string;

@@ -21,7 +21,7 @@ const COLUMNS = [
       { label: "Most useful", href: SITE_ROUTES.journey },
       { label: "FAQ", href: SITE_ROUTES.faq },
       { label: "Sign in", href: AUTH_ROUTES.login },
-      { label: "Create account", href: AUTH_ROUTES.signup },
+      { label: "Reserve your seat", href: AUTH_ROUTES.reserveSeat },
     ],
   },
   {

@@ -353,9 +353,9 @@ export function LandingHero() {
         >
           <span aria-hidden className={styles.heroInviteAura} />
           <span aria-hidden className={styles.heroInviteRing} />
-          <Link href={AUTH_ROUTES.signup} className={styles.heroInviteBtn}>
+          <Link href={AUTH_ROUTES.reserveSeat} className={styles.heroInviteBtn}>
             <span className={styles.heroInviteLive} aria-hidden />
-            <span className={styles.heroInviteLabel}>Enter Suprabase</span>
+            <span className={styles.heroInviteLabel}>Reserve your seat</span>
             <span className={styles.heroInviteArrow} aria-hidden>
               <ArrowRight className="h-4 w-4" strokeWidth={2.25} />
             </span>

@@ -2,7 +2,9 @@ import {
   Flame,
   Flag,
   GitBranch,
+  KeyRound,
   Rocket,
+  Sparkles,
   Target,
   Trophy,
   type LucideIcon,
@@ -13,27 +15,30 @@ export type AuthPanelCopy = {
   points: { icon: LucideIcon; title: string; body: string }[];
 };
 
-/** Signup — invite users to start the run. */
-export const SIGNUP_PANEL: AuthPanelCopy = {
-  title: "Press start. Level up as an engineer.",
+/** Request access — invite-only lobby copy. */
+export const RESERVE_PANEL: AuthPanelCopy = {
+  title: "Access is curated. The run is not.",
   points: [
     {
+      icon: KeyRound,
+      title: "Invite-only lobby",
+      body: "No open signup queue. Request access, get reviewed by Super Admin, and walk in when approved — clean, calm, intentional.",
+    },
+    {
       icon: Rocket,
-      title: "Unlock your first quests",
-      body: "Jump into real builds that feel like missions — clear stages, ship features, and feel progress every session.",
+      title: "Quests that feel like work",
+      body: "Real builds staged like missions. Clear objectives, ship features, and feel the level-up every session — not another tutorial loop.",
     },
     {
-      icon: GitBranch,
-      title: "Choose your skill path",
-      body: "Full stack, AI, system design, DevOps — pick a track and level the stack companies actually hire for.",
-    },
-    {
-      icon: Trophy,
-      title: "Win proof you can show",
-      body: "Beat timed challenges and earn verifiable certs with public IDs — every clear counts outside the game too.",
+      icon: Sparkles,
+      title: "Paths companies hire for",
+      body: "Full stack, AI, system design, DevOps. Pick a track, stack the skills that show up in interviews, and leave with proof that travels.",
     },
   ],
 };
+
+/** @deprecated Prefer RESERVE_PANEL — public signup is closed. */
+export const SIGNUP_PANEL: AuthPanelCopy = RESERVE_PANEL;
 
 /** Sign-in — pull returning players back into the run. */
 export const LOGIN_PANEL: AuthPanelCopy = {

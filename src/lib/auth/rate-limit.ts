@@ -56,4 +56,6 @@ export const AUTH_RATE_LIMITS = {
   forgotPassword: { limit: 5, windowMs: 15 * 60_000, minIntervalMs: 30_000 },
   resendVerification: { limit: 5, windowMs: 15 * 60_000, minIntervalMs: 60_000 },
   login: { limit: 20, windowMs: 15 * 60_000 },
+  seatRequest: { limit: 5, windowMs: 60 * 60_000, minIntervalMs: 15_000 },
+  createAccount: { limit: 10, windowMs: 60 * 60_000, minIntervalMs: 5_000 },
 } as const;

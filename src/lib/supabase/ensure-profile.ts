@@ -1,6 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, ProfileRow } from "@/types/database";
+import { isSuperAdminEmail } from "@/features/auth/super-admin";
 
 type Client = SupabaseClient<Database>;
 
@@ -34,7 +35,7 @@ export async function ensureProfile(
     id: user.id,
     email: user.email ?? "",
     full_name: fullName,
-    role: "student" as const,
+    role: isSuperAdminEmail(user.email) ? "super_admin" : "student",
   };
 
   const { data, error } = await supabase

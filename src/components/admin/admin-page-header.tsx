@@ -20,7 +20,7 @@ export function AdminPageHeader({
   return (
     <div className="mb-6 flex flex-col gap-3 border-b border-zinc-800/80 pb-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h1 className="font-display text-2xl tracking-tight text-zinc-50 sm:text-[1.75rem]">
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-50 sm:text-[1.75rem]">
           {title}
         </h1>
         {description ? (

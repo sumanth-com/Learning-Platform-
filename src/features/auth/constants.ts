@@ -1,13 +1,17 @@
 export const AUTH_ROUTES = {
   public: "/public",
   login: "/login",
-  signup: "/signup",
+  /** @deprecated Public signup removed — use reserveSeat. */
+  signup: "/reserve-seat",
+  reserveSeat: "/reserve-seat",
+  createAccount: "/auth/create-account",
   forgotPassword: "/forgot-password",
   resetPassword: "/reset-password",
   verifyEmail: "/verify-email",
   callback: "/auth/callback",
   dashboard: "/dashboard",
   profile: "/profile",
+  admin: "/admin",
 } as const;
 
 /** Routes that require an authenticated session. */
@@ -37,7 +41,8 @@ export const PROTECTED_ROUTES = [
  */
 export const AUTH_GUEST_ROUTES = [
   AUTH_ROUTES.login,
-  AUTH_ROUTES.signup,
+  AUTH_ROUTES.reserveSeat,
+  AUTH_ROUTES.createAccount,
   AUTH_ROUTES.forgotPassword,
   AUTH_ROUTES.verifyEmail,
 ] as const;

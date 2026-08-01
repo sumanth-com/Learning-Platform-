@@ -11,19 +11,16 @@ import {
   forgotPasswordSchema,
   loginSchema,
   resetPasswordSchema,
-  signupSchema,
 } from "@/features/auth/schemas/auth-schemas";
 import { AUTH_MESSAGES, AUTH_ROUTES } from "@/features/auth/constants";
 import { isCustomEmailEnabled } from "@/lib/email/env";
 import {
   sendPasswordResetEmail,
   sendVerificationEmail,
-  sendWelcomeEmail,
 } from "@/lib/email/send";
 import {
   generateMagicLink,
   generateRecoveryLink,
-  generateSignupLink,
   resolveUserDisplayName,
 } from "@/lib/auth/links";
 import { AUTH_RATE_LIMITS, checkRateLimit } from "@/lib/auth/rate-limit";
@@ -107,102 +104,33 @@ export async function loginAction(
 
   await logAuthEvent("login_success", { email });
   revalidatePath("/", "layout");
+
+  // Super admin lands on admin; students on learning dashboard
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    if ((profile as { role?: string } | null)?.role === "super_admin") {
+      redirect(AUTH_ROUTES.admin);
+    }
+  }
+
   redirect(AUTH_ROUTES.dashboard);
 }
 
 export async function signupAction(
-  input: unknown
+  _input: unknown
 ): Promise<AuthActionResult<{ email: string; needsVerification: boolean }>> {
-  const parsed = signupSchema.safeParse(input);
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: parsed.error.issues[0]?.message ?? "Invalid input.",
-    };
-  }
-
-  const email = parsed.data.email.trim().toLowerCase();
-  const fullName = parsed.data.fullName.trim();
-
-  // Branded Resend path — generateLink creates the user without Supabase SMTP.
-  if (isCustomEmailEnabled()) {
-    try {
-      const { actionLink, user } = await generateSignupLink({
-        email,
-        password: parsed.data.password,
-        fullName,
-      });
-
-      const send = await sendVerificationEmail({
-        to: email,
-        verifyUrl: actionLink,
-        fullName,
-      });
-
-      if (!send.ok) {
-        await logAuthEvent("signup_failed", { email, error: send.error });
-        return {
-          success: false,
-          error:
-            "We couldn't send your verification email. Please try again in a moment.",
-        };
-      }
-
-      await logAuthEvent("signup", { email, userId: user?.id, mode: "resend" });
-
-      // If confirmations somehow already satisfied.
-      if (user?.email_confirmed_at) {
-        await sendWelcomeEmail({ to: email, fullName });
-        revalidatePath("/", "layout");
-        redirect(AUTH_ROUTES.dashboard);
-      }
-
-      return {
-        success: true,
-        message: AUTH_MESSAGES.signupNeedsVerification,
-        data: { email, needsVerification: true },
-      };
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Could not create account.";
-      await logAuthEvent("signup_failed", { email, error: message });
-      return { success: false, error: mapAuthError({ message }) };
-    }
-  }
-
-  // Fallback: Supabase-hosted auth emails.
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password: parsed.data.password,
-    options: {
-      data: { full_name: fullName },
-      emailRedirectTo: `${getAppUrl()}${AUTH_ROUTES.callback}?next=${AUTH_ROUTES.dashboard}`,
-    },
-  });
-
-  if (error) {
-    await logAuthEvent("signup_failed", { email, error: error.message });
-    return { success: false, error: mapAuthError(error) };
-  }
-
-  const identities = data.user?.identities ?? [];
-  if (data.user && identities.length === 0) {
-    return { success: false, error: AUTH_MESSAGES.accountExists };
-  }
-
-  await logAuthEvent("signup", { email, mode: "supabase" });
-
-  if (data.session) {
-    await sendWelcomeEmail({ to: email, fullName }).catch(() => undefined);
-    revalidatePath("/", "layout");
-    redirect(AUTH_ROUTES.dashboard);
-  }
-
+  await logAuthEvent("signup_blocked", { reason: "invite_only" });
   return {
-    success: true,
-    message: AUTH_MESSAGES.signupNeedsVerification,
-    data: { email, needsVerification: true },
+    success: false,
+    error:
+      "Public registration is closed. Reserve your seat to request an invitation.",
   };
 }
 

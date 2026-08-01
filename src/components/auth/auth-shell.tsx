@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AuthLeftAurora } from "@/components/auth/auth-left-aurora";
 import {
   LOGIN_PANEL,
+  RESERVE_PANEL,
   SIGNUP_PANEL,
   type AuthPanelCopy,
 } from "@/components/auth/auth-panel-copy";
@@ -18,13 +19,14 @@ interface AuthShellProps {
   description: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  /** Distinct left-panel copy for signup vs sign-in. */
-  panelVariant?: "signup" | "login";
+  /** Distinct left-panel copy for reserve / signup / sign-in. */
+  panelVariant?: "reserve" | "signup" | "login";
   panelTitle?: string;
   panelPoints?: AuthPanelCopy["points"];
 }
 
 const PANEL_BY_VARIANT = {
+  reserve: RESERVE_PANEL,
   signup: SIGNUP_PANEL,
   login: LOGIN_PANEL,
 } as const;

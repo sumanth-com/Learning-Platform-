@@ -5,6 +5,7 @@ import {
   certificateEarnedEmailHtml,
   invitationEmailHtml,
   passwordResetEmailHtml,
+  seatApprovedEmailHtml,
   teamInviteEmailHtml,
   verifyEmailHtml,
   welcomeEmailHtml,
@@ -148,6 +149,27 @@ export async function sendInvitationEmail(input: {
     subject: `${input.inviterName} invited you to ${brand.name}`,
     html: invitationEmailHtml(input),
     tags: [{ name: "category", value: "invitation" }],
+  });
+}
+
+export async function sendSeatApprovedEmail(input: {
+  to: string;
+  activateUrl: string;
+  firstName?: string | null;
+  fullName?: string | null;
+}) {
+  const brand = getBrand();
+  return sendHtmlEmail({
+    to: input.to,
+    subject: `Welcome to ${brand.name} — your seat is ready`,
+    html: seatApprovedEmailHtml({
+      email: input.to,
+      firstName: input.firstName,
+      fullName: input.fullName,
+      activateUrl: input.activateUrl,
+      expiresInHours: 24,
+    }),
+    tags: [{ name: "category", value: "seat_approved" }],
   });
 }
 

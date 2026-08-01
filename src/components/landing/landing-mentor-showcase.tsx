@@ -109,7 +109,7 @@ export function LandingMentorShowcase() {
               <span aria-hidden className={styles.prismRingComposer} />
 
               <Link
-                href={AUTH_ROUTES.signup}
+                href={AUTH_ROUTES.reserveSeat}
                 aria-label={`Ask Supra: ${ROTATING_PROMPTS[active]}`}
                 className={styles.promptComposer}
               >

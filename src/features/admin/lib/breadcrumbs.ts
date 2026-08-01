@@ -7,6 +7,8 @@ export type AdminBreadcrumb = {
 
 const SEGMENT_LABELS: Record<string, string> = {
   admin: "Admin",
+  "access-requests": "Access Requests",
+  learning: "Learning Management",
   courses: "Courses",
   phases: "Phases",
   modules: "Modules",
@@ -14,7 +16,10 @@ const SEGMENT_LABELS: Record<string, string> = {
   assignments: "Assignments",
   resources: "Resources",
   students: "Students",
+  certifications: "Certifications",
+  submissions: "Submissions",
   analytics: "Analytics",
+  notifications: "Notifications",
   settings: "Settings",
   new: "New",
   edit: "Edit",

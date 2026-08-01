@@ -66,7 +66,7 @@ const STEPS = [
   {
     step: "01",
     title: "Create an account",
-    body: "Sign up, verify your email, and land in the portal dashboard.",
+    body: "Reserve your seat, get invited, activate your account, and land in the portal dashboard.",
   },
   {
     step: "02",

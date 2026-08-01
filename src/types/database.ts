@@ -6,7 +6,50 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export type UserRole = "student" | "instructor" | "admin";
+export type UserRole = "student" | "super_admin";
+
+export type SeatRequestStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "contacted"
+  | "joined"
+  | "inactive";
+
+export type ApplicantStatus =
+  | "student"
+  | "working_professional"
+  | "career_switcher";
+
+export interface SeatRequestRow {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  country: string | null;
+  applicant_status: ApplicantStatus | null;
+  college_name: string | null;
+  message: string | null;
+  notes: string | null;
+  source: string | null;
+  status: SeatRequestStatus;
+  approved_by: string | null;
+  approved_at: string | null;
+  user_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SeatInvitationRow {
+  id: string;
+  seat_request_id: string;
+  user_id: string;
+  email: string;
+  token_hash: string;
+  expires_at: string;
+  used_at: string | null;
+  created_at: string;
+}
 export type CourseDifficulty = "beginner" | "intermediate" | "advanced";
 export type LessonDifficulty = "beginner" | "intermediate" | "advanced";
 export type ResourceType =
@@ -384,6 +427,23 @@ export type Database = {
         Row: ProfileRow;
         Insert: ProfileInsert;
         Update: ProfileUpdate;
+        Relationships: [];
+      };
+      seat_requests: {
+        Row: SeatRequestRow;
+        Insert: Partial<SeatRequestRow> &
+          Pick<SeatRequestRow, "name" | "email">;
+        Update: Partial<SeatRequestRow>;
+        Relationships: [];
+      };
+      seat_invitations: {
+        Row: SeatInvitationRow;
+        Insert: Partial<SeatInvitationRow> &
+          Pick<
+            SeatInvitationRow,
+            "seat_request_id" | "user_id" | "email" | "token_hash" | "expires_at"
+          >;
+        Update: Partial<SeatInvitationRow>;
         Relationships: [];
       };
       courses: {

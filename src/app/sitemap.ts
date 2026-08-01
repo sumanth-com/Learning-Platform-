@@ -31,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: index === 0 ? 1 : path === SITE_ROUTES.terms || path === SITE_ROUTES.privacy ? 0.3 : 0.6,
     })),
     {
-      url: absoluteUrl("/signup"),
+      url: absoluteUrl("/reserve-seat"),
       lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.8,

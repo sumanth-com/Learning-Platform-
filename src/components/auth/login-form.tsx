@@ -33,7 +33,7 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "", password: "", rememberMe: true },
   });
 
   useEffect(() => {
@@ -87,7 +87,15 @@ export function LoginForm() {
         {...register("password")}
       />
 
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-3">
+        <label className="inline-flex items-center gap-2 text-[12.5px] text-[#5f3435]/80">
+          <input
+            type="checkbox"
+            className="h-3.5 w-3.5 rounded border-[#5f3435]/25"
+            {...register("rememberMe")}
+          />
+          Remember me
+        </label>
         <Link
           href={AUTH_ROUTES.forgotPassword}
           className="text-[12.5px] font-medium text-[#5f3435] transition hover:text-[#3f2223] hover:underline hover:underline-offset-2"

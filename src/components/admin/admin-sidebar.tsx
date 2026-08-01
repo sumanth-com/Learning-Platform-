@@ -4,18 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
-  ArrowLeft,
+  Award,
   BarChart3,
+  Bell,
   BookOpen,
-  Boxes,
   ClipboardList,
-  FileText,
-  Inbox,
-  Layers,
   LayoutDashboard,
-  Link2,
-  PanelLeftClose,
-  PanelLeftOpen,
   Settings,
   Users,
   X,
@@ -33,176 +27,143 @@ const NAV: Array<{
   exact?: boolean;
 }> = [
   { href: ADMIN_ROUTES.root, label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: ADMIN_ROUTES.courses, label: "Courses", icon: BookOpen },
-  { href: ADMIN_ROUTES.phases, label: "Phases", icon: Layers },
-  { href: ADMIN_ROUTES.modules, label: "Modules", icon: Boxes },
-  { href: ADMIN_ROUTES.lessons, label: "Lessons", icon: FileText },
-  { href: ADMIN_ROUTES.assignments, label: "Assignments", icon: ClipboardList },
-  { href: ADMIN_ROUTES.resources, label: "Resources", icon: Link2 },
   { href: ADMIN_ROUTES.students, label: "Students", icon: Users },
-  { href: ADMIN_ROUTES.submissions, label: "Submissions", icon: Inbox },
+  { href: ADMIN_ROUTES.accessRequests, label: "Access Requests", icon: ClipboardList },
+  { href: ADMIN_ROUTES.learning, label: "Learning Management", icon: BookOpen },
+  { href: ADMIN_ROUTES.certifications, label: "Certifications", icon: Award },
   { href: ADMIN_ROUTES.analytics, label: "Analytics", icon: BarChart3 },
+  { href: ADMIN_ROUTES.notifications, label: "Notifications", icon: Bell },
   { href: ADMIN_ROUTES.settings, label: "Settings", icon: Settings },
 ];
 
 type AdminSidebarProps = {
-  userName?: string | null;
-  userRole?: string | null;
+  mode?: "desktop" | "drawer";
 };
 
-export function AdminSidebar({ userName, userRole }: AdminSidebarProps) {
+export function AdminSidebar({ mode = "desktop" }: AdminSidebarProps) {
   const pathname = usePathname();
-  const { collapsed, mobileOpen, closeMobile, toggleCollapsed } =
-    useAdminShell();
+  const { mobileOpen, closeMobile } = useAdminShell();
 
   useEffect(() => {
     closeMobile();
   }, [pathname, closeMobile]);
 
+  if (mode === "drawer") {
+    return (
+      <>
+        <div
+          className={cn(
+            "fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity lg:hidden",
+            mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+          )}
+          onClick={closeMobile}
+          aria-hidden={!mobileOpen}
+        />
+        <aside
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 flex h-full w-64 flex-col border-r border-zinc-800/90 bg-zinc-950 shadow-2xl shadow-black/40 transition-transform duration-200 lg:hidden",
+            mobileOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <SidebarChrome onCloseMobile={closeMobile} showClose />
+        </aside>
+      </>
+    );
+  }
+
+  return (
+    <aside className="flex h-full w-64 flex-col overflow-hidden border-r border-zinc-800/90 bg-zinc-950">
+      <SidebarChrome onCloseMobile={closeMobile} />
+    </aside>
+  );
+}
+
+function SidebarChrome({
+  onCloseMobile,
+  showClose = false,
+}: {
+  onCloseMobile: () => void;
+  showClose?: boolean;
+}) {
+  const pathname = usePathname();
+
   return (
     <>
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity lg:hidden",
-          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        )}
-        onClick={closeMobile}
-        aria-hidden={!mobileOpen}
-      />
-
-      <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 flex h-full flex-col border-r border-zinc-800 bg-zinc-950 transition-[width,transform] duration-200 lg:static lg:translate-x-0",
-          collapsed ? "lg:w-[72px]" : "lg:w-60",
-          "w-60",
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          "flex h-16 shrink-0 items-center border-b border-zinc-800/90 px-4",
+          showClose ? "justify-between gap-2" : "gap-2.5"
         )}
       >
-        <div
-          className={cn(
-            "flex h-16 shrink-0 items-center border-b border-zinc-800",
-            collapsed ? "justify-center px-2" : "justify-between px-4"
-          )}
+        <Link
+          href={ADMIN_ROUTES.root}
+          onClick={onCloseMobile}
+          className="flex min-w-0 items-center gap-2.5 rounded-xl transition-opacity hover:opacity-90"
         >
-          <Link
-            href={ADMIN_ROUTES.root}
-            onClick={closeMobile}
-            className={cn(
-              "min-w-0",
-              collapsed && "flex items-center justify-center"
-            )}
-          >
-            {collapsed ? (
-              <SupraBaseMark className="h-9 w-9" />
-            ) : (
-              <div className="flex items-center gap-2.5">
-                <SupraBaseMark className="h-9 w-9" />
-                <div>
-                  <p className="font-display text-lg leading-tight text-zinc-50">
-                    Suprabase
-                  </p>
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">
-                    Admin Portal
-                  </p>
-                </div>
-              </div>
-            )}
-          </Link>
-
-          <div className="flex items-center gap-1">
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="hidden h-8 w-8 lg:inline-flex"
-              onClick={toggleCollapsed}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? (
-                <PanelLeftOpen className="h-4 w-4" />
-              ) : (
-                <PanelLeftClose className="h-4 w-4" />
-              )}
-            </Button>
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 lg:hidden"
-              onClick={closeMobile}
-              aria-label="Close menu"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+          <SupraBaseMark className="h-9 w-9 shrink-0" />
+          <div className="min-w-0">
+            <p className="truncate text-[15px] font-semibold leading-none tracking-tight text-zinc-50">
+              Suprabase
+            </p>
+            <p className="mt-1.5 truncate text-[10px] font-medium uppercase leading-none tracking-[0.16em] text-zinc-500">
+              Super Admin
+            </p>
           </div>
-        </div>
+        </Link>
 
-        <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-3">
-          {NAV.map((item) => {
-            const active = item.exact
-              ? pathname === item.href
-              : pathname === item.href || pathname.startsWith(`${item.href}/`);
-            const Icon = item.icon;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={closeMobile}
-                title={collapsed ? item.label : undefined}
-                className={cn(
-                  "group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors",
-                  collapsed && "justify-center px-2",
-                  active
-                    ? "bg-zinc-800 text-white shadow-sm shadow-black/20"
-                    : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
-                )}
-              >
-                <Icon
-                  className={cn(
-                    "h-4 w-4 shrink-0",
-                    active ? "text-indigo-300" : "text-zinc-500 group-hover:text-zinc-300"
-                  )}
-                />
-                {!collapsed ? <span className="truncate">{item.label}</span> : null}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div
-          className={cn(
-            "border-t border-zinc-800 py-3",
-            collapsed ? "px-2" : "px-3"
-          )}
-        >
-          {!collapsed && userName ? (
-            <div className="mb-2 px-1">
-              <p className="truncate text-xs font-medium text-zinc-300">
-                {userName}
-              </p>
-              {userRole ? (
-                <p className="truncate text-[11px] capitalize text-zinc-500">
-                  {userRole}
-                </p>
-              ) : null}
-            </div>
-          ) : null}
-          <Link
-            href="/dashboard"
-            onClick={closeMobile}
-            title={collapsed ? "Back to app" : undefined}
-            className={cn(
-              "inline-flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-200",
-              collapsed && "justify-center px-2"
-            )}
+        {showClose ? (
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 shrink-0 text-zinc-500 hover:bg-zinc-900 hover:text-zinc-200"
+            onClick={onCloseMobile}
+            aria-label="Close menu"
           >
-            <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
-            {!collapsed ? <span>Back to app</span> : null}
-          </Link>
-        </div>
-      </aside>
+            <X className="h-4 w-4" />
+          </Button>
+        ) : null}
+      </div>
+
+      <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        {NAV.map((item) => {
+          const active = item.exact
+            ? pathname === item.href
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const Icon = item.icon;
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onCloseMobile}
+              className={cn(
+                "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                active
+                  ? "bg-[#5f3435] text-white shadow-sm"
+                  : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-100"
+              )}
+            >
+              {active ? (
+                <span
+                  className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[#a7423d]"
+                  aria-hidden
+                />
+              ) : null}
+              <Icon
+                className={cn(
+                  "h-4 w-4 shrink-0 transition-colors",
+                  active
+                    ? "text-white"
+                    : "text-zinc-500 group-hover:text-zinc-200"
+                )}
+                strokeWidth={1.75}
+              />
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </>
   );
 }

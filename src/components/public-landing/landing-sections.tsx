@@ -297,7 +297,7 @@ export function PricingSection() {
               </button>
             ) : (
               <Link
-                href={AUTH_ROUTES.signup}
+                href={AUTH_ROUTES.reserveSeat}
                 className="mt-8 inline-flex h-11 items-center justify-center rounded-full bg-white text-[13px] font-semibold text-[#181719] transition hover:bg-[#fff8f4]"
               >
                 {plan.cta}
@@ -351,15 +351,15 @@ export function FinalCta() {
           Start building today
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-[14px] leading-relaxed text-white/55 sm:text-[15px]">
-          Create your account, pick a path, and ship your first project with an
+          Reserve your seat, get invited, and ship your first project with an
           AI mentor beside you.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
-            href={AUTH_ROUTES.signup}
+            href={AUTH_ROUTES.reserveSeat}
             className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-[13px] font-semibold text-[#181719] transition hover:-translate-y-0.5 hover:bg-[#fff8f4]"
           >
-            Get started free
+            Reserve your seat
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
@@ -400,8 +400,8 @@ export function LandingFooter() {
           </div>
           <div className="space-y-2.5">
             <p className="font-medium text-white">Account</p>
-            <Link href={AUTH_ROUTES.signup} className="block text-white/45 hover:text-white">
-              Sign up
+            <Link href={AUTH_ROUTES.reserveSeat} className="block text-white/45 hover:text-white">
+              Reserve your seat
             </Link>
             <Link href={AUTH_ROUTES.login} className="block text-white/45 hover:text-white">
               Sign in

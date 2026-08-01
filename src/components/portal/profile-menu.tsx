@@ -21,9 +21,16 @@ import { cn } from "@/lib/utils";
 type ProfileMenuProps = {
   name: string;
   role: string;
+  helpHref?: string;
+  helpLabel?: string;
 };
 
-export function ProfileMenu({ name, role }: ProfileMenuProps) {
+export function ProfileMenu({
+  name,
+  role,
+  helpHref = PORTAL_ROUTES.help,
+  helpLabel = "Help",
+}: ProfileMenuProps) {
   const { theme, toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -123,13 +130,13 @@ export function ProfileMenu({ name, role }: ProfileMenuProps) {
             </button>
 
             <Link
-              href={PORTAL_ROUTES.help}
+              href={helpHref}
               role="menuitem"
               className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
               onClick={() => setOpen(false)}
             >
               <CircleHelp className="h-4 w-4 text-muted-foreground" />
-              Help
+              {helpLabel}
             </Link>
 
             <div className="my-1 h-px bg-border" />

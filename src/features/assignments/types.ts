@@ -24,10 +24,10 @@ export const SUBMISSION_STATUSES = [
   "approved",
 ] as const;
 
-export const MENTOR_ROLES: UserRole[] = ["instructor", "admin"];
+export const MENTOR_ROLES: UserRole[] = ["super_admin"];
 
 export function isMentorRole(role: UserRole | null | undefined): boolean {
-  return role === "instructor" || role === "admin";
+  return role === "super_admin";
 }
 
 export function canStudentEditSubmission(status: SubmissionStatus): boolean {

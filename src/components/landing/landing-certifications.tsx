@@ -85,7 +85,7 @@ export function LandingCertifications() {
 
             <div className="mt-8 grid grid-cols-2 gap-2.5 sm:mt-10 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
               <Link
-                href={AUTH_ROUTES.signup}
+                href={AUTH_ROUTES.reserveSeat}
                 className={`${styles.shine} inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-full bg-white px-3 text-[12px] font-semibold text-[#1b181a] shadow-[0_14px_36px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:bg-[#fff8f4] sm:w-auto sm:gap-2 sm:px-6 sm:text-[13px]`}
               >
                 <span className="truncate">Earn your credential</span>

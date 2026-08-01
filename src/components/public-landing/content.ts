@@ -138,7 +138,7 @@ export const PRICING_PLANS = [
     description: "Start learning with core paths, projects, and mentor access.",
     featured: false,
     cta: "Start free",
-    href: "/signup",
+    href: "/reserve-seat",
     disabled: false,
     badge: null as string | null,
     features: [
