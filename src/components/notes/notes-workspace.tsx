@@ -26,6 +26,7 @@ import {
 import { useProgressStore } from "@/store/use-progress-store";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { cn } from "@/lib/utils";
 import type { AppNote, NoteAccent } from "@/types";
 
@@ -203,6 +204,7 @@ export function NotesWorkspace() {
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [copied, setCopied] = useState(false);
   const [fmt, setFmt] = useState({ bold: false, italic: false, list: false });
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const editorRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
@@ -334,9 +336,13 @@ export function NotesWorkspace() {
     [flushSave, selectedId]
   );
 
-  const handleDelete = useCallback(() => {
+  const requestDelete = useCallback(() => {
     if (!selected) return;
-    if (notes.length > 1 && !window.confirm("Delete this note?")) return;
+    setConfirmDeleteOpen(true);
+  }, [selected]);
+
+  const confirmDelete = useCallback(() => {
+    if (!selected) return;
     if (saveTimer.current) {
       clearTimeout(saveTimer.current);
       saveTimer.current = null;
@@ -345,6 +351,7 @@ export function NotesWorkspace() {
     deleteNote(selected.id);
     draftRef.current = { id: "", title: "", content: "" };
     setSelectedId(remaining[0]?.id ?? null);
+    setConfirmDeleteOpen(false);
   }, [deleteNote, notes, selected]);
 
   const togglePin = useCallback(() => {
@@ -656,7 +663,7 @@ export function NotesWorkspace() {
                   </ToolbarButton>
                   <ToolbarButton
                     title="Delete"
-                    onClick={handleDelete}
+                    onClick={requestDelete}
                     danger
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -721,6 +728,21 @@ export function NotesWorkspace() {
           )}
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        title="Delete this note?"
+        description={
+          selected?.title?.trim()
+            ? `“${selected.title.trim()}” will be permanently removed. This can’t be undone.`
+            : "This note will be permanently removed. This can’t be undone."
+        }
+        confirmLabel="Delete note"
+        cancelLabel="Keep note"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setConfirmDeleteOpen(false)}
+      />
     </div>
   );
 }

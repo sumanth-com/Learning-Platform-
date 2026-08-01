@@ -13,6 +13,7 @@ export default function LoginPage() {
     <AuthShell
       title="Welcome back"
       description="Enter your details to access your dashboard."
+      panelVariant="login"
       footer={
         <>
           Don&apos;t have an account yet?{" "}

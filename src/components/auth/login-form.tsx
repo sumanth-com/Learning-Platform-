@@ -9,7 +9,6 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
-import { AuthSocialButtons } from "@/components/auth/auth-social-buttons";
 import { authPrimaryBtnClass, authSecondaryBtnClass } from "@/components/auth/auth-shell";
 import {
   loginAction,
@@ -71,8 +70,6 @@ export function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-2.5" noValidate>
-      <AuthSocialButtons mode="signin" />
-
       <AuthFormField
         label="Email"
         type="email"

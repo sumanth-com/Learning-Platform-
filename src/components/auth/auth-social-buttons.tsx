@@ -38,7 +38,7 @@ function AppleIcon({ className }: { className?: string }) {
 }
 
 const socialBtnClass =
-  "group inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-[#e2e7ef] bg-white text-[12.5px] font-medium text-[#1c1d21] shadow-[0_1px_2px_rgba(20,30,60,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#d5dce8] hover:bg-white hover:shadow-[0_10px_24px_-14px_rgba(40,60,100,0.35)] active:translate-y-0 disabled:pointer-events-none disabled:opacity-60";
+  "group inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl border-0 bg-[#f0ece9] text-[12.5px] font-medium text-[#1c1d21] shadow-none transition duration-200 hover:-translate-y-0.5 hover:bg-[#e8e3df] hover:shadow-[0_10px_24px_-14px_rgba(40,60,100,0.28)] active:translate-y-0 disabled:pointer-events-none disabled:opacity-60";
 
 async function startOAuth(provider: "google" | "apple") {
   const supabase = createClient();
@@ -94,9 +94,9 @@ export function AuthSocialButtons({ mode }: { mode: "signin" | "signup" }) {
       </div>
 
       <div className="relative flex items-center gap-3 py-0.5">
-        <span className="h-px flex-1 bg-[#e6ebf2]" />
+        <span className="h-px flex-1 bg-[#ebe6e2]" />
         <span className="text-[11.5px] font-medium text-[#9aa3b2]">Or</span>
-        <span className="h-px flex-1 bg-[#e6ebf2]" />
+        <span className="h-px flex-1 bg-[#ebe6e2]" />
       </div>
     </div>
   );

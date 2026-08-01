@@ -96,6 +96,267 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
+/* ----------------------------------------------------------- help spotlight */
+
+.helpStage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.85rem;
+  padding: 1.65rem 1.25rem 1.85rem;
+  background:
+    radial-gradient(ellipse 65% 55% at 50% 0%, rgba(229, 107, 104, 0.2), transparent 58%),
+    radial-gradient(ellipse 45% 45% at 15% 85%, rgba(241, 163, 121, 0.1), transparent 50%),
+    radial-gradient(ellipse 40% 40% at 90% 70%, rgba(120, 108, 172, 0.12), transparent 52%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px);
+}
+
+@media (min-width: 640px) {
+  .helpStage {
+    padding: 2rem 2rem 2.15rem;
+  }
+}
+
+.helpGlow {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 24rem;
+  height: 16rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(229, 107, 104, 0.28), transparent 70%);
+  filter: blur(52px);
+  transform: translate(-50%, -50%);
+  animation: helpGlowDrift 9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.helpGlowAlt {
+  position: absolute;
+  left: 38%;
+  top: 56%;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(241, 163, 121, 0.2), transparent 72%);
+  filter: blur(42px);
+  transform: translate(-50%, -50%);
+  animation: helpGlowDrift 11s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+.helpSheen {
+  position: absolute;
+  inset: -30% -20%;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.045) 48%,
+    transparent 62%
+  );
+  animation: helpSheenSweep 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.helpBloom {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(243, 183, 172, 0.16) 0%,
+    rgba(229, 107, 104, 0.06) 42%,
+    transparent 72%
+  );
+  animation: helpBloomBreath 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.helpTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font-size: 12px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.helpTab:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+}
+
+.helpTabActive {
+  color: #fff;
+  background: rgba(229, 107, 104, 0.2);
+  box-shadow:
+    inset 0 0 0 1px rgba(229, 107, 104, 0.4),
+    0 12px 30px rgba(229, 107, 104, 0.22);
+  transform: translateY(-1px);
+}
+
+.helpPanel {
+  position: relative;
+  width: 100%;
+  min-height: 16.5rem;
+  margin-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.helpIconWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 5.25rem;
+  height: 5.25rem;
+}
+
+.helpIconHalo {
+  position: absolute;
+  inset: -18%;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(229, 107, 104, 0.35) 0%,
+    rgba(243, 183, 172, 0.12) 45%,
+    transparent 70%
+  );
+  filter: blur(10px);
+  animation: helpHaloBreath 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.helpIcon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  height: 3.75rem;
+  width: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.2rem;
+  color: #f3b7ac;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.14), transparent 45%),
+    rgba(229, 107, 104, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 40px rgba(229, 107, 104, 0.28);
+  animation: helpIconFloat 3.6s ease-in-out infinite;
+}
+
+.helpDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 1.75rem;
+}
+
+.helpDot {
+  height: 6px;
+  width: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  transition: width 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+}
+
+.helpDotActive {
+  width: 1.35rem;
+  background: linear-gradient(90deg, #e56b68, #f3b7ac);
+  box-shadow: 0 0 14px rgba(229, 107, 104, 0.45);
+}
+
+@keyframes helpGlowDrift {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(-46%, -54%) scale(1.1);
+  }
+}
+
+@keyframes helpSheenSweep {
+  0%,
+  100% {
+    transform: translateX(-18%) rotate(0deg);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateX(18%) rotate(2deg);
+    opacity: 0.7;
+  }
+}
+
+@keyframes helpBloomBreath {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes helpHaloBreath {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes helpIconFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .helpGlow,
+  .helpGlowAlt,
+  .helpSheen,
+  .helpBloom,
+  .helpIcon,
+  .helpIconHalo {
+    animation: none;
+  }
+}
+
 /* ----------------------------------------------------------- tech stack */
 
 .techSection {

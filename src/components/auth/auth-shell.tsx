@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn } from "lucide-react";
+import { AuthLeftAurora } from "@/components/auth/auth-left-aurora";
+import {
+  LOGIN_PANEL,
+  SIGNUP_PANEL,
+  type AuthPanelCopy,
+} from "@/components/auth/auth-panel-copy";
 import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { SITE } from "@/lib/site";
@@ -13,115 +18,178 @@ interface AuthShellProps {
   description: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  /** Optional icon above the title — defaults to a sign-in glyph. */
-  showIcon?: boolean;
+  /** Distinct left-panel copy for signup vs sign-in. */
+  panelVariant?: "signup" | "login";
+  panelTitle?: string;
+  panelPoints?: AuthPanelCopy["points"];
 }
 
+const PANEL_BY_VARIANT = {
+  signup: SIGNUP_PANEL,
+  login: LOGIN_PANEL,
+} as const;
+
 /**
- * Shared visual chrome for all authentication screens.
- * UI only — forms keep their own submit / validation logic.
+ * Shared visual chrome for authentication screens.
+ * Split marketing + form layout on a public-page brand gradient.
  */
 export function AuthShell({
   title,
   description,
   children,
   footer,
-  showIcon = true,
+  panelVariant = "signup",
+  panelTitle,
+  panelPoints,
 }: AuthShellProps) {
+  const panel = PANEL_BY_VARIANT[panelVariant];
+  const resolvedTitle = panelTitle ?? panel.title;
+  const points = panelPoints ?? panel.points;
+
   return (
-    <div className="relative flex h-svh max-h-svh flex-col overflow-hidden bg-[#e8f1fb]">
+    <div className="relative flex h-svh max-h-svh items-stretch overflow-hidden bg-[#0c0d0e] p-3 sm:p-4 lg:p-5">
+      {/* Brand aurora — same family as /public landing */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.95)_0%,_transparent_55%),linear-gradient(180deg,#dceaf8_0%,#eef4fb_42%,#f7f9fc_100%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-70"
+        className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 50% 118%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 18%, transparent 48%)",
+          background:
+            "radial-gradient(ellipse 70% 55% at 12% 20%, rgba(229,107,104,0.34), transparent 55%), radial-gradient(ellipse 55% 50% at 88% 15%, rgba(233,158,214,0.22), transparent 52%), radial-gradient(ellipse 60% 55% at 70% 85%, rgba(120,108,172,0.28), transparent 55%), radial-gradient(ellipse 50% 40% at 20% 90%, rgba(241,163,121,0.16), transparent 50%), #0c0d0e",
         }}
       />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[42%] h-[140vmax] w-[140vmax] -translate-x-1/2 -translate-y-1/2"
-      >
-        <span className="absolute inset-[18%] rounded-full border border-white/45" />
-        <span className="absolute inset-[28%] rounded-full border border-white/35" />
-        <span className="absolute inset-[38%] rounded-full border border-white/25" />
-        <span className="absolute inset-[48%] rounded-full border border-white/18" />
-      </div>
 
-      <header className="relative z-20 shrink-0 px-4 pt-3 sm:px-6 sm:pt-4">
-        <Link
-          href={AUTH_ROUTES.public}
-          className="inline-flex items-center gap-2 text-[14px] font-semibold tracking-tight text-[#1c1d21] transition hover:opacity-80"
-        >
-          <SupraBaseMark className="h-7 w-7" />
-          {SITE.name}
-        </Link>
-      </header>
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl overflow-hidden rounded-[1.5rem] bg-[#f7f4f1] shadow-[0_40px_100px_-40px_rgba(0,0,0,0.65)] sm:rounded-[1.75rem] lg:rounded-[2rem]">
+        {/* Left marketing panel — soft aurora under readable dark type */}
+        <aside className="relative hidden min-h-0 w-[48%] flex-col justify-between overflow-hidden bg-[#fbf9f7] p-8 lg:flex xl:w-[52%] xl:p-10">
+          <AuthLeftAurora intensity="soft" />
 
-      <main className="relative z-10 flex min-h-0 flex-1 items-center justify-center px-3 py-2 sm:px-5 sm:py-3">
-        <div
-          className={cn(
-            "relative flex w-full max-w-[400px] max-h-full flex-col overflow-y-auto rounded-[1.5rem] border border-white/80 bg-white/85 px-5 py-4 shadow-[0_24px_60px_-24px_rgba(40,70,120,0.32)] backdrop-blur-xl sm:rounded-[1.75rem] sm:px-6 sm:py-5 before:pointer-events-none before:absolute before:inset-x-8 before:top-0 before:h-20 before:rounded-b-[50%] before:bg-[radial-gradient(ellipse_at_top,rgba(220,163,154,0.22),transparent_72%)] before:content-['']"
-          )}
-        >
-          <div className="mb-4 flex shrink-0 flex-col items-center text-center">
-            {showIcon ? (
-              <span className="mb-2.5 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#e6ebf2] bg-white text-[#1c1d21] shadow-[0_6px_16px_-10px_rgba(30,40,80,0.35)]">
-                <LogIn className="h-3.5 w-3.5" strokeWidth={2.25} />
-              </span>
-            ) : null}
-            <h1 className="text-[1.35rem] font-semibold tracking-[-0.03em] text-[#14151a] sm:text-[1.5rem]">
-              {title}
-            </h1>
-            <p className="mt-1 max-w-[19rem] text-[12.5px] leading-5 text-[#6b7285]">
-              {description}
-            </p>
+          <Link
+            href={AUTH_ROUTES.public}
+            className="relative z-10 inline-flex items-center gap-2.5 text-[15px] font-semibold tracking-tight text-[#14151a] transition hover:opacity-80"
+          >
+            <SupraBaseMark className="h-8 w-8" />
+            {SITE.name}
+          </Link>
+
+          <div className="relative z-10 max-w-md">
+            <h2 className="text-[2rem] font-semibold leading-[1.15] tracking-[-0.035em] text-[#14151a] xl:text-[2.35rem]">
+              {resolvedTitle}
+            </h2>
+            <ul className="mt-8 space-y-5">
+              {points.map((point) => {
+                const Icon = point.icon;
+                return (
+                  <li key={point.title} className="flex gap-3.5">
+                    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/70 text-[#5f3435] shadow-[0_8px_18px_-12px_rgba(95,52,53,0.3)] backdrop-blur-sm">
+                      <Icon className="h-4 w-4" strokeWidth={2} />
+                    </span>
+                    <div>
+                      <p className="text-[14px] font-semibold text-[#14151a]">
+                        {point.title}
+                      </p>
+                      <p className="mt-1 text-[13px] leading-5 text-[#3f4550]">
+                        {point.body}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
 
-          <div className="min-h-0">{children}</div>
+          <div className="relative z-10 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-[#5a616e]">
+            <Link
+              href={SITE_ROUTES.terms}
+              className="transition hover:text-[#14151a]"
+            >
+              Terms
+            </Link>
+            <Link
+              href={SITE_ROUTES.privacy}
+              className="transition hover:text-[#14151a]"
+            >
+              Privacy
+            </Link>
+            <Link
+              href={SITE_ROUTES.contact}
+              className="transition hover:text-[#14151a]"
+            >
+              Contact
+            </Link>
+          </div>
+        </aside>
 
-          {footer ? (
-            <div className="mt-3.5 shrink-0 text-center text-[12.5px] text-[#6b7285]">
-              {footer}
+        {/* Right form column — fuller aurora behind the card */}
+        <section className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-[#f4f1ee] px-4 py-4 sm:px-6 sm:py-5 lg:px-8 lg:py-6">
+          <AuthLeftAurora intensity="full" />
+
+          <div className="relative z-10 mb-3 flex shrink-0 items-center justify-between lg:hidden">
+            <Link
+              href={AUTH_ROUTES.public}
+              className="inline-flex items-center gap-2 text-[14px] font-semibold tracking-tight text-[#1c1d21]"
+            >
+              <SupraBaseMark className="h-7 w-7" />
+              {SITE.name}
+            </Link>
+          </div>
+
+          <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center">
+            <div
+              className={cn(
+                "flex w-full max-w-[400px] max-h-full flex-col overflow-y-auto rounded-[1.35rem] bg-white/95 px-5 py-5 shadow-[0_28px_70px_-30px_rgba(40,30,40,0.4)] backdrop-blur-sm sm:px-6 sm:py-6"
+              )}
+            >
+              <div className="mb-4 shrink-0 text-center">
+                <h1 className="text-[1.45rem] font-semibold tracking-[-0.03em] text-[#14151a] sm:text-[1.6rem]">
+                  {title}
+                </h1>
+                <p className="mt-1.5 text-[13px] leading-5 text-[#4b5160]">
+                  {description}
+                </p>
+              </div>
+
+              <div className="min-h-0">{children}</div>
+
+              {footer ? (
+                <p className="mt-4 shrink-0 text-center text-[13px] font-normal text-[#14151a]">
+                  {footer}
+                </p>
+              ) : null}
             </div>
-          ) : null}
-        </div>
-      </main>
+          </div>
 
-      <footer className="relative z-10 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 pb-3 text-[11px] text-[#7a8494] sm:pb-4">
-        <Link
-          href={SITE_ROUTES.terms}
-          className="transition hover:text-[#1c1d21]"
-        >
-          Terms
-        </Link>
-        <Link
-          href={SITE_ROUTES.privacy}
-          className="transition hover:text-[#1c1d21]"
-        >
-          Privacy
-        </Link>
-        <Link
-          href={SITE_ROUTES.contact}
-          className="transition hover:text-[#1c1d21]"
-        >
-          Contact
-        </Link>
-      </footer>
+          <div className="relative z-10 mt-3 flex shrink-0 flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-[#8b93a3] lg:hidden">
+            <Link
+              href={SITE_ROUTES.terms}
+              className="transition hover:text-[#1c1d21]"
+            >
+              Terms
+            </Link>
+            <Link
+              href={SITE_ROUTES.privacy}
+              className="transition hover:text-[#1c1d21]"
+            >
+              Privacy
+            </Link>
+            <Link
+              href={SITE_ROUTES.contact}
+              className="transition hover:text-[#1c1d21]"
+            >
+              Contact
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
 
 /** Shared light-theme classes for auth primary CTAs. */
 export const authPrimaryBtnClass =
-  "h-10 rounded-xl bg-[#1c1d21] text-[13px] font-semibold text-white shadow-[0_10px_24px_-12px_rgba(20,24,40,0.55)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#2a2b31] hover:shadow-[0_14px_28px_-12px_rgba(20,24,40,0.45)] hover:opacity-100 focus-visible:ring-[#1c1d21]/30 active:translate-y-0";
+  "h-10 rounded-xl bg-[#5f3435] text-[13px] font-semibold text-white shadow-[0_12px_28px_-14px_rgba(95,52,53,0.55)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#6d3c3d] hover:shadow-[0_16px_32px_-14px_rgba(95,52,53,0.5)] hover:opacity-100 focus-visible:ring-[#5f3435]/30 active:translate-y-0";
 
 export const authSecondaryBtnClass =
-  "h-10 rounded-xl border border-[#e2e7ef] bg-white text-[13px] font-medium text-[#1c1d21] shadow-none transition duration-200 hover:-translate-y-0.5 hover:bg-[#f5f7fb] hover:shadow-[0_10px_22px_-14px_rgba(40,60,100,0.3)] focus-visible:ring-[#1c1d21]/20 active:translate-y-0";
+  "h-10 rounded-xl border-0 bg-[#f0ece9] text-[13px] font-medium text-[#1c1d21] shadow-none transition duration-200 hover:-translate-y-0.5 hover:bg-[#e8e3df] hover:shadow-[0_10px_22px_-14px_rgba(40,60,100,0.25)] focus-visible:ring-[#5f3435]/20 active:translate-y-0";
 
 export const authLinkClass =
-  "font-semibold text-[#5f3435] transition hover:text-[#3f2223] hover:underline hover:underline-offset-2";
+  "font-medium text-[#5f3435] transition hover:text-[#3f2223] hover:underline hover:underline-offset-2";

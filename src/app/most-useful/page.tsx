@@ -4,9 +4,9 @@ import { SITE_ROUTES } from "@/lib/site-routes";
 import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Most useful",
+  title: "Most useful features for learning software engineering",
   description:
-    "The parts of Suprabase developers use most — mentoring, practice, projects, and certifications.",
+    "Explore Suprabase’s most useful tools: AI mentoring, browser-based coding practice, portfolio projects, and verifiable certifications on one connected roadmap.",
   alternates: { canonical: absoluteUrl(SITE_ROUTES.journey) },
 };
 
@@ -14,8 +14,8 @@ export default function MostUsefulMarketingPage() {
   return (
     <FeatureMarketingPage
       eyebrow="Most useful"
-      title="The features developers lean on most."
-      description="AI Mentor, browser practice, projects, and certifications—designed to stay useful every week, not just on day one."
+      title="Learn software engineering with AI mentoring, practice, and proof."
+      description="Suprabase combines an AI coding mentor, in-browser practice, portfolio projects, and verifiable certifications—so progress compounds on one profile."
       cards={[
         {
           title: "AI Mentor",

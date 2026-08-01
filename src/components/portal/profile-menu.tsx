@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { logoutAction } from "@/features/auth/actions/auth-actions";
 import { AUTH_MESSAGES } from "@/features/auth/constants";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { useTheme } from "@/components/theme/theme-provider";
 import { PORTAL_ROUTES } from "@/features/portal/types";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,7 @@ type ProfileMenuProps = {
 export function ProfileMenu({ name, role }: ProfileMenuProps) {
   const { theme, toggleTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const [pending, startTransition] = useTransition();
   const rootRef = useRef<HTMLDivElement>(null);
   const initial = name.charAt(0).toUpperCase() || "U";
@@ -46,6 +48,14 @@ export function ProfileMenu({ name, role }: ProfileMenuProps) {
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
+
+  const handleLogout = () => {
+    setConfirmLogout(false);
+    startTransition(async () => {
+      toast.success(AUTH_MESSAGES.logoutSuccess);
+      await logoutAction();
+    });
+  };
 
   return (
     <div ref={rootRef} className="relative">
@@ -130,10 +140,8 @@ export function ProfileMenu({ name, role }: ProfileMenuProps) {
               disabled={pending}
               className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-rose-600 transition-colors hover:bg-rose-500/10 disabled:opacity-60 dark:text-rose-400"
               onClick={() => {
-                startTransition(async () => {
-                  toast.success(AUTH_MESSAGES.logoutSuccess);
-                  await logoutAction();
-                });
+                setOpen(false);
+                setConfirmLogout(true);
               }}
             >
               {pending ? (
@@ -146,6 +154,17 @@ export function ProfileMenu({ name, role }: ProfileMenuProps) {
           </div>
         </div>
       ) : null}
+
+      <ConfirmDialog
+        open={confirmLogout}
+        title="Log out?"
+        description="You’ll need to sign in again to get back to your dashboard and learning progress."
+        confirmLabel="Log out"
+        cancelLabel="Stay signed in"
+        variant="danger"
+        onConfirm={handleLogout}
+        onCancel={() => setConfirmLogout(false)}
+      />
     </div>
   );
 }

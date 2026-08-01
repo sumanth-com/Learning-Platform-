@@ -5,18 +5,21 @@ import { Skeleton } from "@/components/ui/skeleton";
  */
 export function AuthLoadingSkeleton() {
   return (
-    <div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-[#e8f1fb] px-4 py-12">
-      <div className="w-full max-w-[420px] space-y-6 rounded-[2rem] border border-white/70 bg-white/75 p-8 shadow-[0_30px_80px_-28px_rgba(40,70,120,0.35)] backdrop-blur-2xl">
-        <div className="flex flex-col items-center gap-3">
-          <Skeleton className="h-11 w-11 rounded-2xl bg-[#e8ecf3]" />
-          <Skeleton className="h-7 w-48 bg-[#e8ecf3]" />
-          <Skeleton className="h-4 w-64 bg-[#e8ecf3]" />
-        </div>
-        <div className="space-y-4">
-          <Skeleton className="h-11 w-full rounded-xl bg-[#e8ecf3]" />
-          <Skeleton className="h-11 w-full rounded-xl bg-[#e8ecf3]" />
-          <Skeleton className="h-11 w-full rounded-xl bg-[#e8ecf3]" />
-        </div>
+    <div className="relative flex h-svh items-center justify-center overflow-hidden bg-[#0c0d0e] p-4">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 55% at 12% 20%, rgba(229,107,104,0.3), transparent 55%), radial-gradient(ellipse 55% 50% at 88% 15%, rgba(233,158,214,0.18), transparent 52%), #0c0d0e",
+        }}
+      />
+      <div className="relative w-full max-w-[400px] space-y-4 rounded-[1.5rem] bg-white p-6 shadow-[0_28px_70px_-30px_rgba(40,30,40,0.4)]">
+        <Skeleton className="h-7 w-48 bg-[#ebe7e4]" />
+        <Skeleton className="h-4 w-64 bg-[#ebe7e4]" />
+        <Skeleton className="h-10 w-full rounded-xl bg-[#ebe7e4]" />
+        <Skeleton className="h-10 w-full rounded-xl bg-[#ebe7e4]" />
+        <Skeleton className="h-10 w-full rounded-xl bg-[#ebe7e4]" />
       </div>
     </div>
   );

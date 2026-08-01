@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Bell } from "lucide-react";
+import { Bell, Check } from "lucide-react";
 import {
   formatNotificationTime,
   listNotifications,
@@ -21,7 +21,7 @@ export function HeaderNotifications() {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const refresh = useCallback(() => {
-    const next = listNotifications();
+    const next = listNotifications().filter((n) => !n.read);
     setItems(next.slice(0, 5));
     setUnread(unreadNotificationCount());
   }, []);
@@ -77,59 +77,79 @@ export function HeaderNotifications() {
 
       {open ? (
         <div className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-[0_20px_50px_-24px_rgba(15,23,42,0.45)]">
-          <div className="flex items-center justify-between border-b border-border/70 px-3.5 py-3">
+          <div className="flex items-center justify-between gap-2 border-b border-border/70 px-3.5 py-3">
             <p className="text-[13px] font-semibold text-foreground">
               Notifications
             </p>
-            {unread > 0 ? (
-              <button
-                type="button"
-                className="text-[11px] font-medium text-muted-foreground hover:text-foreground"
-                onClick={() => {
-                  markAllNotificationsRead();
-                  refresh();
-                }}
-              >
-                Mark all read
-              </button>
-            ) : null}
+            <button
+              type="button"
+              disabled={unread === 0}
+              className={cn(
+                "text-[11px] font-medium transition",
+                unread > 0
+                  ? "text-primary hover:text-primary/80"
+                  : "cursor-default text-muted-foreground/50"
+              )}
+              onClick={() => {
+                if (unread === 0) return;
+                markAllNotificationsRead();
+                refresh();
+              }}
+            >
+              Mark as read
+            </button>
           </div>
 
           {items.length === 0 ? (
             <p className="px-4 py-8 text-center text-[13px] text-muted-foreground">
-              No notifications right now.
+              You&apos;re all caught up.
             </p>
           ) : (
             <ul className="max-h-[22rem] overflow-y-auto">
               {items.map((item) => (
-                <li key={item.id} className="border-b border-border/50 last:border-b-0">
-                  <Link
-                    href={item.href || PORTAL_ROUTES.notifications}
-                    onClick={() => {
-                      markNotificationRead(item.id);
-                      setOpen(false);
-                      refresh();
-                    }}
-                    className={cn(
-                      "block px-3.5 py-3 transition hover:bg-muted/50",
-                      !item.read && "bg-primary/[0.05]"
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-[13px] font-semibold text-foreground">
-                        {item.title}
-                      </p>
-                      {!item.read ? (
+                <li
+                  key={item.id}
+                  className="border-b border-border/50 last:border-b-0"
+                >
+                  <div className="bg-primary/[0.05] px-3.5 py-3 transition hover:bg-muted/50">
+                    <Link
+                      href={item.href || PORTAL_ROUTES.notifications}
+                      onClick={() => {
+                        markNotificationRead(item.id);
+                        setOpen(false);
+                        refresh();
+                      }}
+                      className="block"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-[13px] font-semibold text-foreground">
+                          {item.title}
+                        </p>
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                      ) : null}
+                      </div>
+                      <p className="mt-0.5 line-clamp-2 text-[12px] leading-relaxed text-muted-foreground">
+                        {item.body}
+                      </p>
+                    </Link>
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <p className="text-[10px] text-muted-foreground">
+                        {formatNotificationTime(item.createdAt)}
+                      </p>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-primary transition hover:bg-primary/10"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          markNotificationRead(item.id);
+                          refresh();
+                        }}
+                      >
+                        <Check className="h-3 w-3" strokeWidth={2.25} />
+                        Mark as read
+                      </button>
                     </div>
-                    <p className="mt-0.5 line-clamp-2 text-[12px] leading-relaxed text-muted-foreground">
-                      {item.body}
-                    </p>
-                    <p className="mt-1.5 text-[10px] text-muted-foreground">
-                      {formatNotificationTime(item.createdAt)}
-                    </p>
-                  </Link>
+                  </div>
                 </li>
               ))}
             </ul>

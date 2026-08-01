@@ -59,9 +59,9 @@ export function PasswordField({
           placeholder={placeholder}
           aria-invalid={Boolean(error)}
           className={cn(
-            "flex h-10 w-full rounded-xl border border-[#e2e7ef] bg-[#f4f6fa] px-3 py-2 pr-10 text-[13.5px] text-[#14151a] placeholder:text-[#9aa3b2] shadow-none transition focus-visible:border-[#c9d2e0] focus-visible:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3435]/25",
+            "flex h-10 w-full rounded-xl border-0 bg-[#f0ece9] px-3 py-2 pr-10 text-[13.5px] text-[#14151a] placeholder:text-[#6b7285] shadow-none transition focus-visible:bg-[#ebe6e2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5f3435]/20",
             error &&
-              "border-red-400/80 focus-visible:border-red-400 focus-visible:ring-red-400/30"
+              "bg-red-50 focus-visible:bg-red-50 focus-visible:ring-red-400/30"
           )}
         />
         <button

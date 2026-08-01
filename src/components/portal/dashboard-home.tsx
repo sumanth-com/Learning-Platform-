@@ -14,6 +14,10 @@ import {
   TimeSplitChart,
   type PhasePoint,
 } from "@/components/portal/dashboard-charts";
+import {
+  DashboardPracticeFeatures,
+  type ResumeModuleCard,
+} from "@/components/portal/dashboard-practice-features";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 import type {
   ContinueLearningState,
@@ -37,6 +41,7 @@ export function DashboardHome({
 
   const stats = buildStats(journey, continueState);
   const phasePoints = getPhasePoints(journey, 6);
+  const resumeModules = getResumeModules(journey, continueState, 3);
 
   const courseTitle =
     continueState?.courseTitle ??
@@ -45,7 +50,7 @@ export function DashboardHome({
   const heroMessage = buildHeroMessage(stats, courseTitle);
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1500px] flex-col gap-3 overflow-hidden">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1500px] flex-col gap-3 overflow-y-auto pb-1">
       {/* ── Welcome ───────────────────────────────────── */}
       <section className="relative shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-card">
         <div
@@ -99,7 +104,7 @@ export function DashboardHome({
       </div>
 
       {/* ── Charts ────────────────────────────────────── */}
-      <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-12">
+      <div className="grid shrink-0 gap-3 lg:grid-cols-12">
         <section className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-4 lg:col-span-8">
           <div className="flex shrink-0 items-center justify-between">
             <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
@@ -113,7 +118,7 @@ export function DashboardHome({
               All phases
             </Link>
           </div>
-          <div className="mt-3 min-h-0 flex-1">
+          <div className="mt-3 h-[12rem]">
             <PhaseCompletionChart data={phasePoints} />
           </div>
         </section>
@@ -123,7 +128,7 @@ export function DashboardHome({
             <PieChart className="h-3.5 w-3.5" />
             Time split
           </div>
-          <div className="mt-3 min-h-0 flex-1">
+          <div className="mt-3 h-[12rem]">
             <TimeSplitChart
               investedMinutes={stats.investedMinutes}
               remainingMinutes={stats.remainingMinutes}
@@ -144,6 +149,9 @@ export function DashboardHome({
           </div>
         </section>
       </div>
+
+      {/* ── Resume modules + practice streak ──────────── */}
+      <DashboardPracticeFeatures modules={resumeModules} />
     </div>
   );
 }
@@ -248,6 +256,66 @@ function getPhasePoints(
 function shortPhaseLabel(title: string) {
   const first = title.split(/[\s·—-]+/)[0] ?? title;
   return first.length > 11 ? `${first.slice(0, 10)}…` : first;
+}
+
+/** In-progress modules to resume — prefer started ones, then the next unlock. */
+function getResumeModules(
+  journey: CourseJourney | null,
+  continueState: ContinueLearningState | null,
+  limit: number
+): ResumeModuleCard[] {
+  if (!journey) {
+    if (!continueState?.moduleSlug || !continueState.moduleTitle) return [];
+    return [
+      {
+        slug: continueState.moduleSlug,
+        title: continueState.moduleTitle,
+        phaseTitle: continueState.phaseTitle ?? "Roadmap",
+        progressPercent: continueState.progressPercent,
+        href: continueState.lesson
+          ? CURRICULUM_ROUTES.moduleTopic(
+              continueState.moduleSlug,
+              continueState.lesson.slug
+            )
+          : CURRICULUM_ROUTES.module(continueState.moduleSlug),
+        cta: continueState.hasStarted ? "Resume course" : "Start practice",
+      },
+    ];
+  }
+
+  const cards: ResumeModuleCard[] = [];
+  for (const phase of journey.phases) {
+    for (const module of phase.modules) {
+      if (module.totalCount === 0) continue;
+      if (module.completedCount >= module.totalCount) continue;
+      const nextLesson = module.lessons.find((l) => !l.isCompleted);
+      const started = module.completedCount > 0;
+      cards.push({
+        slug: module.slug,
+        title: module.title,
+        phaseTitle: phase.title,
+        progressPercent: module.progressPercent,
+        href: nextLesson
+          ? CURRICULUM_ROUTES.moduleTopic(module.slug, nextLesson.slug)
+          : CURRICULUM_ROUTES.module(module.slug),
+        cta: started ? "Resume course" : "Resume practice",
+      });
+      if (cards.length >= limit) return prioritizeResume(cards, continueState);
+    }
+  }
+  return prioritizeResume(cards, continueState);
+}
+
+function prioritizeResume(
+  cards: ResumeModuleCard[],
+  continueState: ContinueLearningState | null
+) {
+  if (!continueState?.moduleSlug) return cards;
+  const idx = cards.findIndex((c) => c.slug === continueState.moduleSlug);
+  if (idx <= 0) return cards;
+  const [current] = cards.splice(idx, 1);
+  if (current) cards.unshift(current);
+  return cards;
 }
 
 function formatMinutes(total: number) {

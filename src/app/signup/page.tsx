@@ -10,8 +10,9 @@ export const metadata = {
 export default function SignupPage() {
   return (
     <AuthShell
-      title="Create your account"
+      title="Create an account."
       description="Join Suprabase and start shipping with structure."
+      panelVariant="signup"
       footer={
         <>
           Already have an account?{" "}

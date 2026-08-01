@@ -41,7 +41,7 @@ export function VerifyEmailContent() {
       }
     >
       <div className="space-y-5">
-        <div className="flex items-start gap-3 rounded-2xl border border-[#e6ebf2] bg-[#f4f6fa] p-4">
+        <div className="flex items-start gap-3 rounded-2xl bg-[#f0ece9] p-4">
           <Mail className="mt-0.5 h-5 w-5 shrink-0 text-[#5f3435]" />
           <div className="text-sm text-[#6b7285]">
             <p>
