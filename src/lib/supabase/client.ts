@@ -4,19 +4,9 @@ import { getSupabaseEnv } from "@/lib/supabase/env";
 
 /**
  * Browser Supabase client (Client Components).
- * Uses cookies (not localStorage) so Next.js proxy can read the session.
+ * Uses @supabase/ssr cookie storage so the session matches middleware/SSR.
  */
 export function createClient() {
   const { url, anonKey } = getSupabaseEnv();
-  return createBrowserClient<Database>(url, anonKey, {
-    cookieOptions: {
-      path: "/",
-      sameSite: "lax",
-      // Secure cookies on HTTPS (production / preview). HTTP localhost stays non-secure.
-      secure:
-        typeof window !== "undefined"
-          ? window.location.protocol === "https:"
-          : process.env.NODE_ENV === "production",
-    },
-  });
+  return createBrowserClient<Database>(url, anonKey);
 }

@@ -11,13 +11,11 @@ import {
   Sun,
 } from "lucide-react";
 import { toast } from "sonner";
-import { logoutAction } from "@/features/auth/actions/auth-actions";
 import { AUTH_MESSAGES, AUTH_ROUTES } from "@/features/auth/constants";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { useTheme } from "@/components/theme/theme-provider";
 import { PORTAL_ROUTES } from "@/features/portal/types";
-import { createClient } from "@/lib/supabase/client";
-import { hardNavigate } from "@/features/auth/lib/browser-password-login";
+import { hardNavigate, signOutViaRoute } from "@/features/auth/lib/route-auth";
 import { cn } from "@/lib/utils";
 
 type ProfileMenuProps = {
@@ -61,19 +59,9 @@ export function ProfileMenu({
   const handleLogout = () => {
     setConfirmLogout(false);
     startTransition(async () => {
-      try {
-        const supabase = createClient();
-        await supabase.auth.signOut();
-      } catch {
-        /* continue */
-      }
-      const result = await logoutAction();
-      toast.success(
-        result.success
-          ? (result.message ?? AUTH_MESSAGES.logoutSuccess)
-          : AUTH_MESSAGES.logoutSuccess
-      );
-      hardNavigate(result.data?.redirectTo ?? AUTH_ROUTES.login);
+      const result = await signOutViaRoute();
+      toast.success(result.message ?? AUTH_MESSAGES.logoutSuccess);
+      hardNavigate(result.redirectTo || AUTH_ROUTES.login);
     });
   };
 

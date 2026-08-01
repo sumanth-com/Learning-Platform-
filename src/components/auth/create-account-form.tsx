@@ -14,10 +14,7 @@ import {
   completeInviteAccountAction,
   getInvitePreviewAction,
 } from "@/features/auth/actions/seat-actions";
-import {
-  browserPasswordLogin,
-  hardNavigate,
-} from "@/features/auth/lib/browser-password-login";
+import { hardNavigate, signInViaRoute } from "@/features/auth/lib/route-auth";
 import { createAccountSchema } from "@/features/auth/schemas/auth-schemas";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { SITE_ROUTES } from "@/lib/site-routes";
@@ -93,7 +90,7 @@ export function CreateAccountForm() {
         return;
       }
 
-      const login = await browserPasswordLogin({
+      const login = await signInViaRoute({
         email,
         password: values.password,
       });

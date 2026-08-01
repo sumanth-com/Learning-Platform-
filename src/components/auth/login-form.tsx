@@ -10,15 +10,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
 import { authPrimaryBtnClass, authSecondaryBtnClass } from "@/components/auth/auth-shell";
-import {
-  prepareLoginAction,
-  recordLoginSuccessAction,
-  resendConfirmationAction,
-} from "@/features/auth/actions/auth-actions";
-import {
-  browserPasswordLogin,
-  hardNavigate,
-} from "@/features/auth/lib/browser-password-login";
+import { resendConfirmationAction } from "@/features/auth/actions/auth-actions";
+import { hardNavigate, signInViaRoute } from "@/features/auth/lib/route-auth";
 import {
   loginSchema,
   type LoginInput,
@@ -42,6 +35,16 @@ export function LoginForm() {
   });
 
   useEffect(() => {
+    // Clear any leftover error-boundary reload lock from prior builds.
+    try {
+      sessionStorage.removeItem("suprabase.error.reload");
+      sessionStorage.removeItem("suprabase.global-error.reload");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
     const err = searchParams.get("error");
     if (err === "auth_callback_failed") {
       toast.error(
@@ -58,16 +61,10 @@ export function LoginForm() {
 
   const onSubmit = handleSubmit((values) => {
     startTransition(async () => {
-      const gate = await prepareLoginAction(values);
-      if (!gate.success) {
-        toast.error(gate.error);
-        return;
-      }
-
-      // Browser sign-in writes sb-* cookies in the browser (reliable on Vercel).
-      const result = await browserPasswordLogin({
+      const result = await signInViaRoute({
         email: values.email,
         password: values.password,
+        rememberMe: values.rememberMe,
         next: searchParams.get("next"),
       });
 
@@ -84,13 +81,7 @@ export function LoginForm() {
         return;
       }
 
-      void recordLoginSuccessAction({
-        email: result.email,
-        userId: result.userId,
-        redirectTo: result.redirectTo,
-      });
-
-      // Hard navigation so proxy sees cookies on the first portal request.
+      // Set-Cookie from /auth/sign-in is already applied. Hard navigate once.
       hardNavigate(result.redirectTo);
     });
   });

@@ -2,8 +2,9 @@
 
 import { useEffect } from "react";
 
-const RELOAD_KEY = "suprabase.global-error.reload";
-
+/**
+ * Root error UI — never auto-reload in a loop.
+ */
 export default function GlobalError({
   error,
   reset,
@@ -12,16 +13,13 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[global-error]", error);
+    console.error("[global-error]", {
+      name: error.name,
+      message: error.message,
+      digest: error.digest,
+    });
     try {
-      const last = Number(sessionStorage.getItem(RELOAD_KEY) || "0");
-      const now = Date.now();
-      if (!last || now - last > 15_000) {
-        sessionStorage.setItem(RELOAD_KEY, String(now));
-        window.location.replace(
-          `${window.location.pathname}${window.location.search}`
-        );
-      }
+      sessionStorage.removeItem("suprabase.global-error.reload");
     } catch {
       /* ignore */
     }
@@ -44,34 +42,48 @@ export default function GlobalError({
         }}
       >
         <div>
-          <h1 style={{ fontSize: 24, margin: 0 }}>Loading…</h1>
+          <h1 style={{ fontSize: 24, margin: 0 }}>Something went wrong</h1>
           <p style={{ marginTop: 12, opacity: 0.7, maxWidth: 420 }}>
-            Refreshing this page to continue.
+            An unexpected error stopped this page. Try again or return home.
           </p>
-          <button
-            type="button"
-            onClick={() => {
-              try {
-                sessionStorage.removeItem(RELOAD_KEY);
-              } catch {
-                /* ignore */
-              }
-              reset();
-              window.location.reload();
-            }}
+          <div
             style={{
               marginTop: 24,
-              border: 0,
-              borderRadius: 8,
-              padding: "10px 18px",
-              background: "#5f3435",
-              color: "#fff",
-              fontWeight: 600,
-              cursor: "pointer",
+              display: "flex",
+              gap: 12,
+              justifyContent: "center",
+              flexWrap: "wrap",
             }}
           >
-            Continue
-          </button>
+            <button
+              type="button"
+              onClick={() => reset()}
+              style={{
+                border: 0,
+                borderRadius: 8,
+                padding: "10px 18px",
+                background: "#5f3435",
+                color: "#fff",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Try again
+            </button>
+            <a
+              href="/login"
+              style={{
+                borderRadius: 8,
+                padding: "10px 18px",
+                border: "1px solid #d9d3ce",
+                color: "#14151a",
+                textDecoration: "none",
+                fontWeight: 600,
+              }}
+            >
+              Sign in
+            </a>
+          </div>
         </div>
       </body>
     </html>
