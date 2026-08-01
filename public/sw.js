@@ -1,60 +1,38 @@
-const CACHE_NAME = "suprabase-v8";
-const STATIC_ASSETS = ["/manifest.json", "/icons/icon-192.png", "/icons/icon-512.png"];
-
-self.addEventListener("message", (event) => {
-  if (event.data?.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
+/**
+ * Legacy cleanup worker.
+ * Older builds intercepted page navigations and could return Response.error(),
+ * which shows Chrome/Vercel "This page couldn't load" on /login and other routes.
+ * This version clears caches and unregisters itself so pages always hit the network.
+ */
+const CACHE_PREFIX = "suprabase-";
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
-
-  const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin) return;
-
-  // Never intercept Next.js bundles, dev HMR, or API routes.
-  if (
-    url.pathname.startsWith("/_next/") ||
-    url.pathname.startsWith("/api/") ||
-    url.search.includes("_rsc")
-  ) {
-    return;
-  }
-
-  // Cache-first only for known static offline assets.
-  if (STATIC_ASSETS.includes(url.pathname)) {
-    event.respondWith(
-      caches.match(event.request).then((cached) => cached ?? fetch(event.request))
-    );
-    return;
-  }
-
-  // Network-first for pages and everything else — avoids stale JS/HTML glitches.
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      if (event.request.mode === "navigate") {
-        return caches.match("/") ?? Response.error();
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((key) => key.startsWith(CACHE_PREFIX) || key.includes("supra"))
+          .map((key) => caches.delete(key))
+      );
+      await self.registration.unregister();
+      const clients = await self.clients.matchAll({ type: "window" });
+      for (const client of clients) {
+        if ("navigate" in client) {
+          try {
+            await client.navigate(client.url);
+          } catch {
+            /* ignore */
+          }
+        }
       }
-      return Response.error();
-    })
+    })()
   );
 });
+
+// Do not intercept any fetches — pages must never be soft-failed by this worker.
+self.addEventListener("fetch", () => {});

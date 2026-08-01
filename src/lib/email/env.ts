@@ -3,6 +3,8 @@
  * Custom branded email requires RESEND_API_KEY + EMAIL_FROM + SUPABASE_SERVICE_ROLE_KEY.
  */
 
+import { getAppUrl } from "@/lib/supabase/env";
+
 function stripQuotes(value: string) {
   const t = value.trim();
   if (
@@ -33,10 +35,7 @@ export function isCustomEmailEnabled() {
 }
 
 export function getBrand() {
-  const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(
-    /\/+$/,
-    ""
-  );
+  const appUrl = getAppUrl();
   return {
     name: "Suprabase",
     appUrl,

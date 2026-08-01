@@ -16,8 +16,16 @@ export function getSupabaseEnv() {
 }
 
 export function getAppUrl() {
-  return (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(
-    /\/+$/,
-    ""
-  );
+  const raw = (process.env.NEXT_PUBLIC_APP_URL ?? "").trim().replace(/\/+$/, "");
+  const fallback =
+    process.env.NODE_ENV === "production"
+      ? "https://suprabase.vercel.app"
+      : "http://localhost:3000";
+  if (!raw) return fallback;
+  try {
+    const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    return new URL(withProtocol).origin;
+  } catch {
+    return fallback;
+  }
 }

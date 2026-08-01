@@ -64,51 +64,56 @@ function hasSupabaseAuthCookie(request: NextRequest) {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Fast path: marketing/static without a session cookie — skip Supabase getUser.
-  if (isPublicFastPath(pathname) && !hasSupabaseAuthCookie(request)) {
+  try {
+    // Fast path: marketing/static without a session cookie — skip Supabase getUser.
+    if (isPublicFastPath(pathname) && !hasSupabaseAuthCookie(request)) {
+      return NextResponse.next();
+    }
+
+    // Root: guests go straight to marketing without a second page-level auth call.
+    if (pathname === "/" && !hasSupabaseAuthCookie(request)) {
+      const url = request.nextUrl.clone();
+      url.pathname = AUTH_ROUTES.public;
+      return NextResponse.redirect(url);
+    }
+
+    const { user, supabaseResponse } = await updateSession(request);
+
+    if (pathname === "/") {
+      const url = request.nextUrl.clone();
+      url.pathname = user ? AUTH_ROUTES.dashboard : AUTH_ROUTES.public;
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+
+    const protectedRoutes = [
+      ...PROTECTED_ROUTES,
+      ...CURRICULUM_PROTECTED_ROUTES,
+      ...ASSIGNMENT_PROTECTED_ROUTES,
+      ...ADMIN_PROTECTED_ROUTES,
+    ];
+    const isProtected = isPathMatch(pathname, protectedRoutes);
+    const isGuestOnly = isPathMatch(pathname, AUTH_GUEST_ROUTES);
+
+    if (isProtected && !user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = AUTH_ROUTES.login;
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (isGuestOnly && user) {
+      const dashboardUrl = request.nextUrl.clone();
+      dashboardUrl.pathname = AUTH_ROUTES.dashboard;
+      dashboardUrl.search = "";
+      return NextResponse.redirect(dashboardUrl);
+    }
+
+    return supabaseResponse;
+  } catch (error) {
+    console.error("[proxy] unexpected failure", pathname, error);
     return NextResponse.next();
   }
-
-  // Root: guests go straight to marketing without a second page-level auth call.
-  if (pathname === "/" && !hasSupabaseAuthCookie(request)) {
-    const url = request.nextUrl.clone();
-    url.pathname = AUTH_ROUTES.public;
-    return NextResponse.redirect(url);
-  }
-
-  const { user, supabaseResponse } = await updateSession(request);
-
-  if (pathname === "/") {
-    const url = request.nextUrl.clone();
-    url.pathname = user ? AUTH_ROUTES.dashboard : AUTH_ROUTES.public;
-    url.search = "";
-    return NextResponse.redirect(url);
-  }
-
-  const protectedRoutes = [
-    ...PROTECTED_ROUTES,
-    ...CURRICULUM_PROTECTED_ROUTES,
-    ...ASSIGNMENT_PROTECTED_ROUTES,
-    ...ADMIN_PROTECTED_ROUTES,
-  ];
-  const isProtected = isPathMatch(pathname, protectedRoutes);
-  const isGuestOnly = isPathMatch(pathname, AUTH_GUEST_ROUTES);
-
-  if (isProtected && !user) {
-    const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = AUTH_ROUTES.login;
-    loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  if (isGuestOnly && user) {
-    const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = AUTH_ROUTES.dashboard;
-    dashboardUrl.search = "";
-    return NextResponse.redirect(dashboardUrl);
-  }
-
-  return supabaseResponse;
 }
 
 export const config = {
