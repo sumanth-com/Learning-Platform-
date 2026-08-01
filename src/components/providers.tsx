@@ -15,21 +15,32 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
 
-    // Remove any service worker. Prior versions intercepted navigations and
-    // could surface "This page couldn't load" on auth routes in production.
-    void navigator.serviceWorker.getRegistrations().then((registrations) => {
-      registrations.forEach((registration) => {
-        void registration.unregister();
-      });
-    });
-
-    if ("caches" in window) {
-      void caches.keys().then((keys) => {
-        keys
-          .filter((key) => key.startsWith("suprabase-") || key.includes("supra"))
-          .forEach((key) => void caches.delete(key));
-      });
-    }
+    // Quietly drop any leftover workers/caches. Do not force-navigate —
+    // that interrupts hydration and can flash the app error screen.
+    void (async () => {
+      try {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map((reg) => reg.unregister()));
+      } catch {
+        /* ignore */
+      }
+      if (!("caches" in window)) return;
+      try {
+        const keys = await caches.keys();
+        await Promise.all(
+          keys
+            .filter(
+              (key) =>
+                key.startsWith("suprabase-") ||
+                key.startsWith("supracodez-") ||
+                key.includes("supra")
+            )
+            .map((key) => caches.delete(key))
+        );
+      } catch {
+        /* ignore */
+      }
+    })();
   }, []);
 
   return (

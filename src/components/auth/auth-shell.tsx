@@ -10,9 +10,10 @@ import {
 } from "@/components/auth/auth-panel-copy";
 import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { AUTH_ROUTES } from "@/features/auth/constants";
-import { SITE } from "@/lib/site";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import { cn } from "@/lib/utils";
+
+const BRAND_NAME = "Suprabase";
 
 interface AuthShellProps {
   title: string;
@@ -70,7 +71,7 @@ export function AuthShell({
             className="relative z-10 inline-flex items-center gap-2.5 text-[15px] font-semibold tracking-tight text-[#14151a] transition hover:opacity-80"
           >
             <SupraBaseMark className="h-8 w-8" />
-            {SITE.name}
+            {BRAND_NAME}
           </Link>
 
           <div className="relative z-10 max-w-md">
@@ -134,7 +135,7 @@ export function AuthShell({
                   className="mb-3.5 inline-flex items-center gap-2 text-[15px] font-semibold tracking-[-0.02em] text-[#1c1d21] lg:hidden"
                 >
                   <SupraBaseMark className="h-7 w-7" />
-                  {SITE.name}
+                  {BRAND_NAME}
                 </Link>
 
                 <div
