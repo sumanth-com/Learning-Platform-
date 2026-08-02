@@ -54,8 +54,8 @@ export function renderEmailLayout({
     safeCta && safeUrl
       ? `
       <tr>
-        <td style="padding:28px 0 8px;">
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+        <td align="center" style="padding:28px 0 8px;text-align:center;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto;">
             <tr>
               <td bgcolor="#5f3435" style="border-radius:10px;background:#5f3435;">
                 <!--[if mso]>
@@ -79,7 +79,7 @@ export function renderEmailLayout({
         </td>
       </tr>
       <tr>
-        <td style="padding:16px 0 0;font-family:${FONT};font-size:12px;line-height:1.65;color:#71717a;">
+        <td align="center" style="padding:16px 0 0;font-family:${FONT};font-size:12px;line-height:1.65;color:#71717a;text-align:center;">
           Or open this link in your browser:<br/>
           <a href="${safeUrl}" style="color:#5f3435;word-break:break-all;text-decoration:underline;">${safeUrl}</a>
         </td>
@@ -115,7 +115,6 @@ export function renderEmailLayout({
       .email-text { color:#d4d4d8 !important; }
       .email-muted { color:#a1a1aa !important; }
       .brand-name { color:#fafafa !important; }
-      .brand-tagline { color:#a1a1aa !important; }
       .email-rule { border-color:#27272a !important; }
     }
   </style>
@@ -129,10 +128,10 @@ export function renderEmailLayout({
       <td align="center" style="padding:36px 16px;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:520px;width:100%;">
 
-          <!-- Brand header: logo + name on one row -->
+          <!-- Brand header: centered logo + name -->
           <tr>
-            <td style="padding:0 0 20px;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+            <td align="center" style="padding:0 0 20px;text-align:center;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto;">
                 <tr>
                   <td valign="middle" style="vertical-align:middle;padding:0;line-height:0;">
                     <img src="${safeLogoUrl}" width="36" height="36" alt="${safeBrand}"
@@ -145,9 +144,6 @@ export function renderEmailLayout({
                   </td>
                 </tr>
               </table>
-              <div style="margin-top:10px;font-family:${FONT};font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#71717a;" class="brand-tagline">
-                Learn • Build • Ship
-              </div>
             </td>
           </tr>
 
@@ -178,9 +174,8 @@ export function renderEmailLayout({
 
           <!-- Footer -->
           <tr>
-            <td style="padding:28px 4px 0;font-family:${FONT};font-size:12px;line-height:1.75;color:#71717a;" class="email-muted">
+            <td align="center" style="padding:28px 4px 0;font-family:${FONT};font-size:12px;line-height:1.75;color:#71717a;text-align:center;" class="email-muted">
               <strong style="color:#52525b;font-weight:600;">${safeBrand}</strong><br/>
-              Learn • Build • Ship<br/>
               <a href="mailto:${safeSupport}" style="color:#5f3435;text-decoration:none;">${safeSupport}</a>
               <span style="color:#d4d4d8;"> · </span>
               <a href="${safePrivacy}" style="color:#71717a;text-decoration:none;">Privacy Policy</a>
