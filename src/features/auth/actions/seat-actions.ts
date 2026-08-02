@@ -326,9 +326,41 @@ export async function approveSeatRequestAction(
   }
 }
 
+/** Resolve auth user id for a seat request (invite row → profile email → auth). */
+async function resolveSeatUserId(
+  request: SeatRequestRow
+): Promise<string | null> {
+  if (request.user_id) return request.user_id;
+
+  const invites = await serviceRest<{ user_id: string }[]>(
+    `/seat_invitations?seat_request_id=eq.${encodeURIComponent(request.id)}&select=user_id&order=created_at.desc&limit=1`
+  );
+  if (invites?.[0]?.user_id) return invites[0].user_id;
+
+  const email = request.email.toLowerCase();
+  const profiles = await serviceRest<{ id: string }[]>(
+    `/profiles?email=eq.${encodeURIComponent(email)}&select=id&limit=1`
+  );
+  if (profiles?.[0]?.id) return profiles[0].id;
+
+  try {
+    const listed = await authAdminApi<{
+      users?: { id: string; email?: string }[];
+    }>(`/admin/users?page=1&per_page=200`);
+    const match = listed.users?.find(
+      (u) => u.email?.toLowerCase() === email
+    );
+    if (match?.id) return match.id;
+  } catch {
+    /* fall through */
+  }
+
+  return null;
+}
+
 /**
- * Resend activation email for an already-approved request
- * (new token, 24h TTL). Use when Resend failed or the link expired.
+ * Resend activation email for an approved request (new token, 24h TTL).
+ * Admins may resend as many times as needed.
  */
 export async function resendSeatInviteAction(
   requestId: string
@@ -341,18 +373,53 @@ export async function resendSeatInviteAction(
   );
   const request = rows?.[0];
   if (!request) return { success: false, error: "Seat request not found." };
-  if (request.status !== "approved" || !request.user_id) {
+  if (request.status !== "approved") {
     return {
       success: false,
-      error: "Only approved (not yet joined) requests can resend an invite.",
+      error: "Approve the request before resending an invite.",
     };
   }
 
   const email = request.email.toLowerCase();
   const name = request.name;
-  const userId = request.user_id;
+  let userId = await resolveSeatUserId(request);
 
   try {
+    if (!userId) {
+      const created = await authAdminApi<{
+        id?: string;
+        user?: { id: string };
+      }>("/admin/users", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password: generateTempPassword(),
+          email_confirm: true,
+          user_metadata: { full_name: name },
+        }),
+      });
+      userId = created.id || created.user?.id || null;
+      if (!userId) throw new Error("Failed to create auth user for resend.");
+
+      await serviceRest(`/profiles?id=eq.${userId}`, {
+        method: "PATCH",
+        prefer: "return=minimal",
+        body: JSON.stringify({
+          full_name: name,
+          email,
+          role: "student",
+        }),
+      });
+    }
+
+    if (!request.user_id) {
+      await serviceRest(`/seat_requests?id=eq.${encodeURIComponent(requestId)}`, {
+        method: "PATCH",
+        prefer: "return=minimal",
+        body: JSON.stringify({ user_id: userId }),
+      });
+    }
+
     const token = generateInviteToken();
     const tokenHash = hashInviteToken(token);
     const expiresAt = new Date(Date.now() + INVITE_TTL_MS).toISOString();
@@ -402,6 +469,16 @@ export async function resendSeatInviteAction(
   } catch (err) {
     const message = err instanceof Error ? err.message : "Resend failed.";
     await logAuthEvent("seat_invite_resend_failed", { email, error: message });
+    if (
+      message.toLowerCase().includes("already") ||
+      message.toLowerCase().includes("registered")
+    ) {
+      return {
+        success: false,
+        error:
+          "An account exists for this email but could not be linked. Check the user in Supabase Auth.",
+      };
+    }
     return { success: false, error: message };
   }
 }
