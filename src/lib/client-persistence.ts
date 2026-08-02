@@ -1,8 +1,8 @@
 /**
- * Client-only persistence — no backend.
+ * Client-only cache helpers.
  *
- * Primary store: IndexedDB (`prathyu-academy` database) via Zustand persist.
- * Lightweight settings: localStorage key `SupraBase-settings` only.
+ * Authoritative learner state lives in Supabase (profile_id scoped).
+ * IndexedDB / localStorage keys are short-lived caches keyed by auth user id.
  */
 
 export const IDB_DATABASE = "prathyu-academy";

@@ -37,6 +37,14 @@ export async function toggleLessonCompleteAction(
       await progress.markIncomplete(user.id, lessonId);
     }
 
+    // Dual-write into universal entity_progress via atomic RPC
+    await supabase.rpc("complete_entity", {
+      p_entity_id: lessonId,
+      p_xp: next ? 10 : 0,
+      p_source_key: next ? `lesson:${lessonId}` : undefined,
+      p_completed: next,
+    } as never);
+
     const lessonsRepo = new LessonsRepository(supabase);
     const modulesRepo = new ModulesRepository(supabase);
     const lesson = await lessonsRepo.findById(lessonId);

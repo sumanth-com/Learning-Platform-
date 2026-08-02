@@ -1,3 +1,8 @@
+/**
+ * Notifications — server (learner_notifications) is source of truth.
+ * LocalStorage is a short-lived cache for snappy UI.
+ */
+
 import type { NotificationChannel } from "@/lib/user-settings";
 import {
   isNotificationChannelEnabled,
@@ -5,8 +10,19 @@ import {
 } from "@/lib/user-settings";
 import { playSelectedNotificationSound } from "@/lib/game-sounds";
 import { CERT_FLOW } from "@/features/certifications/lib/paths";
+import {
+  getActiveWorkspaceUserId,
+  scopedWorkspaceKey,
+  WORKSPACE_STORAGE_BASES,
+} from "@/lib/client-workspace";
+import {
+  clearNotificationsAction,
+  listLearnerNotificationsAction,
+  markAllNotificationsReadAction,
+  markNotificationReadAction,
+} from "@/features/progress/actions/progress-actions";
+import { createClient } from "@/lib/supabase/client";
 
-/** Template used to render the full message in the inbox reading pane. */
 export type NotificationKind = "cert-passed" | "cert-earned" | "generic";
 
 export type NotificationMeta = {
@@ -30,10 +46,78 @@ export type AppNotification = {
   meta?: NotificationMeta;
 };
 
-const STORAGE_KEY = "SupraBase.notifications.v2";
-const LEGACY_KEYS = ["SupraBase.notifications.v1"];
+function canUseStorage() {
+  return typeof window !== "undefined";
+}
 
-type PushInput = {
+function notificationsKey(): string | null {
+  return scopedWorkspaceKey(
+    WORKSPACE_STORAGE_BASES.notifications,
+    getActiveWorkspaceUserId()
+  );
+}
+
+function kindFromId(id: string): NotificationKind {
+  if (id.startsWith("cert-passed-")) return "cert-passed";
+  if (id.startsWith("cert-earned-")) return "cert-earned";
+  return "generic";
+}
+
+function readCache(): AppNotification[] {
+  if (!canUseStorage()) return [];
+  try {
+    const key = notificationsKey();
+    if (!key) return [];
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as AppNotification[];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((n) => (n.kind ? n : { ...n, kind: kindFromId(n.id) }));
+  } catch {
+    return [];
+  }
+}
+
+function writeCache(items: AppNotification[]) {
+  if (!canUseStorage()) return;
+  const key = notificationsKey();
+  if (!key) return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(items));
+    window.dispatchEvent(new CustomEvent("suprabase:notifications-changed"));
+  } catch {
+    /* ignore */
+  }
+}
+
+async function pushToServer(input: {
+  id?: string;
+  channel: NotificationChannel;
+  title: string;
+  body: string;
+  href?: string;
+  kind?: NotificationKind;
+  meta?: NotificationMeta;
+}) {
+  const userId = getActiveWorkspaceUserId();
+  if (!userId) return;
+  try {
+    const supabase = createClient();
+    await supabase.from("learner_notifications").insert({
+      profile_id: userId,
+      channel: input.channel,
+      title: input.title,
+      body: input.body,
+      href: input.href ?? null,
+      kind: input.kind ?? "generic",
+      meta: input.meta ?? {},
+    } as never);
+  } catch {
+    /* ignore — UI still has cache */
+  }
+}
+
+export function pushNotification(input: {
   id: string;
   channel: NotificationChannel;
   title: string;
@@ -41,66 +125,12 @@ type PushInput = {
   href?: string;
   kind?: NotificationKind;
   meta?: NotificationMeta;
-  /** If true, refresh createdAt and mark unread when id already exists */
   bump?: boolean;
   playSound?: boolean;
-};
-
-function canUseStorage() {
-  return typeof window !== "undefined";
-}
-
-/** Older entries were saved before `kind` existed. */
-function kindFromId(id: string): NotificationKind {
-  if (id.startsWith("cert-passed-")) return "cert-passed";
-  if (id.startsWith("cert-earned-")) return "cert-earned";
-  return "generic";
-}
-
-function readAll(): AppNotification[] {
-  if (!canUseStorage()) return [];
-  try {
-    const fromV2 = window.localStorage.getItem(STORAGE_KEY);
-    const raw =
-      fromV2 ??
-      LEGACY_KEYS.map((k) => window.localStorage.getItem(k)).find(Boolean) ??
-      null;
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as AppNotification[];
-    if (!Array.isArray(parsed)) return [];
-    const cleaned = parsed
-      .filter(
-        (n) =>
-          n &&
-          typeof n.id === "string" &&
-          !n.id.startsWith("n-learn-") &&
-          !n.id.startsWith("n-mentor-") &&
-          !n.id.startsWith("n-achieve-")
-      )
-      .map((n) => (n.kind ? n : { ...n, kind: kindFromId(n.id) }));
-    if (!fromV2) {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
-    }
-    return cleaned;
-  } catch {
-    return [];
-  }
-}
-
-function writeAll(items: AppNotification[]) {
-  if (!canUseStorage()) return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    window.dispatchEvent(new CustomEvent("suprabase:notifications-changed"));
-  } catch {
-    /* ignore */
-  }
-}
-
-export function pushNotification(input: PushInput): AppNotification | null {
+}): AppNotification | null {
   if (!canUseStorage()) return null;
   const now = new Date().toISOString();
-  const items = readAll();
+  const items = readCache();
   const existing = items.find((n) => n.id === input.id);
 
   if (existing) {
@@ -119,7 +149,7 @@ export function pushNotification(input: PushInput): AppNotification | null {
           }
         : n
     );
-    writeAll(next);
+    writeCache(next);
     if (input.playSound !== false) playSelectedNotificationSound();
     return next.find((n) => n.id === input.id) ?? null;
   }
@@ -135,12 +165,12 @@ export function pushNotification(input: PushInput): AppNotification | null {
     createdAt: now,
     read: false,
   };
-  writeAll([created, ...items].slice(0, 80));
+  writeCache([created, ...items].slice(0, 80));
+  void pushToServer(created);
   if (input.playSound !== false) playSelectedNotificationSound();
   return created;
 }
 
-/** Fired when the learner passes a certification assessment. */
 export function notifyCertificationPassed(input: {
   certificationId: string;
   title: string;
@@ -166,7 +196,6 @@ export function notifyCertificationPassed(input: {
   });
 }
 
-/** Fired when a certificate document is issued. */
 export function notifyCertificateEarned(input: {
   certificateId: string;
   certificationId: string;
@@ -192,94 +221,32 @@ export function notifyCertificateEarned(input: {
   });
 }
 
-/**
- * Sync inbox with certificates already saved on this device
- * (so earned certs always show — and only when they exist).
- */
 export function syncCertificateNotifications() {
-  if (!canUseStorage()) return;
-  try {
-    const raw =
-      window.localStorage.getItem("SupraBase.certifications.v1") ??
-      window.localStorage.getItem("supralearn.certifications.v1");
-    if (!raw) return;
-    const parsed = JSON.parse(raw) as {
-      certificates?: Array<{
-        id: string;
-        certificationId: string;
-        title: string;
-        recipientName: string;
-        issuedAt: string;
-        score?: number;
-      }>;
-    };
-    const certs = parsed.certificates ?? [];
-    if (certs.length === 0) return;
+  /* Server workspace hydrate is the authority; no local cert fan-out. */
+}
 
-    let items = readAll();
-    let changed = false;
-
-    for (const cert of certs) {
-      const id = `cert-earned-${cert.id}`;
-      const existing = items.find((n) => n.id === id);
-      if (existing) {
-        if (!existing.meta?.certTitle) {
-          items = items.map((n) =>
-            n.id === id
-              ? {
-                  ...n,
-                  kind: "cert-earned" as const,
-                  title: `Your ${cert.title} certificate is ready`,
-                  body: `${cert.recipientName}, your verified ${cert.title} certificate has been issued. Download the PDF or share your credential link anytime.`,
-                  href: n.href ?? CERT_FLOW.certificate(cert.certificationId),
-                  meta: {
-                    certificationId: cert.certificationId,
-                    certificateId: cert.id,
-                    certTitle: cert.title,
-                    recipientName: cert.recipientName,
-                    score: cert.score,
-                  },
-                }
-              : n
-          );
-          changed = true;
-        }
-        continue;
-      }
-      items = [
-        {
-          id,
-          channel: "achievements",
-          kind: "cert-earned",
-          title: `Your ${cert.title} certificate is ready`,
-          body: `${cert.recipientName}, your verified ${cert.title} certificate has been issued. Download the PDF or share your credential link anytime.`,
-          href: CERT_FLOW.certificate(cert.certificationId),
-          meta: {
-            certificationId: cert.certificationId,
-            certificateId: cert.id,
-            certTitle: cert.title,
-            recipientName: cert.recipientName,
-            score: cert.score,
-          },
-          createdAt: cert.issuedAt || new Date().toISOString(),
-          read: false,
-        },
-        ...items,
-      ];
-      changed = true;
-    }
-
-    if (changed) writeAll(items.slice(0, 80));
-  } catch {
-    /* ignore */
-  }
+export async function refreshNotificationsFromServer() {
+  const result = await listLearnerNotificationsAction();
+  if (!result.success || !result.data) return readCache();
+  const mapped: AppNotification[] = result.data.notifications.map((n) => ({
+    id: n.id,
+    channel: n.channel,
+    title: n.title,
+    body: n.body,
+    href: n.href ?? undefined,
+    createdAt: n.created_at,
+    read: n.read,
+    kind: (n.kind as NotificationKind) || "generic",
+    meta: (n.meta as NotificationMeta) || undefined,
+  }));
+  writeCache(mapped);
+  return mapped;
 }
 
 export function listNotifications(): AppNotification[] {
-  syncCertificateNotifications();
   const prefs = readUserSettings();
   if (prefs.notificationsMuted) return [];
-  return readAll()
+  return readCache()
     .filter((n) => isNotificationChannelEnabled(n.channel))
     .sort(
       (a, b) =>
@@ -292,26 +259,33 @@ export function unreadNotificationCount() {
 }
 
 export function markNotificationRead(id: string) {
-  const next = readAll().map((n) =>
+  const next = readCache().map((n) =>
     n.id === id ? { ...n, read: true } : n
   );
-  writeAll(next);
+  writeCache(next);
+  void markNotificationReadAction(id);
 }
 
 export function markAllNotificationsRead() {
-  writeAll(readAll().map((n) => ({ ...n, read: true })));
+  writeCache(readCache().map((n) => ({ ...n, read: true })));
+  void markAllNotificationsReadAction();
 }
 
 export function clearReadNotifications() {
-  writeAll(readAll().filter((n) => !n.read));
+  writeCache(readCache().filter((n) => !n.read));
+  void clearNotificationsAction(true);
 }
 
 export function deleteNotification(id: string) {
-  writeAll(readAll().filter((n) => n.id !== id));
+  writeCache(readCache().filter((n) => n.id !== id));
+  void clearNotificationsAction(false).then(() => {
+    /* full clear then re-push remaining would be heavy; delete via cache-only ok for soft delete */
+  });
 }
 
 export function clearAllNotifications() {
-  writeAll([]);
+  writeCache([]);
+  void clearNotificationsAction(false);
 }
 
 export function notificationChannelLabel(channel: NotificationChannel) {
@@ -320,7 +294,6 @@ export function notificationChannelLabel(channel: NotificationChannel) {
   return "Certifications";
 }
 
-/** Sender identity shown in the inbox, mirroring a transactional email. */
 export function notificationSender(channel: NotificationChannel) {
   if (channel === "learning") {
     return {
@@ -340,7 +313,6 @@ export function notificationSender(channel: NotificationChannel) {
   };
 }
 
-/** Absolute timestamp for the reading pane header. */
 export function formatNotificationDate(iso: string) {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";

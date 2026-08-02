@@ -10,9 +10,12 @@ import { issueCertificateAction } from "@/features/certifications/actions/certif
 import { notifyCertificateEarned } from "@/lib/notifications";
 import { createCertificateId as buildCertificateId } from "@/features/certifications/lib/certificate-id";
 import type { CertificateIdInput } from "@/features/certifications/lib/certificate-id";
-
-const STORAGE_KEY = "SupraBase.certifications.v1";
-const LEGACY_STORAGE_KEYS = ["supralearn.certifications.v1"];
+import {
+  getActiveWorkspaceUserId,
+  scopedWorkspaceKey,
+  subscribeWorkspaceChange,
+  WORKSPACE_STORAGE_BASES,
+} from "@/lib/client-workspace";
 
 const EMPTY: CertProgressState = {
   attempts: {},
@@ -21,29 +24,30 @@ const EMPTY: CertProgressState = {
   badges: [],
 };
 
+function storageKey(): string | null {
+  return scopedWorkspaceKey(
+    WORKSPACE_STORAGE_BASES.certifications,
+    getActiveWorkspaceUserId()
+  );
+}
+
 function readState(): CertProgressState {
   if (typeof window === "undefined") return EMPTY;
   try {
-    const raw =
-      window.localStorage.getItem(STORAGE_KEY) ??
-      LEGACY_STORAGE_KEYS.map((k) => window.localStorage.getItem(k)).find(
-        Boolean
-      ) ??
-      null;
+    const key = storageKey();
+    if (!key) return EMPTY;
+    const raw = window.localStorage.getItem(key);
     if (!raw) return EMPTY;
-    const parsed = { ...EMPTY, ...JSON.parse(raw) } as CertProgressState;
-    // Migrate legacy key once
-    if (!window.localStorage.getItem(STORAGE_KEY) && raw) {
-      window.localStorage.setItem(STORAGE_KEY, raw);
-    }
-    return parsed;
+    return { ...EMPTY, ...JSON.parse(raw) } as CertProgressState;
   } catch {
     return EMPTY;
   }
 }
 
 function writeState(state: CertProgressState) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const key = storageKey();
+  if (!key) return;
+  window.localStorage.setItem(key, JSON.stringify(state));
 }
 
 export function useCertifications() {
@@ -51,47 +55,86 @@ export function useCertifications() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const local = readState();
-    setState(local);
-    setReady(true);
+    const load = () => {
+      const local = readState();
+      setState(local);
+      setReady(Boolean(getActiveWorkspaceUserId()));
 
-    // Publish legacy browser-only credentials and replace them with the
-    // canonical server-issued records used by QR verification.
-    if (local.certificates.length > 0) {
-      void Promise.all(
-        local.certificates.map((certificate) =>
-          issueCertificateAction({
-            certificationId: certificate.certificationId,
-            recipientName: certificate.recipientName,
-            score: certificate.score,
-          })
-        )
-      ).then((results) => {
-        const issued = results.flatMap((result) =>
-          result.success ? [result.certificate] : []
-        );
-        if (issued.length === 0) return;
-        const current = readState();
-        const byCertification = new Map(
-          issued.map((certificate) => [
-            certificate.certificationId,
-            certificate,
-          ])
-        );
-        const certificates = current.certificates.map(
-          (certificate) =>
-            byCertification.get(certificate.certificationId) ?? certificate
-        );
-        const next = { ...current, certificates };
-        writeState(next);
-        setState(next);
-      });
-    }
+      void import("@/features/progress/actions/progress-actions").then(
+        async ({ getCertAttemptsAction }) => {
+          const result = await getCertAttemptsAction();
+          if (!result.success || !result.data) return;
+          const attempts: CertProgressState["attempts"] = {};
+          for (const row of result.data.attempts as Array<{
+            certification_id: string;
+            payload: AssessmentAttempt;
+            status: string;
+            score: number | null;
+          }>) {
+            attempts[row.certification_id] = {
+              ...(row.payload as AssessmentAttempt),
+              certificationId: row.certification_id,
+              status: row.status as AssessmentAttempt["status"],
+              score: row.score ?? undefined,
+            };
+          }
+          const next = { ...readState(), attempts };
+          writeState(next);
+          setState(next);
+        }
+      );
+
+      if (local.certificates.length > 0) {
+        void Promise.all(
+          local.certificates.map((certificate) =>
+            issueCertificateAction({
+              certificationId: certificate.certificationId,
+              recipientName: certificate.recipientName,
+              score: certificate.score,
+            })
+          )
+        ).then((results) => {
+          const issued = results.flatMap((result) =>
+            result.success ? [result.certificate] : []
+          );
+          if (issued.length === 0) return;
+          const current = readState();
+          const byCertification = new Map(
+            issued.map((certificate) => [
+              certificate.certificationId,
+              certificate,
+            ])
+          );
+          const certificates = current.certificates.map(
+            (certificate) =>
+              byCertification.get(certificate.certificationId) ?? certificate
+          );
+          const next = { ...current, certificates };
+          writeState(next);
+          setState(next);
+        });
+      }
+    };
+
+    load();
+    return subscribeWorkspaceChange(() => load());
   }, []);
 
   const persist = useCallback((next: CertProgressState) => {
     setState(next);
     writeState(next);
+    // Persist each attempt durably
+    Object.entries(next.attempts).forEach(([certificationId, attempt]) => {
+      void import("@/features/progress/actions/progress-actions").then(
+        ({ upsertCertAttemptAction }) =>
+          upsertCertAttemptAction({
+            certificationId,
+            payload: attempt as unknown as Record<string, unknown>,
+            status: attempt.status,
+            score: attempt.score ?? null,
+          })
+      );
+    });
   }, []);
 
   const saveAttempt = useCallback(
@@ -182,10 +225,15 @@ export function useCertifications() {
 }
 
 export function createCertificateId(
-  input?: Partial<CertificateIdInput> & { recipientName?: string; certificationId?: string }
+  input?: Partial<CertificateIdInput> & {
+    recipientName?: string;
+    certificationId?: string;
+  }
 ) {
   const current =
-    typeof window !== "undefined" ? readState().certificates.map((c) => c.id) : [];
+    typeof window !== "undefined"
+      ? readState().certificates.map((c) => c.id)
+      : [];
   return buildCertificateId({
     recipientName: input?.recipientName?.trim() || "Learner",
     certificationId: input?.certificationId || "general-basic",
@@ -195,7 +243,7 @@ export function createCertificateId(
   });
 }
 
-/** Public lookup for verify page (localStorage on same browser; demo store). */
+/** Local cache lookup — server `verify_certificate` is the public source of truth. */
 export function findCertificateById(id: string): EarnedCertificate | null {
   if (typeof window === "undefined") return null;
   try {

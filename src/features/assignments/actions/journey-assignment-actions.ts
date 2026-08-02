@@ -70,23 +70,33 @@ export async function submitJourneyAssignmentAction(
   }
 
   try {
-    const service = new JourneySubmissionService(ctx.supabase);
-    const submission = await service.submit(
-      ctx.user.id,
+    const { data, error } = await ctx.supabase.rpc(
+      "submit_and_complete_journey_assignment",
       {
-        name: ctx.fullName || "Student",
-        email: ctx.email,
-      },
-      parsed.data
+        p_catalog_id: parsed.data.catalogId,
+        p_assignment_number: parsed.data.assignmentNumber,
+        p_assignment_title: parsed.data.assignmentTitle,
+        p_module_slug: parsed.data.moduleSlug,
+        p_module_title: parsed.data.moduleTitle,
+        p_student_name: ctx.fullName || "Student",
+        p_student_email: ctx.email,
+        p_github_url: parsed.data.githubUrl ?? "",
+        p_live_url: parsed.data.liveUrl ?? "",
+        p_screenshots: parsed.data.screenshots ?? "",
+        p_notes: parsed.data.notes ?? "",
+        p_reflection: parsed.data.reflection ?? "",
+        p_xp: 50,
+      } as never
     );
+    if (error) throw error;
+    const payload = data as { submission: JourneyAssignmentSubmissionRow };
 
     revalidatePath(ADMIN_ROUTES.submissions);
-    revalidatePath(
-      `/assignments/${parsed.data.moduleSlug}`
-    );
+    revalidatePath(`/assignments/${parsed.data.moduleSlug}`);
+    revalidatePath("/dashboard");
     return {
       success: true,
-      data: { submission },
+      data: { submission: payload.submission },
       message: "Submitted for review. An admin will see it shortly.",
     };
   } catch (error) {

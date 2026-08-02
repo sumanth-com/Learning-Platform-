@@ -18,10 +18,12 @@ export type EmailLayoutProps = {
   footerNote?: string;
 };
 
+const FONT =
+  "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+
 /**
- * Centered transactional email chrome — logo, title, body, CTA.
+ * Premium transactional email chrome (Linear / Stripe / Vercel style).
  * Table-based for Outlook / Gmail / Apple Mail compatibility.
- * No card border — soft shadow only for a clean look.
  */
 export function renderEmailLayout({
   preview,
@@ -33,7 +35,10 @@ export function renderEmailLayout({
   footerNote,
 }: EmailLayoutProps): string {
   const brand = getBrand();
-  const name = escapeHtml(firstName.trim() || "there");
+  const trimmedName = firstName.trim();
+  const greeting = trimmedName
+    ? `Hello ${escapeHtml(trimmedName)},`
+    : "Hello,";
   const safeTitle = escapeHtml(title);
   const safePreview = escapeHtml(preview);
   const safeCta = ctaLabel ? escapeHtml(ctaLabel) : "";
@@ -41,36 +46,48 @@ export function renderEmailLayout({
   const safeLogoUrl = escapeHtml(brand.logoUrl);
   const safeBrand = escapeHtml(brand.name);
   const safeSupport = escapeHtml(brand.supportEmail);
+  const safePrivacy = escapeHtml(`${brand.appUrl}/privacy`);
+  const safeTerms = escapeHtml(`${brand.appUrl}/terms`);
   const year = new Date().getFullYear();
 
   const ctaBlock =
     safeCta && safeUrl
       ? `
       <tr>
-        <td align="center" style="padding:28px 0 8px;">
+        <td style="padding:28px 0 8px;">
           <table role="presentation" cellspacing="0" cellpadding="0" border="0">
             <tr>
-              <td align="center" bgcolor="#5f3435" style="border-radius:12px;background:#5f3435;">
+              <td bgcolor="#5f3435" style="border-radius:10px;background:#5f3435;">
+                <!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${safeUrl}" style="height:46px;v-text-anchor:middle;width:200px;" arcsize="12%" stroke="f" fillcolor="#5f3435">
+                  <w:anchorlock/>
+                  <center style="color:#ffffff;font-family:Arial,sans-serif;font-size:15px;font-weight:600;">
+                    ${safeCta}
+                  </center>
+                </v:roundrect>
+                <![endif]-->
+                <!--[if !mso]><!-->
                 <a href="${safeUrl}"
                    target="_blank"
-                   style="display:inline-block;padding:15px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;line-height:1;color:#ffffff;text-decoration:none;border-radius:12px;">
+                   style="display:inline-block;padding:14px 28px;font-family:${FONT};font-size:15px;font-weight:600;line-height:1.2;color:#ffffff;text-decoration:none;border-radius:10px;background:#5f3435;">
                   ${safeCta}
                 </a>
+                <!--<![endif]-->
               </td>
             </tr>
           </table>
         </td>
       </tr>
       <tr>
-        <td align="center" style="padding:14px 8px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.65;color:#71717a;">
-          Or paste this link in your browser:<br/>
+        <td style="padding:16px 0 0;font-family:${FONT};font-size:12px;line-height:1.65;color:#71717a;">
+          Or open this link in your browser:<br/>
           <a href="${safeUrl}" style="color:#5f3435;word-break:break-all;text-decoration:underline;">${safeUrl}</a>
         </td>
       </tr>`
       : "";
 
   const note = footerNote
-    ? `<tr><td align="center" style="padding:24px 12px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.65;color:#a1a1aa;">${footerNote}</td></tr>`
+    ? `<tr><td style="padding:24px 0 0;font-family:${FONT};font-size:13px;line-height:1.65;color:#71717a;">${footerNote}</td></tr>`
     : "";
 
   return `<!DOCTYPE html>
@@ -92,12 +109,14 @@ export function renderEmailLayout({
     img { border: 0 !important; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
     a { color: #5f3435; }
     @media (prefers-color-scheme: dark) {
-      .email-bg { background:#0c0c0e !important; }
+      .email-bg { background:#09090b !important; }
       .email-card { background:#18181b !important; }
       .email-title { color:#fafafa !important; }
       .email-text { color:#d4d4d8 !important; }
       .email-muted { color:#a1a1aa !important; }
       .brand-name { color:#fafafa !important; }
+      .brand-tagline { color:#a1a1aa !important; }
+      .email-rule { border-color:#27272a !important; }
     }
   </style>
 </head>
@@ -107,43 +126,47 @@ export function renderEmailLayout({
   </div>
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f4f4f5;width:100%;" class="email-bg">
     <tr>
-      <td align="center" style="padding:40px 16px;">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;width:100%;">
-          <!-- Logo + brand -->
+      <td align="center" style="padding:36px 16px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:520px;width:100%;">
+
+          <!-- Brand header: logo + name on one row -->
           <tr>
-            <td align="center" style="padding:0 0 24px;">
+            <td style="padding:0 0 20px;">
               <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td align="center" style="line-height:0;">
-                    <img src="${safeLogoUrl}" width="56" height="56" alt="${safeBrand}"
-                         style="display:block;margin:0 auto;width:56px;height:56px;border:0;outline:none;text-decoration:none;border-radius:14px;" />
+                  <td valign="middle" style="vertical-align:middle;padding:0;line-height:0;">
+                    <img src="${safeLogoUrl}" width="36" height="36" alt="${safeBrand}"
+                         style="display:block;width:36px;height:36px;border:0;outline:none;text-decoration:none;border-radius:10px;" />
                   </td>
-                </tr>
-                <tr>
-                  <td align="center" style="padding-top:12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.02em;color:#18181b;" class="brand-name">
-                    ${safeBrand}
+                  <td valign="middle" style="vertical-align:middle;padding:0 0 0 12px;">
+                    <div style="font-family:${FONT};font-size:18px;font-weight:650;letter-spacing:-0.03em;line-height:1;color:#18181b;" class="brand-name">
+                      ${safeBrand}
+                    </div>
                   </td>
                 </tr>
               </table>
+              <div style="margin-top:10px;font-family:${FONT};font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#71717a;" class="brand-tagline">
+                Learn • Build • Ship
+              </div>
             </td>
           </tr>
 
-          <!-- Card (no border stroke) -->
+          <!-- Content card -->
           <tr>
-            <td align="center" bgcolor="#ffffff" style="background:#ffffff;border:0;border-radius:18px;padding:36px 32px;box-shadow:0 12px 40px rgba(24,24,27,0.08);" class="email-card">
+            <td bgcolor="#ffffff" style="background:#ffffff;border-radius:14px;padding:32px 28px;box-shadow:0 1px 2px rgba(24,24,27,0.04),0 8px 24px rgba(24,24,27,0.06);" class="email-card">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td align="center" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.03em;line-height:1.3;color:#18181b;padding:0 0 16px;" class="email-title">
+                  <td style="font-family:${FONT};font-size:22px;font-weight:650;letter-spacing:-0.03em;line-height:1.3;color:#18181b;padding:0 0 18px;" class="email-title">
                     ${safeTitle}
                   </td>
                 </tr>
                 <tr>
-                  <td align="center" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:#3f3f46;" class="email-text">
-                    Hello ${name},
+                  <td style="font-family:${FONT};font-size:15px;line-height:1.7;color:#3f3f46;" class="email-text">
+                    ${greeting}
                   </td>
                 </tr>
                 <tr>
-                  <td align="center" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:#3f3f46;padding-top:12px;" class="email-text">
+                  <td style="font-family:${FONT};font-size:15px;line-height:1.7;color:#3f3f46;padding-top:12px;" class="email-text">
                     ${bodyHtml}
                   </td>
                 </tr>
@@ -155,9 +178,14 @@ export function renderEmailLayout({
 
           <!-- Footer -->
           <tr>
-            <td align="center" style="padding:28px 12px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.75;color:#71717a;" class="email-muted">
-              <strong style="color:#52525b;">${safeBrand}</strong><br/>
-              Need help? <a href="mailto:${safeSupport}" style="color:#5f3435;text-decoration:none;">${safeSupport}</a><br/>
+            <td style="padding:28px 4px 0;font-family:${FONT};font-size:12px;line-height:1.75;color:#71717a;" class="email-muted">
+              <strong style="color:#52525b;font-weight:600;">${safeBrand}</strong><br/>
+              Learn • Build • Ship<br/>
+              <a href="mailto:${safeSupport}" style="color:#5f3435;text-decoration:none;">${safeSupport}</a>
+              <span style="color:#d4d4d8;"> · </span>
+              <a href="${safePrivacy}" style="color:#71717a;text-decoration:none;">Privacy Policy</a>
+              <span style="color:#d4d4d8;"> · </span>
+              <a href="${safeTerms}" style="color:#71717a;text-decoration:none;">Terms</a><br/>
               &copy; ${year} ${safeBrand}. All rights reserved.
             </td>
           </tr>
@@ -172,6 +200,7 @@ export function renderEmailLayout({
 const HONORIFIC =
   /^(mr|mrs|ms|miss|dr|prof|sir|madam|mx)\.?$/i;
 
+/** Prefer a real given name. Skip honorifics. Empty when unknown. */
 export function firstNameFrom(fullName?: string | null, email?: string | null) {
   const parts = (fullName?.trim() || "").split(/\s+/).filter(Boolean);
   const firstReal = parts.find((part) => !HONORIFIC.test(part));
@@ -179,8 +208,10 @@ export function firstNameFrom(fullName?: string | null, email?: string | null) {
 
   const local = email?.split("@")[0]?.trim();
   if (local) {
-    const cleaned = local.replace(/[._-]+/g, " ").split(/\s+/)[0];
-    if (cleaned) return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+    const cleaned = local.replace(/[._+-]+/g, " ").split(/\s+/)[0];
+    if (cleaned && cleaned.length >= 2 && !/^\d+$/.test(cleaned)) {
+      return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+    }
   }
-  return "there";
+  return "";
 }

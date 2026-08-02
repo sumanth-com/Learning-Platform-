@@ -37,14 +37,14 @@ export function isCustomEmailEnabled() {
 export function getBrand() {
   const appUrl = getAppUrl();
   return {
-    name: "Suprabase",
+    name: "SupraBase",
     appUrl,
     supportEmail: getEmailEnv().support,
     /**
-     * Absolute production URL — email clients cannot load localhost icons.
-     * Use 512 PNG served from the live app origin.
+     * Absolute production URL — email clients cannot load localhost assets.
+     * Same mark as the in-app brand (`src/assets/Logo.png` → `/brand/logo.png`).
      */
-    logoUrl: `${appUrl}/icons/icon-512.png`,
+    logoUrl: `${appUrl}/brand/logo.png`,
   } as const;
 }
 

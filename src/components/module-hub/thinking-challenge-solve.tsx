@@ -25,6 +25,7 @@ import {
 import { useEntityProgress } from "@/hooks/use-curriculum";
 import { useTrackResumePosition } from "@/hooks/use-resume-position";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
+import { getActiveWorkspaceUserId } from "@/lib/client-workspace";
 import { cn } from "@/lib/utils";
 
 type ThinkingChallengeSolveProps = {
@@ -85,8 +86,9 @@ export function ThinkingChallengeSolve({
   );
 
   const { isDone, toggle } = useEntityProgress(entityId);
-  const storageKey = `thinking-answer:${entityId}`;
-  const submittedKey = `thinking-submitted:${entityId}`;
+  const userScope = getActiveWorkspaceUserId() ?? "anon";
+  const storageKey = `thinking-answer:${userScope}:${entityId}`;
+  const submittedKey = `thinking-submitted:${userScope}:${entityId}`;
 
   const [answer, setAnswer] = useState("");
   const [selectedOption, setSelectedOption] = useState<string | null>(null);

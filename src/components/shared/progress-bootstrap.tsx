@@ -4,24 +4,79 @@ import { useEffect, useRef } from "react";
 import { useProgressStore } from "@/store/use-progress-store";
 import { useCurriculum } from "@/hooks/use-curriculum";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
+import { useUser } from "@/hooks/use-user";
 import { getWeekById } from "@/curriculum/java-roadmap/curriculum";
 import { isWeekFullyCompleteAcrossModules } from "@/lib/module-progress";
 import { fireWeekCelebration } from "@/components/shared/week-completion-celebration";
 import { syncCelebratedWeeks } from "@/lib/week-celebration-storage";
+import {
+  bindClientWorkspace,
+  clearClientWorkspace,
+} from "@/lib/client-workspace";
+import { fetchLearnerWorkspace } from "@/features/progress/lib/progress-sync";
+import { refreshNotificationsFromServer } from "@/lib/notifications";
 
-/** Runs once on app load: restore profile, daily goal, streak, and sync week gates. */
+/** Binds auth user and hydrates progress from Supabase (server is source of truth). */
 export function ProgressBootstrap() {
   const bootstrap = useProgressStore((s) => s.bootstrapSession);
+  const hydrateFromServer = useProgressStore((s) => s.hydrateFromServer);
+  const updateProfile = useProgressStore((s) => s.updateProfile);
   const hydrated = useStoreHydrated();
+  const { user, profile, isLoading } = useUser();
+  const boundUserRef = useRef<string | null>(null);
 
   useEffect(() => {
-    bootstrap();
-  }, [bootstrap]);
+    if (isLoading) return;
 
-  useEffect(() => {
-    if (!hydrated) return;
-    bootstrap();
-  }, [hydrated, bootstrap]);
+    let cancelled = false;
+
+    void (async () => {
+      if (!user) {
+        boundUserRef.current = null;
+        await clearClientWorkspace();
+        return;
+      }
+
+      if (boundUserRef.current !== user.id) {
+        await bindClientWorkspace(user.id);
+        if (cancelled) return;
+        boundUserRef.current = user.id;
+      }
+
+      const workspace = await fetchLearnerWorkspace();
+      if (cancelled) return;
+
+      if (workspace) {
+        hydrateFromServer(workspace);
+        void refreshNotificationsFromServer();
+      }
+
+      const displayName =
+        profile?.full_name?.trim() ||
+        user.user_metadata?.full_name ||
+        user.email?.split("@")[0] ||
+        "";
+      if (displayName) {
+        updateProfile({
+          name: displayName,
+          avatar: displayName.charAt(0).toUpperCase(),
+        });
+      }
+      if (hydrated) bootstrap();
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    user,
+    profile?.full_name,
+    isLoading,
+    hydrated,
+    bootstrap,
+    hydrateFromServer,
+    updateProfile,
+  ]);
 
   return null;
 }

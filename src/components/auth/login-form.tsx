@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -9,7 +9,11 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthFormField } from "@/components/auth/auth-form-field";
-import { authPrimaryBtnClass, authSecondaryBtnClass } from "@/components/auth/auth-shell";
+import { PasswordField } from "@/components/auth/password-field";
+import {
+  authPrimaryBtnClass,
+  authSecondaryBtnClass,
+} from "@/components/auth/auth-shell";
 import { resendConfirmationAction } from "@/features/auth/actions/auth-actions";
 import { hardNavigate, signInViaRoute } from "@/features/auth/lib/route-auth";
 import {
@@ -27,6 +31,7 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    control,
     getValues,
     formState: { errors },
   } = useForm<LoginInput>({
@@ -35,7 +40,6 @@ export function LoginForm() {
   });
 
   useEffect(() => {
-    // Clear any leftover error-boundary reload lock from prior builds.
     try {
       sessionStorage.removeItem("suprabase.error.reload");
       sessionStorage.removeItem("suprabase.global-error.reload");
@@ -81,7 +85,6 @@ export function LoginForm() {
         return;
       }
 
-      // Set-Cookie from /auth/sign-in is already applied. Hard navigate once.
       hardNavigate(result.redirectTo);
     });
   });
@@ -96,13 +99,22 @@ export function LoginForm() {
         error={errors.email}
         {...register("email")}
       />
-      <AuthFormField
-        label="Password"
-        type="password"
-        autoComplete="current-password"
-        placeholder="Enter password"
-        error={errors.password}
-        {...register("password")}
+
+      <Controller
+        name="password"
+        control={control}
+        render={({ field }) => (
+          <PasswordField
+            id="login-password"
+            label="Password"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.password?.message}
+            placeholder="Enter password"
+            autoComplete="current-password"
+            showStrength={false}
+          />
+        )}
       />
 
       <div className="flex items-center justify-between gap-3">

@@ -2,7 +2,22 @@ import type { StateStorage } from "zustand/middleware";
 
 const DB_NAME = "prathyu-academy";
 const STORE_NAME = "persist";
-const LEGACY_KEYS = ["prathyu-academy-v3", "prathyu-academy-v2"];
+
+/** Active auth user for scoped persist keys — set by client-workspace. */
+let persistUserId: string | null = null;
+
+export function setIdbPersistUserId(userId: string | null) {
+  persistUserId = userId;
+}
+
+export function getIdbPersistUserId() {
+  return persistUserId;
+}
+
+function scopedKey(name: string): string | null {
+  if (!persistUserId) return null;
+  return `${name}:${persistUserId}`;
+}
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -49,65 +64,65 @@ async function idbRemove(key: string): Promise<void> {
   });
 }
 
-function readLegacyLocalStorage(key: string): string | null {
-  if (typeof localStorage === "undefined") return null;
-  try {
-    return localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-/** Migrate legacy localStorage saves into IndexedDB once. */
-async function migrateLegacyStorage(activeKey: string): Promise<string | null> {
-  const existing = await idbGet(activeKey);
-  if (existing) return existing;
-
-  for (const legacyKey of LEGACY_KEYS) {
-    const legacy = readLegacyLocalStorage(legacyKey);
-    if (!legacy) continue;
-    await idbSet(activeKey, legacy);
-    if (legacyKey !== activeKey) {
-      try {
-        localStorage.removeItem(legacyKey);
-      } catch {
-        /* ignore */
-      }
+/** Delete exact keys (legacy unscoped) from IndexedDB + localStorage. */
+export async function purgePersistKeys(keys: readonly string[]): Promise<void> {
+  if (typeof window === "undefined") return;
+  for (const key of keys) {
+    try {
+      await idbRemove(key);
+    } catch {
+      /* ignore */
     }
-    return legacy;
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* ignore */
+    }
   }
-
-  return null;
 }
 
+/**
+ * IndexedDB persist storage scoped to the active authenticated user.
+ * Never reads or writes unscoped keys (prevents cross-account leakage).
+ */
 export function createIdbPersistStorage(): StateStorage {
   return {
     getItem: async (name) => {
+      const key = scopedKey(name);
+      if (!key) return null;
       try {
-        return await migrateLegacyStorage(name);
+        return await idbGet(key);
       } catch {
-        return readLegacyLocalStorage(name);
+        try {
+          return localStorage.getItem(key);
+        } catch {
+          return null;
+        }
       }
     },
     setItem: async (name, value) => {
+      const key = scopedKey(name);
+      if (!key) return;
       try {
-        await idbSet(name, value);
+        await idbSet(key, value);
       } catch {
         try {
-          localStorage.setItem(name, value);
+          localStorage.setItem(key, value);
         } catch {
           /* ignore quota errors */
         }
       }
     },
     removeItem: async (name) => {
+      const key = scopedKey(name);
+      if (!key) return;
       try {
-        await idbRemove(name);
+        await idbRemove(key);
       } catch {
         /* ignore */
       }
       try {
-        localStorage.removeItem(name);
+        localStorage.removeItem(key);
       } catch {
         /* ignore */
       }

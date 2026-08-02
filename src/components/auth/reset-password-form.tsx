@@ -107,9 +107,22 @@ export function ResetPasswordForm() {
                 label="Confirm password"
                 value={field.value}
                 onChange={field.onChange}
-                error={errors.confirmPassword?.message}
+                error={
+                  password &&
+                  field.value &&
+                  password !== field.value
+                    ? undefined
+                    : errors.confirmPassword?.message
+                }
                 placeholder="Repeat password"
                 showStrength={false}
+                matchStatus={
+                  !field.value
+                    ? null
+                    : password === field.value
+                      ? "match"
+                      : "mismatch"
+                }
               />
             )}
           />

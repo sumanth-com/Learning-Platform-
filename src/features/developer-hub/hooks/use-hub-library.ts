@@ -2,8 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { HubLibraryState } from "../types";
-
-const KEY = "SupraBase.developer-hub.library";
+import {
+  getActiveWorkspaceUserId,
+  scopedWorkspaceKey,
+  subscribeWorkspaceChange,
+  WORKSPACE_STORAGE_BASES,
+} from "@/lib/client-workspace";
 
 const EMPTY: HubLibraryState = {
   bookmarks: [],
@@ -11,10 +15,19 @@ const EMPTY: HubLibraryState = {
   liked: [],
 };
 
+function storageKey(): string | null {
+  return scopedWorkspaceKey(
+    WORKSPACE_STORAGE_BASES.hubLibrary,
+    getActiveWorkspaceUserId()
+  );
+}
+
 function read(): HubLibraryState {
   if (typeof window === "undefined") return EMPTY;
   try {
-    const raw = localStorage.getItem(KEY);
+    const key = storageKey();
+    if (!key) return EMPTY;
+    const raw = localStorage.getItem(key);
     if (!raw) return EMPTY;
     return { ...EMPTY, ...JSON.parse(raw) } as HubLibraryState;
   } catch {
@@ -23,7 +36,9 @@ function read(): HubLibraryState {
 }
 
 function write(next: HubLibraryState) {
-  localStorage.setItem(KEY, JSON.stringify(next));
+  const key = storageKey();
+  if (!key) return;
+  localStorage.setItem(key, JSON.stringify(next));
 }
 
 export function useHubLibrary() {
@@ -31,14 +46,40 @@ export function useHubLibrary() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setState(read());
-    setHydrated(true);
+    const load = () => {
+      setState(read());
+      setHydrated(Boolean(getActiveWorkspaceUserId()));
+      void import("@/features/progress/actions/progress-actions").then(
+        async ({ getLearnerWorkspaceAction }) => {
+          const result = await getLearnerWorkspaceAction();
+          if (!result.success || !result.data?.workspace.hubLibrary) return;
+          const hub = result.data.workspace.hubLibrary;
+          const next = {
+            bookmarks: hub.bookmarks ?? [],
+            liked: hub.liked ?? [],
+            recent: Array.isArray(hub.recent) ? (hub.recent as HubLibraryState["recent"]) : [],
+          };
+          write(next);
+          setState(next);
+        }
+      );
+    };
+    load();
+    return subscribeWorkspaceChange(() => load());
   }, []);
 
   const persist = useCallback((updater: (prev: HubLibraryState) => HubLibraryState) => {
     setState((prev) => {
       const next = updater(prev);
       write(next);
+      void import("@/features/progress/actions/progress-actions").then(
+        ({ upsertHubLibraryAction }) =>
+          upsertHubLibraryAction({
+            bookmarks: next.bookmarks,
+            liked: next.liked,
+            recent: next.recent,
+          })
+      );
       return next;
     });
   }, []);

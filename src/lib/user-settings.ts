@@ -1,8 +1,12 @@
 /**
- * Lightweight client preferences — localStorage `SupraBase-settings`.
+ * Lightweight client preferences — localStorage scoped per authenticated user.
  */
 
-import { SETTINGS_STORAGE_KEY } from "@/lib/client-persistence";
+import {
+  getActiveWorkspaceUserId,
+  scopedWorkspaceKey,
+  WORKSPACE_STORAGE_BASES,
+} from "@/lib/client-workspace";
 
 export type NotificationChannel = "learning" | "mentor" | "achievements";
 export type NotificationSoundId = "chime" | "ping" | "bell" | "off";
@@ -57,6 +61,13 @@ function canUseStorage() {
   return typeof window !== "undefined";
 }
 
+function settingsKey(): string | null {
+  return scopedWorkspaceKey(
+    WORKSPACE_STORAGE_BASES.settings,
+    getActiveWorkspaceUserId()
+  );
+}
+
 function migrateLegacy(parsed: Record<string, unknown>): Partial<UserSettings> {
   const next: Partial<UserSettings> = {};
   if (typeof parsed.notificationsMuted === "boolean") {
@@ -96,7 +107,9 @@ function migrateLegacy(parsed: Record<string, unknown>): Partial<UserSettings> {
 export function readUserSettings(): UserSettings {
   if (!canUseStorage()) return { ...DEFAULT_USER_SETTINGS };
   try {
-    const raw = window.localStorage.getItem(SETTINGS_STORAGE_KEY);
+    const key = settingsKey();
+    if (!key) return { ...DEFAULT_USER_SETTINGS };
+    const raw = window.localStorage.getItem(key);
     if (!raw) return { ...DEFAULT_USER_SETTINGS };
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     return { ...DEFAULT_USER_SETTINGS, ...migrateLegacy(parsed) };
@@ -107,14 +120,28 @@ export function readUserSettings(): UserSettings {
 
 export function writeUserSettings(next: UserSettings) {
   if (!canUseStorage()) return;
+  const key = settingsKey();
+  if (!key) return;
   try {
-    window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.setItem(key, JSON.stringify(next));
     window.dispatchEvent(
       new CustomEvent("suprabase:settings-changed", { detail: next })
     );
   } catch {
     /* ignore quota */
   }
+  // Durable sync
+  void import("@/features/progress/actions/progress-actions").then(
+    ({ updateLearnerPreferencesAction }) =>
+      updateLearnerPreferencesAction({
+        notifications_muted: next.notificationsMuted,
+        notification_sound: next.notificationSound,
+        notify_learning: next.notifyLearning,
+        notify_mentor: next.notifyMentor,
+        notify_achievements: next.notifyAchievements,
+        celebrations_enabled: next.celebrationsEnabled,
+      })
+  );
 }
 
 export function updateUserSettings(

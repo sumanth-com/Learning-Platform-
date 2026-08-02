@@ -286,6 +286,21 @@ export async function approveSeatRequestAction(
     }
 
     await logAuthEvent("seat_approved", { email, requestId, userId });
+    try {
+      await ctx.supabase.from("audit_events").insert({
+        profile_id: userId,
+        actor_id: ctx.user.id,
+        event_type: "account_approved",
+        entity_type: "seat_request",
+        entity_id: requestId,
+        payload: { email },
+      } as never);
+      await ctx.supabase.rpc("ensure_learner_workspace", {
+        p_profile_id: userId,
+      } as never);
+    } catch {
+      /* non-blocking */
+    }
     revalidatePath(ADMIN_ROUTES.accessRequests);
     revalidatePath(ADMIN_ROUTES.root);
     return {

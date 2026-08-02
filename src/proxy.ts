@@ -46,6 +46,7 @@ function isPublicFastPath(pathname: string) {
   if (PUBLIC_FAST_PATHS.has(pathname)) return true;
   if (pathname.startsWith("/verify/")) return true;
   if (pathname.startsWith("/icons/")) return true;
+  if (pathname.startsWith("/brand/")) return true;
   if (pathname.startsWith("/images/")) return true;
   if (pathname.startsWith("/hub-brands/")) return true;
   // Auth API routes manage their own cookies — do not refresh/redirect here.

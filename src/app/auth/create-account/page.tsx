@@ -5,9 +5,9 @@ import { CreateAccountForm } from "@/components/auth/create-account-form";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Activate Account",
+  title: "Create Password",
   description:
-    "Activate your invite to join Suprabase — set your password and open the learning portal.",
+    "Create your SupraBase password and open your learning workspace.",
   path: "/auth/create-account",
   noIndex: true,
 });
@@ -15,8 +15,8 @@ export const metadata: Metadata = buildPageMetadata({
 export default function CreateAccountPage() {
   return (
     <AuthShell
-      title="Set your password."
-      description="Create a password for your invited account, then continue into the portal."
+      title="Create your password."
+      description="Set a secure password for your invited account, then continue into your workspace."
       panelVariant="signup"
     >
       <Suspense

@@ -32,8 +32,6 @@ export interface UserProgressState {
   completionDates: Record<string, string>;
   projectMeta: Record<string, ProjectProgressMeta>;
   assignmentMeta: Record<string, AssignmentProgressMeta>;
-  /** One-time seed flag for demo A1–A4 completion */
-  assignmentJourneySeeded?: boolean;
   githubRepoLinks: Record<string, string>;
   weekNotes: Record<number, string>;
   /** Per-module week unlock/completion (v3+) */
@@ -46,7 +44,7 @@ export interface UserProgressState {
   completedWeekIds: number[];
 }
 
-export const PROGRESS_VERSION = 20;
+export const PROGRESS_VERSION = 21;
 
 export const defaultProgressState: UserProgressState = {
   version: PROGRESS_VERSION,
@@ -56,7 +54,6 @@ export const defaultProgressState: UserProgressState = {
   completionDates: {},
   projectMeta: {},
   assignmentMeta: {},
-  assignmentJourneySeeded: false,
   githubRepoLinks: {},
   weekNotes: {},
   moduleGates: createDefaultModuleGates(),
@@ -66,4 +63,3 @@ export const defaultProgressState: UserProgressState = {
 };
 
 export type { ResumePosition };
-

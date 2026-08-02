@@ -161,7 +161,7 @@ export async function sendSeatApprovedEmail(input: {
   const brand = getBrand();
   return sendHtmlEmail({
     to: input.to,
-    subject: `Welcome to ${brand.name} — your seat is ready`,
+    subject: `Welcome to ${brand.name}`,
     html: seatApprovedEmailHtml({
       email: input.to,
       firstName: input.firstName,

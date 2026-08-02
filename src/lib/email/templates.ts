@@ -22,13 +22,13 @@ export function passwordResetEmailHtml(
     firstName: nameOf(props),
     bodyHtml: `
       <p style="margin:0 0 12px;">We received a request to reset the password for your ${brand.name} account.</p>
-      <p style="margin:0;">Click the button below to securely create a new password.</p>
+      <p style="margin:0;">Click the button below to create a new password.</p>
     `,
     ctaLabel: "Reset Password",
     ctaUrl: props.resetUrl,
     footerNote: `
       <p style="margin:0 0 10px;">This link expires in <strong>${mins} minutes</strong> and can only be used once.</p>
-      <p style="margin:0;">If you didn't request this, you can safely ignore this email. Your password will stay the same.</p>
+      <p style="margin:0;">If you did not request this, you can safely ignore this email. Your password will stay the same.</p>
     `,
   });
 }
@@ -40,17 +40,17 @@ export function verifyEmailHtml(
   const hours = props.expiresInHours ?? 24;
   return renderEmailLayout({
     preview: `Verify your email for ${brand.name}`,
-    title: `Welcome to ${brand.name}`,
+    title: "Verify your email",
     firstName: nameOf(props),
     bodyHtml: `
-      <p style="margin:0 0 12px;">Thanks for joining ${brand.name}. Confirm your email so we know it's really you.</p>
-      <p style="margin:0;">Click below to verify your address and start learning.</p>
+      <p style="margin:0 0 12px;">Confirm your email address to finish setting up your ${brand.name} account.</p>
+      <p style="margin:0;">Click the button below to verify and continue.</p>
     `,
     ctaLabel: "Verify Email",
     ctaUrl: props.verifyUrl,
     footerNote: `
       <p style="margin:0 0 10px;">This link expires in <strong>${hours} hours</strong>.</p>
-      <p style="margin:0;">If you didn't create an account, you can ignore this message.</p>
+      <p style="margin:0;">If you did not create an account, you can safely ignore this email.</p>
     `,
   });
 }
@@ -58,15 +58,18 @@ export function verifyEmailHtml(
 export function welcomeEmailHtml(props: PersonEmailProps) {
   const brand = getBrand();
   return renderEmailLayout({
-    preview: `You're in — welcome to ${brand.name}`,
+    preview: `Welcome to ${brand.name}`,
     title: `Welcome to ${brand.name}`,
     firstName: nameOf(props),
     bodyHtml: `
-      <p style="margin:0 0 12px;">Your account is ready. Explore roadmaps, projects, certifications, and your AI mentor — all in one place.</p>
-      <p style="margin:0;">We're glad you're here.</p>
+      <p style="margin:0 0 12px;">Your account is ready. Explore roadmaps, projects, certifications, and your AI mentor in one workspace.</p>
+      <p style="margin:0;">Open your dashboard to get started.</p>
     `,
-    ctaLabel: "Open dashboard",
+    ctaLabel: "Open Dashboard",
     ctaUrl: `${brand.appUrl}/dashboard`,
+    footerNote: `
+      <p style="margin:0;">Thank you,<br/>The ${brand.name} Team</p>
+    `,
   });
 }
 
@@ -80,35 +83,39 @@ export function invitationEmailHtml(
   const inviter = props.inviterName.trim() || "A teammate";
   return renderEmailLayout({
     preview: `${inviter} invited you to ${brand.name}`,
-    title: "You're invited",
+    title: `You are invited to ${brand.name}`,
     firstName: nameOf(props),
     bodyHtml: `
       <p style="margin:0 0 12px;"><strong>${inviter}</strong> invited you to join ${brand.name}.</p>
-      <p style="margin:0;">Accept the invite to create your account and get started.</p>
+      <p style="margin:0;">Accept the invitation to create your account and access your learning workspace.</p>
     `,
-    ctaLabel: "Accept invitation",
+    ctaLabel: "Accept Invitation",
     ctaUrl: props.inviteUrl,
-    footerNote: `<p style="margin:0;">If you weren't expecting this invite, you can ignore this email.</p>`,
+    footerNote: `<p style="margin:0;">If you did not expect this invitation, you can safely ignore this email.</p>`,
   });
 }
 
-/** Branded seat-approval / activate-account email. */
+/** Account approved / create password email. */
 export function seatApprovedEmailHtml(
   props: PersonEmailProps & { activateUrl: string; expiresInHours?: number }
 ) {
   const brand = getBrand();
   const hours = props.expiresInHours ?? 24;
   return renderEmailLayout({
-    preview: `Your seat is ready on ${brand.name} — set your password and start learning`,
-    title: `You're in — welcome to ${brand.name}`,
+    preview: `Your access request has been approved on ${brand.name}`,
+    title: `Welcome to ${brand.name}`,
     firstName: nameOf(props),
     bodyHtml: `
-      <p style="margin:0;text-align:center;">Your access request has been approved. Set your password to open the learning portal.</p>
+      <p style="margin:0 0 12px;">Your access request has been approved.</p>
+      <p style="margin:0 0 12px;">You can now create your password and access your learning workspace.</p>
+      <p style="margin:0;">Click the button below to continue.</p>
     `,
-    ctaLabel: "Set password & activate",
+    ctaLabel: "Create Password",
     ctaUrl: props.activateUrl,
     footerNote: `
-      <p style="margin:0;text-align:center;">This link works once and expires in ${hours} hours.</p>
+      <p style="margin:0 0 10px;">This link works once and expires in <strong>${hours} hours</strong>.</p>
+      <p style="margin:0 0 10px;">If you did not request this invitation, you can safely ignore this email.</p>
+      <p style="margin:0;">Thank you,<br/>The ${brand.name} Team</p>
     `,
   });
 }
@@ -131,8 +138,9 @@ export function teamInviteEmailHtml(
       <p style="margin:0 0 12px;"><strong>${inviter}</strong> invited you to <strong>${team}</strong> on ${brand.name}.</p>
       <p style="margin:0;">Join the team to collaborate on learning and projects.</p>
     `,
-    ctaLabel: "Join team",
+    ctaLabel: "Join Team",
     ctaUrl: props.inviteUrl,
+    footerNote: `<p style="margin:0;">If you did not expect this invitation, you can safely ignore this email.</p>`,
   });
 }
 
@@ -146,13 +154,13 @@ export function certificateEarnedEmailHtml(
   const cert = props.certificateTitle.trim() || "your certification";
   return renderEmailLayout({
     preview: `You earned ${cert} on ${brand.name}`,
-    title: "Certificate earned",
+    title: "Certificate ready",
     firstName: nameOf(props),
     bodyHtml: `
-      <p style="margin:0 0 12px;">Congratulations — you passed <strong>${cert}</strong>.</p>
-      <p style="margin:0;">Your verified ${brand.name} certificate is ready to share.</p>
+      <p style="margin:0 0 12px;">Congratulations. You passed <strong>${cert}</strong>.</p>
+      <p style="margin:0;">Your verified ${brand.name} certificate is ready to download and share.</p>
     `,
-    ctaLabel: "View certificate",
+    ctaLabel: "View Certificate",
     ctaUrl: props.certificateUrl,
   });
 }
@@ -171,10 +179,10 @@ export function assessmentPassedEmailHtml(
     title: "Assessment passed",
     firstName: nameOf(props),
     bodyHtml: `
-      <p style="margin:0 0 12px;">Nice work — you passed <strong>${title}</strong> with a score of <strong>${props.score}%</strong>.</p>
-      <p style="margin:0;">Review your results and keep building momentum.</p>
+      <p style="margin:0 0 12px;">Great news. You passed <strong>${title}</strong> with a score of <strong>${props.score}%</strong>.</p>
+      <p style="margin:0;">Review your results and continue building your skills.</p>
     `,
-    ctaLabel: "View results",
+    ctaLabel: "View Results",
     ctaUrl: props.resultsUrl,
   });
 }

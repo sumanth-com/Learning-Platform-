@@ -6,6 +6,8 @@
  * hard-navigate so the first portal document request includes them.
  */
 
+import { clearClientWorkspace } from "@/lib/client-workspace";
+
 export type SignInApiResult =
   | { success: true; redirectTo: string; message?: string }
   | { success: false; error: string };
@@ -57,6 +59,7 @@ export async function signOutViaRoute(): Promise<{
   message?: string;
 }> {
   try {
+    await clearClientWorkspace();
     const res = await fetch("/auth/sign-out", {
       method: "POST",
       credentials: "same-origin",

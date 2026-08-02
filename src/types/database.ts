@@ -81,6 +81,7 @@ export interface ProfileRow {
   full_name: string | null;
   email: string;
   avatar_url: string | null;
+  headline?: string | null;
   role: UserRole;
   created_at: string;
   updated_at: string;
@@ -420,6 +421,200 @@ export type PublicCertificateRow = Pick<
   | "issued_at"
 >;
 
+export interface LearnerStatsRow {
+  profile_id: string;
+  total_xp: number;
+  level: number;
+  streak: number;
+  last_active_date: string | null;
+  total_study_hours: number;
+  current_week: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface XpLedgerRow {
+  id: string;
+  profile_id: string;
+  amount: number;
+  source_key: string;
+  reason: string;
+  created_at: string;
+}
+
+export interface EntityProgressRow {
+  id: string;
+  profile_id: string;
+  entity_id: string;
+  completed: boolean;
+  completed_at: string | null;
+  xp_earned: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ModuleGateRow {
+  id: string;
+  profile_id: string;
+  module: string;
+  unlocked_week_ids: number[];
+  completed_week_ids: number[];
+  updated_at: string;
+}
+
+export interface LearnerNoteRow {
+  id: string;
+  profile_id: string;
+  title: string;
+  content: string;
+  week_id: number | null;
+  pinned: boolean;
+  accent: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EntityNoteRow {
+  id: string;
+  profile_id: string;
+  entity_id: string;
+  note: string;
+  updated_at: string;
+}
+
+export interface WeekNoteRow {
+  id: string;
+  profile_id: string;
+  week_id: number;
+  note: string;
+  updated_at: string;
+}
+
+export interface LearnerBookmarkRow {
+  id: string;
+  profile_id: string;
+  entity_id: string;
+  created_at: string;
+}
+
+export interface ProjectProgressRow {
+  id: string;
+  profile_id: string;
+  project_id: string;
+  progress: number;
+  status: string;
+  github_link: string;
+  notes: string;
+  updated_at: string;
+}
+
+export interface AssignmentLocalMetaRow {
+  id: string;
+  profile_id: string;
+  catalog_id: string;
+  status: string;
+  github_url: string;
+  live_url: string;
+  screenshots: string;
+  notes: string;
+  reflection: string;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  feedback: string | null;
+  marks: number | null;
+  updated_at: string;
+}
+
+export interface LearnerResumeRow {
+  profile_id: string;
+  module: string;
+  week_id: number;
+  title: string;
+  subtitle: string | null;
+  href: string;
+  topic_slug: string | null;
+  topic_title: string | null;
+  lesson_id: string | null;
+  updated_at: string;
+}
+
+export interface LearnerPreferencesRow {
+  profile_id: string;
+  notifications_muted: boolean;
+  notification_sound: string;
+  notify_learning: boolean;
+  notify_mentor: boolean;
+  notify_achievements: boolean;
+  celebrations_enabled: boolean;
+  today_goal: string;
+  today_goal_date: string | null;
+  today_goal_completed: boolean;
+  celebrated_week_ids: number[];
+  scroll_positions: Json;
+  github_repo_links: Json;
+  updated_at: string;
+}
+
+export interface LearnerNotificationRow {
+  id: string;
+  profile_id: string;
+  channel: "learning" | "mentor" | "achievements";
+  title: string;
+  body: string;
+  href: string | null;
+  kind: string;
+  meta: Json;
+  read: boolean;
+  created_at: string;
+}
+
+export interface AchievementRow {
+  id: string;
+  profile_id: string;
+  achievement_key: string;
+  title: string;
+  awarded_at: string;
+  meta: Json;
+}
+
+export interface CertAttemptRow {
+  id: string;
+  profile_id: string;
+  certification_id: string;
+  payload: Json;
+  status: string;
+  score: number | null;
+  updated_at: string;
+}
+
+export interface HubLibraryRow {
+  profile_id: string;
+  bookmarks: string[];
+  liked: string[];
+  recent: Json;
+  updated_at: string;
+}
+
+export interface StudySessionRow {
+  id: string;
+  profile_id: string;
+  session_date: string;
+  hours: number;
+  week_id: number;
+  created_at: string;
+}
+
+export interface AuditEventRow {
+  id: string;
+  profile_id: string | null;
+  actor_id: string | null;
+  event_type: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  payload: Json;
+  created_at: string;
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -548,12 +743,170 @@ export type Database = {
         Update: CertificateUpdate;
         Relationships: [];
       };
+      learner_stats: {
+        Row: LearnerStatsRow;
+        Insert: Partial<LearnerStatsRow> & Pick<LearnerStatsRow, "profile_id">;
+        Update: Partial<LearnerStatsRow>;
+        Relationships: [];
+      };
+      xp_ledger: {
+        Row: XpLedgerRow;
+        Insert: Pick<XpLedgerRow, "profile_id" | "amount" | "source_key"> &
+          Partial<XpLedgerRow>;
+        Update: never;
+        Relationships: [];
+      };
+      entity_progress: {
+        Row: EntityProgressRow;
+        Insert: Pick<EntityProgressRow, "profile_id" | "entity_id"> &
+          Partial<EntityProgressRow>;
+        Update: Partial<EntityProgressRow>;
+        Relationships: [];
+      };
+      module_gates: {
+        Row: ModuleGateRow;
+        Insert: Pick<ModuleGateRow, "profile_id" | "module"> &
+          Partial<ModuleGateRow>;
+        Update: Partial<ModuleGateRow>;
+        Relationships: [];
+      };
+      learner_notes: {
+        Row: LearnerNoteRow;
+        Insert: Pick<LearnerNoteRow, "profile_id"> & Partial<LearnerNoteRow>;
+        Update: Partial<LearnerNoteRow>;
+        Relationships: [];
+      };
+      entity_notes: {
+        Row: EntityNoteRow;
+        Insert: Pick<EntityNoteRow, "profile_id" | "entity_id"> &
+          Partial<EntityNoteRow>;
+        Update: Partial<EntityNoteRow>;
+        Relationships: [];
+      };
+      week_notes: {
+        Row: WeekNoteRow;
+        Insert: Pick<WeekNoteRow, "profile_id" | "week_id"> & Partial<WeekNoteRow>;
+        Update: Partial<WeekNoteRow>;
+        Relationships: [];
+      };
+      learner_bookmarks: {
+        Row: LearnerBookmarkRow;
+        Insert: Pick<LearnerBookmarkRow, "profile_id" | "entity_id"> &
+          Partial<LearnerBookmarkRow>;
+        Update: Partial<LearnerBookmarkRow>;
+        Relationships: [];
+      };
+      project_progress: {
+        Row: ProjectProgressRow;
+        Insert: Pick<ProjectProgressRow, "profile_id" | "project_id"> &
+          Partial<ProjectProgressRow>;
+        Update: Partial<ProjectProgressRow>;
+        Relationships: [];
+      };
+      assignment_local_meta: {
+        Row: AssignmentLocalMetaRow;
+        Insert: Pick<AssignmentLocalMetaRow, "profile_id" | "catalog_id"> &
+          Partial<AssignmentLocalMetaRow>;
+        Update: Partial<AssignmentLocalMetaRow>;
+        Relationships: [];
+      };
+      learner_resume: {
+        Row: LearnerResumeRow;
+        Insert: Pick<LearnerResumeRow, "profile_id"> & Partial<LearnerResumeRow>;
+        Update: Partial<LearnerResumeRow>;
+        Relationships: [];
+      };
+      learner_preferences: {
+        Row: LearnerPreferencesRow;
+        Insert: Pick<LearnerPreferencesRow, "profile_id"> &
+          Partial<LearnerPreferencesRow>;
+        Update: Partial<LearnerPreferencesRow>;
+        Relationships: [];
+      };
+      learner_notifications: {
+        Row: LearnerNotificationRow;
+        Insert: Pick<
+          LearnerNotificationRow,
+          "profile_id" | "channel" | "title"
+        > &
+          Partial<LearnerNotificationRow>;
+        Update: Partial<LearnerNotificationRow>;
+        Relationships: [];
+      };
+      achievements: {
+        Row: AchievementRow;
+        Insert: Pick<AchievementRow, "profile_id" | "achievement_key"> &
+          Partial<AchievementRow>;
+        Update: Partial<AchievementRow>;
+        Relationships: [];
+      };
+      cert_attempts: {
+        Row: CertAttemptRow;
+        Insert: Pick<CertAttemptRow, "profile_id" | "certification_id"> &
+          Partial<CertAttemptRow>;
+        Update: Partial<CertAttemptRow>;
+        Relationships: [];
+      };
+      hub_library: {
+        Row: HubLibraryRow;
+        Insert: Pick<HubLibraryRow, "profile_id"> & Partial<HubLibraryRow>;
+        Update: Partial<HubLibraryRow>;
+        Relationships: [];
+      };
+      study_sessions: {
+        Row: StudySessionRow;
+        Insert: Pick<StudySessionRow, "profile_id" | "session_date"> &
+          Partial<StudySessionRow>;
+        Update: Partial<StudySessionRow>;
+        Relationships: [];
+      };
+      audit_events: {
+        Row: AuditEventRow;
+        Insert: Pick<AuditEventRow, "event_type"> & Partial<AuditEventRow>;
+        Update: never;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {
       verify_certificate: {
         Args: { cert_id: string };
         Returns: PublicCertificateRow[];
+      };
+      ensure_learner_workspace: {
+        Args: { p_profile_id?: string };
+        Returns: null;
+      };
+      touch_daily_activity: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      complete_entity: {
+        Args: {
+          p_entity_id: string;
+          p_xp?: number;
+          p_source_key?: string;
+          p_completed?: boolean;
+        };
+        Returns: Json;
+      };
+      submit_and_complete_journey_assignment: {
+        Args: {
+          p_catalog_id: string;
+          p_assignment_number: number;
+          p_assignment_title: string;
+          p_module_slug: string;
+          p_module_title: string;
+          p_student_name: string;
+          p_student_email: string;
+          p_github_url?: string;
+          p_live_url?: string;
+          p_screenshots?: string;
+          p_notes?: string;
+          p_reflection?: string;
+          p_xp?: number;
+        };
+        Returns: Json;
       };
     };
     Enums: { [_ in never]: never };

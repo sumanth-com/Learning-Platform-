@@ -14,27 +14,27 @@ export type PasswordRule = {
 export const PASSWORD_RULES: PasswordRule[] = [
   {
     id: "length",
-    label: "8+ characters",
+    label: "At least 8 characters",
     test: (p) => p.length >= 8,
   },
   {
     id: "upper",
-    label: "Uppercase letter",
+    label: "One uppercase letter",
     test: (p) => /[A-Z]/.test(p),
   },
   {
     id: "lower",
-    label: "Lowercase letter",
+    label: "One lowercase letter",
     test: (p) => /[a-z]/.test(p),
   },
   {
     id: "number",
-    label: "Number",
+    label: "One number",
     test: (p) => /\d/.test(p),
   },
   {
     id: "special",
-    label: "Special character",
+    label: "One special character",
     test: (p) => /[^A-Za-z0-9]/.test(p),
   },
 ];
@@ -55,9 +55,10 @@ export function isStrongPassword(password: string) {
 }
 
 export function passwordStrengthLabel(score: number) {
-  if (score <= 1) return "Weak";
+  if (score <= 0) return "Weak";
+  if (score === 1) return "Weak";
   if (score === 2) return "Fair";
   if (score === 3) return "Good";
   if (score === 4) return "Strong";
-  return "Excellent";
+  return "Very Strong";
 }

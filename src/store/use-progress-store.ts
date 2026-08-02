@@ -3,9 +3,13 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import type { UserProfile, AppNote, StudySession, ProjectStatus } from "@/types";
-import type { UserProgressState, ResumePosition, AssignmentProgressMeta } from "./progress-types";
+import type {
+  AssignmentProgressMeta,
+  ProjectProgressMeta,
+  UserProgressState,
+  ResumePosition,
+} from "./progress-types";
 import { defaultProgressState, PROGRESS_VERSION } from "./progress-types";
-import { getSeededCompletedAssignmentIds } from "@/curriculum/assignment-catalog";
 import type { AssignmentSubmissionStatus } from "@/curriculum/assignment-catalog/types";
 import { getCurriculumWeeks, getTotalWeeks } from "@/curriculum/registry";
 import {
@@ -35,26 +39,111 @@ import {
   getModuleWeekProgress,
   isModuleWeekCompleted,
   isModuleWeekLocked,
-  markWeekCompleteAllModules,
   migrateProgressStateV3,
   rebuildModuleGatesFromProgress,
+  createDefaultModuleGates,
   type LearningModule,
 } from "@/lib/module-progress";
 import { COMMUNICATION_WEEKS } from "@/curriculum/communication-skills";
 import { createIdbPersistStorage } from "@/lib/idb-persist-storage";
 import { publishLiveActivity } from "@/lib/live-activity-sync";
-import { EXPORT_APP_ID } from "@/lib/client-persistence";
-import { ensurePrathyuBootstrap } from "@/lib/week-bootstrap";
+import { EXPORT_APP_ID, PERSIST_KEY } from "@/lib/client-persistence";
+import { registerProgressWorkspaceReset } from "@/lib/client-workspace";
+import {
+  syncAssignmentMeta,
+  syncBookmark,
+  syncDeleteNote,
+  syncEntityComplete,
+  syncEntityNote,
+  syncModuleGates,
+  syncPreferences,
+  syncProjectMeta,
+  syncResume,
+  syncStudySession,
+  syncAddNote,
+  syncUpdateNote,
+  syncWeekNote,
+} from "@/features/progress/lib/progress-sync";
+import type { LearnerWorkspace } from "@/features/progress/lib/workspace-mapper";
+import type { LearningModule as ResumeModule } from "@/lib/module-progress";
+
 const defaultProfile: UserProfile = {
-  name: "Prathyu",
-  avatar: "P",
+  name: "",
+  avatar: "S",
   currentWeek: 1,
   streak: 0,
   totalStudyHours: 0,
-  lastActiveDate: new Date().toISOString().split("T")[0],
+  lastActiveDate: "",
   resumeReadinessScore: 0,
   githubProgress: 0,
 };
+
+/** Strip demo-seeded assignment completions left by older portal builds. */
+function scrubLegacyDemoAssignmentSeeds(
+  progress: UserProgressState
+): UserProgressState {
+  const withFlag = progress as UserProgressState & {
+    assignmentJourneySeeded?: boolean;
+  };
+  const hadSeedFlag = Boolean(withFlag.assignmentJourneySeeded);
+
+  const completed = { ...progress.completed };
+  const completionDates = { ...progress.completionDates };
+  const assignmentMeta = { ...(progress.assignmentMeta ?? {}) };
+  let changed = hadSeedFlag;
+
+  for (const [id, meta] of Object.entries(assignmentMeta)) {
+    const isSeedNote =
+      meta.notes === "Seeded foundation completion" ||
+      meta.reflection === "Completed as part of Developer Foundation.";
+    if (!isSeedNote) continue;
+    changed = true;
+    delete assignmentMeta[id];
+    delete completed[`${id}-complete`];
+    delete completionDates[`${id}-complete`];
+    delete completed[id];
+    delete completionDates[id];
+  }
+
+  if (!changed) return progress;
+
+  const { assignmentJourneySeeded: _removed, ...rest } = withFlag;
+
+  return {
+    ...rest,
+    completed,
+    completionDates,
+    assignmentMeta,
+  };
+}
+
+function createEmptyStoreSlice() {
+  return {
+    progress: {
+      ...defaultProgressState,
+      completed: {},
+      notes: {},
+      bookmarks: {},
+      completionDates: {},
+      projectMeta: {},
+      assignmentMeta: {},
+      githubRepoLinks: {},
+      weekNotes: {},
+      moduleGates: createDefaultModuleGates(),
+      scrollPositions: {},
+      unlockedWeekIds: [1],
+      completedWeekIds: [],
+      version: PROGRESS_VERSION,
+    },
+    profile: { ...defaultProfile },
+    studySessions: [] as StudySession[],
+    notes: [] as AppNote[],
+    todayGoal: "Complete today's learning plan items",
+    todayGoalDate: todayIso(),
+    todayGoalCompleted: false,
+    resumePosition: null as ResumePosition | null,
+  };
+}
 
 const defaultNotes: AppNote[] = [];
 
@@ -107,7 +196,6 @@ interface ProgressStore {
     assignmentId: string,
     updates: Partial<AssignmentProgressMeta>
   ) => void;
-  seedAssignmentJourneyIfNeeded: () => void;
 
   // GitHub repo links
   setGitHubRepoLink: (weekId: number, link: string) => void;
@@ -132,6 +220,8 @@ interface ProgressStore {
   updateStreak: () => void;
   syncProfileFromProgress: () => void;
   bootstrapSession: () => void;
+  /** Replace local cache from authoritative server workspace. */
+  hydrateFromServer: (workspace: import("@/features/progress/lib/workspace-mapper").LearnerWorkspace) => void;
   resetWeekProgress: (weekId: number) => void;
   resetSectionProgress: (section: ResetSectionId, scope: ResetScope) => void;
   resetAllProgress: () => void;
@@ -233,9 +323,9 @@ export const useProgressStore = create<ProgressStore>()(
       getCompletionDate: (entityId) => get().progress.completionDates[entityId],
 
       toggleComplete: (entityId) => {
+        const wasDone = get().progress.completed[entityId];
+        const nowDone = !wasDone;
         set((state) => {
-          const wasDone = state.progress.completed[entityId];
-          const nowDone = !wasDone;
           const completed = { ...state.progress.completed, [entityId]: nowDone };
           const completionDates = { ...state.progress.completionDates };
           if (nowDone) {
@@ -251,7 +341,9 @@ export const useProgressStore = create<ProgressStore>()(
             profile: syncDerivedProfile(state.profile, stats, currentWeek),
           };
         });
-        get().updateStreak();
+        syncEntityComplete(entityId, nowDone, 10);
+        syncModuleGates(get().progress.moduleGates);
+        if (nowDone) get().updateStreak();
       },
 
       setComplete: (entityId, value) => {
@@ -259,21 +351,26 @@ export const useProgressStore = create<ProgressStore>()(
         if (current !== value) get().toggleComplete(entityId);
       },
 
-      setNote: (entityId, note) =>
+      setNote: (entityId, note) => {
         set((state) => ({
           progress: {
             ...state.progress,
             notes: { ...state.progress.notes, [entityId]: note },
           },
-        })),
+        }));
+        syncEntityNote(entityId, note);
+      },
 
-      toggleBookmark: (entityId) =>
+      toggleBookmark: (entityId) => {
+        let nextOn = false;
         set((state) => {
           const next = { ...state.progress.bookmarks };
           if (next[entityId]) {
             delete next[entityId];
+            nextOn = false;
           } else {
             next[entityId] = true;
+            nextOn = true;
           }
           return {
             progress: {
@@ -281,9 +378,17 @@ export const useProgressStore = create<ProgressStore>()(
               bookmarks: next,
             },
           };
-        }),
+        });
+        syncBookmark(entityId, nextOn);
+      },
 
-      updateProjectMeta: (projectId, updates) =>
+      updateProjectMeta: (projectId, updates) => {
+        let merged: ProjectProgressMeta = {
+          progress: 0,
+          status: "not-started",
+          githubLink: "",
+          notes: "",
+        };
         set((state) => {
           const existing = state.progress.projectMeta[projectId] ?? {
             progress: 0,
@@ -291,7 +396,7 @@ export const useProgressStore = create<ProgressStore>()(
             githubLink: "",
             notes: "",
           };
-          const merged = { ...existing, ...updates };
+          merged = { ...existing, ...updates };
           if (updates.progress !== undefined) {
             merged.status =
               updates.progress >= 100
@@ -306,7 +411,9 @@ export const useProgressStore = create<ProgressStore>()(
               projectMeta: { ...state.progress.projectMeta, [projectId]: merged },
             },
           };
-        }),
+        });
+        syncProjectMeta(projectId, merged);
+      },
 
       setProjectComplete: (projectId, complete) => {
         get().setComplete(`${projectId}-complete`, complete);
@@ -321,6 +428,7 @@ export const useProgressStore = create<ProgressStore>()(
 
       setAssignmentComplete: (assignmentId, complete) => {
         get().setComplete(`${assignmentId}-complete`, complete);
+        let nextMeta: AssignmentProgressMeta | undefined;
         set((state) => {
           const existing = state.progress.assignmentMeta?.[assignmentId] ?? {
             status: "not_started" as AssignmentSubmissionStatus,
@@ -329,23 +437,30 @@ export const useProgressStore = create<ProgressStore>()(
             screenshots: "",
             notes: "",
             reflection: "",
+          };
+          nextMeta = {
+            ...existing,
+            status: complete
+              ? "completed"
+              : existing.status === "completed"
+                ? "in_progress"
+                : existing.status,
           };
           return {
             progress: {
               ...state.progress,
               assignmentMeta: {
                 ...(state.progress.assignmentMeta ?? {}),
-                [assignmentId]: {
-                  ...existing,
-                  status: complete ? "completed" : existing.status === "completed" ? "in_progress" : existing.status,
-                },
+                [assignmentId]: nextMeta,
               },
             },
           };
         });
+        if (nextMeta) syncAssignmentMeta(assignmentId, nextMeta);
       },
 
-      setAssignmentSubmission: (assignmentId, updates) =>
+      setAssignmentSubmission: (assignmentId, updates) => {
+        let merged: AssignmentProgressMeta | undefined;
         set((state) => {
           const existing = state.progress.assignmentMeta?.[assignmentId] ?? {
             status: "not_started" as AssignmentSubmissionStatus,
@@ -355,15 +470,12 @@ export const useProgressStore = create<ProgressStore>()(
             notes: "",
             reflection: "",
           };
-          const merged: AssignmentProgressMeta = {
+          merged = {
             ...existing,
             ...updates,
           };
           if (updates.status === "submitted" || updates.status === "pending_review") {
             merged.submittedAt = updates.submittedAt ?? new Date().toISOString();
-            if (!get().isDone(`${assignmentId}-complete`)) {
-              // mark in progress via meta only; completion stays explicit
-            }
           }
           return {
             progress: {
@@ -374,59 +486,36 @@ export const useProgressStore = create<ProgressStore>()(
               },
             },
           };
-        }),
-
-      seedAssignmentJourneyIfNeeded: () => {
-        set((state) => {
-          if (state.progress.assignmentJourneySeeded) return state;
-          const ids = getSeededCompletedAssignmentIds();
-          const completed = { ...state.progress.completed };
-          const completionDates = { ...state.progress.completionDates };
-          const assignmentMeta = { ...(state.progress.assignmentMeta ?? {}) };
-          const seedDates = ["2026-06-10", "2026-06-18", "2026-07-02", "2026-07-12"];
-          ids.forEach((id, index) => {
-            completed[`${id}-complete`] = true;
-            completionDates[`${id}-complete`] = seedDates[index] ?? todayIso();
-            assignmentMeta[id] = {
-              status: "completed",
-              githubUrl: "",
-              liveUrl: "",
-              screenshots: "",
-              notes: "Seeded foundation completion",
-              reflection: "Completed as part of Developer Foundation.",
-              submittedAt: completionDates[`${id}-complete`],
-              reviewedAt: completionDates[`${id}-complete`],
-            };
-          });
-          return {
-            progress: {
-              ...state.progress,
-              completed,
-              completionDates,
-              assignmentMeta,
-              assignmentJourneySeeded: true,
-            },
-          };
         });
+        if (merged) syncAssignmentMeta(assignmentId, merged);
       },
 
-      setGitHubRepoLink: (weekId, link) =>
+      setGitHubRepoLink: (weekId, link) => {
         set((state) => ({
           progress: {
             ...state.progress,
             githubRepoLinks: { ...state.progress.githubRepoLinks, [weekId]: link },
           },
-        })),
+        }));
+        syncPreferences({
+          github_repo_links: {
+            ...get().progress.githubRepoLinks,
+            [weekId]: link,
+          },
+        });
+      },
 
       getGitHubRepoLink: (weekId) => get().progress.githubRepoLinks[weekId] ?? "",
 
-      updateWeekNotes: (weekId, notes) =>
+      updateWeekNotes: (weekId, notes) => {
         set((state) => ({
           progress: {
             ...state.progress,
             weekNotes: { ...state.progress.weekNotes, [weekId]: notes },
           },
-        })),
+        }));
+        syncWeekNote(weekId, notes);
+      },
 
       completeWeek: (weekId) => get().completeModuleWeek("practice", weekId),
 
@@ -435,19 +524,22 @@ export const useProgressStore = create<ProgressStore>()(
           const progress = syncModuleUnlocks(state.progress);
           const stats = computeGlobalStats(getCurriculumWeeks(), progress);
           const currentWeek = getModuleCurrentWeek("practice", progress, getTotalWeeks());
+          syncModuleGates(progress.moduleGates);
           return {
             progress,
             profile: syncDerivedProfile(state.profile, stats, currentWeek),
           };
         }),
 
-      setResumePosition: (position) =>
+      setResumePosition: (position) => {
         set((state) => {
           publishLiveActivity({ ...position, learnerName: state.profile.name });
           return { resumePosition: position };
-        }),
+        });
+        syncResume(position);
+      },
 
-      setScrollPosition: (key, scrollY) =>
+      setScrollPosition: (key, scrollY) => {
         set((state) => {
           if (state.progress.scrollPositions[key] === scrollY) return state;
           return {
@@ -456,12 +548,73 @@ export const useProgressStore = create<ProgressStore>()(
               scrollPositions: { ...state.progress.scrollPositions, [key]: scrollY },
             },
           };
-        }),
+        });
+        syncPreferences({
+          scroll_positions: {
+            ...get().progress.scrollPositions,
+            [key]: scrollY,
+          },
+        });
+      },
 
       getScrollPosition: (key) => get().progress.scrollPositions[key] ?? 0,
 
-      setTodayGoal: (goal) => set({ todayGoal: goal }),
-      toggleTodayGoal: () => set((s) => ({ todayGoalCompleted: !s.todayGoalCompleted })),
+      setTodayGoal: (goal) => {
+        set({ todayGoal: goal });
+        syncPreferences({
+          today_goal: goal,
+          today_goal_date: get().todayGoalDate || todayIso(),
+        });
+      },
+      toggleTodayGoal: () => {
+        set((s) => ({ todayGoalCompleted: !s.todayGoalCompleted }));
+        syncPreferences({
+          today_goal_completed: get().todayGoalCompleted,
+          today_goal_date: get().todayGoalDate || todayIso(),
+        });
+      },
+
+      hydrateFromServer: (workspace: LearnerWorkspace) => {
+        const resume = workspace.resumePosition
+          ? {
+              module: workspace.resumePosition.module as ResumeModule,
+              weekId: workspace.resumePosition.week_id,
+              title: workspace.resumePosition.title,
+              subtitle: workspace.resumePosition.subtitle ?? undefined,
+              href: workspace.resumePosition.href,
+              updatedAt: workspace.resumePosition.updated_at,
+              topicSlug: workspace.resumePosition.topic_slug ?? undefined,
+              topicTitle: workspace.resumePosition.topic_title ?? undefined,
+              lessonId: workspace.resumePosition.lesson_id ?? undefined,
+            }
+          : null;
+        const weeks = getCurriculumWeeks();
+        const progress = syncModuleUnlocks(
+          migrateProgressStateV3(workspace.progress, weeks, { rebuildGates: true })
+        );
+        const stats = computeGlobalStats(weeks, progress);
+        const currentWeek = getCurrentWeekId(weeks, progress);
+        set({
+          progress,
+          notes: workspace.notes,
+          studySessions: workspace.studySessions,
+          resumePosition: resume,
+          todayGoal: workspace.preferences.today_goal || "Complete today's learning plan items",
+          todayGoalDate: workspace.preferences.today_goal_date || todayIso(),
+          todayGoalCompleted: workspace.preferences.today_goal_completed,
+          profile: syncDerivedProfile(
+            {
+              ...get().profile,
+              streak: workspace.profile.streak,
+              totalStudyHours: workspace.profile.totalStudyHours,
+              lastActiveDate: workspace.profile.lastActiveDate,
+              currentWeek: workspace.profile.currentWeek,
+            },
+            stats,
+            currentWeek
+          ),
+        });
+      },
 
       bootstrapSession: () => {
         const today = todayIso();
@@ -473,7 +626,7 @@ export const useProgressStore = create<ProgressStore>()(
           }
           const weeks = getCurriculumWeeks();
           let progress = syncModuleUnlocks(
-            ensurePrathyuBootstrap(
+            scrubLegacyDemoAssignmentSeeds(
               migrateProgressStateV3(state.progress, weeks, { rebuildGates: true })
             )
           );
@@ -498,8 +651,6 @@ export const useProgressStore = create<ProgressStore>()(
           updates.profile = syncDerivedProfile(state.profile, stats, currentWeek);
           return { ...state, ...updates };
         });
-        get().seedAssignmentJourneyIfNeeded();
-        get().updateStreak();
       },
 
       resetWeekProgress: (weekId) => {
@@ -677,7 +828,7 @@ export const useProgressStore = create<ProgressStore>()(
         }
       },
 
-      addStudySession: (hours) =>
+      addStudySession: (hours) => {
         set((state) => {
           const today = todayIso();
           const weekId = getCurrentWeekId(getCurriculumWeeks(), state.progress);
@@ -691,18 +842,28 @@ export const useProgressStore = create<ProgressStore>()(
             studySessions: sessions,
             profile: { ...state.profile, totalStudyHours: state.profile.totalStudyHours + hours },
           };
-        }),
+        });
+        syncStudySession(hours, get().getCurrentWeekId());
+      },
 
       updateProfile: (updates) => set((s) => ({ profile: { ...s.profile, ...updates } })),
 
-      addNote: (note) => set((s) => ({ notes: [...s.notes, note] })),
-      updateNote: (id, updates) =>
+      addNote: (note) => {
+        set((s) => ({ notes: [...s.notes, note] }));
+        syncAddNote(note);
+      },
+      updateNote: (id, updates) => {
         set((s) => ({
           notes: s.notes.map((n) =>
             n.id === id ? { ...n, ...updates, updatedAt: new Date().toISOString() } : n
           ),
-        })),
-      deleteNote: (id) => set((s) => ({ notes: s.notes.filter((n) => n.id !== id) })),
+        }));
+        syncUpdateNote(id, updates);
+      },
+      deleteNote: (id) => {
+        set((s) => ({ notes: s.notes.filter((n) => n.id !== id) }));
+        syncDeleteNote(id);
+      },
 
       updateStreak: () =>
         set((state) => {
@@ -722,7 +883,7 @@ export const useProgressStore = create<ProgressStore>()(
         }),
     }),
     {
-      name: "prathyu-academy-v3",
+      name: PERSIST_KEY,
       version: PROGRESS_VERSION,
       storage: createJSONStorage(() => createIdbPersistStorage()),
       migrate: (persisted, version) => {
@@ -731,12 +892,11 @@ export const useProgressStore = create<ProgressStore>()(
         if (!state.todayGoalDate) state.todayGoalDate = todayIso();
         if (state.progress) {
           const weeks = getCurriculumWeeks();
-          let progress = state.progress as UserProgressState;
+          let progress = scrubLegacyDemoAssignmentSeeds(
+            state.progress as UserProgressState
+          );
           if (!progress.scrollPositions) {
             progress = { ...progress, scrollPositions: {} };
-          }
-          if (version < 18) {
-            progress = markWeekCompleteAllModules(progress, 2, weeks);
           }
           if (version < PROGRESS_VERSION) {
             progress = {
@@ -746,7 +906,9 @@ export const useProgressStore = create<ProgressStore>()(
               scrollPositions: progress.scrollPositions ?? {},
             };
           }
-          state.progress = migrateProgressStateV3(progress, weeks, { rebuildGates: true });
+          state.progress = migrateProgressStateV3(progress, weeks, {
+            rebuildGates: true,
+          });
         }
         if (version < PROGRESS_VERSION && !state.resumePosition) {
           state.resumePosition = null;
@@ -759,6 +921,22 @@ export const useProgressStore = create<ProgressStore>()(
     }
   )
 );
+
+registerProgressWorkspaceReset(() => {
+  useProgressStore.setState(createEmptyStoreSlice());
+});
+
+/** Load authoritative progress from Supabase into the in-memory store. */
+export async function rehydrateProgressWorkspace() {
+  const { fetchLearnerWorkspace } = await import(
+    "@/features/progress/lib/progress-sync"
+  );
+  const workspace = await fetchLearnerWorkspace();
+  if (workspace) {
+    useProgressStore.getState().hydrateFromServer(workspace);
+  }
+  useProgressStore.getState().bootstrapSession();
+}
 
 /** Backward-compatible alias */
 export const useAppStore = useProgressStore;

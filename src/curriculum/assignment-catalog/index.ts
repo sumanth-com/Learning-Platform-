@@ -130,21 +130,6 @@ export function resolveAssignmentRoute(
   return { assignment: def, listing, href: listing.href };
 }
 
-/** First module’s four assignments — seeded complete for the demo journey. */
-export const SEEDED_COMPLETED_ASSIGNMENT_SLUGS = [
-  "problem-solving-basics",
-  "thinking-like-a-developer",
-  "algorithm-thinking",
-  "pseudocode-challenge",
-] as const;
-
-export function getSeededCompletedAssignmentIds(): string[] {
-  const allowed = new Set<string>(SEEDED_COMPLETED_ASSIGNMENT_SLUGS);
-  return getAllAssignmentListings()
-    .filter((a) => a.moduleNumber === 1 && allowed.has(a.slug))
-    .map((a) => a.id);
-}
-
 export function isModuleUnlocked(
   _moduleNumber: number,
   _isAssignmentComplete: (assignmentId: string) => boolean
