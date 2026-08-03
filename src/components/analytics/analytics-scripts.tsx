@@ -1,10 +1,12 @@
+import { Suspense } from "react";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { GaPageViews } from "@/components/analytics/ga-page-views";
 
 /**
  * Optional analytics loaders — enabled only when env vars are set.
  * GA4 uses the official @next/third-parties GoogleAnalytics component
- * (automatic page_view on load + App Router client navigations).
+ * plus GaPageViews for App Router client navigations.
  *
  * Env:
  * - NEXT_PUBLIC_GA_MEASUREMENT_ID (GA4) — production only
@@ -22,7 +24,14 @@ export function AnalyticsScripts() {
 
   return (
     <>
-      {enableGa && gaId ? <GoogleAnalytics gaId={gaId} /> : null}
+      {enableGa && gaId ? (
+        <>
+          <GoogleAnalytics gaId={gaId} />
+          <Suspense fallback={null}>
+            <GaPageViews />
+          </Suspense>
+        </>
+      ) : null}
 
       {gtmId ? (
         <Script id="gtm" strategy="afterInteractive">{`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
