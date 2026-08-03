@@ -1,6 +1,6 @@
 /** Public marketing routes — real paths, not hash anchors. */
 export const SITE_ROUTES = {
-  home: "/public",
+  home: "/",
   mentor: "/mentor",
   platform: "/platform",
   certifications: "/credentials",

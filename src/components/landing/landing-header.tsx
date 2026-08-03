@@ -52,7 +52,7 @@ export function LandingHeader({ showNav = true }: { showNav?: boolean }) {
       >
         <div className="mx-auto flex h-[4.75rem] w-full max-w-7xl items-center justify-between gap-3 px-5 sm:px-8">
           <Link
-            href={AUTH_ROUTES.public}
+            href={SITE_ROUTES.home}
             className="flex min-w-0 items-center gap-2.5 text-white transition-opacity hover:opacity-90"
           >
             <SupraBaseMark className="h-8 w-8 shrink-0 sm:h-9 sm:w-9" />

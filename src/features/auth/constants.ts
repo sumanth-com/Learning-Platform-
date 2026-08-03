@@ -1,5 +1,6 @@
 export const AUTH_ROUTES = {
-  public: "/public",
+  /** Marketing landing page (root domain). */
+  public: "/",
   login: "/login",
   /** @deprecated Public signup removed — use reserveSeat. */
   signup: "/reserve-seat",

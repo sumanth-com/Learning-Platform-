@@ -51,7 +51,7 @@ export function AuthShell({
 
   return (
     <div className="relative flex min-h-svh items-stretch overflow-x-hidden overflow-y-auto bg-[#0c0d0e] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:p-4 lg:p-5">
-      {/* Brand aurora — same family as /public landing */}
+      {/* Brand aurora — same family as the marketing landing */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"

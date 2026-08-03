@@ -77,29 +77,28 @@ export async function proxy(request: NextRequest) {
 
   try {
     // Fast path: marketing/static without a session cookie — skip Supabase getUser.
+    // Root `/` is the landing page and is included via SITE_ROUTES.home.
     if (isPublicFastPath(pathname) && !hasCookie) {
       return NextResponse.next();
     }
 
-    // Root: guests go straight to marketing without a second page-level auth call.
-    if (pathname === "/" && !hasCookie) {
-      const url = request.nextUrl.clone();
-      url.pathname = AUTH_ROUTES.public;
-      return NextResponse.redirect(url);
-    }
-
     const { user, supabaseResponse } = await updateSession(request);
 
+    // Signed-in users hitting the marketing root go to the app dashboard.
+    // Guests already on `/` stay — do not redirect to a legacy /public path.
     if (pathname === "/") {
-      const url = request.nextUrl.clone();
-      url.pathname = user ? AUTH_ROUTES.dashboard : AUTH_ROUTES.public;
-      url.search = "";
-      logProxy(user ? "root_to_dashboard" : "root_to_public", {
-        pathname,
-        hasCookie,
-        userId: user?.id ?? null,
-      });
-      return redirectWithSessionCookies(url, supabaseResponse);
+      if (user) {
+        const url = request.nextUrl.clone();
+        url.pathname = AUTH_ROUTES.dashboard;
+        url.search = "";
+        logProxy("root_to_dashboard", {
+          pathname,
+          hasCookie,
+          userId: user.id,
+        });
+        return redirectWithSessionCookies(url, supabaseResponse);
+      }
+      return supabaseResponse;
     }
 
     const protectedRoutes = [

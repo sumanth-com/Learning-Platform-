@@ -84,6 +84,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/public",
+        destination: "/",
+        permanent: true,
+      },
+      {
         source: "/module/:slug/topic/:topicSlug/challenge/:challengeId",
         destination: "/challenge/:slug/:challengeId",
         permanent: false,
