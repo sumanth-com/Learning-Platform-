@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import { cn } from "@/lib/utils";
 
@@ -87,18 +89,22 @@ export function LandingHeader({ showNav = true }: { showNav?: boolean }) {
           ) : null}
 
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <Link
+            <TrackedLink
               href={AUTH_ROUTES.login}
+              event={ANALYTICS_EVENTS.login_clicked}
+              eventParams={{ source: "header" }}
               className="inline-flex rounded-full px-3 py-2 text-[12.5px] font-medium text-white/70 transition-colors hover:bg-white/5 hover:text-white sm:px-4"
             >
               Sign in
-            </Link>
-            <Link
+            </TrackedLink>
+            <TrackedLink
               href={AUTH_ROUTES.reserveSeat}
+              event={ANALYTICS_EVENTS.get_started_clicked}
+              eventParams={{ source: "header" }}
               className="inline-flex h-9 items-center rounded-full bg-white px-3.5 text-[12px] font-semibold text-[#181719] shadow-[0_12px_30px_rgba(0,0,0,0.28)] transition hover:-translate-y-0.5 hover:bg-[#fff8f4] sm:h-10 sm:px-5 sm:text-[12.5px]"
             >
               Get started
-            </Link>
+            </TrackedLink>
           </div>
         </div>
       </div>

@@ -111,7 +111,7 @@ export default function OpenGraphImage() {
           }}
         >
           <span>AI Learning Platform · Developer Roadmap · Certifications</span>
-          <span style={{ color: "#f3aaa0" }}>suprabase.com</span>
+          <span style={{ color: "#f3aaa0" }}>suprabase.in</span>
         </div>
       </div>
     ),

@@ -12,4 +12,6 @@ export const SITE_ROUTES = {
   manual: "/manual",
   terms: "/terms",
   privacy: "/privacy",
+  reserveSeat: "/reserve-seat",
+  login: "/login",
 } as const;

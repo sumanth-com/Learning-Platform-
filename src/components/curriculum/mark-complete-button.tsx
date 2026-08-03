@@ -34,6 +34,13 @@ export function MarkCompleteButton({
             toast.error(result.error);
             return;
           }
+          if (result.completed) {
+            void import("@/lib/analytics").then(({ trackEvent, ANALYTICS_EVENTS }) => {
+              trackEvent(ANALYTICS_EVENTS.lesson_completed, {
+                lesson_id: lessonId,
+              });
+            });
+          }
           toast.success(
             result.completed
               ? "Lesson marked complete."

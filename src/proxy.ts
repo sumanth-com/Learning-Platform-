@@ -37,9 +37,13 @@ const PUBLIC_FAST_PATHS = new Set<string>([
   "/robots.txt",
   "/sitemap.xml",
   "/manifest.json",
+  "/site.webmanifest",
   "/sw.js",
   "/opengraph-image",
   "/twitter-image",
+  "/apple-touch-icon.png",
+  "/android-chrome-192x192.png",
+  "/android-chrome-512x512.png",
 ]);
 
 function isPublicFastPath(pathname: string) {

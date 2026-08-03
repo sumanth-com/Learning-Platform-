@@ -13,6 +13,25 @@ const securityHeaders = [
     key: "Strict-Transport-Security",
     value: "max-age=63072000; includeSubDomains; preload",
   },
+  {
+    key: "Content-Security-Policy",
+    value: [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+      "object-src 'none'",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://scripts.clarity.ms https://va.vercel-scripts.com https://cdn.jsdelivr.net",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.clarity.ms https://vitals.vercel-insights.com https://va.vercel-scripts.com https://generativelanguage.googleapis.com https://api.resend.com https://api.qrserver.com",
+      "frame-src 'self' https://www.googletagmanager.com",
+      "worker-src 'self' blob:",
+      "media-src 'self' blob: data:",
+      "upgrade-insecure-requests",
+    ].join("; "),
+  },
 ];
 
 const noIndexHeaders = [

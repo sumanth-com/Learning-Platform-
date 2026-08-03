@@ -57,6 +57,11 @@ export function SubmissionForm({
         toast.error(result.error);
         return;
       }
+      void import("@/lib/analytics").then(({ trackEvent, ANALYTICS_EVENTS }) => {
+        trackEvent(ANALYTICS_EVENTS.project_submitted, {
+          assignment_id: assignmentId,
+        });
+      });
       toast.success(result.message);
     });
   });

@@ -108,6 +108,12 @@ export function CreateAccountForm() {
         return;
       }
 
+      void import("@/lib/analytics").then(({ trackEvent, ANALYTICS_EVENTS }) => {
+        trackEvent(ANALYTICS_EVENTS.signup_completed, {
+          source: "create_account",
+        });
+      });
+
       const email = result.data?.email ?? preview?.email;
       if (!email) {
         setSucceeded(true);

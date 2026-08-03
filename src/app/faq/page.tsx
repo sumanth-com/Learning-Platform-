@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { FAQ_ITEMS } from "@/components/landing/landing-faq";
+import { TrackPageEvent } from "@/components/analytics/track-page-event";
 import { JsonLd } from "@/components/seo/json-ld";
 import {
   SiteCard,
@@ -9,6 +10,7 @@ import {
   SitePageShell,
 } from "@/components/site/site-page-shell";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import { buildPageMetadata } from "@/lib/seo";
 import {
@@ -35,7 +37,9 @@ export const metadata: Metadata = buildPageMetadata({
 export default function FaqPage() {
   return (
     <SitePageShell wide>
+      <TrackPageEvent event={ANALYTICS_EVENTS.faq_viewed} />
       <JsonLd
+        id="json-ld-faq"
         data={graphSchema([
           organizationSchema(),
           faqPageSchema(FAQ_ITEMS),

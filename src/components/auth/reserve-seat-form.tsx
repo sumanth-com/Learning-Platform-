@@ -214,6 +214,11 @@ export function ReserveSeatForm({
         toast.error(result.error);
         return;
       }
+      void import("@/lib/analytics").then(({ trackEvent, ANALYTICS_EVENTS }) => {
+        trackEvent(ANALYTICS_EVENTS.contact_submitted, {
+          source: "reserve_seat",
+        });
+      });
       setDone(true);
       onSubmitted?.();
     });

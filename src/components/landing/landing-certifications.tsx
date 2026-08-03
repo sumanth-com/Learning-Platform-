@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight, BadgeCheck, ShieldCheck, Sparkles } from "lucide-react";
 import { CertificateSheet } from "@/components/certifications/certificate-document";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 import { Reveal } from "./reveal";
 import styles from "./landing.module.css";
 
@@ -84,19 +85,23 @@ export function LandingCertifications() {
             </ul>
 
             <div className="mt-8 grid grid-cols-2 gap-2.5 sm:mt-10 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
-              <Link
+              <TrackedLink
                 href={AUTH_ROUTES.reserveSeat}
+                event={ANALYTICS_EVENTS.reserve_seat_clicked}
+                eventParams={{ source: "certifications" }}
                 className={`${styles.shine} inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-full bg-white px-3 text-[12px] font-semibold text-[#1b181a] shadow-[0_14px_36px_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 hover:bg-[#fff8f4] sm:w-auto sm:gap-2 sm:px-6 sm:text-[13px]`}
               >
                 <span className="truncate">Earn your credential</span>
                 <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-              </Link>
-              <Link
+              </TrackedLink>
+              <TrackedLink
                 href={AUTH_ROUTES.login}
+                event={ANALYTICS_EVENTS.login_clicked}
+                eventParams={{ source: "certifications" }}
                 className="inline-flex h-11 w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.05] px-3 text-[12px] font-semibold text-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition hover:bg-white/[0.08] hover:text-white sm:w-auto sm:px-6 sm:text-[13px] sm:font-medium sm:text-white/70"
               >
                 <span className="truncate">View certifications</span>
-              </Link>
+              </TrackedLink>
             </div>
           </Reveal>
         </div>

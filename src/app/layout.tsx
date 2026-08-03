@@ -41,14 +41,27 @@ export const metadata: Metadata = {
   publisher: SITE.name,
   category: "education",
   keywords: [...SEO_KEYWORDS],
-  manifest: "/manifest.json",
+  manifest: "/site.webmanifest",
   icons: {
     icon: [
       { url: "/favicon.ico" },
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      {
+        url: "/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
     ],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
     shortcut: ["/favicon.ico"],
   },
   appleWebApp: {
@@ -69,12 +82,21 @@ export const metadata: Metadata = {
     title:
       "Suprabase — AI Learning Platform for Full Stack & Software Engineering",
     description: SITE.shortDescription,
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${SITE.name} — Full Stack & AI Engineering Learning Platform`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title:
       "Suprabase — AI Learning Platform for Full Stack & Software Engineering",
     description: SITE.shortDescription,
+    images: ["/twitter-image"],
   },
   robots: {
     index: true,
@@ -114,6 +136,11 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${sans.variable} ${display.variable} ${certScript.variable} dark`}
     >
+      <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
+      </head>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <AnalyticsScripts />
         <Providers>

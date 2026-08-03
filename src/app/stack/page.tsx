@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { FeatureMarketingPage } from "@/components/site/feature-marketing-page";
+import { TrackPageEvent } from "@/components/analytics/track-page-event";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SITE_ROUTES } from "@/lib/site-routes";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 import { buildPageMetadata } from "@/lib/seo";
 import {
   breadcrumbSchema,
@@ -30,7 +32,9 @@ export const metadata: Metadata = buildPageMetadata({
 export default function StackMarketingPage() {
   return (
     <>
+      <TrackPageEvent event={ANALYTICS_EVENTS.stack_viewed} />
       <JsonLd
+        id="json-ld-stack"
         data={graphSchema([
           organizationSchema(),
           courseSchema({

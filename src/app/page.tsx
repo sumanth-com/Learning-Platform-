@@ -151,7 +151,7 @@ export default function HomePage() {
 
   return (
     <div className={styles.page}>
-      <JsonLd data={buildStructuredData(weeks)} />
+      <JsonLd id="json-ld-home" data={buildStructuredData(weeks)} />
 
       <div aria-hidden className={styles.backdrop}>
         <div className={`${styles.aurora} ${styles.auroraOne}`} />

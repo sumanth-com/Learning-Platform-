@@ -53,6 +53,7 @@ export default function AboutPage() {
   return (
     <SitePageShell wide>
       <JsonLd
+        id="json-ld-about"
         data={graphSchema([
           organizationSchema(),
           breadcrumbSchema([

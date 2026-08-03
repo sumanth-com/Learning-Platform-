@@ -1,3 +1,4 @@
+import Script from "next/script";
 import {
   graphSchema,
   organizationSchema,
@@ -6,13 +7,16 @@ import {
 
 type JsonLdProps = {
   data: Record<string, unknown> | Array<Record<string, unknown>>;
+  id?: string;
 };
 
-/** Safe JSON-LD script tag for schema.org graphs. */
-export function JsonLd({ data }: JsonLdProps) {
+/** JSON-LD via next/script for schema.org graphs. */
+export function JsonLd({ data, id = "json-ld" }: JsonLdProps) {
   return (
-    <script
+    <Script
+      id={id}
       type="application/ld+json"
+      strategy="afterInteractive"
       dangerouslySetInnerHTML={{
         __html: JSON.stringify(data).replace(/</g, "\\u003c"),
       }}
@@ -23,6 +27,9 @@ export function JsonLd({ data }: JsonLdProps) {
 /** Site-wide organization + website graph for pages that opt in. */
 export function OrganizationJsonLd() {
   return (
-    <JsonLd data={graphSchema([organizationSchema(), websiteSchema()])} />
+    <JsonLd
+      id="json-ld-organization"
+      data={graphSchema([organizationSchema(), websiteSchema()])}
+    />
   );
 }

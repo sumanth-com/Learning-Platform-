@@ -25,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: SITE_ROUTES.about, changeFrequency: "monthly", priority: 0.7 },
     { path: SITE_ROUTES.contact, changeFrequency: "monthly", priority: 0.6 },
     { path: SITE_ROUTES.manual, changeFrequency: "monthly", priority: 0.5 },
-    { path: "/reserve-seat", changeFrequency: "weekly", priority: 0.85 },
+    { path: SITE_ROUTES.reserveSeat, changeFrequency: "weekly", priority: 0.85 },
     { path: SITE_ROUTES.terms, changeFrequency: "yearly", priority: 0.3 },
     { path: SITE_ROUTES.privacy, changeFrequency: "yearly", priority: 0.3 },
   ];

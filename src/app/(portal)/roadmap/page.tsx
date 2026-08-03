@@ -1,6 +1,8 @@
 import { JourneyRoadmap } from "@/components/portal/journey-roadmap";
+import { TrackPageEvent } from "@/components/analytics/track-page-event";
 import { getPortalData } from "@/features/portal/lib/get-portal-data";
 import { createClient } from "@/lib/supabase/server";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 
 export const metadata = {
   title: "Roadmap",
@@ -46,10 +48,13 @@ export default async function RoadmapPage() {
   }
 
   return (
-    <JourneyRoadmap
-      journey={data.journey}
-      assignmentLessonIds={assignmentLessonIds}
-      projectModuleIds={projectModuleIds}
-    />
+    <>
+      <TrackPageEvent event={ANALYTICS_EVENTS.roadmap_viewed} />
+      <JourneyRoadmap
+        journey={data.journey}
+        assignmentLessonIds={assignmentLessonIds}
+        projectModuleIds={projectModuleIds}
+      />
+    </>
   );
 }

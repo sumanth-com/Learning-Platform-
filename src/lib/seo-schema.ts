@@ -3,14 +3,19 @@ import { SITE_ROUTES } from "@/lib/site-routes";
 
 type JsonLd = Record<string, unknown> | Array<Record<string, unknown>>;
 
+/** Dual-typed Organization + EducationalOrganization for rich results. */
 export function organizationSchema() {
   return {
-    "@type": "EducationalOrganization",
+    "@type": ["Organization", "EducationalOrganization"],
     "@id": absoluteUrl("/#organization"),
     name: SITE.name,
     url: SITE.url,
     description: SITE.longDescription,
-    logo: absoluteUrl("/icons/icon-512.png"),
+    logo: {
+      "@type": "ImageObject",
+      url: absoluteUrl("/icons/icon-512.png"),
+    },
+    image: absoluteUrl("/opengraph-image"),
     email: SITE.supportEmail,
     sameAs: [] as string[],
   };
@@ -56,6 +61,21 @@ export function webApplicationSchema() {
     browserRequirements: "Requires a modern browser with JavaScript enabled",
     description: SITE.shortDescription,
     provider: { "@id": absoluteUrl("/#organization") },
+  };
+}
+
+export function personSchema(input: {
+  name: string;
+  url?: string;
+  jobTitle?: string;
+  description?: string;
+}) {
+  return {
+    "@type": "Person",
+    name: input.name,
+    ...(input.url ? { url: absoluteUrl(input.url) } : {}),
+    ...(input.jobTitle ? { jobTitle: input.jobTitle } : {}),
+    ...(input.description ? { description: input.description } : {}),
   };
 }
 

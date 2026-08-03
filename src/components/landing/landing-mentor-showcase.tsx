@@ -11,7 +11,9 @@ import {
   Plus,
   Sparkles,
 } from "lucide-react";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 import { Reveal } from "./reveal";
 import styles from "./landing.module.css";
 
@@ -108,8 +110,10 @@ export function LandingMentorShowcase() {
             <div className={styles.promptDock}>
               <span aria-hidden className={styles.prismRingComposer} />
 
-              <Link
+              <TrackedLink
                 href={AUTH_ROUTES.reserveSeat}
+                event={ANALYTICS_EVENTS.mentor_chat_started}
+                eventParams={{ source: "landing_mentor" }}
                 aria-label={`Ask Supra: ${ROTATING_PROMPTS[active]}`}
                 className={styles.promptComposer}
               >
@@ -157,7 +161,7 @@ export function LandingMentorShowcase() {
                     </span>
                   </span>
                 </span>
-              </Link>
+              </TrackedLink>
             </div>
           </div>
 

@@ -15,7 +15,9 @@ import {
   Star,
   Terminal,
 } from "lucide-react";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 import styles from "./landing.module.css";
 
 const HEADLINE = "Become the developer companies actually hire";
@@ -353,13 +355,18 @@ export function LandingHero() {
         >
           <span aria-hidden className={styles.heroInviteAura} />
           <span aria-hidden className={styles.heroInviteRing} />
-          <Link href={AUTH_ROUTES.reserveSeat} className={styles.heroInviteBtn}>
+          <TrackedLink
+            href={AUTH_ROUTES.reserveSeat}
+            event={ANALYTICS_EVENTS.reserve_seat_clicked}
+            eventParams={{ source: "hero" }}
+            className={styles.heroInviteBtn}
+          >
             <span className={styles.heroInviteLive} aria-hidden />
             <span className={styles.heroInviteLabel}>Reserve your seat</span>
             <span className={styles.heroInviteArrow} aria-hidden>
               <ArrowRight className="h-4 w-4" strokeWidth={2.25} />
             </span>
-          </Link>
+          </TrackedLink>
         </motion.div>
 
         <HeroTrust reduceMotion={reduceMotion} />

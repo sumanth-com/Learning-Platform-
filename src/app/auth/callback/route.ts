@@ -103,7 +103,16 @@ export async function GET(request: NextRequest) {
       redirectPath,
       cookieCount: cookieJar.length,
     });
-    const response = NextResponse.redirect(`${origin}${redirectPath}`);
+
+    const destination = new URL(redirectPath, request.url);
+    if (
+      typeParam === "signup" ||
+      typeParam === "email" ||
+      typeParam === "invite"
+    ) {
+      destination.searchParams.set("email_verified", "1");
+    }
+    const response = NextResponse.redirect(destination);
     cookieJar.forEach(({ name, value, options }) => {
       response.cookies.set(name, value, options);
     });

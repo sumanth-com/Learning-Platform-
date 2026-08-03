@@ -68,6 +68,11 @@ export async function printCertificateLandscape(
     });
     pdf.addImage(canvas.toDataURL("image/jpeg", 0.98), "JPEG", 0, 0, 297, 210);
     pdf.save(filename);
+    void import("@/lib/analytics").then(({ trackEvent, ANALYTICS_EVENTS }) => {
+      trackEvent(ANALYTICS_EVENTS.certificate_downloaded, {
+        filename,
+      });
+    });
   } finally {
     holder.remove();
   }

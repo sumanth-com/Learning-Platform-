@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import { AUTH_ROUTES } from "@/features/auth/constants";
+import { ANALYTICS_EVENTS } from "@/lib/analytics";
 import { SITE } from "@/lib/site";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import styles from "./landing.module.css";
@@ -20,8 +22,16 @@ const COLUMNS = [
     links: [
       { label: "Most useful", href: SITE_ROUTES.journey },
       { label: "FAQ", href: SITE_ROUTES.faq },
-      { label: "Sign in", href: AUTH_ROUTES.login },
-      { label: "Reserve your seat", href: AUTH_ROUTES.reserveSeat },
+      {
+        label: "Sign in",
+        href: AUTH_ROUTES.login,
+        event: ANALYTICS_EVENTS.login_clicked,
+      },
+      {
+        label: "Reserve your seat",
+        href: AUTH_ROUTES.reserveSeat,
+        event: ANALYTICS_EVENTS.reserve_seat_clicked,
+      },
     ],
   },
   {
@@ -62,16 +72,31 @@ export function LandingFooter() {
                   {column.title}
                 </p>
                 <ul className="mt-3 space-y-2 sm:mt-3.5 sm:space-y-2.5">
-                  {column.links.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-[11.5px] leading-5 text-white/42 transition-colors hover:text-white focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40 sm:text-[12.5px]"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
+                  {column.links.map((link) => {
+                    const className =
+                      "text-[11.5px] leading-5 text-white/42 transition-colors hover:text-white focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40 sm:text-[12.5px]";
+                    if ("event" in link && link.event) {
+                      return (
+                        <li key={link.label}>
+                          <TrackedLink
+                            href={link.href}
+                            event={link.event}
+                            eventParams={{ source: "footer" }}
+                            className={className}
+                          >
+                            {link.label}
+                          </TrackedLink>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={link.label}>
+                        <Link href={link.href} className={className}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </nav>
             ))}

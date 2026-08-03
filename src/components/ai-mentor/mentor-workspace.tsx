@@ -273,6 +273,12 @@ export function MentorWorkspace() {
     attachmentIds?: string[],
     responseMode: MentorResponseMode = "suggested"
   ) => {
+    void import("@/lib/analytics").then(({ trackEvent, ANALYTICS_EVENTS }) => {
+      trackEvent(ANALYTICS_EVENTS.mentor_chat_started, {
+        source: "ai_mentor",
+      });
+    });
+
     if (activeId) {
       void send(content, learningContext, attachmentIds, responseMode).then((meta) => {
         if (meta?.title) {
