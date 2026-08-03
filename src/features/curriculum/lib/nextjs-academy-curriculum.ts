@@ -1165,7 +1165,7 @@ export const NEXTJS_ACADEMY_SECTIONS: NextjsSectionDef[] = [
         commonMistakes: [
           "Missing production env vars that exist only in .env.local locally",
           "Assuming preview deployments share production database credentials",
-          "Not setting NEXT_PUBLIC_APP_URL for absolute URLs in previews",
+          "Not setting NEXT_PUBLIC_SITE_URL for absolute URLs in previews",
         ],
         bestPractices: [
           "Use preview deployments to QA before merging to main",

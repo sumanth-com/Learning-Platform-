@@ -23,6 +23,7 @@ export type SystemHealth = {
     serviceRole: boolean;
     resend: boolean;
     emailFrom: boolean;
+    siteUrl: boolean;
     appUrl: string;
   };
 };
@@ -98,6 +99,10 @@ export class AdminSystemService {
         serviceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()),
         resend: Boolean(email.apiKey),
         emailFrom: Boolean(process.env.EMAIL_FROM?.trim()),
+        siteUrl: Boolean(
+          process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+            process.env.NEXT_PUBLIC_APP_URL?.trim()
+        ),
         appUrl,
       },
     };

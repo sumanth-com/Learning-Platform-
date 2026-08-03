@@ -1,10 +1,38 @@
 /** Canonical site facts shared by metadata, sitemap, robots and structured data. */
 
-function resolveSiteUrl() {
-  const raw = (process.env.NEXT_PUBLIC_APP_URL ?? "").trim().replace(/\/+$/, "");
+/** Production custom domain - single public origin for SEO, auth, and emails. */
+export const PRODUCTION_SITE_URL = "https://suprabase.in";
+
+function readConfiguredSiteUrl() {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.NEXT_PUBLIC_APP_URL,
+  ];
+
+  for (const candidate of candidates) {
+    const raw = (candidate ?? "").trim().replace(/\/+$/, "");
+    if (!raw) continue;
+    // Ignore Vercel default/preview hosts so they never become canonical.
+    const host = raw.replace(/^https?:\/\//i, "").split("/")[0] ?? "";
+    if (/\.vercel\.app$/i.test(host)) {
+      continue;
+    }
+    return raw;
+  }
+  return "";
+}
+
+/**
+ * Resolves the public site origin from env.
+ * Prefer NEXT_PUBLIC_SITE_URL; NEXT_PUBLIC_APP_URL remains a compatible alias.
+ * Preview hosts are ignored so production always canonicalizes to suprabase.in.
+ */
+export function resolveSiteUrl() {
+  const raw = readConfiguredSiteUrl();
+
   const fallback =
     process.env.NODE_ENV === "production"
-      ? "https://suprabase.vercel.app"
+      ? PRODUCTION_SITE_URL
       : "http://localhost:3000";
 
   if (!raw) return fallback;

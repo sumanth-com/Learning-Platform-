@@ -38,6 +38,11 @@ function stripQuotes(v) {
   return t;
 }
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+  process.env.NEXT_PUBLIC_APP_URL?.trim() ||
+  "http://localhost:3000";
+
 const env = {
   RESEND_API_KEY: process.env.RESEND_API_KEY?.trim() || "",
   EMAIL_FROM: stripQuotes(process.env.EMAIL_FROM || ""),
@@ -46,8 +51,8 @@ const env = {
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || "",
   NEXT_PUBLIC_SUPABASE_ANON_KEY:
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() || "",
-  NEXT_PUBLIC_APP_URL:
-    process.env.NEXT_PUBLIC_APP_URL?.trim() || "http://localhost:3000",
+  NEXT_PUBLIC_SITE_URL: siteUrl,
+  NEXT_PUBLIC_APP_URL: siteUrl,
 };
 
 console.log("\n=== STEP 1: Environment ===\n");

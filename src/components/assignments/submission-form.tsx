@@ -80,7 +80,7 @@ export function SubmissionForm({
         <Label htmlFor="demoUrl">Demo URL (optional)</Label>
         <Input
           id="demoUrl"
-          placeholder="https://your-demo.vercel.app"
+          placeholder="https://your-demo.example.com"
           disabled={isPending}
           {...register("demoUrl")}
         />

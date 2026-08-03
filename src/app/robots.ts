@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/lib/site";
+import { SITE, absoluteUrl } from "@/lib/site";
 
 /**
  * Crawl policy: index marketing + invite entry + public credential verify.
@@ -77,6 +77,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: absoluteUrl("/sitemap.xml"),
-    host: absoluteUrl("/"),
+    host: SITE.url,
   };
 }

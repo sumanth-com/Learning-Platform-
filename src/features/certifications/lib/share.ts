@@ -1,18 +1,8 @@
 import type { EarnedCertificate } from "@/features/certifications/types";
+import { absoluteUrl } from "@/lib/site";
 
 export function certificateVerifyUrl(id: string) {
-  if (typeof window !== "undefined") {
-    const configuredOrigin = process.env.NEXT_PUBLIC_APP_URL?.trim();
-    const origin =
-      (configuredOrigin ? configuredOrigin : undefined) ||
-      window.location.origin;
-    return `${origin.replace(/\/+$/, "")}/verify/${encodeURIComponent(id)}`;
-  }
-  const configuredOrigin = process.env.NEXT_PUBLIC_APP_URL?.trim();
-  return `${(configuredOrigin || "https://suprabase.vercel.app").replace(
-    /\/+$/,
-    ""
-  )}/verify/${encodeURIComponent(id)}`;
+  return absoluteUrl(`/verify/${encodeURIComponent(id)}`);
 }
 
 export function qrImageUrl(data: string) {
