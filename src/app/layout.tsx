@@ -109,9 +109,6 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  alternates: {
-    canonical: SITE.url,
-  },
 };
 
 export const viewport: Viewport = {

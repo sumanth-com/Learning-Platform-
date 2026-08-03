@@ -1,6 +1,14 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/lib/site";
+import { resolveSiteUrl } from "@/lib/site";
 import { SITE_ROUTES } from "@/lib/site-routes";
+
+export const dynamic = "force-static";
+
+function loc(path: string) {
+  const origin = resolveSiteUrl();
+  if (!path || path === "/") return origin;
+  return `${origin}${path.startsWith("/") ? path : `/${path}`}`;
+}
 
 /** Public marketing, legal, and invite entry points only. */
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -25,13 +33,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: SITE_ROUTES.about, changeFrequency: "monthly", priority: 0.7 },
     { path: SITE_ROUTES.contact, changeFrequency: "monthly", priority: 0.6 },
     { path: SITE_ROUTES.manual, changeFrequency: "monthly", priority: 0.5 },
-    { path: SITE_ROUTES.reserveSeat, changeFrequency: "weekly", priority: 0.85 },
+    {
+      path: SITE_ROUTES.reserveSeat,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
     { path: SITE_ROUTES.terms, changeFrequency: "yearly", priority: 0.3 },
     { path: SITE_ROUTES.privacy, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   return entries.map((entry) => ({
-    url: absoluteUrl(entry.path),
+    url: loc(entry.path),
     lastModified,
     changeFrequency: entry.changeFrequency,
     priority: entry.priority,

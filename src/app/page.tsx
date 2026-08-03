@@ -30,6 +30,13 @@ const LandingMentorShowcase = dynamic(
     })),
   { ssr: true }
 );
+const LandingPathNarrative = dynamic(
+  () =>
+    import("@/components/landing/landing-path-narrative").then((m) => ({
+      default: m.LandingPathNarrative,
+    })),
+  { ssr: true }
+);
 const LandingCertifications = dynamic(
   () =>
     import("@/components/landing/landing-certifications").then((m) => ({
@@ -85,7 +92,8 @@ const CERT_TEACHES = [
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Full Stack Development & AI Engineering Learning Platform",
-  description: SITE.shortDescription,
+  description:
+    "Learn full stack development, AI engineering, system design, and DevOps on Suprabase — real projects, an AI mentor, and verifiable certifications employers can check.",
   path: SITE_ROUTES.home,
   keywords: [
     "AI learning platform",
@@ -168,6 +176,7 @@ export default function HomePage() {
         <LandingHero />
         <LandingMentorShowcase />
         <LandingCore />
+        <LandingPathNarrative />
         <LandingCertifications />
         <LandingManifesto stats={stats} />
         <LandingJourney />

@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowRight, BadgeCheck, ShieldCheck, Sparkles } from "lucide-react";
 import { CertificateSheet } from "@/components/certifications/certificate-document";
 import { TrackedLink } from "@/components/analytics/tracked-link";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { ANALYTICS_EVENTS } from "@/lib/analytics";
+import { SITE_ROUTES } from "@/lib/site-routes";
 import { Reveal } from "./reveal";
 import styles from "./landing.module.css";
 
@@ -94,14 +96,12 @@ export function LandingCertifications() {
                 <span className="truncate">Earn your credential</span>
                 <ArrowRight className="h-3.5 w-3.5 shrink-0" />
               </TrackedLink>
-              <TrackedLink
-                href={AUTH_ROUTES.login}
-                event={ANALYTICS_EVENTS.login_clicked}
-                eventParams={{ source: "certifications" }}
+              <Link
+                href={SITE_ROUTES.certifications}
                 className="inline-flex h-11 w-full items-center justify-center rounded-full border border-white/12 bg-white/[0.05] px-3 text-[12px] font-semibold text-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition hover:bg-white/[0.08] hover:text-white sm:w-auto sm:px-6 sm:text-[13px] sm:font-medium sm:text-white/70"
               >
                 <span className="truncate">View certifications</span>
-              </TrackedLink>
+              </Link>
             </div>
           </Reveal>
         </div>

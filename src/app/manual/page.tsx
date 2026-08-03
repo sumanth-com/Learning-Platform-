@@ -13,10 +13,16 @@ import {
   SitePageHero,
   SitePageShell,
 } from "@/components/site/site-page-shell";
+import { JsonLd } from "@/components/seo/json-ld";
 import { AUTH_ROUTES } from "@/features/auth/constants";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import { SITE } from "@/lib/site";
 import { buildPageMetadata } from "@/lib/seo";
+import {
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+} from "@/lib/seo-schema";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Manual — How to Use the Learning Platform",
@@ -95,6 +101,16 @@ const STEPS = [
 export default function ManualPage() {
   return (
     <SitePageShell wide>
+      <JsonLd
+        id="json-ld-manual"
+        data={graphSchema([
+          organizationSchema(),
+          breadcrumbSchema([
+            { name: "Home", path: SITE_ROUTES.home },
+            { name: "Manual", path: SITE_ROUTES.manual },
+          ]),
+        ])}
+      />
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
         <SitePageHero
           eyebrow="Product manual"

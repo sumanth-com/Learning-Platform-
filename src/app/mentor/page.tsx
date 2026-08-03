@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FeatureMarketingPage } from "@/components/site/feature-marketing-page";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SITE_ROUTES } from "@/lib/site-routes";
+import { SITE } from "@/lib/site";
 import { buildPageMetadata } from "@/lib/seo";
 import {
   breadcrumbSchema,
@@ -28,9 +29,15 @@ export default function MentorMarketingPage() {
   return (
     <>
       <JsonLd
+        id="json-ld-mentor"
         data={graphSchema([
           organizationSchema(),
-          webApplicationSchema(),
+          webApplicationSchema({
+            name: `${SITE.name} AI Mentor`,
+            url: SITE_ROUTES.mentor,
+            description:
+              "Context-aware AI mentoring for full stack development, debugging, system design, and interviews.",
+          }),
           breadcrumbSchema([
             { name: "Home", path: SITE_ROUTES.home },
             { name: "AI Mentor", path: SITE_ROUTES.mentor },

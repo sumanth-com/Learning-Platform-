@@ -50,9 +50,9 @@ export function LandingManifesto({ stats }: { stats: LandingStat[] }) {
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.95fr)] lg:gap-14 xl:gap-16">
           <div ref={ref} className="max-w-xl">
-            <p className="text-[13px] font-medium tracking-tight text-[#f3aaa0]">
+            <h2 className="text-[13px] font-medium tracking-tight text-[#f3aaa0]">
               {LEAD}
-            </p>
+            </h2>
             <p className="mt-5 text-[1.25rem] font-medium leading-[1.45] tracking-[-0.025em] text-white sm:text-[1.55rem]">
               {words.map((word, index) => {
                 const start = index / words.length;

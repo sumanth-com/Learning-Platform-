@@ -52,14 +52,18 @@ export function softwareApplicationSchema() {
   };
 }
 
-export function webApplicationSchema() {
+export function webApplicationSchema(input?: {
+  name?: string;
+  url?: string;
+  description?: string;
+}) {
   return {
     "@type": "WebApplication",
-    name: SITE.name,
-    url: absoluteUrl(SITE_ROUTES.home),
+    name: input?.name ?? SITE.name,
+    url: absoluteUrl(input?.url ?? SITE_ROUTES.home),
     applicationCategory: "EducationalApplication",
     browserRequirements: "Requires a modern browser with JavaScript enabled",
-    description: SITE.shortDescription,
+    description: input?.description ?? SITE.shortDescription,
     provider: { "@id": absoluteUrl("/#organization") },
   };
 }

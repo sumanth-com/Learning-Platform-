@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalDocumentPage } from "@/components/site/legal-document-page";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import { SITE } from "@/lib/site";
 import { buildPageMetadata } from "@/lib/seo";
+import {
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+} from "@/lib/seo-schema";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Terms of Service",
@@ -14,7 +20,18 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function TermsPage() {
   return (
-    <LegalDocumentPage
+    <>
+      <JsonLd
+        id="json-ld-terms"
+        data={graphSchema([
+          organizationSchema(),
+          breadcrumbSchema([
+            { name: "Home", path: SITE_ROUTES.home },
+            { name: "Terms of Service", path: SITE_ROUTES.terms },
+          ]),
+        ])}
+      />
+      <LegalDocumentPage
       title="Terms of Service"
       description={`These Terms govern your access to and use of ${SITE.name}. By creating an account or using the platform, you agree to them.`}
     >
@@ -107,5 +124,6 @@ export default function TermsPage() {
         </p>
       </section>
     </LegalDocumentPage>
+    </>
   );
 }

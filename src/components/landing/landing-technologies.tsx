@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { Reveal } from "./reveal";
 import styles from "./landing.module.css";
@@ -124,13 +125,14 @@ export function LandingTechnologies() {
                   <span className={styles.techSoon}>Soon</span>
                 ) : null}
                 <span aria-hidden className={styles.techCardGlow} />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={tech.src}
                   alt={`${tech.name} logo`}
                   width={32}
                   height={32}
                   draggable={false}
+                  loading="lazy"
+                  unoptimized
                   className={`${styles.techLogo} ${soon ? styles.techLogoSoon : ""}`}
                 />
                 <p className={styles.techName}>{tech.name}</p>

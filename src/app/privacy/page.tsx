@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalDocumentPage } from "@/components/site/legal-document-page";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import { SITE } from "@/lib/site";
 import { buildPageMetadata } from "@/lib/seo";
+import {
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+} from "@/lib/seo-schema";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
@@ -14,7 +20,18 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <LegalDocumentPage
+    <>
+      <JsonLd
+        id="json-ld-privacy"
+        data={graphSchema([
+          organizationSchema(),
+          breadcrumbSchema([
+            { name: "Home", path: SITE_ROUTES.home },
+            { name: "Privacy Policy", path: SITE_ROUTES.privacy },
+          ]),
+        ])}
+      />
+      <LegalDocumentPage
       title="Privacy Policy"
       description={`How ${SITE.name} collects, uses, and protects your information when you use the platform.`}
     >
@@ -110,5 +127,6 @@ export default function PrivacyPage() {
         </p>
       </section>
     </LegalDocumentPage>
+    </>
   );
 }

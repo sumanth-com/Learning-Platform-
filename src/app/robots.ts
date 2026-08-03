@@ -1,11 +1,15 @@
 import type { MetadataRoute } from "next";
-import { SITE, absoluteUrl } from "@/lib/site";
+import { resolveSiteUrl } from "@/lib/site";
+
+export const dynamic = "force-static";
 
 /**
  * Crawl policy: index marketing + invite entry + public credential verify.
  * Block student portal, admin, APIs, and sensitive auth flows.
  */
 export default function robots(): MetadataRoute.Robots {
+  const origin = resolveSiteUrl();
+
   return {
     rules: [
       {
@@ -79,7 +83,7 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: absoluteUrl("/sitemap.xml"),
-    host: SITE.url,
+    sitemap: `${origin}/sitemap.xml`,
+    host: origin,
   };
 }
