@@ -19,7 +19,6 @@ import {
   X,
   Bell,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { SupraBaseMark } from "@/components/brand/supra-learn-logo";
 import { usePortalShell } from "@/components/portal/portal-shell-context";
 import { Button } from "@/components/ui/button";
@@ -147,7 +146,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
               onClick={closeMobile}
               title={isCollapsed ? item.label : undefined}
               className={cn(
-                "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150 active:scale-[0.99]",
                 isCollapsed && "justify-center px-2",
                 active
                   ? "bg-[#5f3435] text-white shadow-sm"
@@ -155,8 +154,8 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
               )}
             >
               {active ? (
-                <motion.span
-                  layoutId="portal-nav-indicator"
+                <span
+                  aria-hidden
                   className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-[#a7423d]"
                 />
               ) : null}

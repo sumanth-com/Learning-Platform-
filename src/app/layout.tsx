@@ -17,6 +17,7 @@ const display = Source_Serif_4({
   subsets: ["latin"],
   variable: "--font-source-serif",
   display: "swap",
+  preload: false,
 });
 
 const certScript = Great_Vibes({

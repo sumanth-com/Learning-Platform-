@@ -278,11 +278,13 @@ export class CurriculumService {
     const phase = await this.phases.findById(module.phase_id);
     if (!phase) return null;
 
-    const course = await this.courses.findById(phase.course_id);
+    const [course, lessons, completedIds] = await Promise.all([
+      this.courses.findById(phase.course_id),
+      this.lessons.listByModuleIds([module.id]),
+      this.progress.listCompletedLessonIds(profileId),
+    ]);
     if (!course) return null;
 
-    const lessons = await this.lessons.listByModuleIds([module.id]);
-    const completedIds = await this.progress.listCompletedLessonIds(profileId);
     const completedSet = new Set(completedIds);
     const summaries = lessons.map((l) => toLessonSummary(l, completedIds));
     const merged = isProgrammingFundamentalsModule(slug)

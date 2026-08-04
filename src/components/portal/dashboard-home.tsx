@@ -1,19 +1,13 @@
 import Link from "next/link";
 import {
-  BarChart3,
   CheckCircle2,
   Clock,
   Layers,
-  PieChart,
   Timer,
 } from "lucide-react";
 import { DashboardGreeting } from "@/components/portal/dashboard-greeting";
 import { DashboardDateTime } from "@/components/portal/dashboard-datetime";
-import {
-  PhaseCompletionChart,
-  TimeSplitChart,
-  type PhasePoint,
-} from "@/components/portal/dashboard-charts";
+import { DashboardChartsSection } from "@/components/portal/dashboard-charts-section";
 import {
   DashboardPracticeFeatures,
   type ResumeModuleCard,
@@ -24,6 +18,7 @@ import type {
   CourseJourney,
 } from "@/features/curriculum/types";
 import { cn } from "@/lib/utils";
+import type { PhasePoint } from "@/components/portal/dashboard-charts";
 
 type DashboardHomeProps = {
   displayName: string;
@@ -111,51 +106,12 @@ export function DashboardHome({
       </div>
 
       {/* ── Charts ────────────────────────────────────── */}
-      <div className="grid shrink-0 gap-2.5 sm:gap-3 lg:grid-cols-12">
-        <section className="flex min-h-0 flex-col overflow-hidden rounded-[1.25rem] border border-border/60 bg-card p-3.5 sm:p-4 max-md:rounded-2xl lg:col-span-8">
-          <div className="flex shrink-0 items-center justify-between gap-2">
-            <div className="flex min-w-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
-              <BarChart3 className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">Completion by phase</span>
-            </div>
-            <Link
-              href={CURRICULUM_ROUTES.roadmap}
-              className="shrink-0 text-[11px] font-semibold tracking-tight text-primary hover:underline"
-            >
-              All phases
-            </Link>
-          </div>
-          <div className="mt-2.5 h-[10.5rem] min-w-0 sm:mt-3 sm:h-[12rem]">
-            <PhaseCompletionChart data={phasePoints} />
-          </div>
-        </section>
-
-        <section className="hidden min-h-0 flex-col overflow-hidden rounded-[1.25rem] border border-border/60 bg-card p-3.5 sm:p-4 lg:col-span-4 lg:flex">
-          <div className="flex shrink-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-primary">
-            <PieChart className="h-3.5 w-3.5" />
-            Time split
-          </div>
-          <div className="mt-3 h-[12rem] min-w-0">
-            <TimeSplitChart
-              investedMinutes={stats.investedMinutes}
-              remainingMinutes={stats.remainingMinutes}
-              percent={stats.progress}
-            />
-          </div>
-          <div className="mt-3 flex shrink-0 items-center justify-between gap-3 text-[11.5px]">
-            <LegendItem
-              swatch="bg-brand"
-              label="Invested"
-              value={formatMinutes(stats.investedMinutes)}
-            />
-            <LegendItem
-              swatch="bg-border"
-              label="Remaining"
-              value={formatMinutes(stats.remainingMinutes)}
-            />
-          </div>
-        </section>
-      </div>
+      <DashboardChartsSection
+        phasePoints={phasePoints}
+        investedMinutes={stats.investedMinutes}
+        remainingMinutes={stats.remainingMinutes}
+        percent={stats.progress}
+      />
 
       {/* ── Resume modules + practice streak ──────────── */}
       <DashboardPracticeFeatures modules={resumeModules} />
@@ -376,25 +332,5 @@ function StatCard({
         {hint}
       </p>
     </div>
-  );
-}
-
-function LegendItem({
-  swatch,
-  label,
-  value,
-}: {
-  swatch: string;
-  label: string;
-  value: string;
-}) {
-  return (
-    <span className="inline-flex min-w-0 items-center gap-1.5">
-      <span className={cn("h-2 w-2 shrink-0 rounded-full", swatch)} />
-      <span className="truncate text-muted-foreground">{label}</span>
-      <span className="shrink-0 font-medium tabular-nums text-foreground">
-        {value}
-      </span>
-    </span>
   );
 }

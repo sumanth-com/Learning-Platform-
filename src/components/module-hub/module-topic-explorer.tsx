@@ -437,10 +437,9 @@ function ModuleTopicExplorerInner({
   }, [searchParams, validTopicSlugs]);
 
   useEffect(() => {
-    for (const card of cards.slice(0, 5)) {
-      if (card.status !== "locked") {
-        prefetchModuleTopic(queryClient, moduleSlug, card.slug);
-      }
+    const firstUnlocked = cards.find((card) => card.status !== "locked");
+    if (firstUnlocked) {
+      prefetchModuleTopic(queryClient, moduleSlug, firstUnlocked.slug);
     }
   }, [cards, moduleSlug, queryClient]);
 

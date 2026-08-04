@@ -1,31 +1,11 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ComponentType } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, Circle } from "lucide-react";
 import { ProblemDocument } from "@/components/learning-engine/problem-document";
-import { HackerrankEditor } from "@/components/learning-engine/hackerrank-editor";
 import { lessonHasWorkspace } from "@/components/learning-engine/editor-workspace";
-import { ThinkingChallengeSolve } from "@/components/module-hub/thinking-challenge-solve";
-import { ToolingChallengeSolve } from "@/components/tooling/tooling-challenge-solve";
-import { HtmlPlaygroundSolve } from "@/components/html-academy/html-playground-solve";
-import { CssPlaygroundSolve } from "@/components/css-academy/css-playground-solve";
-import { JsPlaygroundSolve } from "@/components/js-academy/js-playground-solve";
-import { ReactPlaygroundSolve } from "@/components/react-academy/react-playground-solve";
-import { NextjsPlaygroundSolve } from "@/components/nextjs-academy/nextjs-playground-solve";
-import { TypescriptPlaygroundSolve } from "@/components/typescript-academy/typescript-playground-solve";
-import { ApiPlaygroundSolve } from "@/components/apis-academy/api-playground-solve";
-import { AuthPlaygroundSolve } from "@/components/auth-academy/auth-playground-solve";
-import { SqlPlaygroundSolve } from "@/components/sql-academy/sql-playground-solve";
-import { ModelingPlaygroundSolve } from "@/components/modeling-academy/modeling-playground-solve";
-import { DeploymentPlaygroundSolve } from "@/components/deployment-academy/deployment-playground-solve";
-import { CicdPlaygroundSolve } from "@/components/cicd-academy/cicd-playground-solve";
-import { LlmPlaygroundSolve } from "@/components/llm-academy/llm-playground-solve";
-import { AiFeaturesPlaygroundSolve } from "@/components/ai-features-academy/ai-features-playground-solve";
-import { CapstonePlaygroundSolve } from "@/components/capstone-academy/capstone-playground-solve";
-import { ShipPlaygroundSolve } from "@/components/ship-academy/ship-playground-solve";
-import { InterviewPlaygroundSolve } from "@/components/interview-academy/interview-playground-solve";
-import { SystemsPlaygroundSolve } from "@/components/systems-academy/systems-playground-solve";
 import { ModuleExperiencePlaceholder } from "@/components/module-hub/module-experience-placeholder";
 import { Button } from "@/components/ui/button";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
@@ -59,6 +39,114 @@ import { cn } from "@/lib/utils";
 import { usePersistScroll } from "@/hooks/use-persist-scroll";
 import { useTrackResumePosition } from "@/hooks/use-resume-position";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
+
+function PlaygroundFallback() {
+  return (
+    <div className="flex h-full min-h-[240px] items-center justify-center bg-background text-sm text-muted-foreground">
+      Opening challenge…
+    </div>
+  );
+}
+
+function lazyPlayground(
+  loader: () => Promise<Record<string, ComponentType<any>>>,
+  exportName: string
+) {
+  return dynamic(
+    () =>
+      loader().then((mod) => {
+        const Comp = mod[exportName];
+        if (!Comp) throw new Error(`Missing export ${exportName}`);
+        return { default: Comp };
+      }),
+    { ssr: false, loading: () => <PlaygroundFallback /> }
+  );
+}
+
+const HackerrankEditor = lazyPlayground(
+  () => import("@/components/learning-engine/hackerrank-editor"),
+  "HackerrankEditor"
+);
+const ThinkingChallengeSolve = lazyPlayground(
+  () => import("@/components/module-hub/thinking-challenge-solve"),
+  "ThinkingChallengeSolve"
+);
+const ToolingChallengeSolve = lazyPlayground(
+  () => import("@/components/tooling/tooling-challenge-solve"),
+  "ToolingChallengeSolve"
+);
+const HtmlPlaygroundSolve = lazyPlayground(
+  () => import("@/components/html-academy/html-playground-solve"),
+  "HtmlPlaygroundSolve"
+);
+const CssPlaygroundSolve = lazyPlayground(
+  () => import("@/components/css-academy/css-playground-solve"),
+  "CssPlaygroundSolve"
+);
+const JsPlaygroundSolve = lazyPlayground(
+  () => import("@/components/js-academy/js-playground-solve"),
+  "JsPlaygroundSolve"
+);
+const ReactPlaygroundSolve = lazyPlayground(
+  () => import("@/components/react-academy/react-playground-solve"),
+  "ReactPlaygroundSolve"
+);
+const NextjsPlaygroundSolve = lazyPlayground(
+  () => import("@/components/nextjs-academy/nextjs-playground-solve"),
+  "NextjsPlaygroundSolve"
+);
+const TypescriptPlaygroundSolve = lazyPlayground(
+  () => import("@/components/typescript-academy/typescript-playground-solve"),
+  "TypescriptPlaygroundSolve"
+);
+const ApiPlaygroundSolve = lazyPlayground(
+  () => import("@/components/apis-academy/api-playground-solve"),
+  "ApiPlaygroundSolve"
+);
+const AuthPlaygroundSolve = lazyPlayground(
+  () => import("@/components/auth-academy/auth-playground-solve"),
+  "AuthPlaygroundSolve"
+);
+const SqlPlaygroundSolve = lazyPlayground(
+  () => import("@/components/sql-academy/sql-playground-solve"),
+  "SqlPlaygroundSolve"
+);
+const ModelingPlaygroundSolve = lazyPlayground(
+  () => import("@/components/modeling-academy/modeling-playground-solve"),
+  "ModelingPlaygroundSolve"
+);
+const DeploymentPlaygroundSolve = lazyPlayground(
+  () => import("@/components/deployment-academy/deployment-playground-solve"),
+  "DeploymentPlaygroundSolve"
+);
+const CicdPlaygroundSolve = lazyPlayground(
+  () => import("@/components/cicd-academy/cicd-playground-solve"),
+  "CicdPlaygroundSolve"
+);
+const LlmPlaygroundSolve = lazyPlayground(
+  () => import("@/components/llm-academy/llm-playground-solve"),
+  "LlmPlaygroundSolve"
+);
+const AiFeaturesPlaygroundSolve = lazyPlayground(
+  () => import("@/components/ai-features-academy/ai-features-playground-solve"),
+  "AiFeaturesPlaygroundSolve"
+);
+const CapstonePlaygroundSolve = lazyPlayground(
+  () => import("@/components/capstone-academy/capstone-playground-solve"),
+  "CapstonePlaygroundSolve"
+);
+const ShipPlaygroundSolve = lazyPlayground(
+  () => import("@/components/ship-academy/ship-playground-solve"),
+  "ShipPlaygroundSolve"
+);
+const InterviewPlaygroundSolve = lazyPlayground(
+  () => import("@/components/interview-academy/interview-playground-solve"),
+  "InterviewPlaygroundSolve"
+);
+const SystemsPlaygroundSolve = lazyPlayground(
+  () => import("@/components/systems-academy/systems-playground-solve"),
+  "SystemsPlaygroundSolve"
+);
 
 const SIDE_TABS = [
   { id: "problem" as const, label: "Problem" },

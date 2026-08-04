@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from "react";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
@@ -442,23 +443,28 @@ export async function logoutAction(): Promise<
   };
 }
 
-export async function getCurrentUser(): Promise<AuthSessionUser | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+/**
+ * Deduped per React request — portal layout + module layouts share one auth round-trip.
+ */
+export const getCurrentUser = cache(
+  async (): Promise<AuthSessionUser | null> => {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (!user) return null;
+    if (!user) return null;
 
-  try {
-    const profile = await ensureProfile(supabase, user);
-    return { user, profile };
-  } catch {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
-    return { user, profile };
+    try {
+      const profile = await ensureProfile(supabase, user);
+      return { user, profile };
+    } catch {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+      return { user, profile };
+    }
   }
-}
+);
