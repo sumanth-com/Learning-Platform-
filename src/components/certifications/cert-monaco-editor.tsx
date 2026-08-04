@@ -2,13 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
-import type { editor as MonacoEditor } from "monaco-editor";
 import { useTheme } from "@/components/theme/theme-provider";
 import { languageMeta } from "@/features/certifications/lib/editor-languages";
 import { cn } from "@/lib/utils";
 
 const LIGHT_THEME = "suprabase-light";
 const DARK_THEME = "suprabase-dark";
+
+type MonacoApi = Parameters<BeforeMount>[0];
+type MonacoEditorInstance = Parameters<OnMount>[0];
 
 function readDomTheme(): "light" | "dark" {
   if (typeof document === "undefined") return "dark";
@@ -17,7 +19,7 @@ function readDomTheme(): "light" | "dark" {
     : "dark";
 }
 
-function defineCertThemes(monaco: Parameters<BeforeMount>[0]) {
+function defineCertThemes(monaco: MonacoApi) {
   monaco.editor.defineTheme(LIGHT_THEME, {
     base: "vs",
     inherit: true,
@@ -70,12 +72,12 @@ function defineCertThemes(monaco: Parameters<BeforeMount>[0]) {
   });
 }
 
-const EDITOR_OPTIONS: MonacoEditor.IStandaloneEditorConstructionOptions = {
+const EDITOR_OPTIONS = {
   fontSize: 13.5,
   fontFamily:
     "'Cascadia Code', 'Fira Code', 'JetBrains Mono', Menlo, Monaco, Consolas, monospace",
   fontLigatures: true,
-  lineNumbers: "on",
+  lineNumbers: "on" as const,
   lineNumbersMinChars: 3,
   glyphMargin: false,
   folding: true,
@@ -84,28 +86,28 @@ const EDITOR_OPTIONS: MonacoEditor.IStandaloneEditorConstructionOptions = {
   scrollBeyondLastLine: false,
   automaticLayout: true,
   insertSpaces: true,
-  wordWrap: "on",
+  wordWrap: "on" as const,
   bracketPairColorization: { enabled: true },
-  matchBrackets: "near",
+  matchBrackets: "near" as const,
   padding: { top: 14, bottom: 14 },
-  renderLineHighlight: "none",
-  cursorBlinking: "smooth",
+  renderLineHighlight: "none" as const,
+  cursorBlinking: "smooth" as const,
   smoothScrolling: true,
   overviewRulerLanes: 0,
   overviewRulerBorder: false,
   hideCursorInOverviewRuler: true,
-  renderValidationDecorations: "off",
+  renderValidationDecorations: "off" as const,
   fixedOverflowWidgets: true,
   contextmenu: true,
-  accessibilitySupport: "off",
+  accessibilitySupport: "off" as const,
   guides: {
     indentation: true,
     highlightActiveIndentation: false,
     bracketPairs: false,
   },
   scrollbar: {
-    vertical: "auto",
-    horizontal: "auto",
+    vertical: "auto" as const,
+    horizontal: "auto" as const,
     verticalScrollbarSize: 8,
     horizontalScrollbarSize: 8,
     useShadows: false,
@@ -132,8 +134,8 @@ export function CertMonacoEditor({
     domTheme === "light" || contextTheme === "light" ? "light" : "dark";
   const isLight = resolved === "light";
   const monacoTheme = isLight ? LIGHT_THEME : DARK_THEME;
-  const ref = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null);
-  const monacoRef = useRef<Parameters<BeforeMount>[0] | null>(null);
+  const editorRef = useRef<MonacoEditorInstance | null>(null);
+  const monacoRef = useRef<MonacoApi | null>(null);
   const meta = languageMeta(language);
 
   useEffect(() => {
@@ -146,28 +148,20 @@ export function CertMonacoEditor({
   }, []);
 
   useEffect(() => {
-    const ed = ref.current;
+    const ed = editorRef.current;
     if (!ed) return;
     if (value !== ed.getValue()) ed.setValue(value);
   }, [value]);
 
   useEffect(() => {
-    const ed = ref.current;
+    const ed = editorRef.current;
     if (!ed) return;
     ed.updateOptions({ tabSize: language === "python" ? 4 : 2 });
     requestAnimationFrame(() => ed.layout());
   }, [language]);
 
   useEffect(() => {
-    const monaco = monacoRef.current;
-    if (monaco) {
-      monaco.editor.setTheme(monacoTheme);
-      return;
-    }
-    void import("monaco-editor").then((m) => {
-      defineCertThemes(m);
-      m.editor.setTheme(monacoTheme);
-    });
+    monacoRef.current?.editor.setTheme(monacoTheme);
   }, [monacoTheme]);
 
   const handleBeforeMount: BeforeMount = (monaco) => {
@@ -185,7 +179,7 @@ export function CertMonacoEditor({
   };
 
   const handleMount: OnMount = (editor, monaco) => {
-    ref.current = editor;
+    editorRef.current = editor;
     monacoRef.current = monaco;
     defineCertThemes(monaco);
     monaco.editor.setTheme(monacoTheme);

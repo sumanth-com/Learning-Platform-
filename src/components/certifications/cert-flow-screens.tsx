@@ -26,7 +26,7 @@ import { CertificateNameModal } from "@/components/certifications/certificate-na
 import { ConfirmDetailsModal } from "@/components/certifications/confirm-details-modal";
 import { SubmitTestConfirmModal } from "@/components/certifications/submit-test-confirm-modal";
 import { RetestCooldownCard } from "@/components/certifications/retest-cooldown-card";
-import { CertMonacoEditor } from "@/components/certifications/cert-monaco-editor";
+import dynamic from "next/dynamic";
 import { useCertSession } from "@/features/certifications/hooks/use-cert-session";
 import {
   runCodeTests,
@@ -50,6 +50,21 @@ import {
 import { printCertificateLandscape } from "@/features/certifications/lib/print-certificate";
 import type { AssessmentQuestion, TestRunResult } from "@/features/certifications/types";
 import { cn } from "@/lib/utils";
+
+const CertMonacoEditor = dynamic(
+  () =>
+    import("@/components/certifications/cert-monaco-editor").then(
+      (m) => m.CertMonacoEditor
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full min-h-[280px] items-center justify-center bg-muted/20 text-[12px] text-muted-foreground">
+        Loading editor…
+      </div>
+    ),
+  }
+);
 
 function unansweredCount(
   questions: AssessmentQuestion[],

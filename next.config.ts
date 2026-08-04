@@ -42,6 +42,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  /** Keep Monaco out of the server graph — large package can OOM/timeout Vercel builds. */
+  serverExternalPackages: ["monaco-editor"],
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
