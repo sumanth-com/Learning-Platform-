@@ -60,9 +60,16 @@ function readStoredPreference(): ThemePreference {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [preference, setPreferenceState] =
-    useState<ThemePreference>("dark");
-  const [theme, setThemeState] = useState<AppTheme>("dark");
+  const [preference, setPreferenceState] = useState<ThemePreference>(() => {
+    if (typeof window === "undefined") return "dark";
+    return readStoredPreference();
+  });
+  const [theme, setThemeState] = useState<AppTheme>(() => {
+    if (typeof window === "undefined") return "dark";
+    if (document.documentElement.classList.contains("light")) return "light";
+    if (document.documentElement.classList.contains("dark")) return "dark";
+    return resolveTheme(readStoredPreference());
+  });
 
   useServerInsertedHTML(() => (
     <script

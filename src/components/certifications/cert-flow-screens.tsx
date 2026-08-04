@@ -619,8 +619,8 @@ export function CertProblemScreen({
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background text-foreground">
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-800 bg-card px-4 py-2.5">
-        <div className="flex min-w-0 items-center gap-3">
+      <header className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-4">
+        <div className="flex min-w-0 items-center gap-2.5">
           <button
             type="button"
             onClick={() =>
@@ -630,58 +630,56 @@ export function CertProblemScreen({
                   : CERT_FLOW.lobby(certification.id)
               )
             }
-            className="inline-flex items-center gap-1 text-[12px] text-zinc-400 hover:text-foreground"
+            className="inline-flex items-center gap-1 text-[12px] text-muted-foreground transition hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {sample ? "Brief" : "Lobby"}
           </button>
-          <span className="text-zinc-600">/</span>
-          <p className="truncate text-[13px] font-medium text-zinc-200">
+          <span className="text-border">/</span>
+          <p className="truncate text-[13px] font-medium text-foreground">
             {question.title}
           </p>
           {sample ? (
-            <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium text-amber-300">
+            <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
               Sample
             </span>
           ) : null}
         </div>
-        <div className="flex items-center gap-3 text-[12px] text-zinc-400">
-          {!sample ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-zinc-700 px-2 py-1">
-              <Clock className="h-3.5 w-3.5" />
+        {!sample ? (
+          <div className="flex shrink-0 items-center gap-2">
+            <span className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2.5 font-mono text-[12px] tabular-nums text-foreground">
+              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
               {mins}:{secs.toString().padStart(2, "0")}
             </span>
-          ) : null}
-          {!sample ? (
             <button
               type="button"
               onClick={() => setConfirmSubmit(true)}
-              className="rounded-md border border-primary/50 px-3 py-1.5 font-medium text-primary"
+              className="inline-flex h-8 items-center rounded-md border border-primary/40 bg-primary/5 px-3 text-[12px] font-semibold text-primary transition hover:bg-primary/10"
             >
               Submit Test
             </button>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <aside className="flex max-h-[45vh] w-full shrink-0 flex-col overflow-y-auto border-b border-zinc-800 lg:max-h-none lg:w-[44%] lg:border-b-0 lg:border-r">
+        <aside className="flex max-h-[45vh] w-full shrink-0 flex-col overflow-y-auto border-b border-border lg:max-h-none lg:w-[44%] lg:border-b-0 lg:border-r">
           <div className="px-5 py-4">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
               Problem {index + 1} · Coding
             </p>
-            <h2 className="mt-2 text-[22px] font-semibold tracking-tight">
+            <h2 className="mt-2 text-[22px] font-semibold tracking-tight text-foreground">
               {question.title}
             </h2>
-            <p className="mt-4 whitespace-pre-wrap text-[14px] leading-relaxed text-zinc-300">
+            <p className="mt-4 whitespace-pre-wrap text-[14px] leading-relaxed text-muted-foreground">
               {question.prompt}
             </p>
             {question.constraints?.length ? (
               <div className="mt-5">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                   Constraints
                 </p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-[13px] text-zinc-400">
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-[13px] text-muted-foreground">
                   {question.constraints.map((c) => (
                     <li key={c}>{c}</li>
                   ))}
@@ -691,26 +689,26 @@ export function CertProblemScreen({
             {question.examples?.map((ex, i) => (
               <div
                 key={i}
-                className="mt-4 rounded-lg border border-zinc-800 bg-muted p-3 font-mono text-[12px] text-zinc-300"
+                className="mt-4 rounded-lg border border-border bg-muted/50 p-3 font-mono text-[12px] text-foreground"
               >
                 <p>
-                  <span className="text-zinc-500">Input: </span>
+                  <span className="text-muted-foreground">Input: </span>
                   {ex.input}
                 </p>
                 <p className="mt-1">
-                  <span className="text-zinc-500">Output: </span>
+                  <span className="text-muted-foreground">Output: </span>
                   {ex.output}
                 </p>
                 {ex.explanation ? (
-                  <p className="mt-1 text-zinc-500">{ex.explanation}</p>
+                  <p className="mt-1 text-muted-foreground">{ex.explanation}</p>
                 ) : null}
               </div>
             ))}
 
             {question.hints?.length ? (
               <div className="mt-6">
-                <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
-                  <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
+                <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
                   Hints
                 </p>
                 <ul className="mt-2 space-y-2">
@@ -719,23 +717,23 @@ export function CertProblemScreen({
                     return (
                       <li
                         key={i}
-                        className="overflow-hidden rounded-xl border border-zinc-800 bg-muted"
+                        className="overflow-hidden rounded-xl border border-border bg-muted/40"
                       >
                         <button
                           type="button"
                           onClick={() => setOpenHint(open ? null : i)}
-                          className="flex w-full items-center justify-between gap-2 px-3.5 py-2.5 text-left text-[13px] text-zinc-300 hover:bg-white/[0.03]"
+                          className="flex w-full items-center justify-between gap-2 px-3.5 py-2.5 text-left text-[13px] text-foreground hover:bg-muted/60"
                         >
                           <span>Hint {i + 1}</span>
                           <ChevronDown
                             className={cn(
-                              "h-4 w-4 text-zinc-500 transition",
+                              "h-4 w-4 text-muted-foreground transition",
                               open && "rotate-180"
                             )}
                           />
                         </button>
                         {open ? (
-                          <p className="border-t border-zinc-800 px-3.5 py-3 text-[13px] leading-relaxed text-zinc-400">
+                          <p className="border-t border-border px-3.5 py-3 text-[13px] leading-relaxed text-muted-foreground">
                             {hint}
                           </p>
                         ) : null}
@@ -748,16 +746,16 @@ export function CertProblemScreen({
           </div>
         </aside>
 
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-muted">
-          <div className="flex flex-wrap items-center gap-2 border-b border-zinc-800 px-3 py-2">
-            <label className="relative">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-background lg:border-l lg:border-border">
+          <div className="flex h-11 shrink-0 items-center gap-2 border-b border-border px-3">
+            <label className="relative shrink-0">
               <span className="sr-only">Language</span>
               <select
                 value={language}
                 onChange={(e) =>
                   setQuestionLanguage(question.id, e.target.value)
                 }
-                className="h-8 appearance-none rounded-md border border-zinc-700 bg-card py-1 pl-2.5 pr-8 text-[12px] font-medium text-zinc-200 outline-none hover:border-zinc-500"
+                className="h-8 appearance-none rounded-md border border-border bg-background py-1 pl-2.5 pr-8 text-[12px] font-medium text-foreground outline-none transition hover:border-foreground/20 focus:border-primary/50 focus:ring-1 focus:ring-primary/25"
               >
                 {EDITOR_LANGUAGES.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -765,100 +763,142 @@ export function CertProblemScreen({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </label>
-            <button
-              type="button"
-              disabled={running}
-              onClick={() => runTests("run")}
-              className="inline-flex items-center gap-1.5 rounded-md bg-zinc-800 px-3 py-1.5 text-[12px] font-semibold text-foreground hover:bg-zinc-700 disabled:opacity-50"
-            >
-              <Play className="h-3.5 w-3.5" />
-              Run
-            </button>
-            {!sample ? (
-              <button
-                type="button"
-                disabled={running || !canComplete}
-                onClick={() => runTests("complete")}
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-bold disabled:opacity-50",
-                  isComplete
-                    ? "border border-primary/50 bg-primary/10 text-primary"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
-                )}
-              >
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                {isComplete ? "Completed" : "Complete"}
-              </button>
-            ) : null}
-            <span className="text-[11px] text-zinc-500">
+
+            <span className="inline-flex h-8 items-center gap-1.5 rounded-md bg-muted/60 px-2.5 font-mono text-[11px] text-muted-foreground">
+              <span
+                className="h-1.5 w-1.5 rounded-full bg-emerald-500"
+                aria-hidden
+              />
+              solution.{langMeta.ext}
+            </span>
+
+            <p className="hidden min-w-0 flex-1 truncate text-[11px] text-muted-foreground md:block">
               {langMeta.runnable
                 ? isComplete
-                  ? "Marked complete · auto-saved"
+                  ? "Saved · marked complete"
                   : hasRun
-                    ? "Run passed — click Complete when you’re done"
-                    : "Run tests, then mark Complete"
-                : `${langMeta.label} editor · auto-saved · switch to JS/TS to run tests`}
-            </span>
+                    ? "Tests ran · mark Complete when ready"
+                    : "Run tests, then Complete"
+                : `${langMeta.label} · drafts auto-save · switch to JS/TS to grade`}
+            </p>
+
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              <button
+                type="button"
+                disabled={running}
+                onClick={() => runTests("run")}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-[12px] font-semibold text-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                <Play className="h-3.5 w-3.5 fill-current" />
+                {running ? "Running…" : "Run"}
+              </button>
+              {!sample ? (
+                <button
+                  type="button"
+                  disabled={running || !canComplete}
+                  onClick={() => runTests("complete")}
+                  className={cn(
+                    "inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-45",
+                    isComplete
+                      ? "border border-emerald-500/35 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90"
+                  )}
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  {isComplete ? "Completed" : "Complete"}
+                </button>
+              ) : null}
+            </div>
           </div>
-          <div className="min-h-0 flex-1 p-2">
+
+          <div className="min-h-0 flex-1 overflow-hidden">
             <CertMonacoEditor
               key={`${question.id}-${language}`}
               value={codeValue || question.starterCode || ""}
               language={language}
               onChange={(v) => setAnswer(question.id, v)}
               height="100%"
-              className="h-full min-h-[300px]"
+              className="h-full min-h-[280px]"
             />
           </div>
-          <div className="max-h-[28vh] shrink-0 overflow-y-auto border-t border-zinc-800 bg-card px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
-              Testcases
-            </p>
-            {testResults.length === 0 ? (
-              <p className="mt-2 text-[12px] text-zinc-500">
-                Click Run to execute sample tests, then Complete to mark this
-                challenge done in the lobby.
-              </p>
-            ) : (
-              <ul className="mt-2 space-y-2">
-                {testResults
-                  .filter((r) => !r.hidden || r.passed === false)
-                  .map((r) => (
-                    <li
-                      key={r.id}
-                      className="rounded-md border border-zinc-800 bg-muted px-3 py-2 text-[12px]"
-                    >
-                      <div className="flex items-center gap-2">
-                        {r.passed ? (
-                          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-rose-400" />
+
+          <div className="flex max-h-[30vh] shrink-0 flex-col border-t border-border bg-muted/20">
+            <div className="flex h-9 shrink-0 items-center gap-2 px-3.5">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                Output
+              </span>
+              {testResults.length > 0 ? (
+                <span
+                  className={cn(
+                    "rounded px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",
+                    testResults.every((r) => r.passed)
+                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                      : "bg-rose-500/15 text-rose-700 dark:text-rose-300"
+                  )}
+                >
+                  {testResults.filter((r) => r.passed).length}/
+                  {testResults.length} passed
+                </span>
+              ) : (
+                <span className="text-[11px] text-muted-foreground/70">
+                  Idle
+                </span>
+              )}
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-3.5 pb-3">
+              {testResults.length === 0 ? (
+                <p className="text-[12px] leading-relaxed text-muted-foreground">
+                  Run sample tests here. When they pass, mark the challenge
+                  Complete to return to the lobby.
+                </p>
+              ) : (
+                <ul className="space-y-1.5">
+                  {testResults
+                    .filter((r) => !r.hidden || r.passed === false)
+                    .map((r) => (
+                      <li
+                        key={r.id}
+                        className={cn(
+                          "rounded-md border px-3 py-2 text-[12px]",
+                          r.passed
+                            ? "border-emerald-500/20 bg-emerald-500/[0.06]"
+                            : "border-rose-500/25 bg-rose-500/[0.06]"
                         )}
-                        <span className="font-medium text-zinc-200">
-                          {r.hidden ? "Hidden case" : r.name}
-                        </span>
-                        <span
-                          className={cn(
-                            "ml-auto font-semibold",
-                            r.passed ? "text-emerald-400" : "text-rose-400"
+                      >
+                        <div className="flex items-center gap-2">
+                          {r.passed ? (
+                            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                          ) : (
+                            <XCircle className="h-3.5 w-3.5 shrink-0 text-rose-600 dark:text-rose-400" />
                           )}
-                        >
-                          {r.passed ? "Passed" : "Failed"}
-                        </span>
-                      </div>
-                      {!r.passed ? (
-                        <div className="mt-1.5 space-y-0.5 font-mono text-[11px] text-zinc-500">
-                          {r.error ? <p>Error: {r.error}</p> : null}
-                          <p>Expected: {r.expected}</p>
-                          <p>Actual: {r.actual || "—"}</p>
+                          <span className="truncate font-medium text-foreground">
+                            {r.hidden ? "Hidden case" : r.name}
+                          </span>
+                          <span
+                            className={cn(
+                              "ml-auto shrink-0 text-[11px] font-semibold uppercase tracking-wide",
+                              r.passed
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-rose-600 dark:text-rose-400"
+                            )}
+                          >
+                            {r.passed ? "Pass" : "Fail"}
+                          </span>
                         </div>
-                      ) : null}
-                    </li>
-                  ))}
-              </ul>
-            )}
+                        {!r.passed ? (
+                          <div className="mt-1.5 space-y-0.5 border-t border-border/80 pt-1.5 font-mono text-[11px] text-muted-foreground">
+                            {r.error ? <p>Error: {r.error}</p> : null}
+                            <p>Expected: {r.expected}</p>
+                            <p>Got: {r.actual || "—"}</p>
+                          </div>
+                        ) : null}
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       </div>

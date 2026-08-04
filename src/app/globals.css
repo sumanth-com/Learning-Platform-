@@ -726,6 +726,87 @@ html.light .mentor-composer-glow {
   background-size: 200% 100%;
 }
 
+/* Certification Monaco workspace — theme-aware chrome, no artifact borders */
+.cert-monaco-shell .monaco-editor .inputarea {
+  background: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: transparent !important;
+  caret-color: transparent !important;
+  opacity: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+.cert-monaco-shell .monaco-editor,
+.cert-monaco-shell .monaco-editor .overflow-guard,
+.cert-monaco-shell .monaco-editor .monaco-scrollable-element {
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cert-monaco-shell .monaco-editor .scroll-decoration,
+.cert-monaco-shell .monaco-editor .monaco-editor-overlaymessage {
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+.cert-monaco-shell .monaco-editor .current-line,
+.cert-monaco-shell .monaco-editor .view-overlays .current-line,
+.cert-monaco-shell .monaco-editor .margin-view-overlays .current-line,
+.cert-monaco-shell .monaco-editor .lines-content .cdr {
+  border: 0 !important;
+}
+
+.cert-monaco-shell .monaco-editor .cursors-layer > .cursor {
+  border: 0 !important;
+}
+
+.cert-monaco-shell[data-editor-theme="dark"] .monaco-editor,
+.cert-monaco-shell[data-editor-theme="dark"] .monaco-editor-background,
+.cert-monaco-shell[data-editor-theme="dark"] .monaco-editor .margin {
+  background-color: #0b0d10 !important;
+}
+
+.cert-monaco-shell[data-editor-theme="light"] .monaco-editor,
+.cert-monaco-shell[data-editor-theme="light"] .monaco-editor-background,
+.cert-monaco-shell[data-editor-theme="light"] .monaco-editor .margin,
+.cert-monaco-shell[data-editor-theme="light"] .monaco-editor .monaco-editor-background {
+  background-color: #fafafa !important;
+}
+
+/* Belt-and-suspenders: if app is light, never keep a black editor pane */
+html.light .cert-monaco-shell,
+html.light .cert-monaco-shell .monaco-editor,
+html.light .cert-monaco-shell .monaco-editor-background,
+html.light .cert-monaco-shell .monaco-editor .margin {
+  background-color: #fafafa !important;
+}
+
+html.light .cert-monaco-shell .view-lines,
+html.light .cert-monaco-shell .view-line span {
+  color: inherit;
+}
+
+.cert-monaco-shell .monaco-scrollable-element > .scrollbar > .slider {
+  background: rgba(113, 113, 122, 0.35) !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+}
+
+.cert-monaco-shell[data-editor-theme="light"]
+  .monaco-scrollable-element
+  > .scrollbar
+  > .slider {
+  background: rgba(113, 113, 122, 0.28) !important;
+}
+
+.cert-monaco-shell .monaco-scrollable-element > .scrollbar > .slider:hover {
+  background: rgba(113, 113, 122, 0.55) !important;
+}
+
 /* Developer Hub - print / A4 */
 @media print {
   @page {

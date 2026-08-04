@@ -1,10 +1,117 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import Editor, { type OnMount } from "@monaco-editor/react";
+import { useEffect, useRef, useState } from "react";
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import type { editor as MonacoEditor } from "monaco-editor";
+import { useTheme } from "@/components/theme/theme-provider";
 import { languageMeta } from "@/features/certifications/lib/editor-languages";
 import { cn } from "@/lib/utils";
+
+const LIGHT_THEME = "suprabase-light";
+const DARK_THEME = "suprabase-dark";
+
+function readDomTheme(): "light" | "dark" {
+  if (typeof document === "undefined") return "dark";
+  return document.documentElement.classList.contains("light")
+    ? "light"
+    : "dark";
+}
+
+function defineCertThemes(monaco: Parameters<BeforeMount>[0]) {
+  monaco.editor.defineTheme(LIGHT_THEME, {
+    base: "vs",
+    inherit: true,
+    rules: [
+      { token: "", foreground: "18181B" },
+      { token: "comment", foreground: "71717A", fontStyle: "italic" },
+      { token: "string", foreground: "0F766E" },
+      { token: "keyword", foreground: "7C2D12" },
+      { token: "number", foreground: "9A3412" },
+      { token: "type", foreground: "1D4ED8" },
+      { token: "delimiter", foreground: "52525B" },
+      { token: "identifier", foreground: "18181B" },
+    ],
+    colors: {
+      "editor.background": "#FAFAFA",
+      "editor.foreground": "#18181B",
+      "editorLineNumber.foreground": "#A1A1AA",
+      "editorLineNumber.activeForeground": "#52525B",
+      "editorCursor.foreground": "#5F3435",
+      "editor.selectionBackground": "#E4E4E7",
+      "editor.inactiveSelectionBackground": "#F4F4F5",
+      "editor.lineHighlightBackground": "#00000000",
+      "editor.lineHighlightBorder": "#00000000",
+      "editorIndentGuide.background": "#E4E4E7",
+      "editorIndentGuide.activeBackground": "#D4D4D8",
+      "editorWidget.background": "#FFFFFF",
+      "editorWidget.border": "#E4E4E7",
+      "editorGutter.background": "#FAFAFA",
+      "scrollbarSlider.background": "#A1A1AA55",
+      "scrollbarSlider.hoverBackground": "#A1A1AA88",
+      "scrollbarSlider.activeBackground": "#A1A1AAaa",
+    },
+  });
+
+  monaco.editor.defineTheme(DARK_THEME, {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "6B7280", fontStyle: "italic" },
+    ],
+    colors: {
+      "editor.background": "#0B0D10",
+      "editor.foreground": "#E4E4E7",
+      "editorLineNumber.foreground": "#52525B",
+      "editorLineNumber.activeForeground": "#A1A1AA",
+      "editorGutter.background": "#0B0D10",
+      "editor.lineHighlightBackground": "#00000000",
+      "editor.lineHighlightBorder": "#00000000",
+    },
+  });
+}
+
+const EDITOR_OPTIONS: MonacoEditor.IStandaloneEditorConstructionOptions = {
+  fontSize: 13.5,
+  fontFamily:
+    "'Cascadia Code', 'Fira Code', 'JetBrains Mono', Menlo, Monaco, Consolas, monospace",
+  fontLigatures: true,
+  lineNumbers: "on",
+  lineNumbersMinChars: 3,
+  glyphMargin: false,
+  folding: true,
+  foldingHighlight: false,
+  minimap: { enabled: false },
+  scrollBeyondLastLine: false,
+  automaticLayout: true,
+  insertSpaces: true,
+  wordWrap: "on",
+  bracketPairColorization: { enabled: true },
+  matchBrackets: "near",
+  padding: { top: 14, bottom: 14 },
+  renderLineHighlight: "none",
+  cursorBlinking: "smooth",
+  smoothScrolling: true,
+  overviewRulerLanes: 0,
+  overviewRulerBorder: false,
+  hideCursorInOverviewRuler: true,
+  renderValidationDecorations: "off",
+  fixedOverflowWidgets: true,
+  contextmenu: true,
+  accessibilitySupport: "off",
+  guides: {
+    indentation: true,
+    highlightActiveIndentation: false,
+    bracketPairs: false,
+  },
+  scrollbar: {
+    vertical: "auto",
+    horizontal: "auto",
+    verticalScrollbarSize: 8,
+    horizontalScrollbarSize: 8,
+    useShadows: false,
+    alwaysConsumeMouseWheel: false,
+  },
+};
 
 export function CertMonacoEditor({
   value,
@@ -19,75 +126,114 @@ export function CertMonacoEditor({
   className?: string;
   height?: string | number;
 }) {
+  const { theme: contextTheme } = useTheme();
+  const [domTheme, setDomTheme] = useState<"light" | "dark">(readDomTheme);
+  const resolved =
+    domTheme === "light" || contextTheme === "light" ? "light" : "dark";
+  const isLight = resolved === "light";
+  const monacoTheme = isLight ? LIGHT_THEME : DARK_THEME;
   const ref = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null);
+  const monacoRef = useRef<Parameters<BeforeMount>[0] | null>(null);
   const meta = languageMeta(language);
+
+  useEffect(() => {
+    setDomTheme(readDomTheme());
+    const root = document.documentElement;
+    const sync = () => setDomTheme(readDomTheme());
+    const observer = new MutationObserver(sync);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const ed = ref.current;
     if (!ed) return;
-    const current = ed.getValue();
-    if (value !== current) {
-      ed.setValue(value);
-    }
+    if (value !== ed.getValue()) ed.setValue(value);
   }, [value]);
 
-  const handleMount: OnMount = (editor) => {
-    ref.current = editor;
-    editor.updateOptions({
-      fontSize: 14,
-      fontFamily:
-        "'Cascadia Code', 'Fira Code', 'JetBrains Mono', Menlo, Monaco, Consolas, monospace",
-      fontLigatures: true,
-      lineNumbers: "on",
-      minimap: { enabled: false },
-      scrollBeyondLastLine: false,
-      automaticLayout: true,
-      tabSize: language === "python" ? 4 : 2,
-      insertSpaces: true,
-      wordWrap: "on",
-      bracketPairColorization: { enabled: true },
-      padding: { top: 12, bottom: 12 },
-      renderLineHighlight: "line",
-      cursorBlinking: "smooth",
-      smoothScrolling: true,
+  useEffect(() => {
+    const ed = ref.current;
+    if (!ed) return;
+    ed.updateOptions({ tabSize: language === "python" ? 4 : 2 });
+    requestAnimationFrame(() => ed.layout());
+  }, [language]);
+
+  useEffect(() => {
+    const monaco = monacoRef.current;
+    if (monaco) {
+      monaco.editor.setTheme(monacoTheme);
+      return;
+    }
+    void import("monaco-editor").then((m) => {
+      defineCertThemes(m);
+      m.editor.setTheme(monacoTheme);
     });
-    editor.focus();
+  }, [monacoTheme]);
+
+  const handleBeforeMount: BeforeMount = (monaco) => {
+    monacoRef.current = monaco;
+    defineCertThemes(monaco);
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: true,
+    });
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: true,
+    });
+    monaco.editor.setTheme(monacoTheme);
+  };
+
+  const handleMount: OnMount = (editor, monaco) => {
+    ref.current = editor;
+    monacoRef.current = monaco;
+    defineCertThemes(monaco);
+    monaco.editor.setTheme(monacoTheme);
+    editor.updateOptions({
+      ...EDITOR_OPTIONS,
+      tabSize: language === "python" ? 4 : 2,
+    });
+    requestAnimationFrame(() => {
+      editor.layout();
+      monaco.editor.setTheme(monacoTheme);
+      editor.focus();
+    });
   };
 
   return (
     <div
       className={cn(
-        "flex h-full min-h-[320px] flex-col overflow-hidden rounded-xl border border-zinc-800 bg-[#0d1117]",
+        "cert-monaco-shell flex h-full min-h-0 flex-col overflow-hidden",
+        isLight ? "bg-[#fafafa]" : "bg-[#0b0d10]",
         className
       )}
+      data-editor-theme={isLight ? "light" : "dark"}
     >
-      <div className="flex shrink-0 items-center justify-between border-b border-zinc-800 bg-[#161b22] px-3 py-1.5">
-        <span className="font-mono text-[11px] text-zinc-400">
-          solution.{meta.ext}
-        </span>
-        <span className="text-[10px] uppercase tracking-wide text-zinc-500">
-          Monaco · {meta.label}
-        </span>
-      </div>
-      <div className="min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1 overflow-hidden">
         <Editor
-          key={meta.monaco}
+          key={`${meta.monaco}-${monacoTheme}`}
           height={typeof height === "number" ? height : "100%"}
-          theme="vs-dark"
+          theme={monacoTheme}
           language={meta.monaco}
           defaultValue={value}
+          beforeMount={handleBeforeMount}
           onMount={handleMount}
           onChange={(v) => onChange(v ?? "")}
           loading={
-            <div className="flex h-full items-center justify-center bg-[#0d1117] text-[12px] text-zinc-500">
-              Loading code editor…
+            <div
+              className={cn(
+                "flex h-full items-center justify-center text-[12px]",
+                isLight
+                  ? "bg-[#fafafa] text-zinc-400"
+                  : "bg-[#0b0d10] text-zinc-500"
+              )}
+            >
+              Loading editor…
             </div>
           }
           options={{
-            fontSize: 14,
-            minimap: { enabled: false },
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
+            ...EDITOR_OPTIONS,
+            tabSize: language === "python" ? 4 : 2,
           }}
         />
       </div>
