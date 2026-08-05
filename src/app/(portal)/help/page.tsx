@@ -1,6 +1,6 @@
 import { PortalChrome } from "@/components/portal/portal-chrome";
 import { HelpWorkspace } from "@/components/help/help-workspace";
-import { getPortalData } from "@/features/portal/lib/get-portal-data";
+import { getPortalUser } from "@/features/portal/lib/get-portal-data";
 import { getBrand } from "@/lib/email/env";
 
 export const metadata = {
@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function HelpPage() {
-  const { user } = await getPortalData();
+  const user = await getPortalUser();
   const brand = getBrand();
 
   return (

@@ -13,7 +13,7 @@ import { StudentSidebar } from "@/components/portal/student-sidebar";
 import { StudentHeader } from "@/components/portal/student-header";
 import { ContinueOnDesktop } from "@/components/portal/continue-on-desktop";
 import { MobileBottomNav } from "@/components/portal/mobile-bottom-nav";
-import type { PortalData } from "@/features/portal/types";
+import type { PortalUser } from "@/features/portal/types";
 import { useMinWidth } from "@/hooks/use-min-width";
 import { getQueryClient } from "@/lib/get-query-client";
 import {
@@ -23,7 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 
 type StudentShellProps = {
-  data: PortalData;
+  user: PortalUser;
   children: React.ReactNode;
 };
 
@@ -34,7 +34,7 @@ export function StudentShell(props: StudentShellProps) {
     <QueryClientProvider client={queryClient}>
       <PortalShellProvider>
         <PortalChromeProvider>
-          <PortalRuntimeProviders />
+          <PortalRuntimeProviders seedUser={props.user} />
           <StudentShellInner {...props} />
         </PortalChromeProvider>
       </PortalShellProvider>
@@ -42,7 +42,7 @@ export function StudentShell(props: StudentShellProps) {
   );
 }
 
-function StudentShellInner({ data, children }: StudentShellProps) {
+function StudentShellInner({ user, children }: StudentShellProps) {
   const pathname = usePathname();
   const { setCollapsed } = usePortalShell();
   const { title, subtitle, fillViewport } = usePortalChrome();
@@ -107,7 +107,7 @@ function StudentShellInner({ data, children }: StudentShellProps) {
       </div>
 
       <div className="portal-shell-col flex min-w-0 flex-1 flex-col bg-background">
-        <StudentHeader title={title} subtitle={subtitle} user={data.user} />
+        <StudentHeader title={title} subtitle={subtitle} user={user} />
         <main
           className={cn(
             "relative min-h-0 min-w-0 flex-1",

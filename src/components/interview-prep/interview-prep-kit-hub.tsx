@@ -23,7 +23,7 @@ import {
   isSystemsAcademyModule,
 } from "@/features/curriculum/lib/systems-academy";
 import { listSystemsAcademyChallenges } from "@/features/curriculum/lib/systems-academy-challenges";
-import { curriculumChallengeEntityId } from "@/features/curriculum/lib/topic-challenges";
+import { curriculumChallengeEntityId } from "@/features/curriculum/lib/challenge-entity-id";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
 import { useProgressStore } from "@/store/use-progress-store";
 import { cn } from "@/lib/utils";
@@ -441,6 +441,7 @@ export function InterviewPrepKitHub({ payload }: InterviewPrepKitHubProps) {
 
 export function isInterviewPrepKitModule(moduleSlug: string) {
   return (
-    isInterviewAcademyModule(moduleSlug) || isSystemsAcademyModule(moduleSlug)
+    moduleSlug === "technical-interviews" ||
+    moduleSlug === "system-design-behavioral"
   );
 }

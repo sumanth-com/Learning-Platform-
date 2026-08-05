@@ -11,7 +11,7 @@ import {
   problemTypeLabel,
   topicProgress,
 } from "@/learning-engine/labels";
-import { categoryLabel } from "./lesson-renderer";
+import { categoryLabel } from "@/learning-engine/category-labels";
 import { cn } from "@/lib/utils";
 
 interface TopicSidebarProps {

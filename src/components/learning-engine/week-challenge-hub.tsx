@@ -12,7 +12,7 @@ import {
 import type { LearnDifficulty, LearnLesson, LearnWeekBundle } from "@/learning-engine/types";
 import { lessonEntityId } from "@/learning-engine/types";
 import { DIFFICULTY_LABELS, problemTypeLabel, weekProgress } from "@/learning-engine/labels";
-import { categoryLabel } from "@/components/learning-engine/lesson-renderer";
+import { categoryLabel } from "@/learning-engine/category-labels";
 import { useTrackResumePosition } from "@/hooks/use-resume-position";
 import { useProgressStore } from "@/store/use-progress-store";
 import { Button } from "@/components/ui/button";

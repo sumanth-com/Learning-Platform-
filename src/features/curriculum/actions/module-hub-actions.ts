@@ -6,12 +6,17 @@ import { CurriculumService } from "@/features/curriculum/services/curriculum.ser
 import { AssignmentService } from "@/features/assignments/services/assignment.service";
 import { resolveLessonObjectives } from "@/features/learn/lib/objectives";
 import { buildTopicCards } from "@/features/curriculum/lib/topic-cards";
+import {
+  buildModuleHubChallengeSummaries,
+} from "@/features/curriculum/lib/module-hub-challenge-summaries";
+import type { ModuleHubChallengeSummary } from "@/features/curriculum/lib/module-hub-challenge-summary";
 import type { ModuleDetail, LessonDetail } from "@/features/curriculum/types";
 import type { AssignmentSummary } from "@/features/assignments/types";
 import type { LessonResourceRow } from "@/types/database";
 
 export type ModuleHubPayload = {
   detail: ModuleDetail;
+  challenges: ModuleHubChallengeSummary[];
   assignments: Array<
     AssignmentSummary & { lessonId: string; lessonTitle: string }
   >;
@@ -48,6 +53,10 @@ const loadModuleHubCached = cache(
 
     return {
       detail,
+      challenges: buildModuleHubChallengeSummaries(
+        detail.module.slug,
+        detail.lessons
+      ),
       assignments: [],
       resources: [],
     } satisfies ModuleHubPayload;

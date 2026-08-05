@@ -15,9 +15,12 @@ import {
 } from "@/lib/client-workspace";
 import { fetchLearnerWorkspace } from "@/features/progress/lib/progress-sync";
 import { refreshNotificationsFromServer } from "@/lib/notifications";
+import type { PortalUser } from "@/features/portal/types";
+
+type SeedUser = Pick<PortalUser, "id" | "name" | "email">;
 
 /** Binds auth user and hydrates progress from Supabase (server is source of truth). */
-export function ProgressBootstrap() {
+export function ProgressBootstrap({ seedUser }: { seedUser?: SeedUser }) {
   const bootstrap = useProgressStore((s) => s.bootstrapSession);
   const hydrateFromServer = useProgressStore((s) => s.hydrateFromServer);
   const updateProfile = useProgressStore((s) => s.updateProfile);
@@ -26,21 +29,22 @@ export function ProgressBootstrap() {
   const boundUserRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (isLoading) return;
+    const activeId = user?.id ?? seedUser?.id ?? null;
+    if (!activeId && isLoading && !seedUser) return;
 
     let cancelled = false;
 
     void (async () => {
-      if (!user) {
+      if (!activeId) {
         boundUserRef.current = null;
         await clearClientWorkspace();
         return;
       }
 
-      if (boundUserRef.current !== user.id) {
-        await bindClientWorkspace(user.id);
+      if (boundUserRef.current !== activeId) {
+        await bindClientWorkspace(activeId);
         if (cancelled) return;
-        boundUserRef.current = user.id;
+        boundUserRef.current = activeId;
       }
 
       const workspace = await fetchLearnerWorkspace();
@@ -53,8 +57,10 @@ export function ProgressBootstrap() {
 
       const displayName =
         profile?.full_name?.trim() ||
-        user.user_metadata?.full_name ||
-        user.email?.split("@")[0] ||
+        user?.user_metadata?.full_name ||
+        seedUser?.name ||
+        user?.email?.split("@")[0] ||
+        seedUser?.email?.split("@")[0] ||
         "";
       if (displayName) {
         updateProfile({
@@ -70,6 +76,9 @@ export function ProgressBootstrap() {
     };
   }, [
     user,
+    seedUser?.id,
+    seedUser?.name,
+    seedUser?.email,
     profile?.full_name,
     isLoading,
     hydrated,

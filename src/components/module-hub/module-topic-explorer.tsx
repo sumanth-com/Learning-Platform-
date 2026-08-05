@@ -1,17 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { Lock } from "lucide-react";
 import {
-  Lock,
-} from "lucide-react";
-import { SaveDiamondButton, TrackSavedDiamond, DiamondGem } from "@/components/shared/save-diamond-button";
+  SaveDiamondButton,
+  TrackSavedDiamond,
+  DiamondGem,
+} from "@/components/shared/save-diamond-button";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { DifficultyBadge } from "@/components/curriculum/difficulty-badge";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
 import type { ModuleHubPayload } from "@/features/curriculum/actions/module-hub-actions";
+import type { ModuleHubChallengeSummary } from "@/features/curriculum/lib/module-hub-challenge-summary";
 import {
   formatModuleDuration,
   moduleDifficulty,
@@ -21,312 +31,40 @@ import {
   type TopicCardModel,
 } from "@/features/curriculum/lib/topic-cards";
 import {
-  resolveTopicChallenges,
-  getTopicChallengeLimit,
-  curriculumChallengeEntityId,
-} from "@/features/curriculum/lib/topic-challenges";
-import { isProgrammingFundamentalsModule } from "@/features/curriculum/lib/programming-fundamentals";
-import { isDeveloperToolingModule } from "@/features/curriculum/lib/developer-tooling";
-import { findDeveloperToolingChallenge } from "@/features/curriculum/lib/developer-tooling-challenges";
-import { isHtmlAcademyModule } from "@/features/curriculum/lib/html-academy";
-import { findHtmlAcademyChallenge } from "@/features/curriculum/lib/html-academy-challenges";
-import { isCssAcademyModule } from "@/features/curriculum/lib/css-academy";
-import { findCssAcademyChallenge } from "@/features/curriculum/lib/css-academy-challenges";
-import { isJsAcademyModule } from "@/features/curriculum/lib/js-academy";
-import { findJsAcademyChallenge } from "@/features/curriculum/lib/js-academy-challenges";
-import { isReactAcademyModule } from "@/features/curriculum/lib/react-academy";
-import { findReactAcademyChallenge } from "@/features/curriculum/lib/react-academy-challenges";
-import { isNextjsAcademyModule } from "@/features/curriculum/lib/nextjs-academy";
-import { findNextjsAcademyChallenge } from "@/features/curriculum/lib/nextjs-academy-challenges";
-import { isTypescriptAcademyModule } from "@/features/curriculum/lib/typescript-academy";
-import { findTypescriptAcademyChallenge } from "@/features/curriculum/lib/typescript-academy-challenges";
-import { isApisAcademyModule } from "@/features/curriculum/lib/apis-academy";
-import { findApisAcademyChallenge } from "@/features/curriculum/lib/apis-academy-challenges";
-import { isAuthAcademyModule } from "@/features/curriculum/lib/auth-academy";
-import { findAuthAcademyChallenge } from "@/features/curriculum/lib/auth-academy-challenges";
-import { isSqlAcademyModule } from "@/features/curriculum/lib/sql-academy";
-import { findSqlAcademyChallenge } from "@/features/curriculum/lib/sql-academy-challenges";
-import { isModelingAcademyModule } from "@/features/curriculum/lib/modeling-academy";
-import { findModelingAcademyChallenge } from "@/features/curriculum/lib/modeling-academy-challenges";
-import { isDeploymentAcademyModule } from "@/features/curriculum/lib/deployment-academy";
-import { findDeploymentAcademyChallenge } from "@/features/curriculum/lib/deployment-academy-challenges";
-import { isCicdAcademyModule } from "@/features/curriculum/lib/cicd-academy";
-import { findCicdAcademyChallenge } from "@/features/curriculum/lib/cicd-academy-challenges";
-import { isLlmAcademyModule } from "@/features/curriculum/lib/llm-academy";
-import { findLlmAcademyChallenge } from "@/features/curriculum/lib/llm-academy-challenges";
-import { isAiFeaturesAcademyModule } from "@/features/curriculum/lib/ai-features-academy";
-import { findAiFeaturesAcademyChallenge } from "@/features/curriculum/lib/ai-features-academy-challenges";
-import { isCapstoneAcademyModule } from "@/features/curriculum/lib/capstone-academy";
-import { findCapstoneAcademyChallenge } from "@/features/curriculum/lib/capstone-academy-challenges";
-import { isShipAcademyModule } from "@/features/curriculum/lib/ship-academy";
-import { findShipAcademyChallenge } from "@/features/curriculum/lib/ship-academy-challenges";
-import { isInterviewAcademyModule } from "@/features/curriculum/lib/interview-academy";
-import { findInterviewAcademyChallenge } from "@/features/curriculum/lib/interview-academy-challenges";
-import { isSystemsAcademyModule } from "@/features/curriculum/lib/systems-academy";
-import { findSystemsAcademyChallenge } from "@/features/curriculum/lib/systems-academy-challenges";
-import {
-  InterviewPrepKitHub,
+  isChallengeHubModule,
+  isDrillStyleModule,
   isInterviewPrepKitModule,
-} from "@/components/interview-prep/interview-prep-kit-hub";
-import { prefetchModuleTopic, useModuleHub } from "@/features/curriculum/hooks/use-module-hub";
-import { DIFFICULTY_LABELS, problemTypeLabel } from "@/learning-engine/labels";
+} from "@/features/curriculum/lib/hub-module-guards";
+import {
+  prefetchModuleTopic,
+  useModuleHub,
+} from "@/features/curriculum/hooks/use-module-hub";
+import { DIFFICULTY_LABELS } from "@/learning-engine/labels";
 import type { LearnDifficulty } from "@/learning-engine/types";
-import { categoryLabel } from "@/components/learning-engine/lesson-renderer";
-import { THINKING_KIND_LABELS } from "@/features/curriculum/lib/thinking-challenge";
 import { useProgressStore } from "@/store/use-progress-store";
-
-const TOOLING_KIND_LABELS: Record<string, string> = {
-  terminal: "Terminal Practice",
-  git: "Git Practice",
-  scenario: "Scenario Based",
-  debug: "Debugging",
-  recovery: "Recovery",
-};
-
-const HTML_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  a11y: "Accessibility",
-  seo: "SEO",
-  semantic: "Semantic HTML",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const CSS_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Layout",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const JS_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const REACT_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const NEXTJS_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const TS_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const APIS_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const AUTH_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const SQL_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const MODELING_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const DEPLOY_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const CICD_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const LLM_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const AI_FEATURES_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const CAPSTONE_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const SHIP_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const INTERVIEW_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-const SYSTEMS_KIND_LABELS: Record<string, string> = {
-  build: "Build",
-  fix: "Bug Fix",
-  layout: "Practice",
-  responsive: "Responsive",
-  interview: "Interview",
-  project: "Mini Project",
-};
-
-function isChallengeHubModule(moduleSlug: string) {
-  return (
-    isProgrammingFundamentalsModule(moduleSlug) ||
-    isDeveloperToolingModule(moduleSlug) ||
-    isHtmlAcademyModule(moduleSlug) ||
-    isCssAcademyModule(moduleSlug) ||
-    isJsAcademyModule(moduleSlug) ||
-    isReactAcademyModule(moduleSlug) ||
-    isNextjsAcademyModule(moduleSlug) ||
-    isTypescriptAcademyModule(moduleSlug) ||
-    isApisAcademyModule(moduleSlug) ||
-    isAuthAcademyModule(moduleSlug) ||
-    isSqlAcademyModule(moduleSlug) ||
-    isModelingAcademyModule(moduleSlug) ||
-    isDeploymentAcademyModule(moduleSlug) ||
-    isCicdAcademyModule(moduleSlug) ||
-    isLlmAcademyModule(moduleSlug) ||
-    isAiFeaturesAcademyModule(moduleSlug) ||
-    isCapstoneAcademyModule(moduleSlug) ||
-    isShipAcademyModule(moduleSlug) ||
-    isInterviewAcademyModule(moduleSlug) ||
-    isSystemsAcademyModule(moduleSlug)
-  );
-}
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
 import { useTrackResumePosition } from "@/hooks/use-resume-position";
 import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 25;
+const InterviewPrepKitHub = dynamic(
+  () =>
+    import("@/components/interview-prep/interview-prep-kit-hub").then(
+      (m) => m.InterviewPrepKitHub
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mx-auto max-w-6xl animate-pulse space-y-6 pb-10">
+        <div className="h-4 w-48 rounded bg-zinc-800" />
+        <div className="h-24 rounded-xl bg-zinc-900/50" />
+        <div className="h-64 rounded-xl bg-zinc-900/40" />
+      </div>
+    ),
+  }
+);
 
-type ModuleChallengeItem = {
-  id: string;
-  weekId: number;
-  topicSlug: string;
-  curriculumTopicSlug: string;
-  curriculumTopicTitle: string;
-  topicIndex: number;
-  lessonIndex: number;
-  lesson: ReturnType<typeof resolveTopicChallenges>[number]["lesson"];
-  entityId: string;
-  thinking?: ReturnType<typeof resolveTopicChallenges>[number]["thinking"];
-  toolingKind?: string;
-  toolingScenario?: string;
-  htmlKind?: string;
-  htmlScenario?: string;
-  cssKind?: string;
-  cssScenario?: string;
-  jsKind?: string;
-  jsScenario?: string;
-  reactKind?: string;
-  reactScenario?: string;
-  nextjsKind?: string;
-  nextjsScenario?: string;
-  tsKind?: string;
-  tsScenario?: string;
-  apisKind?: string;
-  apisScenario?: string;
-  authKind?: string;
-  authScenario?: string;
-  sqlKind?: string;
-  sqlScenario?: string;
-  modelingKind?: string;
-  modelingScenario?: string;
-  deployKind?: string;
-  deployScenario?: string;
-  cicdKind?: string;
-  cicdScenario?: string;
-  llmKind?: string;
-  llmScenario?: string;
-  aiFeaturesKind?: string;
-  aiFeaturesScenario?: string;
-  capstoneKind?: string;
-  capstoneScenario?: string;
-  shipKind?: string;
-  shipScenario?: string;
-  interviewKind?: string;
-  interviewScenario?: string;
-  systemsKind?: string;
-  systemsScenario?: string;
-};
+const PAGE_SIZE = 25;
 
 function FilterSection({
   title,
@@ -403,7 +141,7 @@ function ModuleTopicExplorerInner({
 }: {
   payload: ModuleHubPayload;
 }) {
-  const { detail } = payload;
+  const { detail, challenges: allChallenges } = payload;
   const moduleSlug = detail.module.slug;
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -431,7 +169,6 @@ function ModuleTopicExplorerInner({
 
   useEffect(() => {
     const topic = searchParams.get("topic");
-    // No topic param → show All. Valid topic param → select that topic.
     const next = topic && validTopicSlugs.has(topic) ? topic : "all";
     setActiveTopic(next);
   }, [searchParams, validTopicSlugs]);
@@ -445,8 +182,11 @@ function ModuleTopicExplorerInner({
 
   const syncTopicUrl = useCallback(
     (slug: string) => {
-      router.replace(CURRICULUM_ROUTES.moduleHub(moduleSlug, slug === "all" ? null : slug), {
-        scroll: false,
+      startTransition(() => {
+        router.replace(
+          CURRICULUM_ROUTES.moduleHub(moduleSlug, slug === "all" ? null : slug),
+          { scroll: false }
+        );
       });
     },
     [moduleSlug, router]
@@ -455,133 +195,6 @@ function ModuleTopicExplorerInner({
   const isDoneFn = useProgressStore((s) => s.isDone);
   const bookmarks = useProgressStore((s) => s.progress.bookmarks);
   const isBookmarkedFn = useProgressStore((s) => s.isBookmarked);
-
-  const allChallenges = useMemo<ModuleChallengeItem[]>(() => {
-    const items: ModuleChallengeItem[] = [];
-    cards.forEach((card, topicIndex) => {
-      if (card.status === "locked") return;
-      const challenges = resolveTopicChallenges(
-        moduleSlug,
-        card.slug,
-        card.title,
-        getTopicChallengeLimit(moduleSlug, card.slug)
-      );
-      challenges.forEach((challenge, lessonIndex) => {
-        const tooling = isDeveloperToolingModule(moduleSlug)
-          ? findDeveloperToolingChallenge(card.slug, challenge.id)
-          : null;
-        const html = isHtmlAcademyModule(moduleSlug)
-          ? findHtmlAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const css = isCssAcademyModule(moduleSlug)
-          ? findCssAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const js = isJsAcademyModule(moduleSlug)
-          ? findJsAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const react = isReactAcademyModule(moduleSlug)
-          ? findReactAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const nextjs = isNextjsAcademyModule(moduleSlug)
-          ? findNextjsAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const ts = isTypescriptAcademyModule(moduleSlug)
-          ? findTypescriptAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const apis = isApisAcademyModule(moduleSlug)
-          ? findApisAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const auth = isAuthAcademyModule(moduleSlug)
-          ? findAuthAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const sql = isSqlAcademyModule(moduleSlug)
-          ? findSqlAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const modeling = isModelingAcademyModule(moduleSlug)
-          ? findModelingAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const deploy = isDeploymentAcademyModule(moduleSlug)
-          ? findDeploymentAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const cicd = isCicdAcademyModule(moduleSlug)
-          ? findCicdAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const llm = isLlmAcademyModule(moduleSlug)
-          ? findLlmAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const aiFeatures = isAiFeaturesAcademyModule(moduleSlug)
-          ? findAiFeaturesAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const capstone = isCapstoneAcademyModule(moduleSlug)
-          ? findCapstoneAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const ship = isShipAcademyModule(moduleSlug)
-          ? findShipAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const interview = isInterviewAcademyModule(moduleSlug)
-          ? findInterviewAcademyChallenge(card.slug, challenge.id)
-          : null;
-        const systems = isSystemsAcademyModule(moduleSlug)
-          ? findSystemsAcademyChallenge(card.slug, challenge.id)
-          : null;
-        items.push({
-          id: challenge.id,
-          weekId: challenge.weekId,
-          topicSlug: challenge.topicSlug,
-          curriculumTopicSlug: card.slug,
-          curriculumTopicTitle: card.title,
-          topicIndex,
-          lessonIndex,
-          lesson: challenge.lesson,
-          thinking: challenge.thinking,
-          toolingKind: tooling?.kind,
-          toolingScenario: tooling?.scenario,
-          htmlKind: html?.kind,
-          htmlScenario: html?.scenario,
-          cssKind: css?.kind,
-          cssScenario: css?.scenario,
-          jsKind: js?.kind,
-          jsScenario: js?.scenario,
-          reactKind: react?.kind,
-          reactScenario: react?.scenario,
-          nextjsKind: nextjs?.kind,
-          nextjsScenario: nextjs?.scenario,
-          tsKind: ts?.kind,
-          tsScenario: ts?.scenario,
-          apisKind: apis?.kind,
-          apisScenario: apis?.scenario,
-          authKind: auth?.kind,
-          authScenario: auth?.scenario,
-          sqlKind: sql?.kind,
-          sqlScenario: sql?.scenario,
-          modelingKind: modeling?.kind,
-          modelingScenario: modeling?.scenario,
-          deployKind: deploy?.kind,
-          deployScenario: deploy?.scenario,
-          cicdKind: cicd?.kind,
-          cicdScenario: cicd?.scenario,
-          llmKind: llm?.kind,
-          llmScenario: llm?.scenario,
-          aiFeaturesKind: aiFeatures?.kind,
-          aiFeaturesScenario: aiFeatures?.scenario,
-          capstoneKind: capstone?.kind,
-          capstoneScenario: capstone?.scenario,
-          shipKind: ship?.kind,
-          shipScenario: ship?.scenario,
-          interviewKind: interview?.kind,
-          interviewScenario: interview?.scenario,
-          systemsKind: systems?.kind,
-          systemsScenario: systems?.scenario,
-          entityId: curriculumChallengeEntityId(moduleSlug, {
-            weekId: challenge.weekId || 0,
-            topicSlug: challenge.topicSlug,
-            lesson: challenge.lesson,
-          }),
-        });
-      });
-    });
-    return items;
-  }, [cards, moduleSlug]);
 
   const challengeProgress = useMemo(() => {
     const total = allChallenges.length;
@@ -609,7 +222,7 @@ function ModuleTopicExplorerInner({
         if (done && !showSolved) return false;
         if (!done && !showUnsolved) return false;
         if (bookmarkedOnly && !isBookmarkedFn(c.entityId)) return false;
-        const d = c.lesson.difficulty;
+        const d = c.difficulty;
         if (d === "easy" && !diffEasy) return false;
         if (d === "medium" && !diffMedium) return false;
         if (d === "hard" && !diffHard) return false;
@@ -617,8 +230,8 @@ function ModuleTopicExplorerInner({
       })
       .sort((a, b) => {
         if (a.topicIndex !== b.topicIndex) return a.topicIndex - b.topicIndex;
-        const da = byDifficultyRank[a.lesson.difficulty];
-        const db = byDifficultyRank[b.lesson.difficulty];
+        const da = byDifficultyRank[a.difficulty];
+        const db = byDifficultyRank[b.difficulty];
         if (da !== db) return da - db;
         return a.lessonIndex - b.lessonIndex;
       });
@@ -637,7 +250,10 @@ function ModuleTopicExplorerInner({
     showUnsolved,
   ]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / PAGE_SIZE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredAndSorted.length / PAGE_SIZE)
+  );
   const pageItems = filteredAndSorted.slice(
     page * PAGE_SIZE,
     (page + 1) * PAGE_SIZE
@@ -657,14 +273,10 @@ function ModuleTopicExplorerInner({
   };
 
   const activeCard =
-    activeTopic === "all"
-      ? null
-      : cards.find((c) => c.slug === activeTopic);
+    activeTopic === "all" ? null : cards.find((c) => c.slug === activeTopic);
 
   const activeTopicTitle =
-    activeTopic === "all"
-      ? "All topics"
-      : (activeCard?.title ?? activeTopic);
+    activeTopic === "all" ? "All topics" : (activeCard?.title ?? activeTopic);
 
   const hubHref = CURRICULUM_ROUTES.moduleHub(
     moduleSlug,
@@ -692,6 +304,8 @@ function ModuleTopicExplorerInner({
     return allChallenges.filter((c) => isBookmarkedFn(c.entityId)).length;
   }, [allChallenges, bookmarks, hydrated, isBookmarkedFn]);
 
+  const drillStyle = isDrillStyleModule(moduleSlug);
+
   return (
     <div className="mx-auto flex h-full w-full max-w-7xl flex-col gap-4 px-1 pt-1 sm:px-2">
       <div className="surface-card-3d shrink-0 space-y-4 p-4 sm:p-5">
@@ -717,8 +331,7 @@ function ModuleTopicExplorerInner({
                 suppressHydrationWarning
               >
                 {hydrated
-                  ? isInterviewAcademyModule(moduleSlug) ||
-                    isSystemsAcademyModule(moduleSlug)
+                  ? drillStyle
                     ? `Drills ready: ${displayProgress.completed}/${displayProgress.total} · Topics: ${detail.completedCount}/${detail.totalCount}`
                     : `Challenges: ${displayProgress.completed}/${displayProgress.total} · Topics: ${detail.completedCount}/${detail.totalCount}`
                   : "\u00a0"}
@@ -729,12 +342,10 @@ function ModuleTopicExplorerInner({
                 {detail.module.description}
               </p>
             ) : null}
-            {isInterviewAcademyModule(moduleSlug) ||
-            isSystemsAcademyModule(moduleSlug) ? (
+            {drillStyle ? (
               <p className="mt-3 max-w-2xl rounded-lg border border-emerald-600/30 bg-emerald-500/10 px-3 py-2.5 text-sm leading-relaxed text-zinc-200">
-                Interview Preparation Kit — practice aloud with a checklist.
-                No code editor. Mark complete when you can run the approach
-                cleanly.
+                Interview Preparation Kit — practice aloud with a checklist. No
+                code editor. Mark complete when you can run the approach cleanly.
               </p>
             ) : null}
           </div>
@@ -794,7 +405,9 @@ function ModuleTopicExplorerInner({
                         : "bg-zinc-900 text-zinc-200 ring-1 ring-zinc-700 hover:bg-zinc-800 hover:text-zinc-50"
                   )}
                 >
-                  {locked ? <Lock className="h-3 w-3 shrink-0 opacity-70" /> : null}
+                  {locked ? (
+                    <Lock className="h-3 w-3 shrink-0 opacity-70" />
+                  ) : null}
                   {card.title}
                 </button>
               );
@@ -835,215 +448,18 @@ function ModuleTopicExplorerInner({
               )}
             </div>
           ) : (
-            pageItems.map((item, i) => {
-              const isFirst = page === 0 && i === 0;
-              const { lesson, entityId } = item;
-              const done = hydrated && isDoneFn(entityId);
-              const estimatedMinutes =
-                lesson.estimatedMinutes ??
-                (lesson.difficulty === "easy"
-                  ? 8
-                  : lesson.difficulty === "medium"
-                    ? 15
-                    : 25);
-              const xpPoints =
-                estimatedMinutes *
-                (lesson.difficulty === "easy"
-                  ? 2
-                  : lesson.difficulty === "medium"
-                    ? 3
-                    : 4);
-              const successRate =
-                lesson.difficulty === "easy"
-                  ? 82
-                  : lesson.difficulty === "medium"
-                    ? 67
-                    : 41;
-
-              return (
-                <article
-                  key={entityId}
-                  className="surface-card-3d p-4 sm:p-5"
-                >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex min-w-0 items-center gap-2.5">
-                        <SaveDiamondButton
-                          entityId={entityId}
-                          showUnsaveAction={bookmarkedOnly}
-                        />
-                        <h2 className="min-w-0 truncate text-base font-semibold text-zinc-100">
-                          {lesson.title}
-                        </h2>
-                      </div>
-                      <div className="mt-1.5 min-w-0 sm:pl-9">
-                          <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
-                            <span
-                              className={cn(
-                                "font-semibold",
-                                DIFFICULTY_COLORS[lesson.difficulty]
-                              )}
-                            >
-                              {DIFFICULTY_LABELS[lesson.difficulty]}
-                            </span>
-                            <span>|</span>
-                            <span>
-                              {item.thinking
-                                ? THINKING_KIND_LABELS[item.thinking.kind]
-                                : item.toolingKind
-                                  ? (TOOLING_KIND_LABELS[item.toolingKind] ??
-                                    item.toolingKind)
-                                  : item.htmlKind
-                                    ? (HTML_KIND_LABELS[item.htmlKind] ??
-                                      item.htmlKind)
-                                    : item.cssKind
-                                      ? (CSS_KIND_LABELS[item.cssKind] ??
-                                        item.cssKind)
-                                      : item.jsKind
-                                        ? (JS_KIND_LABELS[item.jsKind] ??
-                                          item.jsKind)
-                                        : item.reactKind
-                                          ? (REACT_KIND_LABELS[item.reactKind] ??
-                                            item.reactKind)
-                                          : item.nextjsKind
-                                            ? (NEXTJS_KIND_LABELS[
-                                                item.nextjsKind
-                                              ] ?? item.nextjsKind)
-                                            : item.tsKind
-                                              ? (TS_KIND_LABELS[item.tsKind] ??
-                                                item.tsKind)
-                                              : item.apisKind
-                                                ? (APIS_KIND_LABELS[
-                                                    item.apisKind
-                                                  ] ?? item.apisKind)
-                                                : item.authKind
-                                                  ? (AUTH_KIND_LABELS[
-                                                      item.authKind
-                                                    ] ?? item.authKind)
-                                                  : item.sqlKind
-                                                    ? (SQL_KIND_LABELS[
-                                                        item.sqlKind
-                                                      ] ?? item.sqlKind)
-                                                    : item.modelingKind
-                                                      ? (MODELING_KIND_LABELS[
-                                                          item.modelingKind
-                                                        ] ?? item.modelingKind)
-                                                      : item.deployKind
-                                                        ? (DEPLOY_KIND_LABELS[
-                                                            item.deployKind
-                                                          ] ?? item.deployKind)
-                                                        : item.cicdKind
-                                                          ? (CICD_KIND_LABELS[
-                                                              item.cicdKind
-                                                            ] ?? item.cicdKind)
-                                                          : item.llmKind
-                                                            ? (LLM_KIND_LABELS[
-                                                                item.llmKind
-                                                              ] ?? item.llmKind)
-                                                            : item.aiFeaturesKind
-                                                              ? (AI_FEATURES_KIND_LABELS[
-                                                                  item.aiFeaturesKind
-                                                                ] ??
-                                                                item.aiFeaturesKind)
-                                                              : item.capstoneKind
-                                                                ? (CAPSTONE_KIND_LABELS[
-                                                                    item.capstoneKind
-                                                                  ] ??
-                                                                  item.capstoneKind)
-                                                                : item.shipKind
-                                                                  ? (SHIP_KIND_LABELS[
-                                                                      item.shipKind
-                                                                    ] ??
-                                                                    item.shipKind)
-                                                                  : item.interviewKind
-                                                                    ? (INTERVIEW_KIND_LABELS[
-                                                                        item.interviewKind
-                                                                      ] ??
-                                                                      item.interviewKind)
-                                                                    : item.systemsKind
-                                                                      ? (SYSTEMS_KIND_LABELS[
-                                                                          item.systemsKind
-                                                                        ] ??
-                                                                        item.systemsKind)
-                                                                      : problemTypeLabel(
-                                                                          lesson.problemType
-                                                                        )}
-                            </span>
-                            <span>|</span>
-                            <span>Est. {estimatedMinutes} min</span>
-                            <span>|</span>
-                            <span>{xpPoints} XP</span>
-                            <span>|</span>
-                            <span className="tabular-nums text-emerald-400">
-                              {successRate}% success
-                            </span>
-                            {done ? (
-                              <>
-                                <span>|</span>
-                                <span className="text-emerald-400">Solved</span>
-                              </>
-                            ) : null}
-                          </p>
-                          <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-                            {item.thinking?.scenario ??
-                              item.toolingScenario ??
-                              item.htmlScenario ??
-                              item.cssScenario ??
-                              item.jsScenario ??
-                              item.reactScenario ??
-                              item.nextjsScenario ??
-                              item.tsScenario ??
-                              item.apisScenario ??
-                              item.authScenario ??
-                              item.sqlScenario ??
-                              item.modelingScenario ??
-                              item.deployScenario ??
-                              item.cicdScenario ??
-                              item.llmScenario ??
-                              item.aiFeaturesScenario ??
-                              item.capstoneScenario ??
-                              item.shipScenario ??
-                              item.interviewScenario ??
-                              item.systemsScenario ??
-                              lesson.description ??
-                              `Practice ${categoryLabel(lesson.category)} concepts.`}
-                          </p>
-                      </div>
-                    </div>
-                    <Button
-                      asChild
-                      size="sm"
-                      className={cn(
-                        "h-9 min-w-[8.5rem] shrink-0 rounded-full font-semibold shadow-sm",
-                        isFirst && !done
-                          ? "bg-emerald-600 shadow-emerald-600/25 hover:bg-emerald-500"
-                          : done
-                            ? "border border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800"
-                            : "border border-emerald-600/60 bg-transparent text-emerald-400 hover:bg-emerald-500/10"
-                      )}
-                      variant={isFirst && !done ? "default" : "outline"}
-                    >
-                      <Link
-                        href={CURRICULUM_ROUTES.moduleChallenge(
-                          moduleSlug,
-                          item.curriculumTopicSlug,
-                          item.id
-                        )}
-                      >
-                        {isInterviewAcademyModule(moduleSlug) ||
-                        isSystemsAcademyModule(moduleSlug)
-                          ? done
-                            ? "Practiced"
-                            : "Start drill"
-                          : done
-                            ? "Solved"
-                            : "Solve Challenge"}
-                      </Link>
-                    </Button>
-                  </div>
-                </article>
-              );
-            })
+            pageItems.map((item, i) => (
+              <ChallengeListCard
+                key={item.entityId}
+                item={item}
+                isFirst={page === 0 && i === 0}
+                hydrated={hydrated}
+                done={hydrated && isDoneFn(item.entityId)}
+                bookmarkedOnly={bookmarkedOnly}
+                moduleSlug={moduleSlug}
+                drillStyle={drillStyle}
+              />
+            ))
           )}
 
           {totalPages > 1 ? (
@@ -1111,5 +527,115 @@ function ModuleTopicExplorerInner({
         </aside>
       </div>
     </div>
+  );
+}
+
+function ChallengeListCard({
+  item,
+  isFirst,
+  hydrated,
+  done,
+  bookmarkedOnly,
+  moduleSlug,
+  drillStyle,
+}: {
+  item: ModuleHubChallengeSummary;
+  isFirst: boolean;
+  hydrated: boolean;
+  done: boolean;
+  bookmarkedOnly: boolean;
+  moduleSlug: string;
+  drillStyle: boolean;
+}) {
+  const estimatedMinutes =
+    item.estimatedMinutes ??
+    (item.difficulty === "easy"
+      ? 8
+      : item.difficulty === "medium"
+        ? 15
+        : 25);
+  const xpPoints =
+    estimatedMinutes *
+    (item.difficulty === "easy" ? 2 : item.difficulty === "medium" ? 3 : 4);
+  const successRate =
+    item.difficulty === "easy" ? 82 : item.difficulty === "medium" ? 67 : 41;
+
+  return (
+    <article className="surface-card-3d p-4 sm:p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <SaveDiamondButton
+              entityId={item.entityId}
+              showUnsaveAction={bookmarkedOnly}
+            />
+            <h2 className="min-w-0 truncate text-base font-semibold text-zinc-100">
+              {item.title}
+            </h2>
+          </div>
+          <div className="mt-1.5 min-w-0 sm:pl-9">
+            <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-zinc-500">
+              <span
+                className={cn(
+                  "font-semibold",
+                  DIFFICULTY_COLORS[item.difficulty]
+                )}
+              >
+                {DIFFICULTY_LABELS[item.difficulty]}
+              </span>
+              <span>|</span>
+              <span>{item.kindLabel}</span>
+              <span>|</span>
+              <span>Est. {estimatedMinutes} min</span>
+              <span>|</span>
+              <span>{xpPoints} XP</span>
+              <span>|</span>
+              <span className="tabular-nums text-emerald-400">
+                {successRate}% success
+              </span>
+              {hydrated && done ? (
+                <>
+                  <span>|</span>
+                  <span className="text-emerald-400">Solved</span>
+                </>
+              ) : null}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+              {item.scenario}
+            </p>
+          </div>
+        </div>
+        <Button
+          asChild
+          size="sm"
+          className={cn(
+            "h-9 min-w-[8.5rem] shrink-0 rounded-full font-semibold shadow-sm",
+            isFirst && !done
+              ? "bg-emerald-600 shadow-emerald-600/25 hover:bg-emerald-500"
+              : done
+                ? "border border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800"
+                : "border border-emerald-600/60 bg-transparent text-emerald-400 hover:bg-emerald-500/10"
+          )}
+          variant={isFirst && !done ? "default" : "outline"}
+        >
+          <Link
+            href={CURRICULUM_ROUTES.moduleChallenge(
+              moduleSlug,
+              item.curriculumTopicSlug,
+              item.id
+            )}
+            prefetch={false}
+          >
+            {drillStyle
+              ? done
+                ? "Practiced"
+                : "Start drill"
+              : done
+                ? "Solved"
+                : "Solve Challenge"}
+          </Link>
+        </Button>
+      </div>
+    </article>
   );
 }

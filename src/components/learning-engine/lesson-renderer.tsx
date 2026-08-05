@@ -15,6 +15,7 @@ import type {
   SqlLesson,
 } from "@/learning-engine/types";
 import { isJavaLike } from "@/learning-engine/types";
+import { categoryLabel as categoryLabelFromEngine } from "@/learning-engine/category-labels";
 import { CodeWorkspace } from "./code-workspace";
 import { ExecutionOutput } from "./execution-output";
 import { VisualizationPanel } from "./visualization-panel";
@@ -648,23 +649,5 @@ export function LessonRenderer({ lesson }: { lesson: LearnLesson }) {
 }
 
 export function categoryLabel(category: string): string {
-  const labels: Record<string, string> = {
-    java: "Java",
-    oop: "OOP",
-    collections: "Collections",
-    java8: "Java 8",
-    multithreading: "Multithreading",
-    dsa: "DSA",
-    sql: "SQL",
-    "database-design": "Database Design",
-    jdbc: "JDBC",
-    "spring-boot": "Spring Boot",
-    hibernate: "Hibernate/JPA",
-    "rest-api": "REST API",
-    security: "Security",
-    mongodb: "MongoDB",
-    git: "Git",
-    ai: "AI Skills",
-  };
-  return labels[category] ?? category;
+  return categoryLabelFromEngine(category);
 }

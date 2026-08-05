@@ -143,6 +143,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
             <Link
               key={item.id}
               href={item.href}
+              prefetch={false}
               onClick={closeMobile}
               title={isCollapsed ? item.label : undefined}
               className={cn(

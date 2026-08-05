@@ -357,12 +357,7 @@ function makeSynthetic(
   };
 }
 
-export function curriculumChallengeEntityId(
-  moduleSlug: string,
-  challenge: { weekId: number; topicSlug: string; lesson: { id: string } }
-): string {
-  return `curriculum-${moduleSlug}-${challenge.weekId}-${challenge.topicSlug}-${challenge.lesson.id}`;
-}
+export { curriculumChallengeEntityId } from "@/features/curriculum/lib/challenge-entity-id";
 
 export function getModuleChallengeStats(moduleSlug: string): {
   easy: number;
