@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Award,
@@ -27,29 +28,37 @@ const ICONS: Record<MobileBottomNavId, LucideIcon> = {
 
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   if (shouldHideBottomNav(pathname)) return null;
+
+  const activePath = pendingHref ?? pathname;
 
   return (
     <nav
       aria-label="Mobile companion"
       className={cn(
         "md:hidden",
-        "shrink-0 border-t border-border/70 bg-card/95 backdrop-blur-xl",
+        "shrink-0 border-t border-border/70 bg-card/95",
         "pb-[max(0.25rem,env(safe-area-inset-bottom))]"
       )}
     >
       <ul className="grid grid-cols-5 gap-0.5 px-2 pt-1">
         {MOBILE_BOTTOM_NAV.map((item) => {
           const Icon = ICONS[item.id];
-          const active = item.match(pathname);
+          const active = item.match(activePath);
           return (
             <li key={item.id}>
               <Link
                 href={item.href}
                 prefetch={false}
+                onClick={() => setPendingHref(item.href)}
                 className={cn(
-                  "flex min-h-[2.85rem] flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1 transition-[color,background-color,transform] duration-150 active:scale-[0.96]",
+                  "flex min-h-[2.85rem] flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1 transition-[color,background-color,transform] duration-100 active:scale-[0.96]",
                   active
                     ? "bg-muted text-foreground"
                     : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"

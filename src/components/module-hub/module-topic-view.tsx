@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -31,9 +30,9 @@ import {
 } from "@/features/curriculum/hooks/use-module-hub";
 import type { ModuleTopicPayload } from "@/features/curriculum/actions/module-hub-actions";
 import { parseTopicDocSections } from "@/features/curriculum/lib/parse-topic-sections";
-import { resolveTopicChallenges, getTopicChallengeLimit } from "@/features/curriculum/lib/topic-challenges";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/types";
 import { cn } from "@/lib/utils";
+import { useMemo } from "react";
 
 type ModuleTopicViewProps = {
   moduleSlug: string;
@@ -61,23 +60,12 @@ export function ModuleTopicView({
   const [pending, startTransition] = useTransition();
   const query = useModuleTopic(moduleSlug, topicSlug, initialData);
   const payload = query.data ?? initialData;
-  const { detail, objectives, assignments } = payload;
+  const { detail, objectives, assignments, challenges } = payload;
   const { lesson, resources, module, isCompleted } = detail;
 
   const sections = useMemo(
     () => parseTopicDocSections(lesson.content || ""),
     [lesson.content]
-  );
-
-  const challenges = useMemo(
-    () =>
-      resolveTopicChallenges(
-        moduleSlug,
-        topicSlug,
-        lesson.title,
-        getTopicChallengeLimit(moduleSlug, topicSlug)
-      ),
-    [moduleSlug, topicSlug, lesson.title]
   );
 
   useEffect(() => {
@@ -86,15 +74,10 @@ export function ModuleTopicView({
   }, [queryClient, moduleSlug, detail.previousLessonSlug, detail.nextLessonSlug]);
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.article
-        key={lesson.id}
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.12 }}
-        className="mx-auto max-w-4xl space-y-10 pb-12"
-      >
+    <article
+      key={lesson.id}
+      className="mx-auto max-w-4xl space-y-10 pb-12"
+    >
         <nav className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
           <Link
             href={CURRICULUM_ROUTES.moduleHub(moduleSlug)}
@@ -358,7 +341,6 @@ export function ModuleTopicView({
             )}
           </div>
         </div>
-      </motion.article>
-    </AnimatePresence>
+    </article>
   );
 }

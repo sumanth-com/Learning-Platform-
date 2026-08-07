@@ -4,10 +4,9 @@ import Link from "next/link";
 import { SaveDiamondButton } from "@/components/shared/save-diamond-button";
 import { Button } from "@/components/ui/button";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
-import type { TopicChallenge } from "@/features/curriculum/lib/topic-challenges";
-import { DIFFICULTY_LABELS, problemTypeLabel } from "@/learning-engine/labels";
+import type { ModuleHubChallengeSummary } from "@/features/curriculum/lib/module-hub-challenge-summary";
+import { DIFFICULTY_LABELS } from "@/learning-engine/labels";
 import type { LearnDifficulty } from "@/learning-engine/types";
-import { curriculumChallengeEntityId } from "@/features/curriculum/lib/topic-challenges";
 import { useProgressStore } from "@/store/use-progress-store";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
 import { cn } from "@/lib/utils";
@@ -21,7 +20,7 @@ const DIFFICULTY_COLORS: Record<LearnDifficulty, string> = {
 type ModuleChallengeCardsProps = {
   moduleSlug: string;
   topicSlug: string;
-  challenges: TopicChallenge[];
+  challenges: ModuleHubChallengeSummary[];
 };
 
 export function ModuleChallengeCards({
@@ -43,31 +42,25 @@ export function ModuleChallengeCards({
   return (
     <ul className="space-y-3">
       {challenges.map((item) => {
-        const { lesson } = item;
-        const entityId = curriculumChallengeEntityId(moduleSlug, {
-          weekId: item.weekId || 0,
-          topicSlug: item.topicSlug,
-          lesson,
-        });
-        const done = hydrated && isDoneFn(entityId);
+        const done = hydrated && isDoneFn(item.entityId);
         const estimatedMinutes =
-          lesson.estimatedMinutes ??
-          (lesson.difficulty === "easy"
+          item.estimatedMinutes ??
+          (item.difficulty === "easy"
             ? 8
-            : lesson.difficulty === "medium"
+            : item.difficulty === "medium"
               ? 15
               : 25);
         const xpPoints =
           estimatedMinutes *
-          (lesson.difficulty === "easy"
+          (item.difficulty === "easy"
             ? 2
-            : lesson.difficulty === "medium"
+            : item.difficulty === "medium"
               ? 3
               : 4);
         const successRate =
-          lesson.difficulty === "easy"
+          item.difficulty === "easy"
             ? 82
-            : lesson.difficulty === "medium"
+            : item.difficulty === "medium"
               ? 67
               : 41;
 
@@ -77,9 +70,9 @@ export function ModuleChallengeCards({
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
                   <div className="flex min-w-0 items-center gap-2.5">
-                    <SaveDiamondButton entityId={entityId} />
+                    <SaveDiamondButton entityId={item.entityId} />
                     <h3 className="min-w-0 truncate text-base font-semibold text-zinc-100">
-                      {lesson.title}
+                      {item.title}
                     </h3>
                   </div>
                   <div className="mt-1.5 min-w-0 sm:pl-9">
@@ -87,13 +80,13 @@ export function ModuleChallengeCards({
                       <span
                         className={cn(
                           "font-semibold",
-                          DIFFICULTY_COLORS[lesson.difficulty]
+                          DIFFICULTY_COLORS[item.difficulty]
                         )}
                       >
-                        {DIFFICULTY_LABELS[lesson.difficulty]}
+                        {DIFFICULTY_LABELS[item.difficulty]}
                       </span>
                       <span>|</span>
-                      <span>{problemTypeLabel(lesson.problemType)}</span>
+                      <span>{item.kindLabel}</span>
                       <span>|</span>
                       <span>Est. {estimatedMinutes} min</span>
                       <span>|</span>
@@ -112,8 +105,7 @@ export function ModuleChallengeCards({
                       </span>
                     </p>
                     <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-zinc-400">
-                      {lesson.problemStatement?.split("\n").find(Boolean) ??
-                        lesson.description}
+                      {item.scenario}
                     </p>
                   </div>
                 </div>
@@ -128,6 +120,7 @@ export function ModuleChallengeCards({
                       topicSlug,
                       item.id
                     )}
+                    prefetch={false}
                   >
                     Solve Challenge
                   </Link>

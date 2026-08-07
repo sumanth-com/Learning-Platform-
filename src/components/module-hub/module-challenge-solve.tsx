@@ -7,38 +7,22 @@ import { ArrowLeft, CheckCircle2, Circle } from "lucide-react";
 import { ProblemDocument } from "@/components/learning-engine/problem-document";
 import { lessonHasWorkspace } from "@/components/learning-engine/editor-workspace";
 import { ModuleExperiencePlaceholder } from "@/components/module-hub/module-experience-placeholder";
+import type { ModuleChallengeSolveProps } from "@/components/module-hub/module-challenge-solve-types";
 import { Button } from "@/components/ui/button";
 import { CURRICULUM_ROUTES } from "@/features/curriculum/lib/curriculum-routes";
 import {
   getModuleChallengeExperience,
   type ChallengeExperienceKind,
 } from "@/features/curriculum/lib/challenge-experience";
-import { findDeveloperToolingChallenge } from "@/features/curriculum/lib/developer-tooling-challenges";
-import { findHtmlAcademyChallenge } from "@/features/curriculum/lib/html-academy-challenges";
-import { findCssAcademyChallenge } from "@/features/curriculum/lib/css-academy-challenges";
-import { findJsAcademyChallenge } from "@/features/curriculum/lib/js-academy-challenges";
-import { findReactAcademyChallenge } from "@/features/curriculum/lib/react-academy-challenges";
-import { findNextjsAcademyChallenge } from "@/features/curriculum/lib/nextjs-academy-challenges";
-import { findTypescriptAcademyChallenge } from "@/features/curriculum/lib/typescript-academy-challenges";
-import { findApisAcademyChallenge } from "@/features/curriculum/lib/apis-academy-challenges";
-import { findAuthAcademyChallenge } from "@/features/curriculum/lib/auth-academy-challenges";
-import { findSqlAcademyChallenge } from "@/features/curriculum/lib/sql-academy-challenges";
-import { findModelingAcademyChallenge } from "@/features/curriculum/lib/modeling-academy-challenges";
-import { findDeploymentAcademyChallenge } from "@/features/curriculum/lib/deployment-academy-challenges";
-import { findCicdAcademyChallenge } from "@/features/curriculum/lib/cicd-academy-challenges";
-import { findLlmAcademyChallenge } from "@/features/curriculum/lib/llm-academy-challenges";
-import { findAiFeaturesAcademyChallenge } from "@/features/curriculum/lib/ai-features-academy-challenges";
-import { findCapstoneAcademyChallenge } from "@/features/curriculum/lib/capstone-academy-challenges";
-import { findShipAcademyChallenge } from "@/features/curriculum/lib/ship-academy-challenges";
-import { findInterviewAcademyChallenge } from "@/features/curriculum/lib/interview-academy-challenges";
-import { findSystemsAcademyChallenge } from "@/features/curriculum/lib/systems-academy-challenges";
 import type { TopicChallenge } from "@/features/curriculum/lib/topic-challenges";
-import { curriculumChallengeEntityId } from "@/features/curriculum/lib/topic-challenges";
+import { curriculumChallengeEntityId } from "@/features/curriculum/lib/challenge-entity-id";
 import { useEntityProgress } from "@/hooks/use-curriculum";
 import { cn } from "@/lib/utils";
 import { usePersistScroll } from "@/hooks/use-persist-scroll";
 import { useTrackResumePosition } from "@/hooks/use-resume-position";
 import { useStoreHydrated } from "@/hooks/use-store-hydrated";
+
+export type { ModuleChallengeSolveProps };
 
 function PlaygroundFallback() {
   return (
@@ -63,6 +47,10 @@ function lazyPlayground(
   );
 }
 
+function lazyExperience(loader: () => Promise<{ default: ComponentType<ModuleChallengeSolveProps> }>) {
+  return dynamic(loader, { ssr: false, loading: () => <PlaygroundFallback /> });
+}
+
 const HackerrankEditor = lazyPlayground(
   () => import("@/components/learning-engine/hackerrank-editor"),
   "HackerrankEditor"
@@ -71,95 +59,93 @@ const ThinkingChallengeSolve = lazyPlayground(
   () => import("@/components/module-hub/thinking-challenge-solve"),
   "ThinkingChallengeSolve"
 );
-const ToolingChallengeSolve = lazyPlayground(
-  () => import("@/components/tooling/tooling-challenge-solve"),
-  "ToolingChallengeSolve"
+
+const ToolingRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/tooling")
 );
-const HtmlPlaygroundSolve = lazyPlayground(
-  () => import("@/components/html-academy/html-playground-solve"),
-  "HtmlPlaygroundSolve"
+const HtmlLiveRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/html-live")
 );
-const CssPlaygroundSolve = lazyPlayground(
-  () => import("@/components/css-academy/css-playground-solve"),
-  "CssPlaygroundSolve"
+const CssLiveRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/css-live")
 );
-const JsPlaygroundSolve = lazyPlayground(
-  () => import("@/components/js-academy/js-playground-solve"),
-  "JsPlaygroundSolve"
+const JavascriptConsoleRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/javascript-console")
 );
-const ReactPlaygroundSolve = lazyPlayground(
-  () => import("@/components/react-academy/react-playground-solve"),
-  "ReactPlaygroundSolve"
+const ReactPreviewRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/react-preview")
 );
-const NextjsPlaygroundSolve = lazyPlayground(
-  () => import("@/components/nextjs-academy/nextjs-playground-solve"),
-  "NextjsPlaygroundSolve"
+const NextjsPreviewRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/nextjs-preview")
 );
-const TypescriptPlaygroundSolve = lazyPlayground(
-  () => import("@/components/typescript-academy/typescript-playground-solve"),
-  "TypescriptPlaygroundSolve"
+const TypescriptConsoleRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/typescript-console")
 );
-const ApiPlaygroundSolve = lazyPlayground(
-  () => import("@/components/apis-academy/api-playground-solve"),
-  "ApiPlaygroundSolve"
+const ApiPlaygroundRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/api-playground")
 );
-const AuthPlaygroundSolve = lazyPlayground(
-  () => import("@/components/auth-academy/auth-playground-solve"),
-  "AuthPlaygroundSolve"
+const AuthLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/auth-lab")
 );
-const SqlPlaygroundSolve = lazyPlayground(
-  () => import("@/components/sql-academy/sql-playground-solve"),
-  "SqlPlaygroundSolve"
+const SqlEditorRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/sql-editor")
 );
-const ModelingPlaygroundSolve = lazyPlayground(
-  () => import("@/components/modeling-academy/modeling-playground-solve"),
-  "ModelingPlaygroundSolve"
+const ModelingLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/modeling-lab")
 );
-const DeploymentPlaygroundSolve = lazyPlayground(
-  () => import("@/components/deployment-academy/deployment-playground-solve"),
-  "DeploymentPlaygroundSolve"
+const DeployLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/deploy-lab")
 );
-const CicdPlaygroundSolve = lazyPlayground(
-  () => import("@/components/cicd-academy/cicd-playground-solve"),
-  "CicdPlaygroundSolve"
+const CicdLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/cicd-lab")
 );
-const LlmPlaygroundSolve = lazyPlayground(
-  () => import("@/components/llm-academy/llm-playground-solve"),
-  "LlmPlaygroundSolve"
+const LlmLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/llm-lab")
 );
-const AiFeaturesPlaygroundSolve = lazyPlayground(
-  () => import("@/components/ai-features-academy/ai-features-playground-solve"),
-  "AiFeaturesPlaygroundSolve"
+const AiLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/ai-lab")
 );
-const CapstonePlaygroundSolve = lazyPlayground(
-  () => import("@/components/capstone-academy/capstone-playground-solve"),
-  "CapstonePlaygroundSolve"
+const CapstoneLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/capstone-lab")
 );
-const ShipPlaygroundSolve = lazyPlayground(
-  () => import("@/components/ship-academy/ship-playground-solve"),
-  "ShipPlaygroundSolve"
+const ShipLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/ship-lab")
 );
-const InterviewPlaygroundSolve = lazyPlayground(
-  () => import("@/components/interview-academy/interview-playground-solve"),
-  "InterviewPlaygroundSolve"
+const InterviewLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/interview-lab")
 );
-const SystemsPlaygroundSolve = lazyPlayground(
-  () => import("@/components/systems-academy/systems-playground-solve"),
-  "SystemsPlaygroundSolve"
+const SystemsLabRoute = lazyExperience(
+  () => import("@/components/module-hub/experience-routes/systems-lab")
 );
+
+const EXPERIENCE_ROUTES: Partial<
+  Record<ChallengeExperienceKind, ComponentType<ModuleChallengeSolveProps>>
+> = {
+  tooling: ToolingRoute,
+  "html-live": HtmlLiveRoute,
+  "css-live": CssLiveRoute,
+  "javascript-console": JavascriptConsoleRoute,
+  "react-preview": ReactPreviewRoute,
+  "nextjs-preview": NextjsPreviewRoute,
+  "typescript-console": TypescriptConsoleRoute,
+  "api-playground": ApiPlaygroundRoute,
+  "auth-lab": AuthLabRoute,
+  "sql-editor": SqlEditorRoute,
+  "modeling-lab": ModelingLabRoute,
+  "deploy-lab": DeployLabRoute,
+  "cicd-lab": CicdLabRoute,
+  "llm-lab": LlmLabRoute,
+  "ai-lab": AiLabRoute,
+  "capstone-lab": CapstoneLabRoute,
+  "ship-lab": ShipLabRoute,
+  "interview-lab": InterviewLabRoute,
+  "systems-lab": SystemsLabRoute,
+};
 
 const SIDE_TABS = [
   { id: "problem" as const, label: "Problem" },
   { id: "hints" as const, label: "Hints" },
 ];
-
-type ModuleChallengeSolveProps = {
-  moduleSlug: string;
-  topicSlug: string;
-  topicTitle: string;
-  moduleTitle: string;
-  challenge: TopicChallenge;
-};
 
 function resolveExperience(
   moduleSlug: string,
@@ -229,6 +215,7 @@ function CodeWorkspaceSolve({
       <header className="flex h-11 shrink-0 items-center gap-3 border-b border-zinc-800/80 bg-background/95 px-3 backdrop-blur-sm sm:px-4">
         <Link
           href={backHref}
+          prefetch={false}
           className="inline-flex shrink-0 items-center gap-1.5 text-xs text-zinc-500 transition hover:text-zinc-300"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
@@ -271,7 +258,7 @@ function CodeWorkspaceSolve({
                 type="button"
                 onClick={() => setSideTab(tab.id)}
                 className={cn(
-                  "flex min-h-[88px] flex-1 items-center justify-center border-b border-zinc-800/80 px-1 py-3 text-[10px] font-semibold uppercase tracking-widest transition-colors [writing-mode:vertical-rl] rotate-180",
+                  "flex min-h-[88px] flex-1 items-center justify-center border-b border-zinc-800/80 px-1 py-3 text-[10px] font-semibold uppercase tracking-widest transition-colors duration-100 [writing-mode:vertical-rl] rotate-180",
                   sideTab === tab.id
                     ? "bg-zinc-900 text-emerald-500"
                     : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-300"
@@ -298,10 +285,11 @@ function CodeWorkspaceSolve({
             e.preventDefault();
             const startX = e.clientX;
             const startPct = splitPct;
-            const width = splitRef.current?.clientWidth ?? window.innerWidth;
             const onMove = (ev: MouseEvent) => {
-              const delta = ((ev.clientX - startX) / width) * 100;
-              setSplitPct(Math.min(65, Math.max(25, startPct + delta)));
+              const root = splitRef.current;
+              if (!root) return;
+              const delta = ((ev.clientX - startX) / root.clientWidth) * 100;
+              setSplitPct(Math.min(65, Math.max(28, startPct + delta)));
             };
             const onUp = () => {
               window.removeEventListener("mousemove", onMove);
@@ -310,13 +298,11 @@ function CodeWorkspaceSolve({
             window.addEventListener("mousemove", onMove);
             window.addEventListener("mouseup", onUp);
           }}
-        >
-          <div className="absolute inset-y-0 -left-1 -right-1" />
-        </div>
+        />
 
         <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
           {lessonHasWorkspace(lesson) ? (
-            <HackerrankEditor key={lesson.id} lesson={lesson} />
+            <HackerrankEditor lesson={lesson} />
           ) : (
             <div className="flex h-full items-center justify-center bg-background text-sm text-zinc-500">
               No code editor for this challenge type.
@@ -330,7 +316,7 @@ function CodeWorkspaceSolve({
 
 /**
  * Routes each challenge to the learning experience for its module.
- * Programming Fundamentals → Thinking Challenge (never a code editor).
+ * Academy banks load on demand so the first paint stays under interaction budget.
  */
 export function ModuleChallengeSolve(props: ModuleChallengeSolveProps) {
   const experience = resolveExperience(props.moduleSlug, props.challenge);
@@ -344,204 +330,16 @@ export function ModuleChallengeSolve(props: ModuleChallengeSolveProps) {
     );
   }
 
-  if (experience === "tooling") {
-    const tooling = findDeveloperToolingChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (tooling) {
-      return <ToolingChallengeSolve {...props} challenge={tooling} />;
-    }
-  }
-
-  if (experience === "html-live") {
-    const html = findHtmlAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (html) {
-      return <HtmlPlaygroundSolve {...props} challenge={html} />;
-    }
-  }
-
-  if (experience === "css-live") {
-    const css = findCssAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (css) {
-      return <CssPlaygroundSolve {...props} challenge={css} />;
-    }
-  }
-
-  if (experience === "javascript-console") {
-    const js = findJsAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (js) {
-      return <JsPlaygroundSolve {...props} challenge={js} />;
-    }
-  }
-
-  if (experience === "react-preview") {
-    const react = findReactAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (react) {
-      return <ReactPlaygroundSolve {...props} challenge={react} />;
-    }
-  }
-
-  if (experience === "nextjs-preview") {
-    const nextjs = findNextjsAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (nextjs) {
-      return <NextjsPlaygroundSolve {...props} challenge={nextjs} />;
-    }
-  }
-
-  if (experience === "typescript-console") {
-    const ts = findTypescriptAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (ts) {
-      return <TypescriptPlaygroundSolve {...props} challenge={ts} />;
-    }
-  }
-
-  if (experience === "api-playground") {
-    const apis = findApisAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (apis) {
-      return <ApiPlaygroundSolve {...props} challenge={apis} />;
-    }
-  }
-
-  if (experience === "auth-lab") {
-    const auth = findAuthAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (auth) {
-      return <AuthPlaygroundSolve {...props} challenge={auth} />;
-    }
-  }
-
-  if (experience === "sql-editor") {
-    const sql = findSqlAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (sql) {
-      return <SqlPlaygroundSolve {...props} challenge={sql} />;
-    }
-  }
-
-  if (experience === "modeling-lab") {
-    const modeling = findModelingAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (modeling) {
-      return <ModelingPlaygroundSolve {...props} challenge={modeling} />;
-    }
-  }
-
-  if (experience === "deploy-lab") {
-    const deploy = findDeploymentAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (deploy) {
-      return <DeploymentPlaygroundSolve {...props} challenge={deploy} />;
-    }
-  }
-
-  if (experience === "cicd-lab") {
-    const cicd = findCicdAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (cicd) {
-      return <CicdPlaygroundSolve {...props} challenge={cicd} />;
-    }
-  }
-
-  if (experience === "llm-lab") {
-    const llm = findLlmAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (llm) {
-      return <LlmPlaygroundSolve {...props} challenge={llm} />;
-    }
-  }
-
-  if (experience === "ai-lab") {
-    const ai = findAiFeaturesAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (ai) {
-      return <AiFeaturesPlaygroundSolve {...props} challenge={ai} />;
-    }
-  }
-
-  if (experience === "capstone-lab") {
-    const capstone = findCapstoneAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (capstone) {
-      return <CapstonePlaygroundSolve {...props} challenge={capstone} />;
-    }
-  }
-
-  if (experience === "ship-lab") {
-    const ship = findShipAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (ship) {
-      return <ShipPlaygroundSolve {...props} challenge={ship} />;
-    }
-  }
-
-  if (experience === "interview-lab") {
-    const interview = findInterviewAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (interview) {
-      return <InterviewPlaygroundSolve {...props} challenge={interview} />;
-    }
-  }
-
-  if (experience === "systems-lab") {
-    const systems = findSystemsAcademyChallenge(
-      props.topicSlug,
-      props.challenge.id
-    );
-    if (systems) {
-      return <SystemsPlaygroundSolve {...props} challenge={systems} />;
-    }
+  const ExperienceRoute = EXPERIENCE_ROUTES[experience];
+  if (ExperienceRoute) {
+    return <ExperienceRoute {...props} />;
   }
 
   if (lessonHasWorkspace(props.challenge.lesson)) {
     return <CodeWorkspaceSolve {...props} />;
   }
 
-  if (
-    experience !== "thinking" &&
-    experience !== "code-workspace"
-  ) {
+  if (experience !== "thinking" && experience !== "code-workspace") {
     return (
       <ModuleExperiencePlaceholder
         moduleSlug={props.moduleSlug}

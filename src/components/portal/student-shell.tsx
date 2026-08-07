@@ -1,7 +1,6 @@
 "use client";
 
-import { QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import {
   PortalShellProvider,
@@ -15,7 +14,6 @@ import { ContinueOnDesktop } from "@/components/portal/continue-on-desktop";
 import { MobileBottomNav } from "@/components/portal/mobile-bottom-nav";
 import type { PortalUser } from "@/features/portal/types";
 import { useMinWidth } from "@/hooks/use-min-width";
-import { getQueryClient } from "@/lib/get-query-client";
 import {
   isDesktopOnlyPath,
   shouldHideBottomNav,
@@ -28,17 +26,13 @@ type StudentShellProps = {
 };
 
 export function StudentShell(props: StudentShellProps) {
-  const [queryClient] = useState(() => getQueryClient());
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <PortalShellProvider>
-        <PortalChromeProvider>
-          <PortalRuntimeProviders seedUser={props.user} />
-          <StudentShellInner {...props} />
-        </PortalChromeProvider>
-      </PortalShellProvider>
-    </QueryClientProvider>
+    <PortalShellProvider>
+      <PortalChromeProvider>
+        <PortalRuntimeProviders seedUser={props.user} />
+        <StudentShellInner {...props} />
+      </PortalChromeProvider>
+    </PortalShellProvider>
   );
 }
 

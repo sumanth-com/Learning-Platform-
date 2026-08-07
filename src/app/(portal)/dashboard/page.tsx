@@ -31,9 +31,11 @@ function DashboardFallback() {
 }
 
 async function DashboardContent() {
-  const data = await getPortalData();
+  const [data, supabase] = await Promise.all([
+    getPortalData(),
+    createClient(),
+  ]);
 
-  const supabase = await createClient();
   const { data: rows } = await supabase
     .from("assignments")
     .select("id, title, difficulty, due_days, lessons(title)")

@@ -14,15 +14,22 @@ interface UseUserState {
 /**
  * Client-side session + profile subscription.
  * Prefer Server Components + getCurrentUser() when possible.
+ * Pass enabled:false when the portal shell already seeded the user.
  */
-export function useUser() {
+export function useUser(options?: { enabled?: boolean }) {
+  const enabled = options?.enabled !== false;
   const [state, setState] = useState<UseUserState>({
     user: null,
     profile: null,
-    isLoading: true,
+    isLoading: enabled,
   });
 
   useEffect(() => {
+    if (!enabled) {
+      setState({ user: null, profile: null, isLoading: false });
+      return;
+    }
+
     const supabase = createClient();
     let mounted = true;
 
@@ -74,7 +81,7 @@ export function useUser() {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [enabled]);
 
   return state;
 }

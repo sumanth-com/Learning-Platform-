@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
 import {
   Bot,
   ClipboardList,
@@ -51,9 +51,17 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
   const pathname = usePathname();
   const { collapsed, closeMobile, toggleCollapsed } = usePortalShell();
   const isCollapsed = mode === "desktop" && collapsed;
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+
   useEffect(() => {
     closeMobile();
   }, [pathname, closeMobile]);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
+
+  const activePath = pendingHref ?? pathname;
 
   return (
     <aside
@@ -66,7 +74,7 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
               : PORTAL_SIDEBAR_WIDTH,
       }}
       className={cn(
-        "portal-rail flex h-full flex-col overflow-hidden border-r border-zinc-800/90 transition-[width] duration-200",
+        "portal-rail flex h-full flex-col overflow-hidden border-r border-zinc-800/90 transition-[width] duration-150",
         mode === "drawer" && "shadow-2xl shadow-black/50"
       )}
     >
@@ -80,9 +88,13 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
       >
         <Link
           href="/dashboard"
-          onClick={closeMobile}
+          prefetch={false}
+          onClick={() => {
+            setPendingHref("/dashboard");
+            closeMobile();
+          }}
           className={cn(
-            "flex min-w-0 items-center rounded-xl transition-opacity hover:opacity-90",
+            "flex min-w-0 items-center rounded-xl transition-opacity duration-100 hover:opacity-90",
             isCollapsed ? "justify-center p-1" : "gap-3 py-1"
           )}
         >
@@ -136,18 +148,22 @@ export function StudentSidebar({ mode = "desktop" }: StudentSidebarProps) {
         {PORTAL_NAV.map((item) => {
           const Icon = ICONS[item.id];
           const active = item.match
-            ? item.match(pathname)
-            : pathname === item.href || pathname.startsWith(`${item.href}/`);
+            ? item.match(activePath)
+            : activePath === item.href ||
+              activePath.startsWith(`${item.href}/`);
 
           return (
             <Link
               key={item.id}
               href={item.href}
               prefetch={false}
-              onClick={closeMobile}
+              onClick={() => {
+                setPendingHref(item.href);
+                closeMobile();
+              }}
               title={isCollapsed ? item.label : undefined}
               className={cn(
-                "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150 active:scale-[0.99]",
+                "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-100 active:scale-[0.99]",
                 isCollapsed && "justify-center px-2",
                 active
                   ? "bg-[#5f3435] text-white shadow-sm"

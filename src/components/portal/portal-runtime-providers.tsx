@@ -2,13 +2,20 @@
 
 import dynamic from "next/dynamic";
 import { ProgressBootstrap } from "@/components/shared/progress-bootstrap";
-import { WeekCompletionCelebration } from "@/components/shared/week-completion-celebration";
 import type { PortalUser } from "@/features/portal/types";
 
 const ModuleCompletionWatcher = dynamic(
   () =>
     import("@/components/shared/progress-bootstrap").then(
       (m) => m.ModuleCompletionWatcher
+    ),
+  { ssr: false }
+);
+
+const WeekCompletionCelebration = dynamic(
+  () =>
+    import("@/components/shared/week-completion-celebration").then(
+      (m) => m.WeekCompletionCelebration
     ),
   { ssr: false }
 );

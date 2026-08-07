@@ -29,6 +29,7 @@ export type ModuleTopicPayload = {
   detail: LessonDetail;
   objectives: string[];
   assignments: AssignmentSummary[];
+  challenges: ModuleHubChallengeSummary[];
   isLocked: boolean;
 };
 
@@ -114,6 +115,10 @@ const loadModuleTopicCached = cache(
         detail.lesson.content
       ),
       assignments,
+      challenges: buildModuleHubChallengeSummaries(
+        moduleSlug,
+        moduleDetail.lessons
+      ).filter((c) => c.curriculumTopicSlug === topicSlug),
       isLocked,
     } satisfies ModuleTopicPayload;
   }

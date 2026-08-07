@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   BookOpen,
   CheckCircle2,
@@ -531,16 +530,9 @@ function ModuleJourneyCard({
   const showDesktopGate = desktopOnlyOnMobile && !card.locked;
 
   const cardInner = (
-    <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.24) }}
-      whileHover={
-        !card.locked && !showDesktopGate ? { y: -2 } : undefined
-      }
+    <article
       className={cn(
-        "group relative overflow-hidden rounded-2xl border transition-all duration-300",
+        "group relative overflow-hidden rounded-2xl border transition-[border-color,box-shadow,transform] duration-150",
         companionMobile && "rounded-[1.25rem]",
         card.locked && "border-zinc-800/60 bg-zinc-950/30 opacity-50",
         showDesktopGate &&
@@ -555,7 +547,7 @@ function ModuleJourneyCard({
           !card.done &&
           !card.active &&
           !showDesktopGate &&
-          "border-zinc-800/70 bg-zinc-950/70 hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40",
+          "border-zinc-800/70 bg-zinc-950/70 hover:-translate-y-0.5 hover:border-zinc-700 hover:shadow-xl hover:shadow-black/40",
         companionMobile &&
           !card.locked &&
           !showDesktopGate &&
@@ -733,7 +725,7 @@ function ModuleJourneyCard({
             }
           />
         ) : !card.locked && !showDesktopGate ? (
-          <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-800/80 bg-zinc-900/80 text-zinc-500 transition-all duration-300 group-hover:border-zinc-700 group-hover:bg-zinc-800 group-hover:text-zinc-200">
+          <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-zinc-800/80 bg-zinc-900/80 text-zinc-500 transition-[border-color,background-color,color] duration-150 group-hover:border-zinc-700 group-hover:bg-zinc-800 group-hover:text-zinc-200">
             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </div>
         ) : null}
@@ -743,19 +735,12 @@ function ModuleJourneyCard({
         <div className="relative border-t border-zinc-800/60 bg-zinc-950/40 px-4 py-2.5 sm:px-5">
           <div className="flex items-center gap-3">
             <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-800/80">
-              <motion.div
+              <div
                 className={cn(
-                  "absolute inset-y-0 left-0 rounded-full",
+                  "absolute inset-y-0 left-0 rounded-full transition-[width] duration-150 ease-out",
                   card.done ? "bg-emerald-400" : themeStyle.progress
                 )}
-                initial={{ width: 0 }}
-                whileInView={{ width: `${pct}%` }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.7,
-                  ease: "easeOut",
-                  delay: Math.min(index * 0.04, 0.2),
-                }}
+                style={{ width: `${pct}%` }}
               />
             </div>
             <span className="min-w-[2.5rem] text-right text-xs font-semibold tabular-nums text-zinc-400">
@@ -764,7 +749,7 @@ function ModuleJourneyCard({
           </div>
         </div>
       ) : null}
-    </motion.article>
+    </article>
   );
 
   return (
@@ -786,7 +771,7 @@ function ModuleJourneyCard({
           ) : null}
           <div
             className={cn(
-              "relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 bg-zinc-950 transition-all duration-300 sm:h-11 sm:w-11",
+              "relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 bg-zinc-950 transition-[border-color,background-color,transform] duration-150 sm:h-11 sm:w-11",
               companionMobile && "h-8 w-8 sm:h-8 sm:w-8",
               card.locked && "border-zinc-800 text-zinc-600",
               showDesktopGate && "border-zinc-800 text-zinc-600",
@@ -822,11 +807,11 @@ function ModuleJourneyCard({
         {!isLast ? (
           <div className="relative mt-2 min-h-[32px] w-px flex-1">
             <div className="absolute inset-0 bg-zinc-800/80" />
-            <motion.div
-              className="absolute inset-x-0 top-0 w-px origin-top bg-gradient-to-b from-indigo-500/80 to-indigo-500/20"
-              initial={{ scaleY: 0 }}
-              animate={{ scaleY: prevDone || card.done ? 1 : 0 }}
-              transition={{ duration: 0.55, ease: "easeOut" }}
+            <div
+              className={cn(
+                "absolute inset-x-0 top-0 w-px origin-top bg-gradient-to-b from-indigo-500/80 to-indigo-500/20 transition-transform duration-150 ease-out",
+                prevDone || card.done ? "scale-y-100" : "scale-y-0"
+              )}
               style={{ height: "100%" }}
             />
           </div>

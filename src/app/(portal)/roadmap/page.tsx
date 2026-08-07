@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { JourneyRoadmap } from "@/components/portal/journey-roadmap";
 import { TrackPageEvent } from "@/components/analytics/track-page-event";
 import { getPortalData } from "@/features/portal/lib/get-portal-data";
@@ -8,10 +9,23 @@ export const metadata = {
   title: "Roadmap",
 };
 
-export default async function RoadmapPage() {
-  const data = await getPortalData();
+function RoadmapFallback() {
+  return (
+    <div className="h-full min-h-0 animate-pulse space-y-4 p-4 sm:p-6">
+      <div className="h-8 w-40 rounded bg-zinc-800/80" />
+      <div className="h-36 rounded-2xl bg-zinc-900/50" />
+      <div className="h-36 rounded-2xl bg-zinc-900/40" />
+      <div className="h-36 rounded-2xl bg-zinc-900/40" />
+    </div>
+  );
+}
 
-  const supabase = await createClient();
+async function RoadmapContent() {
+  const [data, supabase] = await Promise.all([
+    getPortalData(),
+    createClient(),
+  ]);
+
   const { data: assignmentRows } = await supabase
     .from("assignments")
     .select("lesson_id")
@@ -56,5 +70,13 @@ export default async function RoadmapPage() {
         projectModuleIds={projectModuleIds}
       />
     </>
+  );
+}
+
+export default function RoadmapPage() {
+  return (
+    <Suspense fallback={<RoadmapFallback />}>
+      <RoadmapContent />
+    </Suspense>
   );
 }
